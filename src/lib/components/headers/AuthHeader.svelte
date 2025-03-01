@@ -12,10 +12,20 @@
     class="mx-auto flex w-full max-w-screen-xl items-center justify-between px-2 lg:px-10"
     style="height: {HEADER_HEIGHT}px"
   >
-    <Logo />
+    <a href="/">
+      <Logo />
+    </a>
     <div class="flex gap-3">
       {#if page.url.pathname === '/signin'}
-        <Button variant="outline" size="sm" class="animate-svg" href="/signup">Sign Up</Button>
+        <IconButton
+          icon={IoArrowForward}
+          variant="outline"
+          size="sm"
+          class="animate-svg"
+          href="/signup"
+        >
+          Sign Up
+        </IconButton>
       {:else}
         <IconButton
           icon={IoArrowForward}

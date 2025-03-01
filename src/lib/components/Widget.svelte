@@ -3,14 +3,23 @@
     title: string;
     subtitle: string;
     padding?: number;
+    border?: boolean;
     borderRadius?: number;
+    backgroundColor?: string;
   }
 </script>
 
 <script lang="ts">
   import Watermark from './svgs/Watermark.svelte';
 
-  const { title, subtitle, padding = 1.5, borderRadius = 8 }: WidgetProps = $props();
+  const {
+    title,
+    subtitle,
+    padding = 1.2,
+    border = true,
+    borderRadius = 8,
+    backgroundColor = 'white',
+  }: WidgetProps = $props();
 </script>
 
 <div
@@ -20,11 +29,12 @@
   style:gap="0.3rem"
   style:padding="{padding}rem"
   style:margin="0.1rem"
-  style:border="1px solid lightgray"
+  style:border={border ? '1px solid lightgray' : 'none'}
   style:border-radius="{borderRadius}px"
+  style:background-color={backgroundColor}
 >
   <Watermark />
-  <div style:font-size="1.25rem" style:font-weight="700">
+  <div style:font-size="1.2rem" style:font-weight="700">
     {title}
   </div>
   <div style:font-size="0.8rem">{subtitle}</div>

@@ -7,8 +7,8 @@
 
 <main>
   <div class="container">
-    <div class="svg-container" contenteditable bind:innerHTML={data.svgContent}></div>
     <Widget title="Pages Read" subtitle="Understanding Deep Learning" />
+    <div class="svg-container" contenteditable bind:innerHTML={data.svgContent}></div>
   </div>
 </main>
 

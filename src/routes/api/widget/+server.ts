@@ -7,6 +7,20 @@ import Widget from '$lib/components/Widget.svelte';
 const props = {
   title: 'Pages Read',
   subtitle: 'Understanding Deep Learning',
+  // borderRadius: 20,
+  // color: 'lightgray',
+  // border: false,
+  // backgroundColor: 'black',
+  metrics: [
+    {
+      value: 94,
+      description: 'today',
+    },
+    {
+      value: 94,
+      description: 'today',
+    },
+  ],
 };
 
 export const GET: RequestHandler = async (event) => {
@@ -23,7 +37,7 @@ export const GET: RequestHandler = async (event) => {
   }
 
   const fonts = await Promise.all([
-    event.fetch('/fonts/inter/inter-latin-ext-400-normal.woff').then((res) =>
+    event.fetch('/fonts/inter/Inter_18pt-Regular.ttf').then((res) =>
       res.arrayBuffer().then((buffer) => ({
         name: 'Inter',
         data: buffer,
@@ -31,11 +45,20 @@ export const GET: RequestHandler = async (event) => {
         style: 'normal',
       }))
     ),
-    event.fetch('/fonts/inter/inter-latin-ext-700-normal.woff').then((res) =>
+    event.fetch('/fonts/inter/Inter_18pt-SemiBold.ttf').then((res) =>
       res.arrayBuffer().then((buffer) => ({
         name: 'Inter',
         data: buffer,
-        weight: 700,
+        weight: 600,
+        style: 'normal',
+      }))
+    ),
+
+    event.fetch('/fonts/inter/Inter_18pt-ExtraBold.ttf').then((res) =>
+      res.arrayBuffer().then((buffer) => ({
+        name: 'Inter',
+        data: buffer,
+        weight: 800,
         style: 'normal',
       }))
     ),

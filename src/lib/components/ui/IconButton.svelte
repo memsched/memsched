@@ -27,3 +27,31 @@
     {/if}
   </span>
 </Button>
+
+<style>
+  :global {
+    .animate-svg svg {
+      transition: transform 0.1s ease-in;
+    }
+
+    .-animate-svg svg {
+      transition: transform 0.1s ease-in;
+    }
+
+    .animate-svg:hover svg {
+      transform: translateX(3px);
+    }
+
+    .-animate-svg:hover svg {
+      transform: translateX(-3px);
+    }
+
+    .animate-svg-spin svg {
+      transition: transform 0.1s ease-in;
+    }
+
+    .animate-svg-spin:hover svg {
+      transform: rotate(-45deg);
+    }
+  }
+</style>

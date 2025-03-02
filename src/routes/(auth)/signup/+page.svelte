@@ -12,10 +12,10 @@
       iconPosition="left"
       variant="outline"
       size="lg"
-      href="/signin/google">Google</IconButton
+      href="/signin/google">Sign up with Google</IconButton
     >
     <IconButton icon={AiOutlineGithub} iconPosition="left" size="lg" href="/signin/github"
-      >Github</IconButton
+      >Sign up with Github</IconButton
     >
   </div>
   <p class="text-sm text-muted-foreground">

@@ -12,10 +12,10 @@
       iconPosition="left"
       variant="outline"
       size="lg"
-      href="/signin/google">Google</IconButton
+      href="/signin/google">Continue with Google</IconButton
     >
     <IconButton icon={AiOutlineGithub} iconPosition="left" size="lg" href="/signin/github"
-      >Github</IconButton
+      >Continue with Github</IconButton
     >
   </div>
   <p class="mt-2">

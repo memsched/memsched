@@ -1,4 +1,4 @@
-import { eq, and } from 'drizzle-orm';
+import { eq } from 'drizzle-orm';
 import { db } from '$lib/server/db';
 import * as table from '$lib/server/db/schema';
 import type { ProviderId } from './oauth';
@@ -9,11 +9,14 @@ import type { ProviderId } from './oauth';
 export async function createUser(
   providerId: ProviderId,
   providerUserId: string,
-  email: string,
-  username: string
+  userData: table.UserInsert
 ): Promise<table.User> {
   // Check if a user already exists with the given email
-  const users = await db.select().from(table.user).where(eq(table.user.email, email)).limit(1);
+  const users = await db
+    .select()
+    .from(table.user)
+    .where(eq(table.user.email, userData.email))
+    .limit(1);
 
   if (users.length > 0) {
     const user = users[0];
@@ -28,13 +31,14 @@ export async function createUser(
   }
 
   // If no user exists, proceed with creating a new one
-  let finalUsername = username;
+  let finalUsername = userData.username;
   let count = 1;
   while (
+    finalUsername === '' ||
     (await db.select().from(table.user).where(eq(table.user.username, finalUsername)).limit(1))
       .length > 0
   ) {
-    finalUsername = `${username}${count}`;
+    finalUsername = `${userData.username}${count}`;
     count++;
     if (count > 1000) {
       throw new Error('Unique username limit reached');
@@ -45,7 +49,7 @@ export async function createUser(
     await db
       .insert(table.user)
       .values({
-        email: email,
+        ...userData,
         username: finalUsername,
       })
       .returning()

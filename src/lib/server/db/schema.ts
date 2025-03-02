@@ -5,6 +5,8 @@ export const user = sqliteTable('user', {
   id: integer('id').primaryKey(),
   email: text('email').notNull().unique(),
   username: text('username').notNull().unique(),
+  name: text('name').notNull(),
+  avatarUrl: text('avatar_url'),
   createdAt: integer('created_at', {
     mode: 'timestamp',
   }).default(sql`CURRENT_TIMESTAMP`),
@@ -36,5 +38,6 @@ export const session = sqliteTable('session', {
 });
 
 export type User = typeof user.$inferSelect;
+export type UserInsert = typeof user.$inferInsert;
 export type AuthProvider = typeof authProvider.$inferSelect;
 export type Session = typeof session.$inferSelect;

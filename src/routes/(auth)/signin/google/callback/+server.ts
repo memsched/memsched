@@ -4,6 +4,7 @@ import { createSession, generateSessionToken, setSessionTokenCookie } from '$lib
 import { decodeIdToken, type OAuth2Tokens } from 'arctic';
 import type { RequestEvent } from './$types';
 import { getUserOverviewUrl } from '$lib/api';
+import { sanitizeUsername } from '$lib/server/utils';
 
 interface IClaims {
   sub: string;
@@ -32,7 +33,7 @@ export async function GET(event: RequestEvent): Promise<Response> {
   let tokens: OAuth2Tokens;
   try {
     tokens = await google.validateAuthorizationCode(code, codeVerifier);
-  } catch (e) {
+  } catch (_) {
     return new Response('Please restart the process.', {
       status: 400,
     });
@@ -40,8 +41,9 @@ export async function GET(event: RequestEvent): Promise<Response> {
 
   const claims = decodeIdToken(tokens.idToken()) as IClaims;
   const googleId = claims.sub;
+  const username = sanitizeUsername(claims.name);
   const name = claims.name;
-  const picture = claims.picture;
+  const avatarUrl = claims.picture;
   const email = claims.email;
 
   const existingUser = await getUserFromProviderUserId(googleId);
@@ -57,7 +59,12 @@ export async function GET(event: RequestEvent): Promise<Response> {
     });
   }
 
-  const user = await createUser('google', googleId, email, name);
+  const user = await createUser('google', googleId, {
+    email,
+    username,
+    name,
+    avatarUrl,
+  });
   const sessionToken = generateSessionToken();
   const session = await createSession(sessionToken, user.id);
   setSessionTokenCookie(event, sessionToken, session.expiresAt);

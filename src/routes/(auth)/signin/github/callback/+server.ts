@@ -4,10 +4,13 @@ import { createSession, generateSessionToken, setSessionTokenCookie } from '$lib
 import type { OAuth2Tokens } from 'arctic';
 import type { RequestEvent } from './$types';
 import { getUserOverviewUrl } from '$lib/api';
+import { sanitizeUsername } from '$lib/server/utils';
 
 interface IGithubUser {
   id: number;
   login: string;
+  name: string;
+  avatar_url: string;
 }
 
 interface IGithubUserEmail {
@@ -35,7 +38,7 @@ export async function GET(event: RequestEvent): Promise<Response> {
   let tokens: OAuth2Tokens;
   try {
     tokens = await github.validateAuthorizationCode(code);
-  } catch (e) {
+  } catch (_) {
     return new Response('Please restart the process.', {
       status: 400,
     });
@@ -48,7 +51,9 @@ export async function GET(event: RequestEvent): Promise<Response> {
   });
   const githubUser: IGithubUser = await githubUserResponse.json();
   const githubUserId = githubUser.id;
-  const githubUsername = githubUser.login;
+  const username = sanitizeUsername(githubUser.login);
+  const name = githubUser.name;
+  const avatarUrl = githubUser.avatar_url;
 
   const existingUser = await getUserFromProviderUserId(githubUserId.toString());
   if (existingUser !== null) {
@@ -74,21 +79,26 @@ export async function GET(event: RequestEvent): Promise<Response> {
       status: 400,
     });
   }
-  let githubEmail: string | null = null;
+  let email: string | null = null;
   for (const emailRecord of emailListResult as IGithubUserEmail[]) {
     const primaryEmail = emailRecord.primary;
     const verifiedEmail = emailRecord.verified;
     if (primaryEmail && verifiedEmail) {
-      githubEmail = emailRecord.email;
+      email = emailRecord.email;
     }
   }
-  if (githubEmail === null) {
+  if (email === null) {
     return new Response('Please verify your GitHub email address.', {
       status: 400,
     });
   }
 
-  const user = await createUser('github', githubUserId.toString(), githubEmail, githubUsername);
+  const user = await createUser('github', githubUserId.toString(), {
+    email,
+    username,
+    name,
+    avatarUrl,
+  });
   const sessionToken = generateSessionToken();
   const session = await createSession(sessionToken, user.id);
   setSessionTokenCookie(event, sessionToken, session.expiresAt);

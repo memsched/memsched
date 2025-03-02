@@ -1,12 +1,12 @@
 // See https://svelte.dev/docs/kit/types#app.d.ts
 // for information about these interfaces
-import type { User } from '$lib/server/auth';
+import type { LocalUser } from '$lib/server/session';
 import type { Session } from '$lib/server/db/schema';
 
 declare global {
   namespace App {
     interface Locals {
-      user: User | null;
+      user: LocalUser | null;
       session: Session | null;
     }
     interface Platform {

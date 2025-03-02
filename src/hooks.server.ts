@@ -5,7 +5,7 @@ import {
   setSessionTokenCookie,
   deleteSessionTokenCookie,
   SESSION_COOKIE_NAME,
-} from '$lib/server/auth';
+} from '$lib/server/session';
 
 const authHandle: Handle = async ({ event, resolve }) => {
   const token = event.cookies.get(SESSION_COOKIE_NAME) ?? null;

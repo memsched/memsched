@@ -17,7 +17,7 @@
   {...buttonProps}
   class={cn(buttonProps.class, buttonProps.size == 'lg' && '[&_svg]:size-5')}
 >
-  <span class="flex items-center justify-center gap-2">
+  <span class="flex h-full items-center justify-center gap-2">
     {#if iconPosition === 'left'}
       <Icon src={icon} />
       {@render children()}

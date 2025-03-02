@@ -58,6 +58,7 @@
     "@libsql/client": "^0.14.0",
     "@oslojs/crypto": "^1.0.1",
     "@oslojs/encoding": "^1.1.0",
+    "arctic": "^3.4.0",
     "drizzle-orm": "^0.38.4",
     "html-react-parser": "^5.2.2",
     "satori": "^0.12.1"

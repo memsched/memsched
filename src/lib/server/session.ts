@@ -9,8 +9,8 @@ const DAY_IN_MS = 1000 * 60 * 60 * 24;
 
 export const SESSION_COOKIE_NAME = 'auth-session';
 
-export interface User {
-  id: string;
+export interface LocalUser {
+  id: number;
   username: string;
 }
 
@@ -20,7 +20,7 @@ export function generateSessionToken() {
   return token;
 }
 
-export async function createSession(token: string, userId: string) {
+export async function createSession(token: string, userId: number) {
   const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(token)));
   const session: table.Session = {
     id: sessionId,
@@ -80,7 +80,7 @@ export function setSessionTokenCookie(event: RequestEvent, token: string, expire
   event.cookies.set(SESSION_COOKIE_NAME, token, {
     path: '/',
     httpOnly: true,
-    secure: import.meta.env.PROD ? true : false,
+    secure: import.meta.env.PROD,
     sameSite: 'lax',
     expires: expiresAt,
   });

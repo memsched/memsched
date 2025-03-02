@@ -2,7 +2,7 @@ import { sqliteTable, integer, text, primaryKey } from 'drizzle-orm/sqlite-core'
 import { sql } from 'drizzle-orm';
 
 export const user = sqliteTable('user', {
-  id: text('id').primaryKey(),
+  id: integer('id').primaryKey(),
   email: text('email').notNull().unique(),
   username: text('username').notNull().unique(),
   createdAt: integer('created_at', {
@@ -15,7 +15,7 @@ export const authProvider = sqliteTable(
   {
     providerId: text('provider_id').notNull(), // "github", "google"
     providerUserId: text('provider_user_id').notNull(), // Provider-specific user ID
-    userId: text('user_id')
+    userId: integer('user_id')
       .notNull()
       .references(() => user.id, { onDelete: 'cascade' }),
     createdAt: integer('created_at', {
@@ -27,7 +27,7 @@ export const authProvider = sqliteTable(
 
 export const session = sqliteTable('session', {
   id: text('id').primaryKey(),
-  userId: text('user_id')
+  userId: integer('user_id')
     .notNull()
     .references(() => user.id),
   expiresAt: integer('expires_at', {
@@ -36,5 +36,5 @@ export const session = sqliteTable('session', {
 });
 
 export type User = typeof user.$inferSelect;
-export type AuthProvided = typeof authProvider.$inferSelect;
+export type AuthProvider = typeof authProvider.$inferSelect;
 export type Session = typeof session.$inferSelect;

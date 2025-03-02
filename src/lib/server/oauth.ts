@@ -1,4 +1,5 @@
 import { GitHub, Google } from 'arctic';
+import { PUBLIC_GITHUB_REDIRECT_URI, PUBLIC_GOOGLE_REDIRECT_URI } from '$env/static/public';
 import {
   GITHUB_CLIENT_ID,
   GITHUB_CLIENT_SECRET,
@@ -8,15 +9,14 @@ import {
 
 export type ProviderId = 'github' | 'google';
 
-// TODO: Update redirect URI
 export const github = new GitHub(
   GITHUB_CLIENT_ID,
   GITHUB_CLIENT_SECRET,
-  'http://localhost:5173/signin/github/callback'
+  PUBLIC_GITHUB_REDIRECT_URI
 );
 
 export const google = new Google(
   GOOGLE_CLIENT_ID,
   GOOGLE_CLIENT_SECRET,
-  'http://localhost:5173/signin/google/callback'
+  PUBLIC_GOOGLE_REDIRECT_URI
 );

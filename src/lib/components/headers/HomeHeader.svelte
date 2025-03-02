@@ -51,7 +51,7 @@
       <Profile />
     {:else}
       <div class="flex gap-3">
-        <Button href="/signup" size="sm">Join Now</Button>
+        <Button href="/signin" size="sm">Join Now</Button>
         <IconButton
           icon={IoArrowForward}
           variant="outline"

@@ -11,7 +11,7 @@
   }
 
   const { icon, title, href }: Props = $props();
-  const finalHref = page.data.user === null ? '/signup' : href;
+  const finalHref = page.data.user === null ? '/signin' : href;
 </script>
 
 <Icon src={icon} size="185" className="*:!stroke-[5px]" />

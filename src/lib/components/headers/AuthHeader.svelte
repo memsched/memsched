@@ -1,10 +1,7 @@
 <script lang="ts">
-  import { page } from '$app/state';
-  import { IoArrowForward } from 'svelte-icons-pack/io';
   import { HEADER_HEIGHT } from '$lib/constants';
   import Logo from '../svgs/Logo.svelte';
   import { Button } from '../ui/button';
-  import IconButton from '../ui/IconButton.svelte';
 </script>
 
 <header class="w-full">
@@ -16,27 +13,6 @@
       <Logo />
     </a>
     <div class="flex gap-3">
-      {#if page.url.pathname === '/signin'}
-        <IconButton
-          icon={IoArrowForward}
-          variant="outline"
-          size="sm"
-          class="animate-svg"
-          href="/signup"
-        >
-          Sign Up
-        </IconButton>
-      {:else}
-        <IconButton
-          icon={IoArrowForward}
-          variant="outline"
-          size="sm"
-          class="animate-svg"
-          href="/signin"
-        >
-          Log In
-        </IconButton>
-      {/if}
       <Button href="mailto:info@memsched.com" size="sm">Contact</Button>
     </div>
   </nav>

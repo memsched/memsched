@@ -1,5 +1,5 @@
 import { github } from '$lib/server/oauth';
-import { createUser, getUserFromGitHubId } from '$lib/server/user';
+import { createUser, getUserFromProviderUserId } from '$lib/server/user';
 import { createSession, generateSessionToken, setSessionTokenCookie } from '$lib/server/session';
 import type { OAuth2Tokens } from 'arctic';
 import type { RequestEvent } from './$types';
@@ -49,7 +49,7 @@ export async function GET(event: RequestEvent): Promise<Response> {
   const githubUserId = githubUser.id;
   const githubUsername = githubUser.login;
 
-  const existingUser = await getUserFromGitHubId(githubUserId);
+  const existingUser = await getUserFromProviderUserId(githubUserId.toString());
   if (existingUser !== null) {
     const sessionToken = generateSessionToken();
     const session = await createSession(sessionToken, existingUser.id);

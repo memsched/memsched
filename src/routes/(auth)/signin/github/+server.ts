@@ -1,5 +1,5 @@
-import { github } from '$lib/server/oauth';
 import { generateState } from 'arctic';
+import { github } from '$lib/server/oauth';
 
 import type { RequestEvent } from './$types';
 

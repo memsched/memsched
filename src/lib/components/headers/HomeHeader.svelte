@@ -13,10 +13,11 @@
   import IconButton from '../ui/IconButton.svelte';
   import LogoShort from '../svgs/LogoShort.svelte';
   import HomeNavLink from './HomeNavLink.svelte';
+  import { getUserOverviewUrl } from '$lib/api';
 
   const NAV_ITEMS = [
     {
-      href: page.data.user === null ? '/' : '/' + page.data.user.username,
+      href: page.data.user === null ? '/' : getUserOverviewUrl(page.data.user.username),
       text: 'Overview',
       icon: IoFlashOutline,
     },

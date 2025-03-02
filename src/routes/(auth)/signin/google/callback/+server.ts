@@ -3,6 +3,7 @@ import { createUser, getUserFromProviderUserId } from '$lib/server/user';
 import { createSession, generateSessionToken, setSessionTokenCookie } from '$lib/server/session';
 import { decodeIdToken, type OAuth2Tokens } from 'arctic';
 import type { RequestEvent } from './$types';
+import { getUserOverviewUrl } from '$lib/api';
 
 interface IClaims {
   sub: string;
@@ -51,7 +52,7 @@ export async function GET(event: RequestEvent): Promise<Response> {
     return new Response(null, {
       status: 302,
       headers: {
-        Location: '/' + existingUser.username,
+        Location: getUserOverviewUrl(existingUser.username),
       },
     });
   }
@@ -63,7 +64,7 @@ export async function GET(event: RequestEvent): Promise<Response> {
   return new Response(null, {
     status: 302,
     headers: {
-      Location: '/' + user.username,
+      Location: getUserOverviewUrl(user.username),
     },
   });
 }

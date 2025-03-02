@@ -17,7 +17,6 @@ export async function createUser(
 
   if (users.length > 0) {
     const user = users[0];
-
     // We assume that this auth provider is not already linked
     await db.insert(table.authProvider).values({
       providerId,

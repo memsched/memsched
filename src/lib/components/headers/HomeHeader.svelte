@@ -16,7 +16,7 @@
 
   const NAV_ITEMS = [
     // TODO: Redirect to home if no auth else redirect to self username
-    { href: '/overview', text: 'Overview', icon: IoFlashOutline },
+    { href: '/', text: 'Overview', icon: IoFlashOutline },
     { href: '/objectives', text: 'Objectives', icon: IoFolderOutline },
     { href: '/widgets', text: 'Widgets', icon: IoCubeOutline },
     { href: '/explore', text: 'Explore', icon: IoCompassOutline },

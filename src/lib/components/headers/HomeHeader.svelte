@@ -14,6 +14,7 @@
   import LogoShort from '../svgs/LogoShort.svelte';
   import HomeNavLink from './HomeNavLink.svelte';
   import { getUserOverviewUrl } from '$lib/api';
+  import Profile from '../account/Profile.svelte';
 
   const NAV_ITEMS = [
     {
@@ -47,17 +48,7 @@
       {/each}
     </div>
     {#if page.data.user !== null}
-      <div class="flex h-full flex-row items-center gap-3">
-        <div class="flex flex-col text-end *:leading-tight">
-          <small>{page.data.user.name}</small>
-          <small class="font-light text-muted-foreground">{page.data.user.username}</small>
-        </div>
-        <img
-          class="inline-block size-8 rounded-full ring-2 ring-white"
-          src={page.data.user.avatarUrl}
-          alt=""
-        />
-      </div>
+      <Profile />
     {:else}
       <div class="flex gap-3">
         <Button href="/signup" size="sm">Join Now</Button>

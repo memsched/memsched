@@ -7,7 +7,12 @@ import * as table from '$lib/server/db/schema';
 
 const DAY_IN_MS = 1000 * 60 * 60 * 24;
 
-export const sessionCookieName = 'auth-session';
+export const SESSION_COOKIE_NAME = 'auth-session';
+
+export interface User {
+  id: string;
+  username: string;
+}
 
 export function generateSessionToken() {
   const bytes = crypto.getRandomValues(new Uint8Array(18));
@@ -72,9 +77,9 @@ export async function invalidateAllSessions(userId: string): Promise<void> {
 }
 
 export function setSessionTokenCookie(event: RequestEvent, token: string, expiresAt: Date) {
-  event.cookies.set(sessionCookieName, token, {
-    httpOnly: true,
+  event.cookies.set(SESSION_COOKIE_NAME, token, {
     path: '/',
+    httpOnly: true,
     secure: import.meta.env.PROD ? true : false,
     sameSite: 'lax',
     expires: expiresAt,
@@ -82,7 +87,7 @@ export function setSessionTokenCookie(event: RequestEvent, token: string, expire
 }
 
 export function deleteSessionTokenCookie(event: RequestEvent) {
-  event.cookies.delete(sessionCookieName, {
+  event.cookies.delete(SESSION_COOKIE_NAME, {
     path: '/',
   });
 }

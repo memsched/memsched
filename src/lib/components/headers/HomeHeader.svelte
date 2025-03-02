@@ -15,8 +15,11 @@
   import HomeNavLink from './HomeNavLink.svelte';
 
   const NAV_ITEMS = [
-    // TODO: Redirect to home if no auth else redirect to self username
-    { href: '/', text: 'Overview', icon: IoFlashOutline },
+    {
+      href: page.data.user === null ? '/' : '/' + page.data.user.username,
+      text: 'Overview',
+      icon: IoFlashOutline,
+    },
     { href: '/objectives', text: 'Objectives', icon: IoFolderOutline },
     { href: '/widgets', text: 'Widgets', icon: IoCubeOutline },
     { href: '/explore', text: 'Explore', icon: IoCompassOutline },
@@ -42,17 +45,21 @@
         <HomeNavLink {href} {text} {icon} />
       {/each}
     </div>
-    <div class="flex gap-3">
-      <Button href="/signup" size="sm">Try Now</Button>
-      <IconButton
-        icon={IoArrowForward}
-        variant="outline"
-        size="sm"
-        class="animate-svg"
-        href="/signin"
-      >
-        Log In
-      </IconButton>
-    </div>
+    {#if page.data.user !== null}
+      <pre>{page.data.user.username}</pre>
+    {:else}
+      <div class="flex gap-3">
+        <Button href="/signup" size="sm">Try Now</Button>
+        <IconButton
+          icon={IoArrowForward}
+          variant="outline"
+          size="sm"
+          class="animate-svg"
+          href="/signin"
+        >
+          Log In
+        </IconButton>
+      </div>
+    {/if}
   </nav>
 </header>

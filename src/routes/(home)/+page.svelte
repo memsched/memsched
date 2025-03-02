@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import Arrow from '$lib/components/svgs/Arrow.svelte';
   import { Badge } from '$lib/components/ui/badge';
   import { Button } from '$lib/components/ui/button';

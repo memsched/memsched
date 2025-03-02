@@ -5,7 +5,7 @@
     IoCompassOutline,
     IoCubeOutline,
     IoFlashOutline,
-    IoFolderOutline,
+    IoFolderOpenOutline,
   } from 'svelte-icons-pack/io';
   import { HEADER_HEIGHT } from '$lib/constants';
   import { scrollToElement } from '$lib/utils';
@@ -21,7 +21,7 @@
       text: 'Overview',
       icon: IoFlashOutline,
     },
-    { href: '/objectives', text: 'Objectives', icon: IoFolderOutline },
+    { href: '/objectives', text: 'Objectives', icon: IoFolderOpenOutline },
     { href: '/widgets', text: 'Widgets', icon: IoCubeOutline },
     { href: '/explore', text: 'Explore', icon: IoCompassOutline },
   ];

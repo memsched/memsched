@@ -1,58 +1,5 @@
-<script module lang="ts">
-  import { z } from 'zod';
-
-  export const formSchema = z
-    .object({
-      name: z
-        .string()
-        .min(1, { message: 'The name must be at least 1 character long.' })
-        .max(50, { message: 'The name is too long, it must be under 50 characters.' }),
-      description: z
-        .string()
-        .max(250, { message: 'Your description is too long, it should be under 250 characters.' }),
-      startValue: z
-        .number()
-        .min(0, { message: "Start value can't be less than 0, please try again." })
-        .optional(),
-      unit: z.enum(['', 'minutes', 'hours', 'pages', 'words', 'lines'], {
-        message: 'Please select a valid unit.',
-      }),
-      visibility: z.enum(['public', 'private'], {
-        message: 'Visibility should be either "public" or "private".',
-      }),
-      goalType: z.enum(['fixed', 'ongoing'], { message: 'Please select a goal type.' }),
-      endValue: z
-        .number()
-        .min(0, { message: "End value can't be less than 0, please enter a valid value." })
-        .optional(),
-    })
-    .refine((data) => data.unit !== '', {
-      message: 'Please select a valid unit.',
-      path: ['unit'],
-    })
-    .refine((data) => data.goalType !== 'fixed' || data.endValue !== undefined, {
-      message:
-        'Looks like you forgot to add an end value. It\'s required when the goal type is "fixed."',
-      path: ['endValue'],
-    })
-    .refine(
-      (data) =>
-        data.goalType !== 'fixed' ||
-        (data.endValue !== undefined &&
-          data.startValue !== undefined &&
-          data.endValue > data.startValue),
-      {
-        message:
-          'End value needs to be greater than start value when the goal type is "fixed". Please double-check.',
-        path: ['endValue'],
-      }
-    );
-
-  export type FormSchema = typeof formSchema;
-</script>
-
 <script lang="ts">
-  import { type SuperValidated, type Infer, superForm } from 'sveltekit-superforms';
+  import SuperDebug, { type SuperValidated, type Infer, superForm } from 'sveltekit-superforms';
   import { zodClient } from 'sveltekit-superforms/adapters';
   import { Icon } from 'svelte-icons-pack';
   import { IoDocumentLockOutline, IoGlobeOutline } from 'svelte-icons-pack/io';
@@ -63,6 +10,7 @@
   import { Input } from '$lib/components/ui/input';
   import { Textarea } from '$lib/components/ui/textarea';
   import { capitalize } from '$lib/utils';
+  import { formSchema, type FormSchema } from './schema';
 
   let { data }: { data: { form: SuperValidated<Infer<FormSchema>> } } = $props();
 
@@ -156,7 +104,7 @@
                   <Icon src={IoGlobeOutline} className="size-8 *:!stroke-[16px]" />
                   <div class="flex flex-col gap-1.5">
                     <div class="font-medium">Public</div>
-                    <div class="font-normal text-muted-foreground">
+                    <div class="text-muted-foreground font-normal">
                       Share your progress with everyone
                     </div>
                   </div>
@@ -172,7 +120,7 @@
                   <Icon src={IoDocumentLockOutline} className="size-8 *:!stroke-[16px]" />
                   <div class="flex flex-col gap-1.5">
                     <div class="font-medium">Public</div>
-                    <div class="font-normal text-muted-foreground">
+                    <div class="text-muted-foreground font-normal">
                       Keep your progress to yourself
                     </div>
                   </div>
@@ -193,7 +141,7 @@
           </Tabs.List>
           <Form.FieldErrors />
           <Tabs.Content value="fixed" class="space-y-6">
-            <div class="text-sm text-muted-foreground">
+            <div class="text-muted-foreground text-sm">
               A goal with a clear endpoint, like "run a marathon" or "read a book."
             </div>
             <Form.Field {form} name="endValue">
@@ -208,7 +156,7 @@
             </Form.Field>
           </Tabs.Content>
           <Tabs.Content value="ongoing">
-            <div class="text-sm text-muted-foreground">
+            <div class="text-muted-foreground text-sm">
               A goal with an ongoing process, like "learn a new language" or "write blog posts."
             </div>
           </Tabs.Content>
@@ -217,4 +165,7 @@
     </div>
   </section>
   <Form.Button>Create Objective</Form.Button>
+  {#if import.meta.env.VITE_DEBUG_FORMS}
+    <SuperDebug data={$formData} />
+  {/if}
 </form>

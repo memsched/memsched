@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { PageData } from './$types';
-  import ObjectiveForm from '$lib/components/forms/ObjectiveForm.svelte';
+  import ObjectiveForm from '$lib/components/forms/objective-form/ObjectiveForm.svelte';
 
   let { data }: { data: PageData } = $props();
 </script>

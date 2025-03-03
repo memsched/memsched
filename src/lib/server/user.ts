@@ -49,7 +49,7 @@ export async function createUser(
     await db
       .insert(table.user)
       .values({
-        ...userData,
+        email: userData.email,
         username: finalUsername,
         name: userData.name ?? '',
         avatarUrl: userData.avatarUrl ?? null,

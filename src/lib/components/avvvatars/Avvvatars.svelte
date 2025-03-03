@@ -9,7 +9,7 @@
     shadow: false,
     border: false,
     borderSize: 2,
-    borderColor: '#fff'
+    borderColor: '#fff',
   };
 
   interface Props {
@@ -35,7 +35,7 @@
     border = DEFAULTS.border,
     borderSize = DEFAULTS.borderSize,
     borderColor = DEFAULTS.borderColor,
-    radius = null
+    radius = null,
   }: Props = $props();
 
   let name = String(displayValue || value).substring(0, 2);

@@ -18,7 +18,7 @@ export const BACKGROUND_COLORS = [
   'EBE6EF',
   'E8DEF6',
   'D8E8F3',
-  'ECE1FE'
+  'ECE1FE',
 ];
 
 export const TEXT_COLORS = [
@@ -41,7 +41,7 @@ export const TEXT_COLORS = [
   'AB133E',
   '420790',
   '222A54',
-  '192251'
+  '192251',
 ];
 
 export const SHAPE_COLORS = [
@@ -64,5 +64,5 @@ export const SHAPE_COLORS = [
   'AB133E',
   '420790',
   '222A54',
-  '192251'
+  '192251',
 ];

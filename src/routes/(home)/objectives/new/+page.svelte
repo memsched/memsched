@@ -2,7 +2,7 @@
   import type { PageData } from './$types';
   import ObjectiveForm from '$lib/components/forms/objective-form/ObjectiveForm.svelte';
 
-  let { data }: { data: PageData } = $props();
+  const { data }: { data: PageData } = $props();
 </script>
 
 <div class="flex h-full w-full flex-col items-start gap-7">

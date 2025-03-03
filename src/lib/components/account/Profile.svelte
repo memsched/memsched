@@ -12,7 +12,7 @@
   >
     <div class="flex flex-col text-end *:leading-tight">
       <small>{page.data.user.name}</small>
-      <small class="text-muted-foreground font-light">{page.data.user.username}</small>
+      <small class="font-light text-muted-foreground">{page.data.user.username}</small>
     </div>
     {#if page.data.user.avatarUrl}
       <img

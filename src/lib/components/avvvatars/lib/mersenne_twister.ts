@@ -78,9 +78,7 @@ MersenneTwister.prototype.init_genrand = function (s: number) {
   for (this.mti = 1; this.mti < this.N; this.mti++) {
     s = this.mt[this.mti - 1] ^ (this.mt[this.mti - 1] >>> 30);
     this.mt[this.mti] =
-      ((((s & 0xffff0000) >>> 16) * 1812433253) << 16) +
-      (s & 0x0000ffff) * 1812433253 +
-      this.mti;
+      ((((s & 0xffff0000) >>> 16) * 1812433253) << 16) + (s & 0x0000ffff) * 1812433253 + this.mti;
     /* See Knuth TAOCP Vol2. 3rd Ed. P.106 for multiplier. */
     /* In the previous versions, MSBs of the seed affect   */
     /* only MSBs of the array mt[].                        */
@@ -94,10 +92,7 @@ MersenneTwister.prototype.init_genrand = function (s: number) {
 /* init_key is the array for initializing keys */
 /* key_length is its length */
 /* slight change for C++, 2004/2/26 */
-MersenneTwister.prototype.init_by_array = function (
-  init_key: any,
-  key_length: any
-) {
+MersenneTwister.prototype.init_by_array = function (init_key: any, key_length: any) {
   let i = 1,
     j = 0,
     k,
@@ -107,9 +102,7 @@ MersenneTwister.prototype.init_by_array = function (
   for (; k; k--) {
     s = this.mt[i - 1] ^ (this.mt[i - 1] >>> 30);
     this.mt[i] =
-      (this.mt[i] ^
-        (((((s & 0xffff0000) >>> 16) * 1664525) << 16) +
-          (s & 0x0000ffff) * 1664525)) +
+      (this.mt[i] ^ (((((s & 0xffff0000) >>> 16) * 1664525) << 16) + (s & 0x0000ffff) * 1664525)) +
       init_key[j] +
       j; /* non linear */
     this.mt[i] >>>= 0; /* for WORDSIZE > 32 machines */
@@ -127,8 +120,7 @@ MersenneTwister.prototype.init_by_array = function (
     s = this.mt[i - 1] ^ (this.mt[i - 1] >>> 30);
     this.mt[i] =
       (this.mt[i] ^
-        (((((s & 0xffff0000) >>> 16) * 1566083941) << 16) +
-          (s & 0x0000ffff) * 1566083941)) -
+        (((((s & 0xffff0000) >>> 16) * 1566083941) << 16) + (s & 0x0000ffff) * 1566083941)) -
       i; /* non linear */
     this.mt[i] >>>= 0; /* for WORDSIZE > 32 machines */
     i++;
@@ -161,11 +153,9 @@ MersenneTwister.prototype.genrand_int32 = function () {
     }
     for (; kk < this.N - 1; kk++) {
       y = (this.mt[kk] & this.UPPER_MASK) | (this.mt[kk + 1] & this.LOWER_MASK);
-      this.mt[kk] =
-        this.mt[kk + (this.M - this.N)] ^ (y >>> 1) ^ mag01[y & 0x1];
+      this.mt[kk] = this.mt[kk + (this.M - this.N)] ^ (y >>> 1) ^ mag01[y & 0x1];
     }
-    y =
-      (this.mt[this.N - 1] & this.UPPER_MASK) | (this.mt[0] & this.LOWER_MASK);
+    y = (this.mt[this.N - 1] & this.UPPER_MASK) | (this.mt[0] & this.LOWER_MASK);
     this.mt[this.N - 1] = this.mt[this.M - 1] ^ (y >>> 1) ^ mag01[y & 0x1];
 
     this.mti = 0;

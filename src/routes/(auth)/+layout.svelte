@@ -1,7 +1,7 @@
 <script lang="ts">
   import AuthHeader from '$lib/components/headers/AuthHeader.svelte';
 
-  let { children } = $props();
+  const { children } = $props();
 </script>
 
 <div class="flex h-screen w-screen flex-col">

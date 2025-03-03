@@ -2,7 +2,7 @@
   import type { PageProps } from './$types';
   import Widget from '$lib/components/Widget.svelte';
 
-  let { data }: PageProps = $props();
+  const { data }: PageProps = $props();
 </script>
 
 <main>

@@ -3,4 +3,10 @@
   import { IoFolderOpenOutline } from 'svelte-icons-pack/io';
 </script>
 
-<CreateNew title="Create your first objective" icon={IoFolderOpenOutline} href="/objectives/new" />
+<div class="flex flex-grow flex-col items-center justify-center">
+  <CreateNew
+    title="Create your first objective"
+    icon={IoFolderOpenOutline}
+    href="/objectives/new"
+  />
+</div>

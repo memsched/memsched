@@ -1,16 +1,24 @@
 <script lang="ts">
   import type { Snippet } from 'svelte';
-  import { Button, type ButtonProps } from './button';
   import { Icon, type IconType } from 'svelte-icons-pack';
+  import type { HTMLAttributes } from 'svelte/elements';
+  import { Button, type ButtonProps } from './button';
   import { cn } from '$lib/utils';
 
   interface Props extends ButtonProps {
     icon: IconType;
     children: Snippet;
+    childrenClass?: HTMLAttributes<HTMLSpanElement>['class'];
     iconPosition?: 'left' | 'right';
   }
 
-  const { icon, children, iconPosition = 'right', ...buttonProps }: Props = $props();
+  const {
+    icon,
+    children,
+    childrenClass = '',
+    iconPosition = 'right',
+    ...buttonProps
+  }: Props = $props();
 </script>
 
 <Button
@@ -20,9 +28,13 @@
   <span class="flex h-full items-center justify-center gap-2">
     {#if iconPosition === 'left'}
       <Icon src={icon} />
-      {@render children()}
+      <span class={childrenClass}>
+        {@render children()}
+      </span>
     {:else}
-      {@render children()}
+      <span class={childrenClass}>
+        {@render children()}
+      </span>
       <Icon src={icon} />
     {/if}
   </span>

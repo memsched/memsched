@@ -12,6 +12,7 @@ CREATE TABLE `objective` (
 	`name` text NOT NULL,
 	`description` text NOT NULL,
 	`start_value` integer NOT NULL,
+	`value` integer NOT NULL,
 	`unit` text NOT NULL,
 	`visibility` text NOT NULL,
 	`goal_type` text NOT NULL,

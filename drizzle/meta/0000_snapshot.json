@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "628497bb-1875-420b-8c81-dd5c6ab4acc5",
+  "id": "37d2a68e-ecc4-40f8-9e3e-46a12e785840",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "auth_provider": {
@@ -84,6 +84,13 @@
         },
         "start_value": {
           "name": "start_value",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "value": {
+          "name": "value",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,

@@ -33,6 +33,7 @@ export const actions: Actions = {
       name: form.data.name,
       description: form.data.description,
       startValue: form.data.startValue,
+      value: form.data.startValue,
       unit: form.data.unit,
       visibility: form.data.visibility,
       goalType: form.data.goalType,

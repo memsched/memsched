@@ -42,6 +42,7 @@ export const objective = sqliteTable('objective', {
   name: text('name').notNull(),
   description: text('description').notNull(),
   startValue: integer('start_value').notNull(),
+  value: integer('value').notNull(),
   unit: text('unit').notNull(),
   visibility: text('visibility').notNull(),
   goalType: text('goal_type').notNull(),
@@ -59,4 +60,3 @@ export type UserInsert = typeof user.$inferInsert;
 export type AuthProvider = typeof authProvider.$inferSelect;
 export type Session = typeof session.$inferSelect;
 export type Objective = typeof objective.$inferSelect;
-export type ObjectiveInsert = typeof objective.$inferInsert;

@@ -18,3 +18,7 @@ export function assert(condition: boolean, message: string) {
     throw new Error(message || 'Assertion failed');
   }
 }
+
+export function capitalize(str: string) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}

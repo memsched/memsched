@@ -21,15 +21,13 @@
   </DropdownMenu.Trigger>
   <DropdownMenu.Content class="w-40" align="end">
     <DropdownMenu.Group>
-      <!-- <DropdownMenu.GroupHeading>My Account</DropdownMenu.GroupHeading> -->
-      <!-- <DropdownMenu.Separator /> -->
       <DropdownMenu.Item>
         <Icon src={FiSettings} className="!text-muted-foreground" />
         <a href="/settings">Settings</a></DropdownMenu.Item
       >
       <DropdownMenu.Item>
         <Icon src={FiLogOut} className="!text-muted-foreground" />
-        <form action="/api/auth/signout" method="post">
+        <form action="/api/auth/signout" method="POST">
           <button>Sign Out</button>
         </form>
       </DropdownMenu.Item>

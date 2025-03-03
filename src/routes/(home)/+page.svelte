@@ -7,7 +7,7 @@
 <section id="hero" class="flex flex-grow flex-col items-center justify-center text-center">
   <div class="space-y-3">
     <Badge class="text-sm">v2 Released 🎉</Badge>
-    <h1 class="text-5xl">Show the world what you're learning.</h1>
+    <h1>Show the world what you're learning.</h1>
     <h4 class="font-medium">
       Set goals, log progress, and showcase your journey with beautiful widgets.
     </h4>

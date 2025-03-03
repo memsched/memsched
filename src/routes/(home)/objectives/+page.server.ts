@@ -4,16 +4,16 @@ import { objective } from '$lib/server/db/schema';
 import { desc, eq } from 'drizzle-orm';
 
 export const load: PageServerLoad = async (event) => {
-  if (!event.locals.user) {
+  if (!event.locals.session) {
     return {
-      objetives: [],
+      objectives: [],
     };
   }
   return {
-    objetives: await db
+    objectives: await db
       .select()
       .from(objective)
-      .where(eq(objective.userId, event.locals.user.id))
+      .where(eq(objective.userId, event.locals.session.userId))
       .orderBy(desc(objective.createdAt)),
   };
 };

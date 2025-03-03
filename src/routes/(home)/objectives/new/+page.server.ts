@@ -7,7 +7,7 @@ import { db } from '$lib/server/db';
 import { objective } from '$lib/server/db/schema';
 
 export const load: PageServerLoad = async (event) => {
-  if (!event.locals.user) {
+  if (!event.locals.session) {
     return redirect(302, '/signin');
   }
   return {
@@ -17,7 +17,7 @@ export const load: PageServerLoad = async (event) => {
 
 export const actions: Actions = {
   default: async (event) => {
-    if (!event.locals.user) {
+    if (!event.locals.session) {
       return redirect(302, '/signin');
     }
 
@@ -37,7 +37,7 @@ export const actions: Actions = {
       visibility: form.data.visibility,
       goalType: form.data.goalType,
       endValue: form.data.endValue,
-      userId: event.locals.user.id,
+      userId: event.locals.session.userId,
     });
     return redirect(302, '/objectives');
   },

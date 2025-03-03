@@ -51,6 +51,8 @@ export async function createUser(
       .values({
         ...userData,
         username: finalUsername,
+        name: userData.name ?? '',
+        avatarUrl: userData.avatarUrl ?? null,
       })
       .returning()
   )[0];

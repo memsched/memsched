@@ -37,7 +37,26 @@ export const session = sqliteTable('session', {
   }).notNull(),
 });
 
+export const objective = sqliteTable('objective', {
+  id: integer('id').primaryKey(),
+  name: text('name').notNull(),
+  description: text('description').notNull(),
+  startValue: integer('start_value').notNull(),
+  unit: text('unit').notNull(),
+  visibility: text('visibility').notNull(),
+  goalType: text('goal_type').notNull(),
+  endValue: integer('end_value'),
+  userId: integer('user_id')
+    .notNull()
+    .references(() => user.id),
+  createdAt: integer('created_at', {
+    mode: 'timestamp',
+  }).default(sql`CURRENT_TIMESTAMP`),
+});
+
 export type User = typeof user.$inferSelect;
 export type UserInsert = typeof user.$inferInsert;
 export type AuthProvider = typeof authProvider.$inferSelect;
 export type Session = typeof session.$inferSelect;
+export type Objective = typeof objective.$inferSelect;
+export type ObjectiveInsert = typeof objective.$inferInsert;

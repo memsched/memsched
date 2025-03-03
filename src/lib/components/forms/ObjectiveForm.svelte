@@ -156,7 +156,7 @@
                   <Icon src={IoGlobeOutline} className="size-8 *:!stroke-[16px]" />
                   <div class="flex flex-col gap-1.5">
                     <div class="font-medium">Public</div>
-                    <div class="text-muted-foreground font-normal">
+                    <div class="font-normal text-muted-foreground">
                       Share your progress with everyone
                     </div>
                   </div>
@@ -172,7 +172,7 @@
                   <Icon src={IoDocumentLockOutline} className="size-8 *:!stroke-[16px]" />
                   <div class="flex flex-col gap-1.5">
                     <div class="font-medium">Public</div>
-                    <div class="text-muted-foreground font-normal">
+                    <div class="font-normal text-muted-foreground">
                       Keep your progress to yourself
                     </div>
                   </div>
@@ -193,7 +193,7 @@
           </Tabs.List>
           <Form.FieldErrors />
           <Tabs.Content value="fixed" class="space-y-6">
-            <div class="text-muted-foreground text-sm">
+            <div class="text-sm text-muted-foreground">
               A goal with a clear endpoint, like "run a marathon" or "read a book."
             </div>
             <Form.Field {form} name="endValue">
@@ -208,7 +208,7 @@
             </Form.Field>
           </Tabs.Content>
           <Tabs.Content value="ongoing">
-            <div class="text-muted-foreground text-sm">
+            <div class="text-sm text-muted-foreground">
               A goal with an ongoing process, like "learn a new language" or "write blog posts."
             </div>
           </Tabs.Content>

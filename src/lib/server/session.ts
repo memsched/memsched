@@ -9,12 +9,6 @@ const DAY_IN_MS = 1000 * 60 * 60 * 24;
 
 export const SESSION_COOKIE_NAME = 'auth-session';
 
-export interface LocalUser {
-  id: number;
-  username: string;
-  avatarUrl: string;
-}
-
 export function generateSessionToken() {
   const bytes = crypto.getRandomValues(new Uint8Array(18));
   const token = encodeBase32(bytes).toLowerCase();
@@ -78,7 +72,7 @@ export async function invalidateSession(sessionId: string) {
   await db.delete(table.session).where(eq(table.session.id, sessionId));
 }
 
-export async function invalidateAllSessions(userId: string): Promise<void> {
+export async function invalidateAllSessions(userId: number): Promise<void> {
   await db.delete(table.session).where(eq(table.session.userId, userId));
 }
 

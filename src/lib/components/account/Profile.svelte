@@ -3,6 +3,7 @@
   import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
   import { Icon } from 'svelte-icons-pack';
   import { FiLogOut, FiSettings } from 'svelte-icons-pack/fi';
+  import Avvvatars from '../avvvatars/Avvvatars.svelte';
 </script>
 
 <DropdownMenu.Root>
@@ -11,13 +12,17 @@
   >
     <div class="flex flex-col text-end *:leading-tight">
       <small>{page.data.user.name}</small>
-      <small class="font-light text-muted-foreground">{page.data.user.username}</small>
+      <small class="text-muted-foreground font-light">{page.data.user.username}</small>
     </div>
-    <img
-      class="inline-block size-8 rounded-full ring-2 ring-white"
-      src={page.data.user.avatarUrl}
-      alt=""
-    />
+    {#if page.data.user.avatarUrl}
+      <img
+        class="inline-block size-8 rounded-full ring-2 ring-white"
+        src={page.data.user.avatarUrl}
+        alt=""
+      />
+    {:else}
+      <Avvvatars value={page.data.user.username} size={32} style="shape" />
+    {/if}
   </DropdownMenu.Trigger>
   <DropdownMenu.Content class="w-40" align="end">
     <DropdownMenu.Group>

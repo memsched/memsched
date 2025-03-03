@@ -1,6 +1,6 @@
 // See https://svelte.dev/docs/kit/types#app.d.ts
 // for information about these interfaces
-import type { LocalUser } from '$lib/server/session';
+import type { LocalUser } from '$lib/types';
 import type { Session } from '$lib/server/db/schema';
 
 declare global {

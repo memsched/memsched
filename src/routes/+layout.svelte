@@ -12,7 +12,7 @@
     <Toaster
       toastOptions={{
         className: 'text-sm font-medium',
-        position: window.innerWidth > 640 ? 'bottom-right' : 'top-center',
+        position: window.innerWidth > 768 ? 'bottom-right' : 'top-center',
       }}
     />
   {/await}

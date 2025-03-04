@@ -4,6 +4,7 @@
   import { Icon } from 'svelte-icons-pack';
   import { FiLogOut, FiSettings } from 'svelte-icons-pack/fi';
   import Avvvatars from '../avvvatars/Avvvatars.svelte';
+  import { enhance } from '$app/forms';
 </script>
 
 <DropdownMenu.Root>
@@ -26,16 +27,24 @@
   </DropdownMenu.Trigger>
   <DropdownMenu.Content class="w-40" align="end">
     <DropdownMenu.Group>
-      <DropdownMenu.Item>
-        <Icon src={FiSettings} className="!text-muted-foreground" />
-        <a href="/settings">Settings</a>
+      <DropdownMenu.Item class="cursor-pointer">
+        {#snippet child({ props })}
+          <a href="/settings" {...props}>
+            <Icon src={FiSettings} className="!text-muted-foreground" />
+            Settings
+          </a>
+        {/snippet}
       </DropdownMenu.Item>
-      <DropdownMenu.Item>
-        <Icon src={FiLogOut} className="!text-muted-foreground" />
-        <form action="/api/auth/signout" method="POST">
-          <button>Sign Out</button>
-        </form>
-      </DropdownMenu.Item>
+      <form action="/signout" method="POST" use:enhance>
+        <DropdownMenu.Item class="w-full cursor-pointer">
+          {#snippet child({ props })}
+            <button {...props}>
+              <Icon src={FiLogOut} className="!text-muted-foreground" />
+              Sign Out
+            </button>
+          {/snippet}
+        </DropdownMenu.Item>
+      </form>
     </DropdownMenu.Group>
   </DropdownMenu.Content>
 </DropdownMenu.Root>

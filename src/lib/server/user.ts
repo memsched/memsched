@@ -1,4 +1,5 @@
 import { eq } from 'drizzle-orm';
+import { v4 as uuidv4 } from 'uuid';
 import { db } from '$lib/server/db';
 import * as table from '$lib/server/db/schema';
 import type { ProviderId } from './oauth';
@@ -9,14 +10,10 @@ import type { ProviderId } from './oauth';
 export async function createUser(
   providerId: ProviderId,
   providerUserId: string,
-  userData: table.UserInsert
+  userData: Omit<table.UserInsert, 'id'>
 ): Promise<table.User> {
   // Check if a user already exists with the given email
-  const users = await db
-    .select()
-    .from(table.user)
-    .where(eq(table.user.email, userData.email))
-    .limit(1);
+  const users = await db.select().from(table.user).where(eq(table.user.email, userData.email));
 
   if (users.length > 0) {
     const user = users[0];
@@ -49,6 +46,7 @@ export async function createUser(
     await db
       .insert(table.user)
       .values({
+        id: uuidv4(),
         email: userData.email,
         username: finalUsername,
         name: userData.name ?? '',

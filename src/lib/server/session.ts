@@ -15,7 +15,7 @@ export function generateSessionToken() {
   return token;
 }
 
-export async function createSession(token: string, userId: number) {
+export async function createSession(token: string, userId: string) {
   const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(token)));
   const session: table.Session = {
     id: sessionId,
@@ -72,7 +72,7 @@ export async function invalidateSession(sessionId: string) {
   await db.delete(table.session).where(eq(table.session.id, sessionId));
 }
 
-export async function invalidateAllSessions(userId: number): Promise<void> {
+export async function invalidateAllSessions(userId: string): Promise<void> {
   await db.delete(table.session).where(eq(table.session.userId, userId));
 }
 

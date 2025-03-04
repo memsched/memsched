@@ -1,5 +1,5 @@
 export interface LocalUser {
-  id: number;
+  id: string;
   name: string;
   username: string;
   avatarUrl: string | null;

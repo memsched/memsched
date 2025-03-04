@@ -10,9 +10,9 @@ export const actions: Actions = {
       return error(401, 'Unauthorized');
     }
 
-    const formData = await event.request.formData();
-    const objectiveId = parseInt(formData.get('objectiveId') as string);
-    if (isNaN(objectiveId)) {
+    const objectiveId = (await event.request.formData()).get('objectiveId') as string;
+    const ob = await db.select().from(objective).where(eq(objective.id, objectiveId));
+    if (!ob.length) {
       return error(400, 'Invalid objective id');
     }
 

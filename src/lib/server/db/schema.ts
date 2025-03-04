@@ -2,7 +2,7 @@ import { sqliteTable, integer, text, primaryKey } from 'drizzle-orm/sqlite-core'
 import { sql } from 'drizzle-orm';
 
 export const user = sqliteTable('user', {
-  id: integer('id').primaryKey(),
+  id: text('id').primaryKey(),
   email: text('email').notNull().unique(),
   username: text('username').notNull().unique(),
   name: text('name').notNull(),
@@ -17,7 +17,7 @@ export const authProvider = sqliteTable(
   {
     providerId: text('provider_id').notNull(), // "github", "google"
     providerUserId: text('provider_user_id').notNull(), // Provider-specific user ID
-    userId: integer('user_id')
+    userId: text('user_id')
       .notNull()
       .references(() => user.id, { onDelete: 'cascade' }),
     createdAt: integer('created_at', {
@@ -29,16 +29,16 @@ export const authProvider = sqliteTable(
 
 export const session = sqliteTable('session', {
   id: text('id').primaryKey(),
-  userId: integer('user_id')
+  userId: text('user_id')
     .notNull()
-    .references(() => user.id),
+    .references(() => user.id, { onDelete: 'cascade' }),
   expiresAt: integer('expires_at', {
     mode: 'timestamp',
   }).notNull(),
 });
 
 export const objective = sqliteTable('objective', {
-  id: integer('id').primaryKey(),
+  id: text('id').primaryKey(),
   name: text('name').notNull(),
   description: text('description').notNull(),
   startValue: integer('start_value').notNull(),
@@ -47,9 +47,9 @@ export const objective = sqliteTable('objective', {
   visibility: text('visibility').notNull(),
   goalType: text('goal_type').notNull(),
   endValue: integer('end_value'),
-  userId: integer('user_id')
+  userId: text('user_id')
     .notNull()
-    .references(() => user.id),
+    .references(() => user.id, { onDelete: 'cascade' }),
   createdAt: integer('created_at', {
     mode: 'timestamp',
   }).default(sql`CURRENT_TIMESTAMP`),

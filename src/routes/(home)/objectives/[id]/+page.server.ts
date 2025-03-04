@@ -13,31 +13,23 @@ export const load: PageServerLoad = async (event) => {
     return redirect(302, '/signin');
   }
 
-  const objectiveId = parseInt(event.params.id);
-  if (isNaN(objectiveId)) {
-    return error(404, 'Objective not found');
-  }
-
-  const objectives = await db
-    .select()
-    .from(objective)
-    .where(eq(objective.id, objectiveId))
-    .limit(1);
+  const objectiveId = event.params.id;
+  const objectives = await db.select().from(objective).where(eq(objective.id, objectiveId));
 
   if (objectives.length === 0) {
     return error(404, 'Objective not found');
   }
 
   const form = await superValidate(zod(formSchema));
-  const o = objectives[0];
+  const ob = objectives[0];
   form.data = {
-    name: o.name,
-    description: o.description,
-    startValue: o.startValue,
-    unit: o.unit as z.infer<FormSchema>['unit'],
-    visibility: o.visibility as z.infer<FormSchema>['visibility'],
-    goalType: o.goalType as z.infer<FormSchema>['goalType'],
-    endValue: o.endValue,
+    name: ob.name,
+    description: ob.description,
+    startValue: ob.startValue,
+    unit: ob.unit as z.infer<FormSchema>['unit'],
+    visibility: ob.visibility as z.infer<FormSchema>['visibility'],
+    goalType: ob.goalType as z.infer<FormSchema>['goalType'],
+    endValue: ob.endValue,
   };
 
   return {
@@ -59,11 +51,7 @@ export const actions: Actions = {
       });
     }
 
-    const objectiveId = parseInt(event.params.id);
-    if (isNaN(objectiveId)) {
-      return error(404, 'Objective not found');
-    }
-
+    const objectiveId = event.params.id;
     await db
       .update(objective)
       .set({

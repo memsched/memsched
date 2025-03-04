@@ -2,6 +2,7 @@ import type { PageServerLoad, Actions } from './$types';
 import { error, fail, redirect } from '@sveltejs/kit';
 import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
+import { v4 as uuidv4 } from 'uuid';
 import { formSchema } from '$lib/components/forms/objective-form/schema';
 import { db } from '$lib/server/db';
 import { objective } from '$lib/server/db/schema';
@@ -30,6 +31,7 @@ export const actions: Actions = {
     }
 
     await db.insert(objective).values({
+      id: uuidv4(),
       name: form.data.name,
       description: form.data.description,
       startValue: form.data.startValue,

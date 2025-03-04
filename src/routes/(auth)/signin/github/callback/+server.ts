@@ -38,6 +38,7 @@ export async function GET(event: RequestEvent): Promise<Response> {
   let tokens: OAuth2Tokens;
   try {
     tokens = await github.validateAuthorizationCode(code);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (_) {
     return new Response('Please restart the process.', {
       status: 400,

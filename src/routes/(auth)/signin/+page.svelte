@@ -19,6 +19,6 @@
     >
   </div>
   <p class="text-sm text-muted-foreground">
-    By joining, you agree to our <a>Terms of <br /> Service</a> and <a>Privacy Policy</a>.
+    By joining, you agree to our <a>Terms of <br /> Service</a> and <a>Privacy Policy</a>.
   </p>
 </div>

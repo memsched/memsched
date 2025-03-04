@@ -97,7 +97,7 @@
                                 <!-- TODO: Add log endpoint -->
                                 <DropdownMenu.Item class="cursor-pointer">
                                   {#snippet child({ props })}
-                                    <a href="" {...props}>
+                                    <a {...props}>
                                       <Icon src={FiPlusCircle} className="!text-muted-foreground" />
                                       Log
                                     </a>

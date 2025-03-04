@@ -2,30 +2,36 @@ import type { RequestHandler } from './$types';
 import { render } from 'svelte/server';
 import satori from 'satori';
 import parse from 'html-react-parser';
+import { eq } from 'drizzle-orm';
+import { db } from '$lib/server/db';
+import { objective } from '$lib/server/db/schema';
 import Widget from '$lib/components/Widget.svelte';
-
-const props = {
-  title: 'Pages Read',
-  subtitle: 'Understanding Deep Learning',
-  // borderRadius: 20,
-  // color: 'lightgray',
-  // border: false,
-  // backgroundColor: 'black',
-  metrics: [
-    {
-      value: 94,
-      description: 'today',
-    },
-    {
-      value: 94,
-      description: 'today',
-    },
-  ],
-};
+import { error } from '@sveltejs/kit';
 
 export const GET: RequestHandler = async (event) => {
-  const renderSvg = event.url.searchParams.has('svg');
+  const objectiveId = event.params.id;
+  const objectives = await db.select().from(objective).where(eq(objective.id, objectiveId));
+  if (objectives.length === 0 || objectives[0].visibility !== 'public') {
+    return error(404, 'Widget not found');
+  }
+  const ob = objectives[0];
 
+  const props = {
+    title: ob.name,
+    subtitle: ob.description,
+    // borderRadius: 20,
+    // color: 'lightgray',
+    // border: false,
+    // backgroundColor: 'black',
+    metrics: [
+      {
+        value: ob.value,
+        description: 'pages read',
+      },
+    ],
+  };
+
+  const renderSvg = event.url.searchParams.has('svg');
   const widget = render(Widget, { props }).body;
 
   if (!renderSvg) {

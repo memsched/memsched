@@ -1,4 +1,4 @@
-import { eq } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 import type { Actions } from './$types';
 import { error, redirect } from '@sveltejs/kit';
 import { objective } from '$lib/server/db/schema';
@@ -6,17 +6,23 @@ import { db } from '$lib/server/db';
 
 export const actions: Actions = {
   default: async (event) => {
-    if (event.locals.session === null) {
+    if (!event.locals.session) {
       return error(401, 'Unauthorized');
     }
 
     const objectiveId = (await event.request.formData()).get('objectiveId') as string;
-    const ob = await db.select().from(objective).where(eq(objective.id, objectiveId));
-    if (!ob.length) {
-      return error(400, 'Invalid objective id');
+    const objectives = await db
+      .select()
+      .from(objective)
+      .where(and(eq(objective.id, objectiveId), eq(objective.userId, event.locals.session.userId)));
+
+    if (objectives.length === 0) {
+      return error(404, 'Objective not found');
     }
 
-    await db.delete(objective).where(eq(objective.id, objectiveId));
+    await db
+      .delete(objective)
+      .where(and(eq(objective.id, objectiveId), eq(objective.userId, event.locals.session.userId)));
 
     const refParts = event.request.headers.get('referer')?.split('/') ?? [];
     const ref = refParts[refParts.length - 1];

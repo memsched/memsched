@@ -42,7 +42,7 @@
         <LogoShort />
       </a>
     {/if}
-    <div class="flex gap-9">
+    <div class="flex h-full gap-9 *:h-full">
       {#each NAV_ITEMS as { href, text, icon }}
         <HomeNavLink {href} {text} {icon} />
       {/each}

@@ -1,5 +1,5 @@
 import type { PageServerLoad, Actions } from './$types';
-import { fail, redirect } from '@sveltejs/kit';
+import { error, fail, redirect } from '@sveltejs/kit';
 import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { formSchema } from '$lib/components/forms/objective-form/schema';
@@ -18,7 +18,7 @@ export const load: PageServerLoad = async (event) => {
 export const actions: Actions = {
   default: async (event) => {
     if (!event.locals.session) {
-      return redirect(302, '/signin');
+      return error(401, 'Unauthorized');
     }
 
     const form = await superValidate(event, zod(formSchema));

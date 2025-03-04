@@ -22,23 +22,20 @@ export const formSchema = z
     endValue: z
       .number()
       .min(0, { message: "End value can't be less than 0, please enter a valid value." })
-      .optional(),
+      .nullable(),
   })
   .refine((data) => data.unit !== '', {
     message: 'Please select a valid unit.',
     path: ['unit'],
   })
-  .refine((data) => data.goalType !== 'fixed' || data.endValue !== undefined, {
+  .refine((data) => data.goalType !== 'fixed' || data.endValue !== null, {
     message:
       'Looks like you forgot to add an end value. It\'s required when the goal type is "fixed."',
     path: ['endValue'],
   })
   .refine(
     (data) =>
-      data.goalType !== 'fixed' ||
-      (data.endValue !== undefined &&
-        data.startValue !== undefined &&
-        data.endValue > data.startValue),
+      data.goalType !== 'fixed' || (data.endValue !== null && data.endValue > data.startValue),
     {
       message:
         'End value needs to be greater than start value when the goal type is "fixed". Please double-check.',

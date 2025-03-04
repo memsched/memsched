@@ -28,8 +28,8 @@
     <DropdownMenu.Group>
       <DropdownMenu.Item>
         <Icon src={FiSettings} className="!text-muted-foreground" />
-        <a href="/settings">Settings</a></DropdownMenu.Item
-      >
+        <a href="/settings">Settings</a>
+      </DropdownMenu.Item>
       <DropdownMenu.Item>
         <Icon src={FiLogOut} className="!text-muted-foreground" />
         <form action="/api/auth/signout" method="POST">

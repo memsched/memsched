@@ -1,23 +1,35 @@
 <script lang="ts">
+  import { browser } from '$app/environment';
   import SuperDebug, { type SuperValidated, type Infer, superForm } from 'sveltekit-superforms';
   import { zodClient } from 'sveltekit-superforms/adapters';
   import { Icon } from 'svelte-icons-pack';
   import { IoDocumentLockOutline, IoGlobeOutline } from 'svelte-icons-pack/io';
+  import toast from 'svelte-french-toast';
   import * as Form from '$lib/components/ui/form';
   import * as Select from '$lib/components/ui/select';
   import * as RadioGroup from '$lib/components/ui/radio-group';
   import * as Tabs from '$lib/components/ui/tabs/index.js';
   import { Input } from '$lib/components/ui/input';
   import { Textarea } from '$lib/components/ui/textarea';
-  import { capitalize } from '$lib/utils';
+  import { capitalize, cn } from '$lib/utils';
   import { formSchema, type FormSchema } from './schema';
 
-  const { data }: { data: { form: SuperValidated<Infer<FormSchema>> } } = $props();
+  interface Props {
+    data: { form: SuperValidated<Infer<FormSchema>> };
+    edit?: boolean;
+  }
+
+  const { data, edit = false }: Props = $props();
 
   const form = superForm(data.form, {
     validators: zodClient(formSchema),
+    resetForm: !edit,
+    onUpdated({ form }) {
+      if (form.message) {
+        toast.success(form.message);
+      }
+    },
   });
-
   const { form: formData, enhance } = form;
 </script>
 
@@ -49,7 +61,7 @@
         </Form.Control>
         <Form.FieldErrors />
       </Form.Field>
-      <Form.Field {form} name="startValue">
+      <Form.Field {form} name="startValue" class={cn(edit && 'hidden')}>
         <Form.Control>
           {#snippet children({ props })}
             <Form.Label>Start Value</Form.Label>
@@ -131,11 +143,11 @@
         </RadioGroup.Root>
         <Form.FieldErrors />
       </Form.Fieldset>
-      <Form.Fieldset {form} name="goalType" class="space-y-4">
+      <Form.Fieldset {form} name="goalType">
         <Form.Legend>Type</Form.Legend>
         <input type="hidden" name="goalType" bind:value={$formData.goalType} />
-        <Tabs.Root bind:value={$formData.goalType}>
-          <Tabs.List class="w-full *:w-full">
+        <Tabs.Root bind:value={$formData.goalType} disabled={edit}>
+          <Tabs.List class={cn('w-full *:w-full', edit && 'cursor-not-allowed')}>
             <Tabs.Trigger value="fixed">Fixed Goal</Tabs.Trigger>
             <Tabs.Trigger value="ongoing">Ongoing Goal</Tabs.Trigger>
           </Tabs.List>
@@ -164,8 +176,12 @@
       </Form.Fieldset>
     </div>
   </section>
-  <Form.Button>Create Objective</Form.Button>
-  {#if import.meta.env.VITE_DEBUG_FORMS}
+  {#if edit}
+    <Form.Button>Update Objective</Form.Button>
+  {:else}
+    <Form.Button>Create Objective</Form.Button>
+  {/if}
+  {#if import.meta.env.VITE_DEBUG_FORMS && browser}
     <SuperDebug data={$formData} />
   {/if}
 </form>

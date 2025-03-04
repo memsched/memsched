@@ -6,6 +6,6 @@
 </script>
 
 <div class="flex h-full w-full flex-col items-start gap-7">
-  <h2>Create Objective</h2>
-  <ObjectiveForm {data} />
+  <h2>Edit Objective</h2>
+  <ObjectiveForm {data} edit />
 </div>

@@ -1,6 +1,6 @@
 import { eq } from 'drizzle-orm';
 import type { Actions } from './$types';
-import { error } from '@sveltejs/kit';
+import { error, redirect } from '@sveltejs/kit';
 import { objective } from '$lib/server/db/schema';
 import { db } from '$lib/server/db';
 
@@ -18,6 +18,12 @@ export const actions: Actions = {
 
     await db.delete(objective).where(eq(objective.id, objectiveId));
 
-    return { success: true, message: 'Objective deleted successfully' };
+    const refParts = event.request.headers.get('referer')?.split('/') ?? [];
+    const ref = refParts[refParts.length - 1];
+
+    if (ref === 'objectives') {
+      return { success: true, message: 'Objective deleted successfully' };
+    }
+    return redirect(302, '/objectives');
   },
 };

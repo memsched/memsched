@@ -1,6 +1,14 @@
 <script lang="ts">
   import { browser } from '$app/environment';
+  import { beforeNavigate } from '$app/navigation';
+  import { updated } from '$app/state';
   import '../app.css';
+
+  beforeNavigate(({ willUnload, to }) => {
+    if (updated.current && !willUnload && to?.url) {
+      location.href = to.url.href;
+    }
+  });
 
   const { children } = $props();
 </script>

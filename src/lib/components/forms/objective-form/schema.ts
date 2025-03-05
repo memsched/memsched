@@ -1,5 +1,7 @@
 import { z } from 'zod';
 
+export const OBJECTIVE_UNITS = ['minutes', 'hours', 'pages', 'words', 'lines'] as const;
+
 export const formSchema = z
   .object({
     name: z
@@ -12,7 +14,7 @@ export const formSchema = z
     startValue: z
       .number()
       .min(0, { message: "Start value can't be less than 0, please try again." }),
-    unit: z.enum(['', 'minutes', 'hours', 'pages', 'words', 'lines'], {
+    unit: z.enum(OBJECTIVE_UNITS, {
       message: 'Please select a valid unit.',
     }),
     visibility: z.enum(['public', 'private'], {
@@ -23,10 +25,6 @@ export const formSchema = z
       .number()
       .min(0, { message: "End value can't be less than 0, please enter a valid value." })
       .nullable(),
-  })
-  .refine((data) => data.unit !== '', {
-    message: 'Please select a valid unit.',
-    path: ['unit'],
   })
   .refine((data) => data.goalType !== 'fixed' || data.endValue !== null, {
     message:

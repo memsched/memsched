@@ -7,6 +7,7 @@ export const user = sqliteTable('user', {
   username: text('username').notNull().unique(),
   name: text('name').notNull(),
   avatarUrl: text('avatar_url'),
+
   createdAt: integer('created_at', {
     mode: 'timestamp',
   }).default(sql`CURRENT_TIMESTAMP`),
@@ -47,9 +48,49 @@ export const objective = sqliteTable('objective', {
   visibility: text('visibility').notNull(),
   goalType: text('goal_type').notNull(),
   endValue: integer('end_value'),
+
   userId: text('user_id')
     .notNull()
     .references(() => user.id, { onDelete: 'cascade' }),
+  createdAt: integer('created_at', {
+    mode: 'timestamp',
+  }).default(sql`CURRENT_TIMESTAMP`),
+});
+
+export const widget = sqliteTable('widget', {
+  id: text('id').primaryKey(),
+  title: text('title').notNull(),
+  subtite: text('subtitle'),
+  imageUrl: text('image_url'),
+  imagePlacement: text('image_placement').notNull(), // 'left' | 'right'
+
+  padding: integer('padding').notNull(),
+  border: integer('border', { mode: 'boolean' }).notNull(),
+  borderWidth: integer('border_width').notNull(),
+  borderRadius: integer('border_radius').notNull(),
+  color: text('color').notNull(),
+  accentColor: text('accent_color').notNull(),
+  backgroundColor: text('background_color').notNull(),
+  watermark: integer('watermark', { mode: 'boolean' }).notNull(),
+
+  objectiveId: text('objective_id')
+    .notNull()
+    .references(() => objective.id, { onDelete: 'cascade' }),
+  createdAt: integer('created_at', {
+    mode: 'timestamp',
+  }).default(sql`CURRENT_TIMESTAMP`),
+});
+
+export const widgetMetric = sqliteTable('widget_metric', {
+  id: text('id').primaryKey(),
+  value: integer('value').notNull(),
+  name: text('name'),
+  timeRange: text('time_range').notNull(), // 'day' | 'week' | 'month' | 'year'
+  valueDecimalPrecision: integer('value_decimal_precision').notNull(),
+
+  widgetId: text('widget_id')
+    .notNull()
+    .references(() => widget.id, { onDelete: 'cascade' }),
   createdAt: integer('created_at', {
     mode: 'timestamp',
   }).default(sql`CURRENT_TIMESTAMP`),

@@ -8,6 +8,20 @@
       "when": 1741112727560,
       "tag": "0000_init",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1741169807237,
+      "tag": "0001_add_widgets",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1741171904889,
+      "tag": "0002_update_widget_metrics",
+      "breakpoints": true
     }
   ]
 }

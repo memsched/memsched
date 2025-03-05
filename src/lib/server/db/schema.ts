@@ -60,7 +60,7 @@ export const objective = sqliteTable('objective', {
 export const widget = sqliteTable('widget', {
   id: text('id').primaryKey(),
   title: text('title').notNull(),
-  subtite: text('subtitle'),
+  subtitle: text('subtitle'),
   imageUrl: text('image_url'),
   imagePlacement: text('image_placement').notNull(), // 'left' | 'right'
 
@@ -101,3 +101,13 @@ export type UserInsert = typeof user.$inferInsert;
 export type AuthProvider = typeof authProvider.$inferSelect;
 export type Session = typeof session.$inferSelect;
 export type Objective = typeof objective.$inferSelect;
+export type Widget = typeof widget.$inferSelect;
+export type WidgetMetric = typeof widgetMetric.$inferSelect;
+export type WidgetJoinMetrics = Widget & {
+  metrics: WidgetMetric[];
+};
+export type WidgetMetricPreview = Omit<WidgetMetric, 'id' | 'userId' | 'createdAt' | 'widgetId'>;
+export type WidgetPreview = Omit<Widget, 'id' | 'userId' | 'createdAt' | 'objectiveId'>;
+export type WidgetJoinMetricsPreview = WidgetPreview & {
+  metrics: WidgetMetricPreview[];
+};

@@ -7,7 +7,7 @@
   import * as Select from '$lib/components/ui/select';
   import * as Tabs from '$lib/components/ui/tabs/index.js';
   import { Input } from '$lib/components/ui/input';
-  import { capitalize } from '$lib/utils';
+  import { capitalize, cn } from '$lib/utils';
   import { type Objective } from '$lib/server/db/schema';
   import { Label } from '$lib/components/ui/label';
   import ColorPickerInput from '$lib/components/inputs/ColorPickerInput.svelte';
@@ -23,9 +23,12 @@
   import { HEADER_HEIGHT } from '$lib/constants';
 
   interface Props {
-    data: { form: SuperValidated<Infer<FormSchema>>; objectives: Objective[] };
+    data: { form: SuperValidated<Infer<FormSchema>>; objectives: Objective[]; previewId: string };
     edit?: boolean;
   }
+
+  // TODO: Set the default title to the objective name
+  // TODO: Add dark mode to widget with url param
 
   const { data, edit = true }: Props = $props();
 
@@ -40,6 +43,14 @@
     },
   });
   const { form: formData, enhance } = form;
+
+  let previewLoaded = $state(false);
+
+  $effect(() => {
+    if (!$formData.objectiveId || !$formData.title) {
+      previewLoaded = false;
+    }
+  });
 
   const metricsCount = $derived($formData.metrics.length);
 
@@ -102,7 +113,7 @@
         <Form.Field {form} name="subtitle">
           <Form.Control>
             {#snippet children({ props })}
-              <Form.Label>Subitle</Form.Label>
+              <Form.Label>Subtitle</Form.Label>
               <Input {...props} bind:value={$formData.subtitle} />
             {/snippet}
           </Form.Control>
@@ -279,8 +290,15 @@
               <Form.Label>Border Radius</Form.Label>
               <Input
                 {...props}
-                bind:value={$formData.borderRadius}
                 type="number"
+                value={$formData.borderRadius}
+                oninput={(e) => {
+                  if (e.currentTarget.value === '') {
+                    $formData.borderRadius = 0;
+                  } else {
+                    $formData.borderRadius = parseInt(e.currentTarget.value);
+                  }
+                }}
                 min="0"
                 max="50"
               />
@@ -294,7 +312,20 @@
           <Form.Control>
             {#snippet children({ props })}
               <Form.Label>Padding</Form.Label>
-              <Input {...props} bind:value={$formData.padding} type="number" min="0" max="30" />
+              <Input
+                {...props}
+                value={$formData.padding}
+                oninput={(e) => {
+                  if (e.currentTarget.value === '') {
+                    $formData.padding = 0;
+                  } else {
+                    $formData.padding = parseInt(e.currentTarget.value);
+                  }
+                }}
+                type="number"
+                min="0"
+                max="30"
+              />
             {/snippet}
           </Form.Control>
           <Form.Description>Set the roundness of the border in pixels.</Form.Description>
@@ -313,7 +344,11 @@
       <Form.Field {form} name="watermark" class="flex items-center space-x-3 space-y-0 py-2">
         <Form.Control>
           {#snippet children({ props })}
-            <Checkbox {...props} bind:checked={$formData.watermark} />
+            <Checkbox
+              {...props}
+              checked={!$formData.watermark}
+              onCheckedChange={() => ($formData.watermark = !$formData.watermark)}
+            />
             <Form.Label>Remove MEMsched Brand</Form.Label>
             <Badge>Pro</Badge>
           {/snippet}
@@ -325,16 +360,28 @@
     {/if}
   </div>
 
-  <div class="sticky col-span-3 h-screen space-y-10" style="top: {HEADER_HEIGHT}px">
+  <div class="sticky col-span-3 h-fit space-y-3" style="top: calc({HEADER_HEIGHT}px + 2rem)">
     <h5>Preview</h5>
+    <div>
+      {#if $formData.objectiveId && $formData.title}
+        <img
+          src="/api/widgets/preview/{data.previewId}?config={btoa(JSON.stringify($formData))}"
+          alt="Preview"
+          class={cn('object-contain object-left', previewLoaded ? 'max-h-[125px]' : 'h-[125px]')}
+          onload={() => (previewLoaded = true)}
+        />
+      {:else}
+        <div
+          class="grid h-[125px] place-items-center rounded-lg border bg-zinc-100 text-sm text-muted-foreground"
+        >
+          Select an objective and title to preview your widget
+        </div>
+      {/if}
+    </div>
     {#if edit}
       <Form.Button>Update Widget</Form.Button>
     {:else}
       <Form.Button>Create Widget</Form.Button>
-    {/if}
-
-    {#if import.meta.env.VITE_DEBUG_FORMS && browser}
-      <SuperDebug data={$formData} />
     {/if}
   </div>
 </form>

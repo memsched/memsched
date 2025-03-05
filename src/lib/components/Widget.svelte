@@ -1,37 +1,18 @@
-<script module lang="ts">
-  export interface Metric {
-    value: number;
-    description: string;
-  }
-
-  export interface WidgetProps {
-    title: string;
-    subtitle: string;
-    metrics: Metric[];
-
-    padding?: number;
-    border?: boolean;
-    borderRadius?: number;
-    color?: string;
-    backgroundColor?: string;
-    watermark?: boolean;
-  }
-</script>
-
 <script lang="ts">
+  import type { WidgetJoinMetricsPreview } from '$lib/server/db/schema';
   import Watermark from './svgs/Watermark.svelte';
 
   const {
     title,
     subtitle,
     metrics,
-    padding = 1.2,
+    padding = 16,
     border = true,
     borderRadius = 8,
     color = 'black',
     backgroundColor = 'white',
     watermark = true,
-  }: WidgetProps = $props();
+  }: WidgetJoinMetricsPreview = $props();
 </script>
 
 <div
@@ -39,7 +20,7 @@
   style:border-radius="{borderRadius}px"
   style:color
   style:background-color={backgroundColor}
-  style:padding="{padding}rem"
+  style:padding="{padding}px"
   style:margin="1px"
   style:display="flex"
   style:justify-content="space-between"
@@ -66,7 +47,7 @@
         <div style:font-size="2rem" style:font-weight="800" style:line-height="1">
           {metric.value}
         </div>
-        <div style:font-size="0.8rem">{metric.description}</div>
+        <div style:font-size="0.8rem">{metric.name}</div>
       </div>
     {/each}
   </div>

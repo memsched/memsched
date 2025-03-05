@@ -4,7 +4,11 @@ export const WIDGET_METRIC_TIME_RANGES = ['day', 'week', 'month', 'year'] as con
 export const WIDGET_METRIC_VALUE_DECIMAL_PRECISION_MAX = 2;
 
 const widgetMetricSchema = z.object({
-  name: z.string().max(25, { message: 'Name must be less than 25 characters.' }).nullable(),
+  name: z
+    .string()
+    .max(25, { message: 'Name must be less than 25 characters.' })
+    .nullable()
+    .transform((v) => (v === '' ? null : v)),
   timeRange: z.enum(WIDGET_METRIC_TIME_RANGES, {
     message: 'Please select a valid time range: day, week, month, or year.',
   }),
@@ -27,8 +31,13 @@ export const formSchema = z.object({
   subtitle: z
     .string()
     .max(100, { message: 'Subtitle must be less than 100 characters.' })
-    .nullable(),
-  imageUrl: z.string().url({ message: 'Please enter a valid image URL.' }).nullable(),
+    .nullable()
+    .transform((v) => (v === '' ? null : v)),
+  imageUrl: z
+    .string()
+    .url({ message: 'Please enter a valid image URL.' })
+    .nullable()
+    .transform((v) => (v === '' ? null : v)),
   imagePlacement: z.enum(['left', 'right']).default('left'),
 
   // Styling options
@@ -65,10 +74,10 @@ export const formSchema = z.object({
       message: 'Please enter a valid hex color code for the background.',
     })
     .default('#ffffff'),
-  watermark: z.boolean(),
+  watermark: z.boolean().default(true),
 
   // Reference fields
-  objectiveId: z.string().min(1, { message: 'Objective ID is required.' }),
+  objectiveId: z.string(),
 
   // Metrics
   metrics: z

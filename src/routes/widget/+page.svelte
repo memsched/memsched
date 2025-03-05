@@ -12,15 +12,15 @@
     metrics={[
       {
         value: 94,
-        description: 'today',
+        name: 'today',
       },
       {
         value: 94,
-        description: 'today',
+        name: 'today',
       },
     ]}
   />
-  <div class="svg-container" contenteditable bind:innerHTML={data.svgContent}></div>
+  <img src="/api/widgets?svg" alt="" class="h-[97px]" />
 </main>
 
 <style>
@@ -31,11 +31,5 @@
     gap: 2rem;
     align-items: center;
     height: 100vh;
-  }
-
-  .svg-container {
-    display: inline-block;
-    resize: both;
-    overflow: auto;
   }
 </style>

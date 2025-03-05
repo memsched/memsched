@@ -91,11 +91,3 @@ export function deleteSessionTokenCookie(event: RequestEvent) {
     path: '/',
   });
 }
-
-export const getPreviewId = (sessionId: string) => {
-  return encodeHexLowerCase(sha256(new TextEncoder().encode(sessionId)));
-};
-
-export const validatePreviewId = (previewId: string, sessionId: string) => {
-  return previewId === getPreviewId(sessionId);
-};

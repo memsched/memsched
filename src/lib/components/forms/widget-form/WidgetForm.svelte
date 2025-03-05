@@ -21,14 +21,15 @@
     WIDGET_METRIC_VALUE_DECIMAL_PRECISION_MAX,
   } from './schema';
   import { HEADER_HEIGHT } from '$lib/constants';
+  import type { LocalUser } from '$lib/types';
 
   interface Props {
-    data: { form: SuperValidated<Infer<FormSchema>>; objectives: Objective[]; previewId: string };
+    data: { form: SuperValidated<Infer<FormSchema>>; objectives: Objective[]; user: LocalUser };
     edit?: boolean;
   }
 
-  // TODO: Set the default title to the objective name
   // TODO: Add dark mode to widget with url param
+  // TODO: Add debounce to preview
 
   const { data, edit = true }: Props = $props();
 
@@ -121,19 +122,39 @@
           <Form.FieldErrors />
         </Form.Field>
 
-        <!-- <Form.Fieldset {form} name="imageUrl" class="col-span-2"> -->
-        <!--   <Form.Legend>Type</Form.Legend> -->
-        <!--   <Tabs.Root value={$formData.imageUrl ? 'upload' : 'none'}> -->
-        <!--     <Tabs.List class="w-full *:w-full"> -->
-        <!--       <Tabs.Trigger value="none">None</Tabs.Trigger> -->
-        <!--       <Tabs.Trigger value="presets">Presets</Tabs.Trigger> -->
-        <!--       <Tabs.Trigger value="upload">Upload</Tabs.Trigger> -->
-        <!--     </Tabs.List> -->
-        <!--     <Form.FieldErrors /> -->
-        <!--     <Tabs.Content value="presets" class="space-y-6"></Tabs.Content> -->
-        <!--     <Tabs.Content value="upload"></Tabs.Content> -->
-        <!--   </Tabs.Root> -->
-        <!-- </Form.Fieldset> -->
+        <div class="col-span-2">
+          <Label>Image</Label>
+          <Tabs.Root value={$formData.imageUrl ? 'upload' : 'none'} class="mt-1 space-y-6">
+            <Tabs.List class="w-full *:w-full">
+              <Tabs.Trigger value="none">None</Tabs.Trigger>
+              <Tabs.Trigger value="icon">Icon</Tabs.Trigger>
+              <Tabs.Trigger value="upload">Upload</Tabs.Trigger>
+            </Tabs.List>
+            <Form.Fieldset {form} name="imagePlacement" class="col-span-2">
+              <input type="hidden" name="imagePlacement" bind:value={$formData.imagePlacement} />
+              <Tabs.Content value="icon" class="space-y-6">
+                <Form.Legend>Placement</Form.Legend>
+                <Tabs.Root bind:value={$formData.imagePlacement}>
+                  <Tabs.List class="w-full *:w-full">
+                    <Tabs.Trigger value="left">Left</Tabs.Trigger>
+                    <Tabs.Trigger value="right">Right</Tabs.Trigger>
+                  </Tabs.List>
+                  <Form.FieldErrors />
+                </Tabs.Root>
+              </Tabs.Content>
+              <Tabs.Content value="upload" class="space-y-6">
+                <Form.Legend>Placement</Form.Legend>
+                <Tabs.Root bind:value={$formData.imagePlacement}>
+                  <Tabs.List class="w-full *:w-full">
+                    <Tabs.Trigger value="left">Left</Tabs.Trigger>
+                    <Tabs.Trigger value="right">Right</Tabs.Trigger>
+                  </Tabs.List>
+                  <Form.FieldErrors />
+                </Tabs.Root>
+              </Tabs.Content>
+            </Form.Fieldset>
+          </Tabs.Root>
+        </div>
       </div>
     </section>
 
@@ -266,7 +287,9 @@
                   '#cccccc',
                   '#f2f2f2',
                   '#ffffff',
+                  '#ffffff00',
                 ]}
+                alpha
               />
             {/snippet}
           </Form.Control>
@@ -363,16 +386,16 @@
   <div class="sticky col-span-3 h-fit space-y-3" style="top: calc({HEADER_HEIGHT}px + 2rem)">
     <h5>Preview</h5>
     <div>
-      {#if $formData.objectiveId && $formData.title}
+      {#if formSchema.safeParse($formData).success}
         <img
-          src="/api/widgets/preview/{data.previewId}?config={btoa(JSON.stringify($formData))}"
+          src="/api/widgets/preview/{data.user.id}?config={btoa(JSON.stringify($formData))}"
           alt="Preview"
           class={cn('object-contain object-left', previewLoaded ? 'max-h-[125px]' : 'h-[125px]')}
           onload={() => (previewLoaded = true)}
         />
       {:else}
         <div
-          class="grid h-[125px] place-items-center rounded-lg border bg-zinc-100 text-sm text-muted-foreground"
+          class="grid h-[125px] place-items-center rounded-lg border bg-zinc-100 p-5 text-sm text-muted-foreground"
         >
           Select an objective and title to preview your widget
         </div>

@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const WIDGET_METRIC_TIME_RANGES = ['day', 'week', 'month', 'year'] as const;
+export const WIDGET_METRIC_TIME_RANGES = ['day', 'week', 'month', 'year', 'all time'] as const;
 export const WIDGET_METRIC_VALUE_DECIMAL_PRECISION_MAX = 2;
 
 const widgetMetricSchema = z.object({
@@ -70,14 +70,14 @@ export const formSchema = z.object({
     .default('#32ad86'),
   backgroundColor: z
     .string()
-    .regex(/^#[0-9A-Fa-f]{6}$/, {
-      message: 'Please enter a valid hex color code for the background.',
+    .regex(/^#([0-9A-Fa-f]{6}|[0-9A-Fa-f]{8})$/, {
+      message: 'Please enter a valid hex color code (with optional alpha).',
     })
     .default('#ffffff'),
   watermark: z.boolean().default(true),
 
   // Reference fields
-  objectiveId: z.string(),
+  objectiveId: z.string().min(1, { message: 'Objective is required.' }),
 
   // Metrics
   metrics: z

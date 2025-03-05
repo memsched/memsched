@@ -15,6 +15,7 @@
       ({ type: 'file'; files?: FileList } | { type?: InputType; files?: undefined })
   > & {
     solids?: string[];
+    alpha?: boolean;
   };
 
   const defaultSolids: string[] = [
@@ -28,8 +29,9 @@
   ];
 
   let {
-    value = $bindable(),
     solids = defaultSolids,
+    alpha = false,
+    value = $bindable(),
     class: className = '',
     disabled = false,
     ...restProps
@@ -37,9 +39,10 @@
 
   function updateColor(e: Event) {
     const inputValue = (e.target as HTMLInputElement).value.toLowerCase();
-    const hexPattern = /^#[0-9A-Fa-f]{6}$/;
 
-    if (hexPattern.test(inputValue)) {
+    if (/^#[0-9A-Fa-f]{6}$/.test(inputValue)) {
+      value = inputValue;
+    } else if (alpha && /^#[0-9A-Fa-f]{8}$/.test(inputValue)) {
       value = inputValue;
     }
   }

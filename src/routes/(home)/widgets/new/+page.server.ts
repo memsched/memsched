@@ -4,10 +4,6 @@ import { message, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { v4 as uuidv4 } from 'uuid';
 import { formSchema } from '$lib/components/forms/widget-form/schema';
-import { db } from '$lib/server/db';
-import { getPreviewId } from '$lib/server/session';
-import { objective } from '$lib/server/db/schema';
-import { eq } from 'drizzle-orm';
 
 export const load: PageServerLoad = async (event) => {
   if (!event.locals.session) {
@@ -16,12 +12,6 @@ export const load: PageServerLoad = async (event) => {
 
   return {
     form: await superValidate(zod(formSchema)),
-    objectives: await db
-      .select()
-      .from(objective)
-      .where(eq(objective.userId, event.locals.session.userId))
-      .all(),
-    previewId: getPreviewId(event.locals.session.id),
   };
 };
 

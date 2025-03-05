@@ -5,18 +5,13 @@ import type { Component } from 'svelte';
 import { eq } from 'drizzle-orm';
 import satori from 'satori';
 import parse from 'html-react-parser';
-import { validatePreviewId } from '$lib/server/session';
-import {
-  objective,
-  type WidgetJoinMetricsPreview,
-  type WidgetMetricPreview,
-} from '$lib/server/db/schema';
+import { objective, type WidgetJoinMetricsPreview } from '$lib/server/db/schema';
 import { db } from '$lib/server/db';
 import { formSchema } from '$lib/components/forms/widget-form/schema';
 import Widget from '$lib/components/Widget.svelte';
 
 export const GET: RequestHandler = async (event) => {
-  if (!event.locals.session || !validatePreviewId(event.params.id, event.locals.session.id)) {
+  if (!event.locals.session || event.params.userId !== event.locals.session.userId) {
     return error(401, 'Unauthorized');
   }
 

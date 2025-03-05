@@ -20,7 +20,11 @@ export function assert(condition: boolean, message: string) {
 }
 
 export function capitalize(str: string) {
-  return str.charAt(0).toUpperCase() + str.slice(1);
+  if (!str) return '';
+  return str
+    .split(' ')
+    .map((word) => (word ? word.charAt(0).toUpperCase() + word.slice(1) : ''))
+    .join(' ');
 }
 
 export const getRandomHexColor = () => {

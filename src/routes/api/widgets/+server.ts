@@ -11,6 +11,8 @@ const props = {
   // color: 'lightgray',
   // border: false,
   // backgroundColor: 'black',
+  imageUrl: 'https://hatscripts.github.io/circle-flags/flags/us.svg',
+  imagePlacement: 'right',
   metrics: [
     {
       value: 94,

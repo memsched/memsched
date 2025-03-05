@@ -9,11 +9,9 @@
   <Widget
     title="Pages Read"
     subtitle="Understanding Deep Learning"
+    imageUrl="https://hatscripts.github.io/circle-flags/flags/us.svg"
+    imagePlacement="left"
     metrics={[
-      {
-        value: 94,
-        name: 'today',
-      },
       {
         value: 94,
         name: 'today',

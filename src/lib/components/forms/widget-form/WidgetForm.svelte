@@ -8,6 +8,7 @@
   import * as Tabs from '$lib/components/ui/tabs/index.js';
   import { Input } from '$lib/components/ui/input';
   import { capitalize, cn } from '$lib/utils';
+  import { CIRCLE_FLAG_CODES, CIRCLE_FLAGS_URL } from '$lib/icons';
   import { type Objective } from '$lib/server/db/schema';
   import { Label } from '$lib/components/ui/label';
   import ColorPickerInput from '$lib/components/inputs/ColorPickerInput.svelte';
@@ -44,6 +45,8 @@
     },
   });
   const { form: formData, enhance } = form;
+
+  let filterdIcons = $state(Object.values(CIRCLE_FLAG_CODES));
 
   let previewLoaded = $state(false);
 
@@ -124,7 +127,7 @@
 
         <div class="col-span-2">
           <Label>Image</Label>
-          <Tabs.Root value={$formData.imageUrl ? 'upload' : 'none'} class="mt-1 space-y-6">
+          <Tabs.Root value={$formData.imageUrl ? 'icon' : 'none'} class="mt-1 space-y-6">
             <Tabs.List class="w-full *:w-full">
               <Tabs.Trigger value="none">None</Tabs.Trigger>
               <Tabs.Trigger value="icon">Icon</Tabs.Trigger>
@@ -133,24 +136,55 @@
             <Form.Fieldset {form} name="imagePlacement" class="col-span-2">
               <input type="hidden" name="imagePlacement" bind:value={$formData.imagePlacement} />
               <Tabs.Content value="icon" class="space-y-6">
-                <Form.Legend>Placement</Form.Legend>
-                <Tabs.Root bind:value={$formData.imagePlacement}>
-                  <Tabs.List class="w-full *:w-full">
-                    <Tabs.Trigger value="left">Left</Tabs.Trigger>
-                    <Tabs.Trigger value="right">Right</Tabs.Trigger>
-                  </Tabs.List>
-                  <Form.FieldErrors />
-                </Tabs.Root>
+                <div class="space-y-2">
+                  <Input
+                    class="w-full"
+                    type="text"
+                    placeholder="Search"
+                    oninput={(e) => {
+                      filterdIcons = Object.entries(CIRCLE_FLAG_CODES)
+                        .filter(([name, _]) =>
+                          name.toLowerCase().includes(e.currentTarget.value.toLowerCase())
+                        )
+                        .map(([_, code]) => code);
+                    }}
+                  />
+                  <div
+                    class="flex max-h-[300px] flex-wrap gap-2 overflow-y-auto rounded-md border border-gray-200 p-4"
+                  >
+                    {#each filterdIcons as code}
+                      <button
+                        type="button"
+                        class="cursor-pointer"
+                        onclick={() => ($formData.imageUrl = `${CIRCLE_FLAGS_URL}/${code}`)}
+                      >
+                        <img src="{CIRCLE_FLAGS_URL}/{code}" alt="" class="size-8" loading="lazy" />
+                      </button>
+                    {/each}
+                  </div>
+                </div>
+                <div class="space-y-2">
+                  <Form.Legend>Placement</Form.Legend>
+                  <Tabs.Root bind:value={$formData.imagePlacement}>
+                    <Tabs.List class="w-full *:w-full">
+                      <Tabs.Trigger value="left">Left</Tabs.Trigger>
+                      <Tabs.Trigger value="right">Right</Tabs.Trigger>
+                    </Tabs.List>
+                    <Form.FieldErrors />
+                  </Tabs.Root>
+                </div>
               </Tabs.Content>
               <Tabs.Content value="upload" class="space-y-6">
-                <Form.Legend>Placement</Form.Legend>
-                <Tabs.Root bind:value={$formData.imagePlacement}>
-                  <Tabs.List class="w-full *:w-full">
-                    <Tabs.Trigger value="left">Left</Tabs.Trigger>
-                    <Tabs.Trigger value="right">Right</Tabs.Trigger>
-                  </Tabs.List>
-                  <Form.FieldErrors />
-                </Tabs.Root>
+                <div class="space-y-2">
+                  <Form.Legend>Placement</Form.Legend>
+                  <Tabs.Root bind:value={$formData.imagePlacement}>
+                    <Tabs.List class="w-full *:w-full">
+                      <Tabs.Trigger value="left">Left</Tabs.Trigger>
+                      <Tabs.Trigger value="right">Right</Tabs.Trigger>
+                    </Tabs.List>
+                    <Form.FieldErrors />
+                  </Tabs.Root>
+                </div>
               </Tabs.Content>
             </Form.Fieldset>
           </Tabs.Root>
@@ -390,14 +424,14 @@
         <img
           src="/api/widgets/preview/{data.user.id}?config={btoa(JSON.stringify($formData))}"
           alt="Preview"
-          class={cn('object-contain object-left', previewLoaded ? 'max-h-[125px]' : 'h-[125px]')}
+          class={cn('object-contain object-left', previewLoaded ? 'max-h-[150px]' : 'h-[150px]')}
           onload={() => (previewLoaded = true)}
         />
       {:else}
         <div
-          class="grid h-[125px] place-items-center rounded-lg border bg-zinc-100 p-5 text-sm text-muted-foreground"
+          class="grid h-[150px] place-items-center rounded-lg border bg-zinc-100 p-5 text-sm text-muted-foreground"
         >
-          Select an objective and title to preview your widget
+          The widget will be visible as you complete the form
         </div>
       {/if}
     </div>

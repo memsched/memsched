@@ -6,6 +6,8 @@
     title,
     subtitle,
     metrics,
+    imageUrl,
+    imagePlacement = 'left',
     padding = 16,
     border = true,
     borderRadius = 8,
@@ -23,24 +25,21 @@
   style:padding="{padding}px"
   style:margin="1px"
   style:display="flex"
-  style:align-items="center"
+  style:align-items={imageUrl && imagePlacement === 'right' ? 'flex-start' : 'center'}
   style:justify-content="center"
-  style:gap="2.5rem"
+  style:flex-direction={imageUrl && imagePlacement === 'left' ? 'row' : 'column'}
+  style:gap={imageUrl && imagePlacement === 'right' ? '1rem' : '2rem'}
 >
   <div
     style:display="flex"
-    style:justify-content="center"
-    style:gap="1rem"
+    style:justify-content="space-between"
+    style:gap={imagePlacement === 'left' ? '1rem' : '2rem'}
     style:align-items="center"
+    style:width={imagePlacement === 'left' ? 'auto' : '100%'}
   >
-    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 512 512"
-      ><mask id="a"><circle cx="256" cy="256" r="256" fill="#fff" /></mask><g mask="url(#a)"
-        ><path fill="#0052b4" d="M512 170v172l-256 32L0 342V170l256-32z" /><path
-          fill="#eee"
-          d="M512 0v170H0V0Z"
-        /><path fill="#d80027" d="M512 342v170H0V342Z" /></g
-      ></svg
-    >
+    {#if imageUrl && imagePlacement === 'left'}
+      <img src={imageUrl} alt="" width="48" height="48" loading="eager" />
+    {/if}
     <div
       style:display="flex"
       style:flex-direction="column"
@@ -57,6 +56,9 @@
         {subtitle}
       </div>
     </div>
+    {#if imageUrl && imagePlacement === 'right'}
+      <img src={imageUrl} alt="" width="48" height="48" loading="eager" />
+    {/if}
   </div>
   {#if metrics.length > 0}
     <div style:display="flex" style:gap="1.25rem">

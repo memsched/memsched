@@ -1,16 +1,22 @@
 import { z } from 'zod';
 
 export const WIDGET_METRIC_TIME_RANGES = ['day', 'week', 'month', 'year'] as const;
-export const WIDGET_METRIC_VALUE_DECIMAL_PRECISIONS = ['0', '1', '2'] as const;
+export const WIDGET_METRIC_VALUE_DECIMAL_PRECISION_MAX = 2;
 
 const widgetMetricSchema = z.object({
   name: z.string().max(25, { message: 'Name must be less than 25 characters.' }).nullable(),
   timeRange: z.enum(WIDGET_METRIC_TIME_RANGES, {
     message: 'Please select a valid time range: day, week, month, or year.',
   }),
-  valueDecimalPrecision: z.enum(WIDGET_METRIC_VALUE_DECIMAL_PRECISIONS, {
-    message: 'Please select a valid value decimal precision: 0, 1, or 2.',
-  }),
+  valueDecimalPrecision: z
+    .number({ message: 'Please enter a valid value decimal precision: 0, 1, or 2.' })
+    .int({
+      message: 'Please select a valid value decimal precision: 0, 1, or 2.',
+    })
+    .min(0, { message: 'Value decimal precision must be greater than or equal to 0.' })
+    .max(WIDGET_METRIC_VALUE_DECIMAL_PRECISION_MAX, {
+      message: 'Value decimal precision must be less than or equal to 2.',
+    }),
 });
 
 export const formSchema = z.object({
@@ -30,9 +36,9 @@ export const formSchema = z.object({
     .number()
     .int()
     .min(0, { message: 'Padding must be 0 or greater.' })
-    .max(100, { message: 'Padding must be less than 100.' })
+    .max(30, { message: 'Padding must be less than 30.' })
     .default(16),
-  border: z.boolean().default(false),
+  border: z.boolean().default(true),
   borderWidth: z
     .number()
     .int()
@@ -52,10 +58,13 @@ export const formSchema = z.object({
   accentColor: z
     .string()
     .regex(/^#[0-9A-Fa-f]{6}$/, { message: 'Please enter a valid hex color code for the accent.' })
-    .default('#32AD86'),
-  backgroundColor: z.string().regex(/^#[0-9A-Fa-f]{6}$/, {
-    message: 'Please enter a valid hex color code for the background.',
-  }),
+    .default('#32ad86'),
+  backgroundColor: z
+    .string()
+    .regex(/^#[0-9A-Fa-f]{6}$/, {
+      message: 'Please enter a valid hex color code for the background.',
+    })
+    .default('#ffffff'),
   watermark: z.boolean(),
 
   // Reference fields

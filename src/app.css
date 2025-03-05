@@ -85,6 +85,9 @@
   h4 {
     @apply scroll-m-20 text-xl font-semibold tracking-tight;
   }
+  h5 {
+    @apply text-lg font-semibold;
+  }
   p a {
     @apply underline underline-offset-2;
   }

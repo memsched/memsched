@@ -22,3 +22,12 @@ export function assert(condition: boolean, message: string) {
 export function capitalize(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
+
+export const getRandomHexColor = () => {
+  const letters = '0123456789abcdef';
+  let color = '#';
+  for (let i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
+};

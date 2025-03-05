@@ -1,6 +1,6 @@
 import type { PageServerLoad, Actions } from './$types';
 import { error, fail, redirect } from '@sveltejs/kit';
-import { superValidate } from 'sveltekit-superforms';
+import { message, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { v4 as uuidv4 } from 'uuid';
 import { formSchema } from '$lib/components/forms/widget-form/schema';
@@ -48,6 +48,7 @@ export const actions: Actions = {
     //   endValue: form.data.endValue,
     //   userId: event.locals.session.userId,
     // });
-    return redirect(302, '/widgets');
+    // return redirect(302, '/widgets');
+    return message(form, 'Hi');
   },
 };

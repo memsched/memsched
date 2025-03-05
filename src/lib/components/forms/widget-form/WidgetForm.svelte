@@ -2,31 +2,32 @@
   import { browser } from '$app/environment';
   import SuperDebug, { type SuperValidated, type Infer, superForm } from 'sveltekit-superforms';
   import { zodClient } from 'sveltekit-superforms/adapters';
-  import { Icon } from 'svelte-icons-pack';
-  import { IoDocumentLockOutline, IoGlobeOutline } from 'svelte-icons-pack/io';
   import toast from 'svelte-french-toast';
   import * as Form from '$lib/components/ui/form';
   import * as Select from '$lib/components/ui/select';
-  import * as RadioGroup from '$lib/components/ui/radio-group';
   import * as Tabs from '$lib/components/ui/tabs/index.js';
   import { Input } from '$lib/components/ui/input';
-  import { Textarea } from '$lib/components/ui/textarea';
-  import { capitalize, cn } from '$lib/utils';
+  import { capitalize } from '$lib/utils';
+  import { type Objective } from '$lib/server/db/schema';
+  import { Label } from '$lib/components/ui/label';
+  import ColorPickerInput from '$lib/components/inputs/ColorPickerInput.svelte';
+  import { Switch } from '$lib/components/ui/switch';
+  import { Checkbox } from '$lib/components/ui/checkbox';
+  import { Badge } from '$lib/components/ui/badge';
   import {
     formSchema,
     type FormSchema,
     WIDGET_METRIC_TIME_RANGES,
-    WIDGET_METRIC_VALUE_DECIMAL_PRECISIONS,
+    WIDGET_METRIC_VALUE_DECIMAL_PRECISION_MAX,
   } from './schema';
-  import { type Objective } from '$lib/server/db/schema';
-  import { Label } from '$lib/components/ui/label';
+  import { HEADER_HEIGHT } from '$lib/constants';
 
   interface Props {
     data: { form: SuperValidated<Infer<FormSchema>>; objectives: Objective[] };
     edit?: boolean;
   }
 
-  const { data, edit = false }: Props = $props();
+  const { data, edit = true }: Props = $props();
 
   const form = superForm(data.form, {
     validators: zodClient(formSchema),
@@ -50,7 +51,7 @@
         metricsCopy.push({
           name: '',
           timeRange: 'day',
-          valueDecimalPrecision: '0',
+          valueDecimalPrecision: 0,
         });
       }
     } else if (currentCount > count) {
@@ -60,8 +61,8 @@
   }
 </script>
 
-<form method="POST" use:enhance class="grid w-full grid-cols-8">
-  <div class="col-span-5 space-y-10">
+<form method="POST" use:enhance class="relative grid w-full grid-cols-8 gap-x-16">
+  <div class="col-span-5 space-y-16 last:space-y-6">
     <section class="space-y-6 first:space-y-3">
       <h3>General</h3>
       <div class="grid grid-cols-2 gap-x-16 gap-y-6">
@@ -182,15 +183,23 @@
                           <Form.Label>Decimal Precision</Form.Label>
                           <Select.Root
                             type="single"
-                            bind:value={$formData.metrics[j].valueDecimalPrecision}
+                            value={$formData.metrics[j].valueDecimalPrecision.toString()}
+                            onValueChange={(value) => {
+                              $formData.metrics[j].valueDecimalPrecision = parseInt(value);
+                            }}
                             name={props.name}
                           >
                             <Select.Trigger {...props}>
-                              {$formData.metrics[j].valueDecimalPrecision}
+                              {$formData.metrics[j].valueDecimalPrecision +
+                                ' digit' +
+                                ($formData.metrics[j].valueDecimalPrecision === 1 ? '' : 's')}
                             </Select.Trigger>
                             <Select.Content>
-                              {#each WIDGET_METRIC_VALUE_DECIMAL_PRECISIONS as prec}
-                                <Select.Item value={prec} label={prec} />
+                              {#each Array(WIDGET_METRIC_VALUE_DECIMAL_PRECISION_MAX + 1) as _, i}
+                                <Select.Item
+                                  value={i.toString()}
+                                  label={i + ' digit' + (i === 1 ? '' : 's')}
+                                />
                               {/each}
                             </Select.Content>
                           </Select.Root>
@@ -208,24 +217,122 @@
     </section>
     <section class="space-y-6 first:space-y-3">
       <h3>Customization</h3>
-      <div class="grid grid-cols-2 gap-x-16 gap-y-6">
+      <div class="grid grid-cols-3 gap-x-10 gap-y-6">
+        <Form.Field {form} name="color">
+          <Form.Control>
+            {#snippet children({ props })}
+              <Form.Label>Foreground Color</Form.Label>
+              <ColorPickerInput
+                {...props}
+                bind:value={$formData.color}
+                solids={[
+                  '#000000',
+                  '#333333',
+                  '#666666',
+                  '#999999',
+                  '#cccccc',
+                  '#f2f2f2',
+                  '#ffffff',
+                ]}
+              />
+            {/snippet}
+          </Form.Control>
+          <Form.FieldErrors />
+        </Form.Field>
+
+        <Form.Field {form} name="backgroundColor">
+          <Form.Control>
+            {#snippet children({ props })}
+              <Form.Label>Background Color</Form.Label>
+              <ColorPickerInput
+                {...props}
+                bind:value={$formData.backgroundColor}
+                solids={[
+                  '#000000',
+                  '#333333',
+                  '#666666',
+                  '#999999',
+                  '#cccccc',
+                  '#f2f2f2',
+                  '#ffffff',
+                ]}
+              />
+            {/snippet}
+          </Form.Control>
+          <Form.FieldErrors />
+        </Form.Field>
+
         <Form.Field {form} name="accentColor">
           <Form.Control>
             {#snippet children({ props })}
               <Form.Label>Accent Color</Form.Label>
-              <Input {...props} bind:value={$formData.accentColor} type="color" />
+              <ColorPickerInput {...props} bind:value={$formData.accentColor} />
             {/snippet}
           </Form.Control>
-          <Form.Description>Set the accent color for your widget.</Form.Description>
           <Form.FieldErrors />
         </Form.Field>
       </div>
+      <div class="grid grid-cols-2 gap-x-10 gap-y-6">
+        <Form.Field {form} name="borderRadius">
+          <Form.Control>
+            {#snippet children({ props })}
+              <Form.Label>Border Radius</Form.Label>
+              <Input
+                {...props}
+                bind:value={$formData.borderRadius}
+                type="number"
+                min="0"
+                max="50"
+              />
+            {/snippet}
+          </Form.Control>
+          <Form.Description>Set the roundness of the border in pixels.</Form.Description>
+          <Form.FieldErrors />
+        </Form.Field>
+
+        <Form.Field {form} name="padding">
+          <Form.Control>
+            {#snippet children({ props })}
+              <Form.Label>Padding</Form.Label>
+              <Input {...props} bind:value={$formData.padding} type="number" min="0" max="30" />
+            {/snippet}
+          </Form.Control>
+          <Form.Description>Set the roundness of the border in pixels.</Form.Description>
+          <Form.FieldErrors />
+        </Form.Field>
+
+        <Form.Field {form} name="border" class="flex items-center gap-3 space-y-0 py-2">
+          <Form.Control>
+            {#snippet children({ props })}
+              <Switch {...props} bind:checked={$formData.border} />
+              <Form.Label>Enable Border</Form.Label>
+            {/snippet}
+          </Form.Control>
+        </Form.Field>
+      </div>
+      <Form.Field {form} name="watermark" class="flex items-center space-x-3 space-y-0 py-2">
+        <Form.Control>
+          {#snippet children({ props })}
+            <Checkbox {...props} bind:checked={$formData.watermark} />
+            <Form.Label>Remove MEMsched Brand</Form.Label>
+            <Badge>Pro</Badge>
+          {/snippet}
+        </Form.Control>
+      </Form.Field>
     </section>
+    {#if import.meta.env.VITE_DEBUG_FORMS && browser}
+      <SuperDebug data={$formData} />
+    {/if}
+  </div>
+
+  <div class="sticky col-span-3 h-screen space-y-10" style="top: {HEADER_HEIGHT}px">
+    <h5>Preview</h5>
     {#if edit}
       <Form.Button>Update Widget</Form.Button>
     {:else}
       <Form.Button>Create Widget</Form.Button>
     {/if}
+
     {#if import.meta.env.VITE_DEBUG_FORMS && browser}
       <SuperDebug data={$formData} />
     {/if}

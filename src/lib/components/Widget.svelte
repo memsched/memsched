@@ -38,7 +38,14 @@
     style:width={imagePlacement === 'left' ? 'auto' : '100%'}
   >
     {#if imageUrl && imagePlacement === 'left'}
-      <img src={imageUrl} alt="" width="48" height="48" loading="eager" />
+      <img
+        src={imageUrl}
+        alt=""
+        width="48"
+        height="48"
+        loading="eager"
+        style:object-fit="contain"
+      />
     {/if}
     <div
       style:display="flex"
@@ -57,7 +64,14 @@
       </div>
     </div>
     {#if imageUrl && imagePlacement === 'right'}
-      <img src={imageUrl} alt="" width="48" height="48" loading="eager" />
+      <img
+        src={imageUrl}
+        alt=""
+        width="48"
+        height="48"
+        loading="eager"
+        style:object-fit="contain"
+      />
     {/if}
   </div>
   {#if metrics.length > 0}

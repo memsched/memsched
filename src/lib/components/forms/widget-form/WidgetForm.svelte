@@ -8,7 +8,6 @@
   import * as Tabs from '$lib/components/ui/tabs/index.js';
   import { Input } from '$lib/components/ui/input';
   import { capitalize, cn } from '$lib/utils';
-  import { CIRCLE_FLAG_CODES, CIRCLE_FLAGS_URL } from '$lib/icons';
   import { type Objective } from '$lib/server/db/schema';
   import { Label } from '$lib/components/ui/label';
   import ColorPickerInput from '$lib/components/inputs/ColorPickerInput.svelte';
@@ -23,6 +22,7 @@
   } from './schema';
   import { HEADER_HEIGHT } from '$lib/constants';
   import type { LocalUser } from '$lib/types';
+  import IconPickerInput from '$lib/components/inputs/IconPickerInput.svelte';
 
   interface Props {
     data: { form: SuperValidated<Infer<FormSchema>>; objectives: Objective[]; user: LocalUser };
@@ -45,8 +45,6 @@
     },
   });
   const { form: formData, enhance } = form;
-
-  let filterdIcons = $state(Object.values(CIRCLE_FLAG_CODES));
 
   let previewLoaded = $state(false);
 
@@ -136,33 +134,7 @@
             <Form.Fieldset {form} name="imagePlacement" class="col-span-2">
               <input type="hidden" name="imagePlacement" bind:value={$formData.imagePlacement} />
               <Tabs.Content value="icon" class="space-y-6">
-                <div class="space-y-2">
-                  <Input
-                    class="w-full"
-                    type="text"
-                    placeholder="Search"
-                    oninput={(e) => {
-                      filterdIcons = Object.entries(CIRCLE_FLAG_CODES)
-                        .filter(([name, _]) =>
-                          name.toLowerCase().includes(e.currentTarget.value.toLowerCase())
-                        )
-                        .map(([_, code]) => code);
-                    }}
-                  />
-                  <div
-                    class="flex max-h-[300px] flex-wrap gap-2 overflow-y-auto rounded-md border border-gray-200 p-4"
-                  >
-                    {#each filterdIcons as code}
-                      <button
-                        type="button"
-                        class="cursor-pointer"
-                        onclick={() => ($formData.imageUrl = `${CIRCLE_FLAGS_URL}/${code}`)}
-                      >
-                        <img src="{CIRCLE_FLAGS_URL}/{code}" alt="" class="size-8" loading="lazy" />
-                      </button>
-                    {/each}
-                  </div>
-                </div>
+                <IconPickerInput bind:value={$formData.imageUrl} />
                 <div class="space-y-2">
                   <Form.Legend>Placement</Form.Legend>
                   <Tabs.Root bind:value={$formData.imagePlacement}>

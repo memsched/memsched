@@ -1,3 +1,4 @@
+// TODO: Remove this file
 import type { RequestHandler } from './$types';
 import { render } from 'svelte/server';
 import satori from 'satori';

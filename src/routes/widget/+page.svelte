@@ -1,4 +1,5 @@
 <script lang="ts">
+  // TODO: Remove this file
   import type { PageProps } from './$types';
   import Widget from '$lib/components/Widget.svelte';
 

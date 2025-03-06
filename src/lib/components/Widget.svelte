@@ -27,7 +27,7 @@
   style:display="flex"
   style:align-items={imageUrl && imagePlacement === 'right' ? 'flex-start' : 'center'}
   style:justify-content="center"
-  style:flex-direction={imageUrl && imagePlacement === 'left' ? 'row' : 'column'}
+  style:flex-direction={imageUrl && imagePlacement === 'right' ? 'column' : 'row'}
   style:gap={imageUrl && imagePlacement === 'right' ? '1rem' : '2rem'}
 >
   <div

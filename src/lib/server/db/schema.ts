@@ -76,6 +76,9 @@ export const widget = sqliteTable('widget', {
   objectiveId: text('objective_id')
     .notNull()
     .references(() => objective.id, { onDelete: 'cascade' }),
+  userId: text('user_id')
+    .notNull()
+    .references(() => user.id, { onDelete: 'cascade' }),
   createdAt: integer('created_at', {
     mode: 'timestamp',
   }).default(sql`CURRENT_TIMESTAMP`),
@@ -88,9 +91,14 @@ export const widgetMetric = sqliteTable('widget_metric', {
   timeRange: text('time_range').notNull(), // 'day' | 'week' | 'month' | 'year'
   valueDecimalPrecision: integer('value_decimal_precision').notNull(),
 
+  order: integer('order').notNull(),
+
   widgetId: text('widget_id')
     .notNull()
     .references(() => widget.id, { onDelete: 'cascade' }),
+  userId: text('user_id')
+    .notNull()
+    .references(() => user.id, { onDelete: 'cascade' }),
   createdAt: integer('created_at', {
     mode: 'timestamp',
   }).default(sql`CURRENT_TIMESTAMP`),

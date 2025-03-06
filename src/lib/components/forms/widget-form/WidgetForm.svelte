@@ -32,7 +32,7 @@
   // TODO: Add dark mode to widget with url param
   // TODO: Add debounce to preview
 
-  const { data, edit = true }: Props = $props();
+  const { data, edit = false }: Props = $props();
 
   const form = superForm(data.form, {
     validators: zodClient(formSchema),
@@ -127,7 +127,9 @@
           <Label>Image</Label>
           <Tabs.Root value={$formData.imageUrl ? 'icon' : 'none'} class="mt-1 space-y-6">
             <Tabs.List class="w-full *:w-full">
-              <Tabs.Trigger value="none">None</Tabs.Trigger>
+              <Tabs.Trigger value="none" onclick={() => ($formData.imageUrl = null)}
+                >None</Tabs.Trigger
+              >
               <Tabs.Trigger value="icon">Icon</Tabs.Trigger>
               <Tabs.Trigger value="upload">Upload</Tabs.Trigger>
             </Tabs.List>

@@ -23,6 +23,7 @@
   import { HEADER_HEIGHT } from '$lib/constants';
   import type { LocalUser } from '$lib/types';
   import IconPickerInput from '$lib/components/inputs/IconPickerInput.svelte';
+  import { page } from '$app/state';
 
   interface Props {
     data: { form: SuperValidated<Infer<FormSchema>>; objectives: Objective[]; user: LocalUser };
@@ -391,23 +392,38 @@
     {/if}
   </div>
 
-  <div class="sticky col-span-3 h-fit space-y-3" style="top: calc({HEADER_HEIGHT}px + 2rem)">
+  <div class="sticky col-span-3 h-fit space-y-4" style="top: calc({HEADER_HEIGHT}px + 2rem)">
     <h5>Preview</h5>
-    <div>
-      {#if formSchema.safeParse($formData).success}
-        <img
-          src="/api/widgets/preview/{data.user.id}?config={btoa(JSON.stringify($formData))}"
-          alt="Preview"
-          class={cn('object-contain object-left', previewLoaded ? 'max-h-[150px]' : 'h-[150px]')}
-          onload={() => (previewLoaded = true)}
-        />
-      {:else}
-        <div
-          class="grid h-[150px] place-items-center rounded-lg border bg-zinc-100 p-5 text-sm text-muted-foreground"
-        >
-          The widget will be visible as you complete the form
+    <div class="space-y-4">
+      {#if edit}
+        <div>
+          <small class="mb-1 ms-1 inline-block text-sm text-muted-foreground">Current</small>
+          <img
+            src="/api/widgets/{page.params.id}?svg"
+            alt="Current preview"
+            class="max-h-[150px] object-contain object-left"
+          />
         </div>
       {/if}
+      <div>
+        {#if formSchema.safeParse($formData).success}
+          {#if edit}
+            <small class="mb-1 ms-1 inline-block text-sm text-muted-foreground">New</small>
+          {/if}
+          <img
+            src="/api/widgets/preview/{data.user.id}?config={btoa(JSON.stringify($formData))}"
+            alt="Edit preview"
+            class={cn('object-contain object-left', previewLoaded ? 'max-h-[150px]' : 'h-[150px]')}
+            onload={() => (previewLoaded = true)}
+          />
+        {:else}
+          <div
+            class="grid h-[150px] place-items-center rounded-lg border bg-zinc-100 p-5 text-sm text-muted-foreground"
+          >
+            The widget will be visible as you complete the form
+          </div>
+        {/if}
+      </div>
     </div>
     {#if edit}
       <Form.Button>Update Widget</Form.Button>

@@ -11,7 +11,7 @@
 
 {#if data.objectives.length > 0}
   {#if data.widgets.length > 0}
-    <main style="margin-top: {HEADER_HEIGHT}px">
+    <HomeLayout class="block" container={false}>
       <div
         class="sticky flex items-center border-b bg-white"
         style="top: {HEADER_HEIGHT}px; height: {SUB_NAV_HEIGHT}px;"
@@ -21,14 +21,14 @@
           <IconButton href="/widgets/new" size="sm" icon={IoAdd}>New</IconButton>
         </div>
       </div>
-      <div class="mx-auto flex max-w-screen-xl gap-6 p-6 lg:px-10">
+      <div class="mx-auto flex max-w-screen-xl flex-wrap gap-4 p-6 lg:px-10">
         {#each data.widgets as widget}
           <a href="/widgets/{widget}">
-            <img src="/api/widgets/{widget}?svg" alt="MEMsched Widget" class="h-[110px]" />
+            <img src="/api/widgets/{widget}?svg" alt="MEMsched Widget" class="h-[125px]" />
           </a>
         {/each}
       </div>
-    </main>
+    </HomeLayout>
   {:else}
     <HomeLayout>
       <div class="flex flex-grow flex-col items-center justify-center">

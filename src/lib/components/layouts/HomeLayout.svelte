@@ -1,11 +1,24 @@
 <script lang="ts">
+  import type { Snippet } from 'svelte';
+  import type { HTMLAttributes } from 'svelte/elements';
   import { HEADER_HEIGHT } from '$lib/constants';
+  import { cn } from '$lib/utils';
 
-  const { children } = $props();
+  interface Props {
+    class?: HTMLAttributes<HTMLElement>['class'];
+    container?: boolean;
+    children: Snippet;
+  }
+
+  const { class: className, container = true, children }: Props = $props();
 </script>
 
 <main
-  class="mx-auto flex w-full max-w-screen-xl flex-grow flex-col px-6 py-8 lg:px-10 lg:py-14"
+  class={cn(
+    'flex w-full flex-grow flex-col',
+    container && 'mx-auto max-w-screen-xl px-6 py-8 lg:px-10 lg:py-14',
+    className
+  )}
   style="margin-top: {HEADER_HEIGHT}px"
 >
   {@render children()}

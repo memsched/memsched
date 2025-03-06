@@ -6,11 +6,12 @@
   import ConfirmDeleteDialog from '$lib/components/dialogs/ConfirmDeleteDialog.svelte';
   import { FiTrash2 } from 'svelte-icons-pack/fi';
   import * as Dialog from '$lib/components/ui/dialog';
+  import HomeLayout from '$lib/components/layouts/HomeLayout.svelte';
 
   const { data }: PageProps = $props();
 </script>
 
-<div class="flex h-full w-full flex-col items-start gap-7">
+<HomeLayout class="gap-7">
   <div class="flex w-full items-center justify-between">
     <h2>Edit Objective</h2>
     <ConfirmDeleteDialog action="/objectives/delete" name="objectiveId" value={page.params.id}>
@@ -22,4 +23,4 @@
     </ConfirmDeleteDialog>
   </div>
   <ObjectiveForm {data} edit />
-</div>
+</HomeLayout>

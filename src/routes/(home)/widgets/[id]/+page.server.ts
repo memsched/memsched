@@ -8,6 +8,7 @@ import { db } from '$lib/server/db';
 import { objective } from '$lib/server/db/schema';
 import type { z } from 'zod';
 import { getWidget } from '$lib/server/queries';
+import type { LocalUser } from '$lib/types';
 
 export const load: PageServerLoad = async (event) => {
   if (!event.locals.session) {
@@ -47,6 +48,8 @@ export const load: PageServerLoad = async (event) => {
 
   return {
     form,
+    // We tell typescript that the user is not null
+    user: event.locals.user as LocalUser,
   };
 };
 

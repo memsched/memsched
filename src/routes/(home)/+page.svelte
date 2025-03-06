@@ -13,7 +13,7 @@
     </h4>
   </div>
   <div class="relative mt-8 w-fit">
-    <Button size="cta">Get Started for Free</Button>
+    <Button size="cta" href="/signin">Get Started for Free</Button>
     <Arrow class="tran absolute left-[105%]  top-[60%] rotate-6" />
   </div>
 </section>

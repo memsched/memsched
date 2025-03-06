@@ -22,7 +22,7 @@
 </script>
 
 {#if data.objectives.length > 0}
-  <main style="margin-top: {HEADER_HEIGHT}px">
+  <HomeLayout container={false}>
     <div
       class="sticky flex items-center border-b bg-white"
       style="top: {HEADER_HEIGHT}px; height: {SUB_NAV_HEIGHT}px;"
@@ -134,7 +134,7 @@
         </tbody>
       </table>
     </div>
-  </main>
+  </HomeLayout>
 {:else}
   <HomeLayout>
     <div class="flex flex-grow flex-col items-center justify-center">

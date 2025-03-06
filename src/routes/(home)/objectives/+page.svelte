@@ -11,7 +11,7 @@
   import { FiEdit3, FiPlusCircle, FiTrash2 } from 'svelte-icons-pack/fi';
   import CreateNew from '$lib/components/CreateNew.svelte';
   import HomeLayout from '$lib/components/layouts/HomeLayout.svelte';
-  import { HEADER_HEIGHT } from '$lib/constants';
+  import { HEADER_HEIGHT, SUB_NAV_HEIGHT } from '$lib/constants';
   import IconButton from '$lib/components/ui/IconButton.svelte';
   import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index';
   import * as Dialog from '$lib/components/ui/dialog/index.js';
@@ -19,8 +19,6 @@
   import { capitalize } from '$lib/utils';
 
   const { data }: PageProps = $props();
-
-  const SUB_NAV_HEIGHT = 55;
 </script>
 
 {#if data.objectives.length > 0}

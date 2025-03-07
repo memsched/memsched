@@ -1,4 +1,4 @@
-import { sqliteTable, integer, text, primaryKey } from 'drizzle-orm/sqlite-core';
+import { sqliteTable, integer, text, primaryKey, real } from 'drizzle-orm/sqlite-core';
 import { sql } from 'drizzle-orm';
 
 export const user = sqliteTable('user', {
@@ -42,13 +42,32 @@ export const objective = sqliteTable('objective', {
   id: text('id').primaryKey(),
   name: text('name').notNull(),
   description: text('description').notNull(),
-  startValue: integer('start_value').notNull(),
-  value: integer('value').notNull(),
+  startValue: real('start_value').notNull(),
+  value: real('value').notNull(),
   unit: text('unit').notNull(),
   visibility: text('visibility').notNull(),
   goalType: text('goal_type').notNull(),
-  endValue: integer('end_value'),
+  endValue: real('end_value'),
 
+  userId: text('user_id')
+    .notNull()
+    .references(() => user.id, { onDelete: 'cascade' }),
+  createdAt: integer('created_at', {
+    mode: 'timestamp',
+  }).default(sql`CURRENT_TIMESTAMP`),
+});
+
+export const objectiveLog = sqliteTable('objective_log', {
+  id: text('id').primaryKey(),
+  value: real('value').notNull(),
+  notes: text('notes'),
+  loggedAt: integer('logged_at', {
+    mode: 'timestamp',
+  }).notNull(),
+
+  objectiveId: text('objective_id')
+    .notNull()
+    .references(() => objective.id, { onDelete: 'cascade' }),
   userId: text('user_id')
     .notNull()
     .references(() => user.id, { onDelete: 'cascade' }),
@@ -86,9 +105,9 @@ export const widget = sqliteTable('widget', {
 
 export const widgetMetric = sqliteTable('widget_metric', {
   id: text('id').primaryKey(),
-  value: integer('value').notNull(),
+  value: real('value').notNull(),
   name: text('name'),
-  timeRange: text('time_range').notNull(), // 'day' | 'week' | 'month' | 'year'
+  timeRange: text('time_range').notNull(), // 'day' | 'week' | 'month' | 'year' | 'all time'
   valueDecimalPrecision: integer('value_decimal_precision').notNull(),
 
   order: integer('order').notNull(),

@@ -1,7 +1,7 @@
 import { and, eq } from 'drizzle-orm';
 import type { Actions } from './$types';
 import { error, redirect } from '@sveltejs/kit';
-import { widget, widgetMetric } from '$lib/server/db/schema';
+import { widget } from '$lib/server/db/schema';
 import { db } from '$lib/server/db';
 
 export const actions: Actions = {
@@ -21,10 +21,7 @@ export const actions: Actions = {
       return error(404, 'Widget not found');
     }
 
-    await db.transaction(async (tx) => {
-      await tx.delete(widgetMetric).where(eq(widgetMetric.widgetId, widgetId));
-      await tx.delete(widget).where(and(eq(widget.id, widgetId), eq(widget.userId, userId)));
-    });
+    await db.delete(widget).where(and(eq(widget.id, widgetId), eq(widget.userId, userId)));
 
     return redirect(302, '/widgets');
   },

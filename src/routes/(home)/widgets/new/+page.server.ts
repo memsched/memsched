@@ -8,6 +8,7 @@ import type { LocalUser } from '$lib/types';
 import * as table from '$lib/server/db/schema';
 import { db } from '$lib/server/db';
 import { eq, and } from 'drizzle-orm';
+import { computeMetricValue } from '$lib/server/queries';
 
 export const load: PageServerLoad = async (event) => {
   if (!event.locals.session) {
@@ -41,12 +42,14 @@ export const actions: Actions = {
       .where(
         and(
           eq(table.objective.id, form.data.objectiveId),
+          eq(table.objective.visibility, 'public'),
           eq(table.objective.userId, event.locals.session.userId)
         )
       );
     if (objectives.length === 0) {
       return error(404, 'Objective not found');
     }
+    const ob = objectives[0];
 
     const userId = event.locals.session.userId;
     await db.transaction(async (tx) => {
@@ -78,9 +81,15 @@ export const actions: Actions = {
       )[0];
 
       for (const [i, metric] of form.data.metrics.entries()) {
+        const value = await computeMetricValue(
+          tx,
+          ob.id,
+          metric.timeRange,
+          metric.valueDecimalPrecision
+        );
         await tx.insert(table.widgetMetric).values({
           id: uuidv4(),
-          value: 0,
+          value,
           name: metric.name,
           timeRange: metric.timeRange,
           valueDecimalPrecision: metric.valueDecimalPrecision,
@@ -90,7 +99,6 @@ export const actions: Actions = {
           userId,
         });
       }
-      // TODO: Call function to update the metric values
     });
     return redirect(302, '/widgets');
   },

@@ -6,7 +6,7 @@ import { eq, and } from 'drizzle-orm';
 import { formSchema, type FormSchema } from '$lib/components/forms/widget-form/schema';
 import { db } from '$lib/server/db';
 import type { z } from 'zod';
-import { getWidget } from '$lib/server/queries';
+import { computeMetricValue, getWidget } from '$lib/server/queries';
 import type { LocalUser } from '$lib/types';
 import * as table from '$lib/server/db/schema';
 import { v4 as uuidv4 } from 'uuid';
@@ -91,6 +91,8 @@ export const actions: Actions = {
       return error(404, 'Objective not found');
     }
 
+    const ob = objectives[0];
+
     await db.transaction(async (tx) => {
       // Update the widget
       await tx
@@ -120,9 +122,15 @@ export const actions: Actions = {
 
       // Insert new metrics
       for (const [i, metric] of form.data.metrics.entries()) {
+        const value = await computeMetricValue(
+          tx,
+          ob.id,
+          metric.timeRange,
+          metric.valueDecimalPrecision
+        );
         await tx.insert(table.widgetMetric).values({
           id: uuidv4(),
-          value: 0,
+          value,
           name: metric.name,
           timeRange: metric.timeRange,
           valueDecimalPrecision: metric.valueDecimalPrecision,
@@ -131,7 +139,6 @@ export const actions: Actions = {
           userId,
         });
       }
-      // TODO: Call function to update the metric values
     });
 
     return message(form, 'Widget successfully updated!');

@@ -36,6 +36,13 @@
       "when": 1741280417779,
       "tag": "0004_add_widget_metric_order",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "6",
+      "when": 1741371148923,
+      "tag": "0005_add_objective_log",
+      "breakpoints": true
     }
   ]
 }

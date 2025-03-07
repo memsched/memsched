@@ -35,6 +35,8 @@ const config = {
           'self',
           'https://avatars.githubusercontent.com',
           'https://lh3.googleusercontent.com',
+          'https://hatscripts.github.io',
+          'https://cdn.svgporn.com',
         ],
         'font-src': ['self'],
         'object-src': ['none'],

@@ -3,13 +3,15 @@
   import { Icon } from 'svelte-icons-pack';
   import { IoCopyOutline } from 'svelte-icons-pack/io';
 
-  const { children } = $props();
+  interface Props {
+    code: string;
+  }
 
-  let code: HTMLElement;
+  const { code }: Props = $props();
 
   function copyToClipboard() {
     navigator.clipboard
-      .writeText(code.innerText)
+      .writeText(code)
       .then(() => {
         toast.success('Copied to clipboard!');
       })
@@ -21,7 +23,7 @@
 
 <pre
   class="flex items-start justify-between gap-3 text-wrap rounded-md border bg-muted p-4 font-mono text-xs">
-    <code bind:this={code}>{@render children()}</code>
+    <code>{code}</code>
     <button class="flex items-center" onclick={copyToClipboard}>
         <Icon
       src={IoCopyOutline}

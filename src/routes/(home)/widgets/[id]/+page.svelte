@@ -11,10 +11,13 @@
 
   const { data }: PageProps = $props();
   const userUrl = page.url.origin + '/' + data.user.username;
-  const widgetUrl = page.url.origin + '/api/widgets/' + page.params.id + '?svg';
-  const markdownSnippet = `
+  const widgetUrl = page.url.origin + '/api/widgets/' + page.params.id;
+  const htmlSnippet = `
 <a href="${userUrl}" target="_blank">
-    <img src="${widgetUrl}" alt="${data.form.data.title} - ${data.form.data.subtitle}" height="80px" />
+    <img src="${widgetUrl}?svg'" 
+         alt="${data.form.data.title} - ${data.form.data.subtitle}"
+         height="80px"
+    />
 </a>
 `.trim();
 </script>
@@ -31,9 +34,14 @@
     </ConfirmDeleteDialog>
   </div>
 
-  <div class="w-[60%] space-y-4">
+  <div class="space-y-4">
     <h3>Sharing</h3>
-    <CodeBlock>{markdownSnippet}</CodeBlock>
+    <div class="w-fit space-y-2">
+      <CodeBlock code={htmlSnippet} />
+      <div class="text-sm text-muted-foreground">
+        Copy the code above and paste it into your markdown or website.
+      </div>
+    </div>
   </div>
   <WidgetForm {data} edit />
 </HomeLayout>

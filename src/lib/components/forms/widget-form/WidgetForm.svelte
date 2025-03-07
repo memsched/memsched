@@ -34,6 +34,9 @@
   // TODO: Add debounce to preview
 
   const { data, edit = false }: Props = $props();
+  // This counter is used to force the real widget to re-render when the form
+  // is updated in edit mode
+  let updateCounter = $state(0);
 
   const form = superForm(data.form, {
     validators: zodClient(formSchema),
@@ -41,6 +44,7 @@
     dataType: 'json',
     onUpdated({ form }) {
       if (form.message) {
+        ++updateCounter;
         toast.success(form.message);
       }
     },
@@ -399,7 +403,7 @@
         <div>
           <small class="mb-1 ms-1 inline-block text-sm text-muted-foreground">Current</small>
           <img
-            src="/api/widgets/{page.params.id}?svg"
+            src="/api/widgets/{page.params.id}?svg&v={updateCounter}"
             alt="Current preview"
             class="max-h-[150px] object-contain object-left"
           />

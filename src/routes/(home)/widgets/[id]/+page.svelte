@@ -12,14 +12,16 @@
   const { data }: PageProps = $props();
   const userUrl = page.url.origin + '/' + data.user.username;
   const widgetUrl = page.url.origin + '/api/widgets/' + page.params.id;
-  const htmlSnippet = `
+  const htmlSnippet = $derived(
+    `
 <a href="${userUrl}" target="_blank">
-    <img src="${widgetUrl}?svg'" 
-         alt="${data.form.data.title} - ${data.form.data.subtitle}"
+    <img src="${widgetUrl}?svg" 
+         alt="${data.form.data.title}${data.form.data.subtitle ? ' - ' + data.form.data.subtitle : ''}"
          height="80px"
     />
 </a>
-`.trim();
+`.trim()
+  );
 </script>
 
 <HomeLayout class="gap-7">
@@ -36,7 +38,7 @@
 
   <div class="space-y-4">
     <h3>Sharing</h3>
-    <div class="w-fit space-y-2">
+    <div class="space-y-2">
       <CodeBlock code={htmlSnippet} />
       <div class="text-sm text-muted-foreground">
         Copy the code above and paste it into your markdown or website.

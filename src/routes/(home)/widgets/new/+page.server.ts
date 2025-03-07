@@ -76,7 +76,8 @@ export const actions: Actions = {
           })
           .returning()
       )[0];
-      form.data.metrics.forEach(async (metric, i) => {
+
+      for (const [i, metric] of form.data.metrics.entries()) {
         await tx.insert(table.widgetMetric).values({
           id: uuidv4(),
           value: 0,
@@ -88,7 +89,8 @@ export const actions: Actions = {
           widgetId: widget.id,
           userId,
         });
-      });
+      }
+      // TODO: Call function to update the metric values
     });
     return redirect(302, '/widgets');
   },

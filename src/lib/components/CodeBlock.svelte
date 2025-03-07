@@ -22,7 +22,7 @@
 </script>
 
 <pre
-  class="flex items-start justify-between gap-3 text-wrap rounded-md border bg-muted p-4 font-mono text-xs">
+  class="flex items-start justify-between gap-3 text-wrap rounded-md border bg-muted p-4 font-mono text-sm">
     <code>{code}</code>
     <button class="flex items-center" onclick={copyToClipboard}>
         <Icon

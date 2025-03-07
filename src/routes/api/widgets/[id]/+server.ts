@@ -12,7 +12,6 @@ export const GET: RequestHandler = async (event) => {
   if (!widget) {
     return error(404, 'Widget not found');
   }
-  console.log(widget);
 
   const objectives = await db.select().from(objective).where(eq(objective.id, widget.objectiveId));
   // TODO: This should be fine commented out but we should assert the behavior

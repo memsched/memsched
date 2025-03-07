@@ -1,5 +1,6 @@
 <script lang="ts">
   import { type PageProps } from './$types';
+  import { v4 as uuid4 } from 'uuid';
   import CreateNew from '$lib/components/CreateNew.svelte';
   import { IoCubeOutline, IoFolderOpenOutline, IoAdd } from 'svelte-icons-pack/io';
   import HomeLayout from '$lib/components/layouts/HomeLayout.svelte';
@@ -24,7 +25,11 @@
       <div class="mx-auto flex max-w-screen-xl flex-wrap gap-4 p-6 lg:px-10">
         {#each data.widgets as widget}
           <a href="/widgets/{widget}">
-            <img src="/api/widgets/{widget}?svg" alt="MEMsched Widget" class="h-[125px]" />
+            <img
+              src="/api/widgets/{widget}?svg&v={uuid4()}"
+              alt="MEMsched Widget"
+              class="h-[110px]"
+            />
           </a>
         {/each}
       </div>

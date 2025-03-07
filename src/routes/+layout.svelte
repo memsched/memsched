@@ -19,7 +19,7 @@
     <!-- TODO: window.innerWidth does not work as this is rendered on the server -->
     <Toaster
       toastOptions={{
-        className: 'text-sm font-medium',
+        className: 'text-base font-medium',
         position: window.innerWidth > 768 ? 'bottom-right' : 'top-center',
       }}
     />

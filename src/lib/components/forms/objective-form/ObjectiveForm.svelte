@@ -12,7 +12,7 @@
   import { Input } from '$lib/components/ui/input';
   import { Textarea } from '$lib/components/ui/textarea';
   import { capitalize, cn } from '$lib/utils';
-  import { formSchema, type FormSchema } from './schema';
+  import { formSchema, type FormSchema, OBJECTIVE_UNITS } from './schema';
 
   interface Props {
     data: { form: SuperValidated<Infer<FormSchema>> };
@@ -81,17 +81,15 @@
       <Form.Field {form} name="unit">
         <Form.Control>
           {#snippet children({ props })}
-            <Form.Label>Unit*</Form.Label>
+            <Form.Label>Unit</Form.Label>
             <Select.Root type="single" bind:value={$formData.unit} name={props.name}>
               <Select.Trigger {...props}>
-                {$formData.unit ? capitalize($formData.unit) : 'Select a unit'}
+                {capitalize($formData.unit)}
               </Select.Trigger>
               <Select.Content>
-                <Select.Item value="minutes" label="Minutes" />
-                <Select.Item value="hours" label="Hours" />
-                <Select.Item value="pages" label="Pages" />
-                <Select.Item value="words" label="Words" />
-                <Select.Item value="lines" label="Lines" />
+                {#each OBJECTIVE_UNITS as unit}
+                  <Select.Item value={unit} label={capitalize(unit)} />
+                {/each}
               </Select.Content>
             </Select.Root>
           {/snippet}

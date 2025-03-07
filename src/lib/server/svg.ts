@@ -1,39 +1,16 @@
-import type { RequestHandler } from './$types';
+import type { Component } from 'svelte';
 import { render } from 'svelte/server';
+import type { RequestEvent } from '@sveltejs/kit';
 import satori from 'satori';
 import parse from 'html-react-parser';
-import { eq } from 'drizzle-orm';
-import { db } from '$lib/server/db';
-import { objective } from '$lib/server/db/schema';
-import Widget from '$lib/components/Widget.svelte';
-import { error } from '@sveltejs/kit';
 
-export const GET: RequestHandler = async (event) => {
-  const objectiveId = event.params.id;
-  const objectives = await db.select().from(objective).where(eq(objective.id, objectiveId));
-  if (objectives.length === 0 || objectives[0].visibility !== 'public') {
-    return error(404, 'Widget not found');
-  }
-  const ob = objectives[0];
-
-  const props = {
-    title: ob.name,
-    subtitle: ob.description,
-    // borderRadius: 20,
-    // color: 'lightgray',
-    // border: false,
-    // backgroundColor: 'black',
-    metrics: [
-      {
-        value: ob.value,
-        description: 'pages read',
-      },
-    ],
-  };
-
-  const renderSvg = event.url.searchParams.has('svg');
-  const widget = render(Widget, { props }).body;
-
+export async function renderWidget<P extends Record<string, any>>(
+  event: RequestEvent,
+  Widget: Component<P>,
+  props: P,
+  renderSvg: boolean = true
+) {
+  const widget = render<Component<P>>(Widget, { props }).body;
   if (!renderSvg) {
     return new Response(widget, {
       headers: {
@@ -71,10 +48,11 @@ export const GET: RequestHandler = async (event) => {
   ]);
 
   let svg = await satori(parse(widget, { trim: true }), {
-    // debug: true,
     // @ts-ignore
     fonts,
   });
+
+  // TODO: Simplify these regexes
   svg = svg.replace(/<svg[^>]*height="[^"]*"[^>]*>/, (match) =>
     match.replace(/height="[^"]*"/, '')
   );
@@ -87,4 +65,4 @@ export const GET: RequestHandler = async (event) => {
       'Content-Type': 'image/svg+xml',
     },
   });
-};
+}

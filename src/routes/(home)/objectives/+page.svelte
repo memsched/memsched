@@ -11,7 +11,7 @@
   import { FiEdit3, FiPlusCircle, FiTrash2 } from 'svelte-icons-pack/fi';
   import CreateNew from '$lib/components/CreateNew.svelte';
   import HomeLayout from '$lib/components/layouts/HomeLayout.svelte';
-  import { HEADER_HEIGHT } from '$lib/constants';
+  import { HEADER_HEIGHT, SUB_NAV_HEIGHT } from '$lib/constants';
   import IconButton from '$lib/components/ui/IconButton.svelte';
   import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index';
   import * as Dialog from '$lib/components/ui/dialog/index.js';
@@ -19,12 +19,10 @@
   import { capitalize } from '$lib/utils';
 
   const { data }: PageProps = $props();
-
-  const SUB_NAV_HEIGHT = 55;
 </script>
 
 {#if data.objectives.length > 0}
-  <main style="margin-top: {HEADER_HEIGHT}px">
+  <HomeLayout container={false}>
     <div
       class="sticky flex items-center border-b bg-white"
       style="top: {HEADER_HEIGHT}px; height: {SUB_NAV_HEIGHT}px;"
@@ -136,7 +134,7 @@
         </tbody>
       </table>
     </div>
-  </main>
+  </HomeLayout>
 {:else}
   <HomeLayout>
     <div class="flex flex-grow flex-col items-center justify-center">

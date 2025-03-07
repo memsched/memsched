@@ -20,5 +20,27 @@ export function assert(condition: boolean, message: string) {
 }
 
 export function capitalize(str: string) {
-  return str.charAt(0).toUpperCase() + str.slice(1);
+  if (!str) return '';
+  return str
+    .split(' ')
+    .map((word) => (word ? word.charAt(0).toUpperCase() + word.slice(1) : ''))
+    .join(' ');
 }
+
+export const getRandomHexColor = () => {
+  const letters = '0123456789abcdef';
+  let color = '#';
+  for (let i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
+};
+
+export const debounce = <F extends (...args: any[]) => any>(func: F, waitFor: number) => {
+  let timeout: NodeJS.Timeout;
+  return (...args: Parameters<F>): Promise<ReturnType<F>> =>
+    new Promise((resolve) => {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => resolve(func(...args)), waitFor);
+    });
+};

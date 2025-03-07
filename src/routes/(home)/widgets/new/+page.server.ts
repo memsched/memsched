@@ -42,7 +42,6 @@ export const actions: Actions = {
       .where(
         and(
           eq(table.objective.id, form.data.objectiveId),
-          eq(table.objective.visibility, 'public'),
           eq(table.objective.userId, event.locals.session.userId)
         )
       );

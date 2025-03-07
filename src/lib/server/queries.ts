@@ -5,6 +5,23 @@ import { eq, type ExtractTablesWithRelations } from 'drizzle-orm';
 import type { SQLiteTransaction } from 'drizzle-orm/sqlite-core';
 import type { ResultSet } from '@libsql/client';
 
+export async function getObjectiveFromWidgetId(id: string) {
+  const objectives = await db
+    .select({
+      objective: table.objective,
+    })
+    .from(table.widget)
+    .innerJoin(table.objective, eq(table.objective.id, table.widget.objectiveId))
+    .where(eq(table.widget.id, id))
+    .limit(1);
+
+  if (objectives.length === 0) {
+    return null;
+  }
+
+  return objectives[0].objective;
+}
+
 export async function getWidget(id: string) {
   const widgetWithMetrics = await db
     .select({

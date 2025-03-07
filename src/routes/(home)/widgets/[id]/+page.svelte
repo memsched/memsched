@@ -35,15 +35,16 @@
       </Dialog.Trigger>
     </ConfirmDeleteDialog>
   </div>
-
-  <div class="space-y-4">
-    <h3>Sharing</h3>
-    <div class="space-y-2">
-      <CodeBlock code={htmlSnippet} />
-      <div class="text-sm text-muted-foreground">
-        Copy the code above and paste it into your markdown or website.
+  {#if data.objectives.find((o) => o.id === data.form.data.objectiveId)?.visibility === 'public'}
+    <div class="space-y-4">
+      <h3>Sharing</h3>
+      <div class="space-y-2">
+        <CodeBlock code={htmlSnippet} />
+        <div class="text-sm text-muted-foreground">
+          Copy the code above and paste it into your markdown or website.
+        </div>
       </div>
     </div>
-  </div>
+  {/if}
   <WidgetForm {data} edit />
 </HomeLayout>

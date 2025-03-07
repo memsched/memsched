@@ -129,9 +129,9 @@
                 <Form.Label class="flex gap-1.5">
                   <Icon src={IoDocumentLockOutline} className="size-8 *:!stroke-[16px]" />
                   <div class="flex flex-col gap-1.5">
-                    <div class="font-medium">Public</div>
+                    <div class="font-medium">Private</div>
                     <div class="font-normal text-muted-foreground">
-                      Keep your progress to yourself
+                      Keep your progress to yourself. Widgets will be visible to you only.
                     </div>
                   </div>
                 </Form.Label>

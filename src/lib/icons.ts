@@ -380,6 +380,7 @@ export const CIRCLE_FLAG_ICONS: Record<string, string> = {
   Zimbabwe: 'https://hatscripts.github.io/circle-flags/flags/zw.svg',
 };
 
+// TODO: Remove all trademarked logos
 export const LOGO_ICONS = {
   '100tb': 'https://cdn.svgporn.com/logos/100tb.svg',
   '500px': 'https://cdn.svgporn.com/logos/500px.svg',

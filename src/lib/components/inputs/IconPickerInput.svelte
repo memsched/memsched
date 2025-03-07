@@ -20,7 +20,6 @@
   let iconIndex: IndexedIcon[] = [];
   let allFilteredIcons = $state([] as [string, string[]][]);
   let visibleFilteredIcons = $state([] as [string, string[]][]);
-  let searchInput = '';
   let noResults = $derived(allFilteredIcons.flatMap(([, icons]) => icons).length === 0);
   let debounceTimer: ReturnType<typeof setTimeout>;
 
@@ -130,7 +129,6 @@
 
   function loadMoreIcons() {
     if (!hasMoreIcons || isLoading) return;
-
     isLoading = true;
 
     // Reduced delay for preloading
@@ -143,7 +141,6 @@
 
   function searchIcons(e: Event) {
     const inputValue = (e.target as HTMLInputElement).value.toLowerCase();
-    searchInput = inputValue;
 
     // Debounce the search to prevent excessive rendering
     clearTimeout(debounceTimer);

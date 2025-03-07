@@ -31,7 +31,6 @@
   }
 
   // TODO: Add dark mode to widget with url param
-  // TODO: Add debounce to preview
 
   const { data, edit = false }: Props = $props();
   // This counter is used to force the real widget to re-render when the form

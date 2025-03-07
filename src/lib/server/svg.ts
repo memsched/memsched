@@ -48,7 +48,6 @@ export async function renderWidget<P extends Record<string, any>>(
   ]);
 
   let svg = await satori(parse(widget, { trim: true }), {
-    // debug: true,
     // @ts-ignore
     fonts,
   });

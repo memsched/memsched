@@ -36,6 +36,9 @@ export const formSchema = z.object({
   imageUrl: z
     .string()
     .url({ message: 'Please enter a valid image URL.' })
+    .refine((url) => !url || url.toLowerCase().endsWith('.svg'), {
+      message: 'Image URL must end with .svg',
+    })
     .nullable()
     .transform((v) => (v === '' ? null : v)),
   imagePlacement: z.enum(['left', 'right']).default('left'),

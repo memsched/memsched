@@ -20,7 +20,7 @@ export const GET: RequestHandler = async (event) => {
   try {
     const decodedConfig = JSON.parse(atob(base64Config));
     config = formSchema.parse(decodedConfig);
-  } catch (e) {
+  } catch (_) {
     return error(400, 'Invalid widget config');
   }
 

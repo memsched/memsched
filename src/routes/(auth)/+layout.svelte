@@ -1,4 +1,5 @@
 <script lang="ts">
+  // TODO: Prefix auth routes with /auth
   import AuthHeader from '$lib/components/headers/AuthHeader.svelte';
 
   const { children } = $props();

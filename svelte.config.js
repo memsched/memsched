@@ -41,7 +41,8 @@ const config = {
         'base-uri': ['self'],
         'form-action': ['self'],
         'frame-ancestors': ['none'],
-        'upgrade-insecure-requests': true,
+        // TODO: Remove this comment in prod
+        // 'upgrade-insecure-requests': true,
         'block-all-mixed-content': true,
       },
       // reportOnly: {

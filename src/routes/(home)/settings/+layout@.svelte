@@ -7,7 +7,6 @@
   const tabs = [
     { name: 'Public Profile', href: '/settings/profile' },
     { name: 'Account', href: '/settings/account' },
-    { name: 'About', href: '/settings/about' },
   ];
   const { children } = $props();
 </script>
@@ -25,7 +24,7 @@
         {/each}
       </div>
     </div>
-    <div class="mx-auto w-full max-w-screen-xl p-6 lg:px-10">
+    <div class="mx-auto w-full max-w-screen-lg px-6 py-12 lg:px-10">
       {@render children()}
     </div>
   </HomeLayout>

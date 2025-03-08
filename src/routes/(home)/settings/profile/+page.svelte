@@ -7,7 +7,7 @@
 </script>
 
 <div class="flex justify-between gap-28">
-  <div class="w-full">
+  <div class="w-full min-w-0">
     <h2>Profile Information</h2>
     <p class="mb-10 mt-2 text-muted-foreground">
       Update your profile information that will be visible to other users.

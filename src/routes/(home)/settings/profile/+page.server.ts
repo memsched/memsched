@@ -3,10 +3,11 @@ import type { PageServerLoad, Actions } from './$types';
 import { redirect, fail } from '@sveltejs/kit';
 import { db } from '$lib/server/db';
 import { user } from '$lib/server/db/schema';
-import { eq } from 'drizzle-orm';
+import { eq, and, not } from 'drizzle-orm';
 import { formSchema } from '$lib/components/forms/profile-form/schema';
-import { superValidate, message } from 'sveltekit-superforms';
+import { superValidate, message, setError } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
+import { z } from 'zod';
 
 export const load: PageServerLoad = async (event) => {
   if (!event.locals.session) {
@@ -33,8 +34,19 @@ export const load: PageServerLoad = async (event) => {
   };
 };
 
+// Helper function to check if username is already taken by another user
+async function isUsernameTaken(username: string, currentUserId: string) {
+  const existingUsers = await db
+    .select()
+    .from(user)
+    .where(and(eq(user.username, username), not(eq(user.id, currentUserId))))
+    .limit(1);
+
+  return existingUsers.length > 0;
+}
+
 export const actions: Actions = {
-  default: async (event) => {
+  post: async (event) => {
     if (!event.locals.session) {
       return redirect(302, '/auth/signin');
     }
@@ -44,6 +56,15 @@ export const actions: Actions = {
 
     if (!form.valid) {
       return fail(400, { form });
+    }
+
+    // Check if username is already taken by another user
+    if (form.data.username !== currentUser.username) {
+      const usernameTaken = await isUsernameTaken(form.data.username, currentUser.id);
+      if (usernameTaken) {
+        setError(form, 'username', 'This username is already taken.');
+        return fail(400, { form });
+      }
     }
 
     try {
@@ -66,5 +87,30 @@ export const actions: Actions = {
         error: 'Failed to update profile. Please try again.',
       });
     }
+  },
+
+  // Add a check action for debounced username validation
+  check: async (event) => {
+    if (!event.locals.session) {
+      return redirect(302, '/auth/signin');
+    }
+
+    const currentUser = event.locals.user as LocalUser;
+    const form = await superValidate(event, zod(z.object({ username: z.string() })));
+
+    if (!form.valid) {
+      return fail(400, { form });
+    }
+
+    // Check if username is already taken by another user
+    if (form.data.username !== currentUser.username) {
+      const usernameTaken = await isUsernameTaken(form.data.username, currentUser.id);
+      if (usernameTaken) {
+        setError(form, 'username', 'This username is already taken.');
+        return fail(400, { form });
+      }
+    }
+
+    return { form };
   },
 };

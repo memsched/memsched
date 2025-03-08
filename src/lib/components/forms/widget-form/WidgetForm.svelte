@@ -390,7 +390,7 @@
         </Form.Control>
       </Form.Field>
     </section>
-    {#if import.meta.env.VITE_DEBUG_FORMS === '1' && browser}
+    {#if browser && import.meta.env.VITE_DEBUG_FORMS === '1' && import.meta.env.DEV}
       <SuperDebug data={$formData} />
     {/if}
   </div>

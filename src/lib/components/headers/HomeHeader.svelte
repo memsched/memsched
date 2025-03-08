@@ -13,7 +13,7 @@
   import LogoShort from '../svgs/LogoShort.svelte';
   import HomeNavLink from './HomeNavLink.svelte';
   import { getUserOverviewUrl } from '$lib/api';
-  import Profile from '../account/Profile.svelte';
+  import HeaderProfile from '../account/HeaderProfile.svelte';
 
   const NAV_ITEMS = [
     {
@@ -49,7 +49,7 @@
       </div>
     </div>
     {#if page.data.user !== null}
-      <Profile />
+      <HeaderProfile />
     {:else}
       <div class="flex gap-3">
         <Button href="/auth/signin" size="sm">Join Now</Button>

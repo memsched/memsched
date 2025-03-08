@@ -37,7 +37,7 @@
         <thead>
           <tr>
             <th
-              class="sticky z-10 bg-background text-left font-semibold"
+              class="sticky z-10 bg-back text-left font-semibold"
               style="top: {HEADER_HEIGHT + SUB_NAV_HEIGHT}px;"
             >
               <div class="mx-auto max-w-screen-xl px-6 lg:px-10">

@@ -8,7 +8,7 @@
   import * as Form from '$lib/components/ui/form';
   import * as Select from '$lib/components/ui/select';
   import * as RadioGroup from '$lib/components/ui/radio-group';
-  import * as Tabs from '$lib/components/ui/tabs/index.js';
+  import * as Tabs from '$lib/components/ui/tabs/index';
   import { Input } from '$lib/components/ui/input';
   import { Textarea } from '$lib/components/ui/textarea';
   import { capitalize, cn } from '$lib/utils';
@@ -179,7 +179,7 @@
   {:else}
     <Form.Button>Create Objective</Form.Button>
   {/if}
-  {#if import.meta.env.VITE_DEBUG_FORMS === '1' && browser}
+  {#if browser && import.meta.env.VITE_DEBUG_FORMS === '1' && import.meta.env.DEV}
     <SuperDebug data={$formData} />
   {/if}
 </form>

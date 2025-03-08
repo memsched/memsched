@@ -13,7 +13,7 @@ export const load: PageServerLoad = async (event) => {
   if (users.length === 0) {
     return error(404, 'User not found');
   }
-  let user = users[0];
+  const user = users[0];
 
   const widgets = await db
     .select({

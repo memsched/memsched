@@ -3,7 +3,6 @@
   import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
   import { Icon } from 'svelte-icons-pack';
   import { FiLogOut, FiSettings } from 'svelte-icons-pack/fi';
-  import Avvvatars from '../avvvatars/Avvvatars.svelte';
   import { enhance } from '$app/forms';
   import UserAvatar from './UserAvatar.svelte';
 </script>

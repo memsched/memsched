@@ -29,7 +29,7 @@
     >
       <div class="mx-auto flex w-full max-w-screen-xl justify-between px-6 lg:px-10">
         <div></div>
-        <IconButton href="/objectives/new" size="sm" icon={IoAdd}>New</IconButton>
+        <IconButton href="/objectives/new" size="sm" variant="accent" icon={IoAdd}>New</IconButton>
       </div>
     </div>
     <div class="w-full">
@@ -37,7 +37,7 @@
         <thead>
           <tr>
             <th
-              class="sticky z-10 bg-back text-left font-semibold"
+              class="bg-back sticky z-10 text-left font-semibold"
               style="top: {HEADER_HEIGHT + SUB_NAV_HEIGHT}px;"
             >
               <div class="mx-auto max-w-screen-xl px-6 lg:px-10">

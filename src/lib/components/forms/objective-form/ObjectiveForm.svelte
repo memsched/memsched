@@ -175,9 +175,9 @@
     </div>
   </section>
   {#if edit}
-    <Form.Button>Update Objective</Form.Button>
+    <Form.Button variant="accent">Update Objective</Form.Button>
   {:else}
-    <Form.Button>Create Objective</Form.Button>
+    <Form.Button variant="accent">Create Objective</Form.Button>
   {/if}
   {#if browser && import.meta.env.VITE_DEBUG_FORMS === '1' && import.meta.env.DEV}
     <SuperDebug data={$formData} />

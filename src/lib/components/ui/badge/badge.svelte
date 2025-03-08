@@ -11,6 +11,7 @@
         destructive:
           'bg-destructive text-destructive-foreground hover:bg-destructive/80 border-transparent',
         outline: 'text-foreground',
+        accent: 'bg-accent text-accent-foreground hover:bg-accent/80 border-accent-foreground',
       },
     },
     defaultVariants: {

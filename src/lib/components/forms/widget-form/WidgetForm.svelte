@@ -429,9 +429,9 @@
       </div>
     </div>
     {#if edit}
-      <Form.Button>Update Widget</Form.Button>
+      <Form.Button variant="accent">Update Widget</Form.Button>
     {:else}
-      <Form.Button>Create Widget</Form.Button>
+      <Form.Button variant="accent">Create Widget</Form.Button>
     {/if}
   </div>
 </form>

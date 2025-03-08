@@ -32,13 +32,13 @@
     class="mx-auto flex w-full max-w-screen-xl items-center justify-between px-6 lg:px-10"
     style="height: {HEADER_HEIGHT}px"
   >
-    <div class="flex h-full items-center gap-16">
+    <div class="flex h-full items-center gap-12">
       {#if page.url.pathname === '/'}
-        <button onclick={() => scrollToElement('hero')}>
+        <button onclick={() => scrollToElement('hero')} class="fill-primary">
           <LogoShort />
         </button>
       {:else}
-        <a href="/">
+        <a href="/" class="fill-primary">
           <LogoShort />
         </a>
       {/if}

@@ -6,14 +6,14 @@
 
 <section id="hero" class="flex flex-grow flex-col items-center justify-center text-center">
   <div class="space-y-3">
-    <Badge class="text-sm">v2 Released 🎉</Badge>
+    <Badge class="text-sm" variant="accent">v2 Released 🎉</Badge>
     <h1>Show the world what you're learning.</h1>
     <h4 class="font-medium">
       Set goals, log progress, and showcase your journey with beautiful widgets.
     </h4>
   </div>
   <div class="relative mt-8 w-fit">
-    <Button size="cta" href="/auth/signin">Get Started for Free</Button>
+    <Button size="cta" href="/auth/signin" variant="accent">Get Started for Free</Button>
     <Arrow class="tran absolute left-[105%]  top-[60%] rotate-6" />
   </div>
 </section>

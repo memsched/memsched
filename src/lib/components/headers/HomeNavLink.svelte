@@ -27,7 +27,7 @@
   {href}
   class={cn(
     'relative px-1 text-muted-foreground after:absolute after:bottom-[-1px] after:left-0 after:h-[2px] after:w-full after:origin-left after:scale-x-0 after:bg-current after:transition-transform after:duration-200 hover:no-underline hover:after:scale-x-100 max-md:px-3',
-    isActive && 'text-black after:scale-x-100'
+    isActive && 'text-accent-foreground after:scale-x-100'
   )}
   childrenClass="max-md:hidden"
 >

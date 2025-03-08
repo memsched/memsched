@@ -10,6 +10,9 @@
     username={data.publicUser.username}
     name={data.publicUser.name}
     avatarUrl={data.publicUser.avatarUrl}
+    bio={data.publicUser.bio}
+    location={data.publicUser.location}
+    website={data.publicUser.website}
     edit={data.isOwner}
   />
   <div class="w-full space-y-3">

@@ -43,6 +43,13 @@
       "when": 1741371148923,
       "tag": "0005_add_objective_log",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "6",
+      "when": 1741439183786,
+      "tag": "0006_add_user_rows",
+      "breakpoints": true
     }
   ]
 }

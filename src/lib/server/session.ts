@@ -33,6 +33,7 @@ export async function validateSessionToken(token: string) {
       // Adjust user table here to tweak returned data
       user: {
         id: table.user.id,
+        email: table.user.email,
         username: table.user.username,
         name: table.user.name,
         avatarUrl: table.user.avatarUrl,

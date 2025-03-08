@@ -1,42 +1,32 @@
 <script lang="ts">
-  import { page } from '$app/state';
-  import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
-  import { Icon } from 'svelte-icons-pack';
-  import { FiLogOut, FiSettings } from 'svelte-icons-pack/fi';
-  import { enhance } from '$app/forms';
+  import { FiCamera } from 'svelte-icons-pack/fi';
+  import IconButton from '../ui/IconButton.svelte';
   import UserAvatar from './UserAvatar.svelte';
+  import { HEADER_HEIGHT } from '$lib/constants';
+
+  interface Props {
+    username: string;
+    name: string;
+    avatarUrl: string | null;
+    edit: boolean;
+  }
+  const { name, username, avatarUrl, edit }: Props = $props();
 </script>
 
-<DropdownMenu.Root>
-  <DropdownMenu.Trigger
-    class="flex flex-row items-center justify-center gap-3 border border-transparent"
-  >
-    <div class="flex flex-col text-end *:leading-tight">
-      <small>{page.data.user.name}</small>
-      <small class="font-light text-muted-foreground">{page.data.user.username}</small>
-    </div>
-    <UserAvatar username={page.data.user.username} avatarUrl={page.data.user.avatarUrl} />
-  </DropdownMenu.Trigger>
-  <DropdownMenu.Content class="w-40" align="end">
-    <DropdownMenu.Group>
-      <DropdownMenu.Item class="cursor-pointer">
-        {#snippet child({ props })}
-          <a href="/settings" {...props}>
-            <Icon src={FiSettings} className="!text-muted-foreground" />
-            Settings
-          </a>
-        {/snippet}
-      </DropdownMenu.Item>
-      <form action="/auth/signout" method="POST" use:enhance>
-        <DropdownMenu.Item class="w-full cursor-pointer">
-          {#snippet child({ props })}
-            <button {...props}>
-              <Icon src={FiLogOut} className="!text-muted-foreground" />
-              Sign Out
-            </button>
-          {/snippet}
-        </DropdownMenu.Item>
-      </form>
-    </DropdownMenu.Group>
-  </DropdownMenu.Content>
-</DropdownMenu.Root>
+<div class="sticky h-fit w-[250px] flex-shrink-0" style="top: calc({HEADER_HEIGHT}px + 5rem)">
+  <div class="relative">
+    <UserAvatar {username} {avatarUrl} large />
+    {#if edit}
+      <IconButton
+        href="/account/settings"
+        icon={FiCamera}
+        class="absolute bottom-0 left-0 border-2 border-background text-base hover:bg-gray-800 [&_svg]:ms-1 [&_svg]:size-5"
+      >
+        Edit
+      </IconButton>
+    {/if}
+  </div>
+  <h2 class="mt-8">{name}</h2>
+  <p class="text-lg text-muted-foreground">{username}</p>
+  <p class="mt-5">This is your public profile page. You can add widgets to your profile here.</p>
+</div>

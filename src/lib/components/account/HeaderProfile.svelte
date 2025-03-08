@@ -2,7 +2,7 @@
   import { page } from '$app/state';
   import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
   import { Icon } from 'svelte-icons-pack';
-  import { FiHelpCircle, FiLifeBuoy, FiLogOut, FiMail, FiSettings } from 'svelte-icons-pack/fi';
+  import { FiLifeBuoy, FiLogOut, FiSettings } from 'svelte-icons-pack/fi';
   import { enhance } from '$app/forms';
   import UserAvatar from './UserAvatar.svelte';
   import DropdownMenuSeparator from '../ui/dropdown-menu/dropdown-menu-separator.svelte';

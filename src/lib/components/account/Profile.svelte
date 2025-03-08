@@ -17,14 +17,14 @@
   const { name, username, avatarUrl, bio, location, website, edit }: Props = $props();
 </script>
 
-<div class="sticky h-fit w-[250px] flex-shrink-0" style="top: calc({HEADER_HEIGHT}px + 5rem)">
+<div class="sticky h-fit w-[250px] flex-shrink-0" style="top: calc({HEADER_HEIGHT}px + 6.5rem)">
   <div class="relative">
     <UserAvatar {username} {avatarUrl} large />
     {#if edit}
       <IconButton
         href="/account/settings"
         icon={FiCamera}
-        class="border-back absolute bottom-0 left-0 border-2 text-base hover:bg-gray-800 [&_svg]:ms-1 [&_svg]:size-5"
+        class="absolute bottom-0 left-0 border-2 border-back text-base hover:bg-gray-800 [&_svg]:ms-1 [&_svg]:size-5"
       >
         Edit
       </IconButton>

@@ -107,11 +107,11 @@
           </p>
         </div>
         <ConfirmDeleteDialog action="?/deleteAccount" name="userId" value={data.user.id}>
-          {#snippet children()}
-            <Dialog.Trigger>
-              <Button variant="destructive">Delete Account</Button>
-            </Dialog.Trigger>
-          {/snippet}
+          <Dialog.Trigger>
+            {#snippet child({ props })}
+              <Button variant="destructive" {...props}>Delete Account</Button>
+            {/snippet}
+          </Dialog.Trigger>
         </ConfirmDeleteDialog>
       </div>
     </div>

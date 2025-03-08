@@ -51,12 +51,13 @@ export const actions: Actions = {
     const ob = objectives[0];
 
     const userId = event.locals.session.userId;
+    const widgetId = uuidv4();
     await db.transaction(async (tx) => {
       const widget = (
         await tx
           .insert(table.widget)
           .values({
-            id: uuidv4(),
+            id: widgetId,
             title: form.data.title,
             subtitle: form.data.subtitle,
             // TODO: Sanitize imageUrl
@@ -99,6 +100,6 @@ export const actions: Actions = {
         });
       }
     });
-    return redirect(302, '/widgets');
+    return redirect(302, `/widgets/new/${widgetId}`);
   },
 };

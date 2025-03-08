@@ -7,21 +7,9 @@
   import ConfirmDeleteDialog from '$lib/components/dialogs/ConfirmDeleteDialog.svelte';
   import * as Dialog from '$lib/components/ui/dialog';
   import WidgetForm from '$lib/components/forms/widget-form/WidgetForm.svelte';
-  import CodeBlock from '$lib/components/CodeBlock.svelte';
+  import ShareWidget from '$lib/components/ShareWidget.svelte';
 
   const { data }: PageProps = $props();
-  const userUrl = page.url.origin + '/' + data.user.username;
-  const widgetUrl = page.url.origin + '/api/widgets/' + page.params.id;
-  const htmlSnippet = $derived(
-    `
-<a href="${userUrl}" target="_blank">
-    <img src="${widgetUrl}?svg" 
-         alt="${data.form.data.title}${data.form.data.subtitle ? ' - ' + data.form.data.subtitle : ''}"
-         height="80px"
-    />
-</a>
-`.trim()
-  );
 </script>
 
 <HomeLayout class="gap-7">
@@ -38,12 +26,11 @@
   {#if data.objectives.find((o) => o.id === data.form.data.objectiveId)?.visibility === 'public'}
     <div class="space-y-4">
       <h3>Sharing</h3>
-      <div class="space-y-2">
-        <CodeBlock code={htmlSnippet} />
-        <div class="text-sm text-muted-foreground">
-          Copy the code above and paste it into your markdown or website.
-        </div>
-      </div>
+      <ShareWidget
+        title={data.form.data.title}
+        subtitle={data.form.data.subtitle}
+        username={data.user.username}
+      />
     </div>
   {/if}
   <WidgetForm {data} edit />

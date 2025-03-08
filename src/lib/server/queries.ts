@@ -22,7 +22,7 @@ export async function getObjectiveFromWidgetId(id: string) {
   return objectives[0].objective;
 }
 
-export async function getWidget(id: string) {
+export async function getWidgetWithMetrics(id: string) {
   const widgetWithMetrics = await db
     .select({
       widget: table.widget,

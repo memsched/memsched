@@ -6,7 +6,7 @@ import { eq, and } from 'drizzle-orm';
 import { formSchema, type FormSchema } from '$lib/components/forms/widget-form/schema';
 import { db } from '$lib/server/db';
 import type { z } from 'zod';
-import { computeMetricValue, getWidget } from '$lib/server/queries';
+import { computeMetricValue, getWidgetWithMetrics } from '$lib/server/queries';
 import type { LocalUser } from '$lib/types';
 import * as table from '$lib/server/db/schema';
 import { v4 as uuidv4 } from 'uuid';
@@ -17,7 +17,7 @@ export const load: PageServerLoad = async (event) => {
   }
 
   const widgetId = event.params.id;
-  const widget = await getWidget(widgetId);
+  const widget = await getWidgetWithMetrics(widgetId);
   if (!widget || widget.userId !== event.locals.session.userId) {
     return error(404, 'Widget not found');
   }

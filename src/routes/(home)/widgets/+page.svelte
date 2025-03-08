@@ -6,6 +6,7 @@
   import HomeLayout from '$lib/components/layouts/HomeLayout.svelte';
   import IconButton from '$lib/components/ui/IconButton.svelte';
   import { HEADER_HEIGHT, SUB_NAV_HEIGHT } from '$lib/constants';
+  import { browser } from '$app/environment';
 
   const { data }: PageProps = $props();
 </script>
@@ -25,11 +26,13 @@
       <div class="mx-auto flex max-w-screen-xl flex-wrap gap-4 p-6 lg:px-10">
         {#each data.widgets as widget}
           <a href="/widgets/{widget}">
-            <img
-              src="/api/widgets/{widget}?svg&v={uuid4()}"
-              alt="MEMsched Widget"
-              class="h-[110px]"
-            />
+            {#if browser}
+              <img
+                src="/api/widgets/{widget}?svg&v={uuid4()}"
+                alt="MEMsched Widget"
+                class="h-[110px]"
+              />
+            {/if}
           </a>
         {/each}
       </div>

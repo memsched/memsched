@@ -2,11 +2,11 @@ import type { RequestHandler } from './$types';
 import { type WidgetJoinMetrics } from '$lib/server/db/schema';
 import Widget from '$lib/components/Widget.svelte';
 import { error } from '@sveltejs/kit';
-import { getObjectiveFromWidgetId, getWidget } from '$lib/server/queries';
+import { getObjectiveFromWidgetId, getWidgetWithMetrics } from '$lib/server/queries';
 import { renderWidget } from '$lib/server/svg';
 
 export const GET: RequestHandler = async (event) => {
-  const widget = await getWidget(event.params.id);
+  const widget = await getWidgetWithMetrics(event.params.id);
   if (!widget) {
     return error(404, 'Widget not found');
   }

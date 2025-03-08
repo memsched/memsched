@@ -16,6 +16,7 @@
 
   const form = superForm(data.form, {
     validators: zodClient(formSchema),
+    resetForm: false,
     onUpdated({ form }) {
       if (form.message) {
         toast.success(form.message);
@@ -76,7 +77,19 @@
         <Form.Control>
           {#snippet children({ props })}
             <Form.Label>Website</Form.Label>
-            <Input {...props} bind:value={$formData.website} placeholder="https://" />
+            <Input
+              {...props}
+              value={$formData.website}
+              oninput={(e) => {
+                const value = e.currentTarget.value;
+                if (value.length > 0) {
+                  $formData.website = value;
+                } else {
+                  $formData.website = null;
+                }
+              }}
+              placeholder="https://"
+            />
           {/snippet}
         </Form.Control>
         <Form.Description>Your personal website or social profile</Form.Description>

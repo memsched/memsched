@@ -5,7 +5,7 @@ import { db } from '$lib/server/db';
 import { user } from '$lib/server/db/schema';
 import { eq } from 'drizzle-orm';
 import { formSchema } from '$lib/components/forms/profile-form/schema';
-import { superValidate } from 'sveltekit-superforms';
+import { superValidate, message } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 
 export const load: PageServerLoad = async (event) => {
@@ -15,14 +15,13 @@ export const load: PageServerLoad = async (event) => {
 
   const currentUser = event.locals.user as LocalUser;
 
-  // Create a form with the current user data
   const form = await superValidate(
     {
       username: currentUser.username,
       name: currentUser.name,
-      bio: currentUser.bio || '',
-      location: currentUser.location || '',
-      website: currentUser.website || '',
+      bio: currentUser.bio,
+      location: currentUser.location,
+      website: currentUser.website,
       avatarUrl: currentUser.avatarUrl,
     },
     zod(formSchema)
@@ -59,8 +58,7 @@ export const actions: Actions = {
         })
         .where(eq(user.id, currentUser.id));
 
-      form.message = 'Profile updated successfully!';
-      return { form };
+      return message(form, 'Profile updated successfully.');
     } catch (error) {
       console.error('Error updating profile:', error);
       return fail(500, {

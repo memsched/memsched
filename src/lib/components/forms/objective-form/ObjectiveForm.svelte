@@ -179,7 +179,7 @@
   {:else}
     <Form.Button>Create Objective</Form.Button>
   {/if}
-  {#if import.meta.env.VITE_DEBUG_FORMS && browser}
+  {#if import.meta.env.VITE_DEBUG_FORMS === '1' && browser}
     <SuperDebug data={$formData} />
   {/if}
 </form>

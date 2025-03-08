@@ -21,7 +21,7 @@
       <Dialog.Title>Are you absolutely sure?</Dialog.Title>
     </Dialog.Header>
     <Dialog.Description>
-      This action cannot be undone. This will permanently delete the objective.
+      This action cannot be undone. This will permanently delete it.
     </Dialog.Description>
     <Dialog.Footer>
       <form {action} method="POST" use:enhance>

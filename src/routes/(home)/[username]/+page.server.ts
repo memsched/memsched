@@ -1,0 +1,36 @@
+import type { PageServerLoad } from './$types';
+import { db } from '$lib/server/db';
+import * as table from '$lib/server/db/schema';
+import { eq, and, desc } from 'drizzle-orm';
+import { error } from '@sveltejs/kit';
+
+export const load: PageServerLoad = async (event) => {
+  const users = await db
+    .select()
+    .from(table.user)
+    .where(eq(table.user.username, event.params.username));
+
+  if (users.length === 0) {
+    return error(404, 'User not found');
+  }
+  let user = users[0];
+
+  const widgets = await db
+    .select({
+      id: table.widget.id,
+    })
+    .from(table.widget)
+    .innerJoin(table.objective, eq(table.objective.id, table.widget.objectiveId))
+    .where(and(eq(table.widget.userId, user.id), eq(table.objective.visibility, 'public')))
+    .orderBy(desc(table.widget.createdAt));
+
+  return {
+    publicUser: {
+      username: user.username,
+      name: user.name,
+      avatarUrl: user.avatarUrl,
+      widgets: widgets.flatMap(({ id }) => id),
+    },
+    isOwner: user.id === event.locals.session?.userId,
+  };
+};

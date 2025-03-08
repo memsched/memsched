@@ -161,7 +161,7 @@
 <div class="space-y-2">
   <Input class="w-full" type="text" placeholder="Search" oninput={searchIcons} />
   <div
-    class="max-h-[300px] space-y-4 overflow-y-auto rounded-md border border-gray-200 p-4"
+    class="max-h-[300px] space-y-4 overflow-y-auto rounded-md border border-gray-200 bg-background p-4"
     bind:this={containerRef}
   >
     {#if noResults}

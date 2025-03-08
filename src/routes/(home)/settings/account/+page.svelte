@@ -13,7 +13,7 @@
 </script>
 
 <div class="mb-8">
-  <h2>Account Settings</h2>
+  <h1 class="text-3xl font-semibold tracking-tight">Account Settings</h1>
   <p class="mt-2 text-muted-foreground">Manage your personal account settings and preferences.</p>
 </div>
 
@@ -26,7 +26,7 @@
 
     <div class="space-y-6">
       <!-- Current Subscription -->
-      <div class="rounded-lg border bg-card p-5">
+      <div class="rounded-lg border bg-background p-5">
         <div class="flex flex-col gap-4">
           <div class="flex items-center justify-between">
             <h5 class="font-medium">Current Subscription</h5>

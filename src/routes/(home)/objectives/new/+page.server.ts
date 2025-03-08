@@ -9,7 +9,7 @@ import * as table from '$lib/server/db/schema';
 
 export const load: PageServerLoad = async (event) => {
   if (!event.locals.session) {
-    return redirect(302, '/signin');
+    return redirect(302, '/auth/signin');
   }
   return {
     form: await superValidate(zod(formSchema)),

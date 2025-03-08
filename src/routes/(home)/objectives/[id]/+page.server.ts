@@ -10,7 +10,7 @@ import type { z } from 'zod';
 
 export const load: PageServerLoad = async (event) => {
   if (!event.locals.session) {
-    return redirect(302, '/signin');
+    return redirect(302, '/auth/signin');
   }
 
   const objectiveId = event.params.id;

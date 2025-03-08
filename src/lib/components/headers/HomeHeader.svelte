@@ -2,7 +2,6 @@
   import { page } from '$app/state';
   import {
     IoArrowForward,
-    IoCompassOutline,
     IoCubeOutline,
     IoFlashOutline,
     IoFolderOpenOutline,
@@ -24,7 +23,7 @@
     },
     { href: '/objectives', text: 'Objectives', icon: IoFolderOpenOutline },
     { href: '/widgets', text: 'Widgets', icon: IoCubeOutline },
-    { href: '/explore', text: 'Explore', icon: IoCompassOutline },
+    // { href: '/explore', text: 'Explore', icon: IoCompassOutline },
   ];
 </script>
 
@@ -51,13 +50,13 @@
       <Profile />
     {:else}
       <div class="flex gap-3">
-        <Button href="/signin" size="sm">Join Now</Button>
+        <Button href="/auth/signin" size="sm">Join Now</Button>
         <IconButton
           icon={IoArrowForward}
           variant="outline"
           size="sm"
           class="animate-svg"
-          href="/signin"
+          href="/auth/signin"
         >
           Log In
         </IconButton>

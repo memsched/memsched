@@ -12,7 +12,7 @@ import { computeMetricValue } from '$lib/server/queries';
 
 export const load: PageServerLoad = async (event) => {
   if (!event.locals.session) {
-    return redirect(302, '/signin');
+    return redirect(302, '/auth/signin');
   }
 
   return {

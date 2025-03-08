@@ -35,7 +35,7 @@
           </a>
         {/snippet}
       </DropdownMenu.Item>
-      <form action="/signout" method="POST" use:enhance>
+      <form action="/auth/signout" method="POST" use:enhance>
         <DropdownMenu.Item class="w-full cursor-pointer">
           {#snippet child({ props })}
             <button {...props}>

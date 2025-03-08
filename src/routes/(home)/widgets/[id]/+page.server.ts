@@ -13,7 +13,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 export const load: PageServerLoad = async (event) => {
   if (!event.locals.session) {
-    return redirect(302, '/signin');
+    return redirect(302, '/auth/signin');
   }
 
   const widgetId = event.params.id;

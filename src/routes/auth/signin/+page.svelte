@@ -12,9 +12,9 @@
       iconPosition="left"
       variant="outline"
       size="lg"
-      href="/signin/google">Continue with Google</IconButton
+      href="/auth/signin/google">Continue with Google</IconButton
     >
-    <IconButton icon={AiOutlineGithub} iconPosition="left" size="lg" href="/signin/github"
+    <IconButton icon={AiOutlineGithub} iconPosition="left" size="lg" href="/auth/signin/github"
       >Continue with Github</IconButton
     >
   </div>

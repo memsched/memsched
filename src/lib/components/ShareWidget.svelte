@@ -17,8 +17,8 @@
 <a href="${userUrl}" target="_blank">
     <img src="${widgetUrl}?svg" 
          alt="${title}${subtitle ? ' - ' + subtitle : ''}"
-         height="80px"
          loading="eager"
+         height="80px"
     />
 </a>
 `.trim()

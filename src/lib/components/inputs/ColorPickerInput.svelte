@@ -64,13 +64,15 @@
       >
         {#if value}
           <div
-            class="size-6 rounded border bg-cover bg-center transition-all"
+            class="size-6 flex-shrink-0 rounded border bg-cover bg-center transition-all"
             style="background-color: {value}"
           ></div>
         {:else}
           <Icon src={IoColorFillOutline} className="ml-1 size-6 !text-muted-foreground" />
         {/if}
-        <span>{value ? value : 'Pick a color'}</span>
+        <span class="overflow-hidden text-ellipsis whitespace-nowrap"
+          >{value ? value : 'Pick a color'}</span
+        >
       </Button>
     {/snippet}
   </Popover.Trigger>

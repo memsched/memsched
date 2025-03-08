@@ -32,19 +32,21 @@
     class="mx-auto flex w-full max-w-screen-xl items-center justify-between px-6 lg:px-10"
     style="height: {HEADER_HEIGHT}px"
   >
-    {#if page.url.pathname === '/'}
-      <button onclick={() => scrollToElement('hero')}>
-        <LogoShort />
-      </button>
-    {:else}
-      <a href="/">
-        <LogoShort />
-      </a>
-    {/if}
-    <div class="flex h-full gap-9 *:h-full">
-      {#each NAV_ITEMS as { href, text, icon }}
-        <HomeNavLink {href} {text} {icon} />
-      {/each}
+    <div class="flex h-full items-center gap-16">
+      {#if page.url.pathname === '/'}
+        <button onclick={() => scrollToElement('hero')}>
+          <LogoShort />
+        </button>
+      {:else}
+        <a href="/">
+          <LogoShort />
+        </a>
+      {/if}
+      <div class="flex h-full gap-9 *:h-full">
+        {#each NAV_ITEMS as { href, text, icon }}
+          <HomeNavLink {href} {text} {icon} />
+        {/each}
+      </div>
     </div>
     {#if page.data.user !== null}
       <Profile />

@@ -3,6 +3,7 @@
   import { beforeNavigate } from '$app/navigation';
   import { updated } from '$app/state';
   import '../app.css';
+  import ColorPickerToolbar from '$lib/components/ColorPickerToolbar.svelte';
 
   beforeNavigate(({ willUnload, to }) => {
     if (updated.current && !willUnload && to?.url) {
@@ -24,4 +25,6 @@
       }}
     />
   {/await}
+  
+  <ColorPickerToolbar />
 {/if}

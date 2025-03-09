@@ -19,7 +19,7 @@
         style="top: {HEADER_HEIGHT}px; height: {SUB_NAV_HEIGHT}px;"
       >
         <div class="mx-auto flex w-full max-w-screen-xl items-center justify-between px-6 lg:px-10">
-          <div class="text-lg font-medium">Your Widgets</div>
+          <div class="font-medium">Your Widgets</div>
           <IconButton href="/widgets/new" size="sm" icon={IoAdd}>New</IconButton>
         </div>
       </div>

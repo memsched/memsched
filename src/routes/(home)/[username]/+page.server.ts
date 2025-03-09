@@ -24,6 +24,13 @@ export const load: PageServerLoad = async (event) => {
     .where(and(eq(table.widget.userId, user.id), eq(table.objective.visibility, 'public')))
     .orderBy(desc(table.widget.createdAt));
 
+  // Fetch public objectives for this user
+  const publicObjectives = await db
+    .select()
+    .from(table.objective)
+    .where(and(eq(table.objective.userId, user.id), eq(table.objective.visibility, 'public')))
+    .orderBy(desc(table.objective.createdAt));
+
   return {
     publicUser: {
       username: user.username,
@@ -35,5 +42,6 @@ export const load: PageServerLoad = async (event) => {
       widgets: widgets.flatMap(({ id }) => id),
     },
     isOwner: user.id === event.locals.session?.userId,
+    publicObjectives,
   };
 };

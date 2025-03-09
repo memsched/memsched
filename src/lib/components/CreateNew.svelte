@@ -14,6 +14,20 @@
   const finalHref = page.data.user === null ? '/auth/signin' : href;
 </script>
 
-<Icon src={icon} size="185" className="*:!stroke-[5px]" />
-<h2 class="mt-2 max-w-lg text-center">{title}</h2>
-<IconButton icon={IoAdd} size="lg" class="mt-6 text-base" href={finalHref}>Create</IconButton>
+<div class="flex flex-col items-center justify-center gap-4">
+  <div class="flex h-48 w-48 items-center justify-center rounded-full bg-primary/5 p-6">
+    <Icon src={icon} size="150" className="*:!stroke-[5px] !text-primary" />
+  </div>
+
+  <h2 class="max-w-sm text-center text-2xl font-semibold">{title}</h2>
+  <div class="text-center">
+    <IconButton icon={IoAdd} size="lg" href={finalHref}>Create Now</IconButton>
+    <p class="mt-2 text-xs text-muted-foreground">
+      {#if page.data.user === null}
+        Sign in to get started
+      {:else}
+        Click to begin
+      {/if}
+    </p>
+  </div>
+</div>

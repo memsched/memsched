@@ -7,7 +7,7 @@
   const { data }: PageProps = $props();
 </script>
 
-<section class="flex gap-16 pt-6">
+<section class="flex gap-16">
   <Profile
     username={data.publicUser.username}
     name={data.publicUser.name}

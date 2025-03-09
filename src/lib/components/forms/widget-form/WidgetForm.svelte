@@ -7,7 +7,7 @@
   import * as Select from '$lib/components/ui/select';
   import * as Tabs from '$lib/components/ui/tabs/index.js';
   import { Input } from '$lib/components/ui/input';
-  import { capitalize, cn } from '$lib/utils';
+  import { cn } from '$lib/utils';
   import { type Objective } from '$lib/server/db/schema';
   import { Label } from '$lib/components/ui/label';
   import ColorPickerInput from '$lib/components/inputs/ColorPickerInput.svelte';
@@ -207,12 +207,16 @@
                             bind:value={$formData.metrics[j].timeRange}
                             name={props.name}
                           >
-                            <Select.Trigger {...props}>
-                              {capitalize($formData.metrics[j].timeRange)}
+                            <Select.Trigger {...props} class="capitalize">
+                              {$formData.metrics[j].timeRange}
                             </Select.Trigger>
                             <Select.Content>
                               {#each WIDGET_METRIC_TIME_RANGES as timeRange}
-                                <Select.Item value={timeRange} label={capitalize(timeRange)} />
+                                <Select.Item
+                                  value={timeRange}
+                                  label={timeRange}
+                                  class="capitalize"
+                                />
                               {/each}
                             </Select.Content>
                           </Select.Root>

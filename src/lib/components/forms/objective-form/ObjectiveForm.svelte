@@ -11,7 +11,7 @@
   import * as Tabs from '$lib/components/ui/tabs/index';
   import { Input } from '$lib/components/ui/input';
   import { Textarea } from '$lib/components/ui/textarea';
-  import { capitalize, cn } from '$lib/utils';
+  import { cn } from '$lib/utils';
   import { formSchema, type FormSchema, OBJECTIVE_UNITS } from './schema';
 
   interface Props {
@@ -83,12 +83,12 @@
           {#snippet children({ props })}
             <Form.Label>Unit</Form.Label>
             <Select.Root type="single" bind:value={$formData.unit} name={props.name}>
-              <Select.Trigger {...props}>
-                {capitalize($formData.unit)}
+              <Select.Trigger {...props} class="capitalize">
+                {$formData.unit}
               </Select.Trigger>
               <Select.Content>
                 {#each OBJECTIVE_UNITS as unit}
-                  <Select.Item value={unit} label={capitalize(unit)} />
+                  <Select.Item value={unit} label={unit} class="capitalize" />
                 {/each}
               </Select.Content>
             </Select.Root>

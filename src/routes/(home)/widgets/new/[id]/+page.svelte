@@ -27,7 +27,9 @@
         subtitle={data.widget.subtitle}
         username={data.user.username}
       />
-      <IconButton icon={IoArrowForward} href="/widgets">Return to Widgets</IconButton>
+      <IconButton icon={IoArrowForward} href="/widgets" class="animate-svg"
+        >Return to Widgets</IconButton
+      >
     </div>
   </div>
 </HomeLayout>

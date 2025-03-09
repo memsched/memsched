@@ -1,6 +1,5 @@
 <script lang="ts">
   import { FiCamera, FiMapPin, FiGlobe } from 'svelte-icons-pack/fi';
-  import IconButton from '../ui/IconButton.svelte';
   import UserAvatar from './UserAvatar.svelte';
   import { HEADER_HEIGHT } from '$lib/constants';
   import { Icon } from 'svelte-icons-pack';
@@ -22,11 +21,11 @@
   <div class="relative">
     <UserAvatar {username} {avatarUrl} large />
     {#if edit}
-      <div class="bg-back absolute bottom-2 left-2 size-12 rounded-full border-2 !p-0"></div>
+      <div class="absolute bottom-2 left-2 size-12 rounded-full border-2 bg-back !p-0"></div>
       <Button
         href="/account/settings"
         size="sm"
-        class="border-back absolute bottom-2 left-2 size-12 rounded-full border-2 !p-0 [&_svg]:size-5"
+        class="absolute bottom-2 left-2 size-12 rounded-full border-2 border-back !p-0 [&_svg]:size-5"
       >
         <Icon src={FiCamera} className="h-full w-full" />
       </Button>

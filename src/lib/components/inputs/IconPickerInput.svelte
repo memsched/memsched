@@ -1,6 +1,5 @@
 <script lang="ts">
   import { ICON_URLS } from '$lib/icons';
-  import { capitalize } from '$lib/utils';
   import { Input } from '../ui/input';
   import { onMount } from 'svelte';
 
@@ -169,7 +168,7 @@
     {:else}
       {#each visibleFilteredIcons as [category, icons]}
         {#if icons.length > 0}
-          <small class="block font-semibold">{capitalize(category)}</small>
+          <small class="block font-semibold capitalize">{category}</small>
           <div class="flex flex-wrap gap-4">
             {#each icons as url}
               <button type="button" class="cursor-pointer" onclick={() => (value = url)}>

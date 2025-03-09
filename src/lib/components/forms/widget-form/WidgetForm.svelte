@@ -397,31 +397,31 @@
 
   <div class="sticky col-span-3 h-fit space-y-4" style="top: calc({HEADER_HEIGHT}px + 2rem)">
     <h5>Preview</h5>
-    <div class="space-y-4">
+    <div class="space-y-2">
       {#if edit}
         <div>
-          <small class="mb-1 ms-1 inline-block text-sm text-muted-foreground">Current</small>
+          <small class="ms-1 inline-block text-sm text-muted-foreground">Current</small>
           <img
             src="/api/widgets/{page.params.id}?svg&v={updateCounter}"
             alt="Current preview"
-            class="max-h-[150px] object-contain object-left"
+            class="max-h-[125px] object-contain object-left"
           />
         </div>
       {/if}
       <div>
         {#if formSchema.safeParse($formData).success}
           {#if edit}
-            <small class="mb-1 ms-1 inline-block text-sm text-muted-foreground">New</small>
+            <small class="ms-1 inline-block text-sm text-muted-foreground">New</small>
           {/if}
           <img
             src="/api/widgets/preview/{data.user.id}?config={btoa(JSON.stringify($formData))}"
             alt="Edit preview"
-            class={cn('object-contain object-left', previewLoaded ? 'max-h-[150px]' : 'h-[150px]')}
+            class={cn('object-contain object-left', previewLoaded ? 'max-h-[125px]' : 'h-[125px]')}
             onload={() => (previewLoaded = true)}
           />
         {:else}
           <div
-            class="grid h-[150px] place-items-center rounded-lg border bg-zinc-100 p-5 text-sm text-muted-foreground"
+            class="grid h-[125px] place-items-center rounded-lg border bg-zinc-100 p-5 text-sm text-muted-foreground"
           >
             The widget will be visible as you complete the form
           </div>
@@ -429,9 +429,9 @@
       </div>
     </div>
     {#if edit}
-      <Form.Button variant="accent">Update Widget</Form.Button>
+      <Form.Button>Update Widget</Form.Button>
     {:else}
-      <Form.Button variant="accent">Create Widget</Form.Button>
+      <Form.Button>Create Widget</Form.Button>
     {/if}
   </div>
 </form>

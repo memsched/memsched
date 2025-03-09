@@ -15,5 +15,5 @@
 </script>
 
 <Icon src={icon} size="185" className="*:!stroke-[5px]" />
-<h2 class="mt-2">{title}</h2>
+<h2 class="mt-2 max-w-lg text-center">{title}</h2>
 <IconButton icon={IoAdd} size="lg" class="mt-6 text-base" href={finalHref}>Create</IconButton>

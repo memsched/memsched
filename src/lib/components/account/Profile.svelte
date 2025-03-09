@@ -24,7 +24,8 @@
       <IconButton
         href="/account/settings"
         icon={FiCamera}
-        class="absolute bottom-0 left-0 border-2 border-back text-base hover:bg-gray-800 [&_svg]:ms-1 [&_svg]:size-5"
+        size="sm"
+        class="border-back absolute bottom-0 left-0 border-2 hover:bg-blue-700"
       >
         Edit
       </IconButton>

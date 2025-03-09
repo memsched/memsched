@@ -26,16 +26,20 @@
         <small class="font-normal text-muted-foreground">{page.data.user.email}</small>
       </DropdownMenuLabel>
       <DropdownMenuSeparator />
-      <DropdownMenu.Item class="cursor-pointer">
+      <DropdownMenu.Item
+        class="cursor-pointer hover:text-accent-foreground [&_svg]:stroke-muted-foreground [&_svg]:hover:stroke-accent-foreground"
+      >
         {#snippet child({ props })}
           <a href="/settings/profile" {...props}>
-            <Icon src={FiSettings} className="!text-muted-foreground" />
+            <Icon src={FiSettings} className="" />
             Settings
           </a>
         {/snippet}
       </DropdownMenu.Item>
       <!-- TODO: Probably remove this -->
-      <DropdownMenu.Item class="cursor-pointer">
+      <DropdownMenu.Item
+        class="cursor-pointer hover:text-accent-foreground [&_svg]:stroke-muted-foreground [&_svg]:hover:stroke-accent-foreground"
+      >
         {#snippet child({ props })}
           <a href="mailto:info@memsched.com" {...props}>
             <Icon src={FiLifeBuoy} className="!text-muted-foreground" />
@@ -45,7 +49,9 @@
       </DropdownMenu.Item>
       <DropdownMenuSeparator />
       <form action="/auth/signout" method="POST" use:enhance>
-        <DropdownMenu.Item class="w-full cursor-pointer">
+        <DropdownMenu.Item
+          class="w-full cursor-pointer hover:text-accent-foreground [&_svg]:stroke-muted-foreground [&_svg]:hover:stroke-accent-foreground"
+        >
           {#snippet child({ props })}
             <button {...props}>
               <Icon src={FiLogOut} className="!text-muted-foreground" />

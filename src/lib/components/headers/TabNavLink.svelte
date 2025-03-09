@@ -15,7 +15,7 @@
   {href}
   variant="secondary"
   class={cn(
-    'h-auto bg-transparent px-3 py-1.5 font-semibold  hover:bg-zinc-200/50',
+    'h-auto bg-transparent px-3 py-1.5  hover:bg-secondary',
     page.url.pathname === href && 'bg-zinc-200/50'
   )}
 >

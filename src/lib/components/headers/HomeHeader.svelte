@@ -34,11 +34,11 @@
   >
     <div class="flex h-full items-center gap-12">
       {#if page.url.pathname === '/'}
-        <button onclick={() => scrollToElement('hero')} class="fill-primary">
+        <button onclick={() => scrollToElement('hero')} class="fill-black">
           <LogoShort />
         </button>
       {:else}
-        <a href="/" class="fill-primary">
+        <a href="/" class="fill-black">
           <LogoShort />
         </a>
       {/if}

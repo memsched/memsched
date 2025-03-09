@@ -20,7 +20,7 @@
       >
         <div class="mx-auto flex w-full max-w-screen-xl justify-between px-6 lg:px-10">
           <div></div>
-          <IconButton href="/widgets/new" variant="accent" size="sm" icon={IoAdd}>New</IconButton>
+          <IconButton href="/widgets/new" size="sm" icon={IoAdd}>New</IconButton>
         </div>
       </div>
       <div class="mx-auto flex max-w-screen-xl flex-wrap gap-4 p-6 lg:px-10">
@@ -30,7 +30,7 @@
               <img
                 src="/api/widgets/{widget}?svg&v={uuid4()}"
                 alt="MEMsched Widget"
-                class="h-[110px]"
+                class="h-[90px]"
               />
             {/if}
           </a>

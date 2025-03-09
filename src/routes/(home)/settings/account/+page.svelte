@@ -72,7 +72,7 @@
       </div>
 
       <!-- Pro Plan Summary -->
-      <div class="rounded-lg border bg-primary/5 p-5">
+      <div class="rounded-lg border bg-secondary p-5">
         <div class="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
           <div>
             <div class="mb-1 flex items-center gap-3">
@@ -80,7 +80,7 @@
               <Badge>Recommended</Badge>
               <span class="font-medium">$3/month</span>
             </div>
-            <p class="text-muted-foreground">
+            <p class="text-sm text-muted-foreground">
               Unlimited widgets, analytics, priority support, and custom integrations
             </p>
           </div>
@@ -101,7 +101,7 @@
       <div class="flex flex-col gap-6 sm:flex-row sm:items-center">
         <div class="flex-1 space-y-1">
           <h3 class="text-xl font-semibold text-destructive">Delete Account</h3>
-          <p class="max-w-prose text-muted-foreground">
+          <p class="max-w-prose text-sm text-muted-foreground">
             Permanently delete your account and all associated data. This action cannot be undone
             and will remove all your objectives, widgets, and personal information from our system.
           </p>

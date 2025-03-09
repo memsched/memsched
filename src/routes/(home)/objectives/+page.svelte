@@ -29,7 +29,7 @@
     >
       <div class="mx-auto flex w-full max-w-screen-xl justify-between px-6 lg:px-10">
         <div></div>
-        <IconButton href="/objectives/new" size="sm" variant="accent" icon={IoAdd}>New</IconButton>
+        <IconButton href="/objectives/new" size="sm" icon={IoAdd}>New</IconButton>
       </div>
     </div>
     <div class="w-full">

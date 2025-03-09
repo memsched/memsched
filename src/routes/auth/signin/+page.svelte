@@ -14,8 +14,12 @@
       size="lg"
       href="/auth/signin/google">Continue with Google</IconButton
     >
-    <IconButton icon={AiOutlineGithub} iconPosition="left" size="lg" href="/auth/signin/github"
-      >Continue with Github</IconButton
+    <IconButton
+      icon={AiOutlineGithub}
+      iconPosition="left"
+      size="lg"
+      href="/auth/signin/github"
+      class="bg-black hover:bg-black/80">Continue with Github</IconButton
     >
   </div>
   <p class="text-sm text-muted-foreground">

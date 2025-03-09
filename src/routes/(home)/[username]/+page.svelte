@@ -18,10 +18,10 @@
   <div class="w-full space-y-3">
     <h3>Widgets</h3>
     {#if data.publicUser.widgets.length > 0}
-      <div class="flex-wrap gap-4">
+      <div class="flex flex-wrap gap-3">
         {#each data.publicUser.widgets as widget}
           <a href="/widgets/{widget}">
-            <img src="/api/widgets/{widget}?svg" alt="MEMsched Widget" class="h-[110px]" />
+            <img src="/api/widgets/{widget}?svg" alt="MEMsched Widget" class="h-[90px]" />
           </a>
         {/each}
       </div>

@@ -148,7 +148,7 @@
       </Form.Field>
     </div>
   </section>
-  <Form.Button variant="accent">Save Profile</Form.Button>
+  <Form.Button>Save Profile</Form.Button>
   {#if browser && import.meta.env.VITE_DEBUG_FORMS === '1' && import.meta.env.DEV}
     <SuperDebug data={$formData} />
   {/if}

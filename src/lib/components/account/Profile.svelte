@@ -4,6 +4,7 @@
   import UserAvatar from './UserAvatar.svelte';
   import { HEADER_HEIGHT } from '$lib/constants';
   import { Icon } from 'svelte-icons-pack';
+  import { Button } from '../ui/button';
 
   interface Props {
     username: string;
@@ -21,14 +22,14 @@
   <div class="relative">
     <UserAvatar {username} {avatarUrl} large />
     {#if edit}
-      <IconButton
+      <div class="bg-back absolute bottom-2 left-2 size-12 rounded-full border-2 !p-0"></div>
+      <Button
         href="/account/settings"
-        icon={FiCamera}
         size="sm"
-        class="border-back absolute bottom-0 left-0 border-2 hover:bg-blue-700"
+        class="border-back absolute bottom-2 left-2 size-12 rounded-full border-2 !p-0 [&_svg]:size-5"
       >
-        Edit
-      </IconButton>
+        <Icon src={FiCamera} className="h-full w-full" />
+      </Button>
     {/if}
   </div>
   <h2 class="mt-8">{name}</h2>

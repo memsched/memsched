@@ -4,17 +4,21 @@
   import ConfirmDeleteDialog from '$lib/components/dialogs/ConfirmDeleteDialog.svelte';
   import type { PageProps } from './$types';
   import IconButton from '$lib/components/ui/IconButton.svelte';
-  import { IoArrowForward, IoCheckmark } from 'svelte-icons-pack/io';
+  import { IoArrowForward, IoCheckmark, IoKey } from 'svelte-icons-pack/io';
   import { Badge } from '$lib/components/ui/badge';
   import { Icon } from 'svelte-icons-pack';
   import * as Separator from '$lib/components/ui/separator';
+  import SettingsTitle from '$lib/components/account/SettingsTitle.svelte';
 
   const { data }: PageProps = $props();
 </script>
 
 <div class="mb-8">
-  <h1 class="text-3xl font-semibold tracking-tight">Account Settings</h1>
-  <p class="mt-2 text-muted-foreground">Manage your personal account settings and preferences.</p>
+  <SettingsTitle
+    title="Account Settings"
+    subtitle="Manage your personal account settings and preferences."
+    icon={IoKey}
+  />
 </div>
 
 <div class="space-y-10">

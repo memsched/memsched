@@ -8,7 +8,7 @@
     IoFolderOpenOutline,
     IoGlobeOutline,
   } from 'svelte-icons-pack/io';
-  import { FiEdit3, FiPlusCircle, FiTrash2 } from 'svelte-icons-pack/fi';
+  import { FiEdit3, FiPlusCircle, FiTrash2, FiRotateCcw } from 'svelte-icons-pack/fi';
   import CreateNew from '$lib/components/CreateNew.svelte';
   import HomeLayout from '$lib/components/layouts/HomeLayout.svelte';
   import { HEADER_HEIGHT, SUB_NAV_HEIGHT } from '$lib/constants';
@@ -21,8 +21,10 @@
   import { Progress } from '$lib/components/ui/progress/index';
   import { Button } from '$lib/components/ui/button/index';
   import type { Objective } from '$lib/server/db/schema';
+  import { enhance } from '$app/forms';
+  import toast from 'svelte-french-toast';
 
-  const { data }: PageProps = $props();
+  const { data, form }: PageProps = $props();
 
   // Function to calculate progress percentage for fixed goals
   function calculateProgress(objective: Objective): number {
@@ -32,12 +34,12 @@
     return 0;
   }
 
-  // Function to handle quick log of progress
-  function handleQuickLog(objective: Objective, amount: number): void {
-    // This would be replaced with actual form submission logic
-    console.log(`Logging ${amount} ${objective.unit} for ${objective.name}`);
-    // TODO: Implement actual form submission
-  }
+  // Show toast message when form action completes successfully
+  $effect(() => {
+    if (form?.success && form?.message) {
+      toast.success(form.message);
+    }
+  });
 </script>
 
 {#if data.objectives.length > 0}
@@ -134,36 +136,53 @@
             <Card.Footer class="flex pt-2">
               <div class="flex items-center gap-2">
                 {#if objective.goalType === 'fixed'}
-                  <Button
-                    size="xs"
-                    variant="translucent"
-                    onclick={() => handleQuickLog(objective, 1)}
-                  >
-                    +1 {objective.unit}
-                  </Button>
-                  <Button
-                    size="xs"
-                    variant="translucent"
-                    onclick={() => handleQuickLog(objective, 5)}
-                  >
-                    +5 {objective.unit}
-                  </Button>
-                  <Button
-                    size="xs"
-                    variant="translucent"
-                    onclick={() => handleQuickLog(objective, 10)}
-                  >
-                    +10 {objective.unit}
-                  </Button>
+                  <form action="?/log" method="POST" use:enhance>
+                    <input type="hidden" name="objectiveId" value={objective.id} />
+                    <input type="hidden" name="value" value="1" />
+                    <Button size="xs" variant="translucent" type="submit">
+                      +1 {objective.unit}
+                    </Button>
+                  </form>
+
+                  <form action="?/log" method="POST" use:enhance>
+                    <input type="hidden" name="objectiveId" value={objective.id} />
+                    <input type="hidden" name="value" value="5" />
+                    <Button size="xs" variant="translucent" type="submit">
+                      +5 {objective.unit}
+                    </Button>
+                  </form>
+
+                  <form action="?/log" method="POST" use:enhance>
+                    <input type="hidden" name="objectiveId" value={objective.id} />
+                    <input type="hidden" name="value" value="10" />
+                    <Button size="xs" variant="translucent" type="submit">
+                      +10 {objective.unit}
+                    </Button>
+                  </form>
                 {:else}
+                  <form action="?/log" method="POST" use:enhance>
+                    <input type="hidden" name="objectiveId" value={objective.id} />
+                    <input type="hidden" name="value" value="1" />
+                    <Button size="xs" variant="translucent" type="submit">
+                      Log {objective.unit}
+                    </Button>
+                  </form>
+                {/if}
+
+                <form action="?/undoLog" method="POST" use:enhance>
+                  <input type="hidden" name="objectiveId" value={objective.id} />
                   <Button
                     size="xs"
-                    variant="translucent"
-                    onclick={() => handleQuickLog(objective, 1)}
+                    variant="outline"
+                    type="submit"
+                    class="flex items-center gap-1"
+                    title="Undo last log"
                   >
-                    Log {objective.unit}
+                    <Icon src={FiRotateCcw} size="14" />
+                    Undo
                   </Button>
-                {/if}
+                </form>
+
                 <div class="ml-auto">
                   <Button
                     size="xs"

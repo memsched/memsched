@@ -67,3 +67,49 @@ export async function computeMetricValue(
 
   return Math.round(value * 10 ** valueDecimalPrecision) / 10 ** valueDecimalPrecision;
 }
+
+/**
+ * Updates all widget metrics associated with an objective
+ * @param tx The database transaction
+ * @param objectiveId The ID of the objective
+ */
+export async function updateObjectiveWidgetMetrics(
+  tx: SQLiteTransaction<
+    'async',
+    ResultSet,
+    Record<string, never>,
+    ExtractTablesWithRelations<Record<string, never>>
+  >,
+  objectiveId: string
+) {
+  // Get all widgets associated with this objective
+  const widgets = await tx
+    .select()
+    .from(table.widget)
+    .where(eq(table.widget.objectiveId, objectiveId));
+
+  // For each widget, update its metrics
+  for (const widgetItem of widgets) {
+    // Get all metrics for this widget
+    const metrics = await tx
+      .select()
+      .from(table.widgetMetric)
+      .where(eq(table.widgetMetric.widgetId, widgetItem.id));
+
+    // Update each metric with the new computed value
+    for (const metric of metrics) {
+      const newMetricValue = await computeMetricValue(
+        tx,
+        objectiveId,
+        metric.timeRange,
+        metric.valueDecimalPrecision
+      );
+
+      // Update the metric value
+      await tx
+        .update(table.widgetMetric)
+        .set({ value: newMetricValue })
+        .where(eq(table.widgetMetric.id, metric.id));
+    }
+  }
+}

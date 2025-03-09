@@ -2,6 +2,7 @@
   import { browser } from '$app/environment';
   import { beforeNavigate } from '$app/navigation';
   import { updated } from '$app/state';
+  import ColorPickerToolbar from '$lib/components/ColorPickerToolbar.svelte';
   import '../app.css';
 
   beforeNavigate(({ willUnload, to }) => {
@@ -24,4 +25,7 @@
       }}
     />
   {/await}
+  {#if import.meta.env.VITE_DEBUG_COLOR_EDITOR === '1' && import.meta.env.DEV}
+    <ColorPickerToolbar />
+  {/if}
 {/if}

@@ -1,7 +1,6 @@
 <script lang="ts">
   import { browser } from '$app/environment';
   import { onMount } from 'svelte';
-  import { dev } from '$app/environment';
 
   // Types
   type ColorPair = {
@@ -16,16 +15,16 @@
   };
 
   // Configuration
-  const INITIAL_POSITION = { x: 20, y: 20 };
+  const INITIAL_POSITION = { x: 20, y: 80 };
 
   // Color variable pairs (base and foreground)
   const COLOR_PAIRS: ColorPair[] = [
-    { base: 'accent', foreground: 'accent-foreground', label: 'Accent' },
-    { base: 'background', foreground: 'foreground', label: 'Background' },
-    { base: 'muted', foreground: 'muted-foreground', label: 'Muted' },
     { base: 'primary', foreground: 'primary-foreground', label: 'Primary' },
     { base: 'secondary', foreground: 'secondary-foreground', label: 'Secondary' },
     { base: 'destructive', foreground: 'destructive-foreground', label: 'Destructive' },
+    { base: 'accent', foreground: 'accent-foreground', label: 'Accent' },
+    { base: 'background', foreground: 'foreground', label: 'Background' },
+    { base: 'muted', foreground: 'muted-foreground', label: 'Muted' },
     { base: 'card', foreground: 'card-foreground', label: 'Card' },
     { base: 'popover', foreground: 'popover-foreground', label: 'Popover' },
   ];
@@ -60,7 +59,6 @@
   let isCollapsed = $state(false);
 
   // Derived values
-  let showToolbar = $derived(dev && browser);
   let currentVariable = $derived(
     isEditingForeground && selectedPair
       ? selectedPair.foreground
@@ -283,171 +281,163 @@
   });
 </script>
 
-{#if showToolbar}
+<div
+  class="fixed z-[9999] w-64 select-none overflow-hidden rounded-lg border border-border bg-background font-sans text-sm shadow-md"
+  style="left: {position.x}px; top: {position.y}px;"
+>
+  <!-- Header -->
   <div
-    class="fixed z-[9999] w-64 select-none overflow-hidden rounded-lg border border-border bg-background font-sans text-sm shadow-md"
-    style="left: {position.x}px; top: {position.y}px;"
+    class="flex h-8 cursor-move items-center justify-between border-b border-border bg-muted px-2.5 py-1"
+    onmousedown={startDrag}
   >
-    <!-- Header -->
-    <div
-      class="flex h-8 cursor-move items-center justify-between border-b border-border bg-muted px-2.5 py-1"
-      on:mousedown={startDrag}
-    >
-      <span class="text-sm font-semibold">Theme Color Editor</span>
-      <div class="flex items-center gap-1">
-        <button
-          class="flex h-5 w-5 cursor-pointer items-center justify-center rounded border-none bg-transparent text-xs hover:bg-muted-foreground/10"
-          on:click={copyCurrentToClipboard}
-          title="Copy current color to clipboard"
-        >
-          {#if copySuccess}
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
+    <span class="text-sm font-semibold">Theme Color Editor</span>
+    <div class="flex items-center gap-1">
+      <button
+        class="flex h-5 w-5 cursor-pointer items-center justify-center rounded border-none bg-transparent text-xs hover:bg-muted-foreground/10"
+        onclick={copyCurrentToClipboard}
+        title="Copy current color to clipboard"
+      >
+        {#if copySuccess}
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M20 6 9 17l-5-5" />
+          </svg>
+        {:else}
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <rect width="14" height="14" x="8" y="8" rx="2" ry="2" />
+            <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
+          </svg>
+        {/if}
+      </button>
+      <button
+        class="flex h-5 w-5 cursor-pointer items-center justify-center rounded border-none bg-transparent text-xs hover:bg-muted-foreground/10"
+        onclick={toggleCollapse}
+        aria-label={isCollapsed ? 'Expand' : 'Collapse'}
+      >
+        {#if isCollapsed}
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="m6 9 6 6 6-6" />
+          </svg>
+        {:else}
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="m18 15-6-6-6 6" />
+          </svg>
+        {/if}
+      </button>
+    </div>
+  </div>
+
+  <!-- Content -->
+  {#if !isCollapsed}
+    <div class="p-3">
+      <!-- Variable Selector -->
+      <div class="mb-3">
+        <label class="flex flex-col gap-1.5 text-xs font-medium">
+          Color Variable:
+          <div class="flex gap-2">
+            <select
+              class="flex-1 rounded border border-border bg-background px-2 py-1 text-xs"
+              onchange={handleVariableChange}
+              value={selectedStandalone ? selectedStandalone.name : selectedPair?.base}
             >
-              <path d="M20 6 9 17l-5-5" />
-            </svg>
-          {:else}
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <rect width="14" height="14" x="8" y="8" rx="2" ry="2" />
-              <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
-            </svg>
-          {/if}
-        </button>
-        <button
-          class="flex h-5 w-5 cursor-pointer items-center justify-center rounded border-none bg-transparent text-xs hover:bg-muted-foreground/10"
-          on:click={toggleCollapse}
-          aria-label={isCollapsed ? 'Expand' : 'Collapse'}
-        >
-          {#if isCollapsed}
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path d="m6 9 6 6 6-6" />
-            </svg>
-          {:else}
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path d="m18 15-6-6-6 6" />
-            </svg>
-          {/if}
-        </button>
+              <optgroup label="Color Pairs">
+                {#each COLOR_PAIRS as pair}
+                  <option value={pair.base}>{pair.label}</option>
+                {/each}
+              </optgroup>
+              <optgroup label="Standalone Colors">
+                {#each STANDALONE_VARIABLES as variable}
+                  <option value={variable.name}>{variable.label}</option>
+                {/each}
+              </optgroup>
+            </select>
+
+            {#if selectedPair && !selectedStandalone}
+              <button
+                class="rounded border border-border bg-background px-2 py-1 text-xs hover:bg-muted/50"
+                onclick={toggleForeground}
+                title="Toggle between base and foreground"
+              >
+                {isEditingForeground ? 'Base' : 'FG'}
+              </button>
+            {/if}
+          </div>
+        </label>
+      </div>
+
+      <!-- Color Preview -->
+      <div class="mb-3">
+        <div class="flex flex-col gap-1">
+          <div class="h-[30px] w-full rounded border border-border" style={currentStyle}></div>
+          <span class="text-center text-[10px] leading-tight">{currentLabel}</span>
+        </div>
+      </div>
+
+      <!-- Sliders -->
+      <div class="flex flex-col gap-3">
+        <label class="flex flex-col gap-1.5 text-xs font-medium">
+          Hue: {hue}
+          <input type="range" min="0" max="360" bind:value={hue} class="hue-slider" />
+        </label>
+
+        <label class="flex flex-col gap-1.5 text-xs font-medium">
+          Saturation: {saturation}%
+          <input
+            type="range"
+            min="0"
+            max="100"
+            bind:value={saturation}
+            style={saturationGradient}
+          />
+        </label>
+
+        <label class="flex flex-col gap-1.5 text-xs font-medium">
+          Lightness: {lightness}%
+          <input type="range" min="0" max="100" bind:value={lightness} style={lightnessGradient} />
+        </label>
       </div>
     </div>
-
-    <!-- Content -->
-    {#if !isCollapsed}
-      <div class="p-3">
-        <!-- Variable Selector -->
-        <div class="mb-3">
-          <label class="flex flex-col gap-1.5 text-xs font-medium">
-            Color Variable:
-            <div class="flex gap-2">
-              <select
-                class="flex-1 rounded border border-border bg-background px-2 py-1 text-xs"
-                on:change={handleVariableChange}
-                value={selectedStandalone ? selectedStandalone.name : selectedPair?.base}
-              >
-                <optgroup label="Color Pairs">
-                  {#each COLOR_PAIRS as pair}
-                    <option value={pair.base}>{pair.label}</option>
-                  {/each}
-                </optgroup>
-                <optgroup label="Standalone Colors">
-                  {#each STANDALONE_VARIABLES as variable}
-                    <option value={variable.name}>{variable.label}</option>
-                  {/each}
-                </optgroup>
-              </select>
-
-              {#if selectedPair && !selectedStandalone}
-                <button
-                  class="rounded border border-border bg-background px-2 py-1 text-xs hover:bg-muted/50"
-                  on:click={toggleForeground}
-                  title="Toggle between base and foreground"
-                >
-                  {isEditingForeground ? 'Base' : 'FG'}
-                </button>
-              {/if}
-            </div>
-          </label>
-        </div>
-
-        <!-- Color Preview -->
-        <div class="mb-3">
-          <div class="flex flex-col gap-1">
-            <div class="h-[30px] w-full rounded border border-border" style={currentStyle}></div>
-            <span class="text-center text-[10px] leading-tight">{currentLabel}</span>
-          </div>
-        </div>
-
-        <!-- Sliders -->
-        <div class="flex flex-col gap-3">
-          <label class="flex flex-col gap-1.5 text-xs font-medium">
-            Hue: {hue}
-            <input type="range" min="0" max="360" bind:value={hue} class="hue-slider" />
-          </label>
-
-          <label class="flex flex-col gap-1.5 text-xs font-medium">
-            Saturation: {saturation}%
-            <input
-              type="range"
-              min="0"
-              max="100"
-              bind:value={saturation}
-              style={saturationGradient}
-            />
-          </label>
-
-          <label class="flex flex-col gap-1.5 text-xs font-medium">
-            Lightness: {lightness}%
-            <input
-              type="range"
-              min="0"
-              max="100"
-              bind:value={lightness}
-              style={lightnessGradient}
-            />
-          </label>
-        </div>
-      </div>
-    {/if}
-  </div>
-{/if}
+  {/if}
+</div>
 
 <style>
   /* Custom slider styling that can't be easily done with Tailwind */

@@ -8,6 +8,7 @@ import { z } from 'zod';
 import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { updateObjectiveWidgetMetrics } from '$lib/server/queries';
+import { logSchema } from '$lib/components/forms/objective-log-form/schema';
 
 export const load: PageServerLoad = async (event) => {
   if (!event.locals.session) {
@@ -21,15 +22,9 @@ export const load: PageServerLoad = async (event) => {
       .from(table.objective)
       .where(eq(table.objective.userId, event.locals.session.userId))
       .orderBy(desc(table.objective.createdAt)),
+    form: await superValidate(zod(logSchema)),
   };
 };
-
-// Schema for objective logging
-const logSchema = z.object({
-  objectiveId: z.string().min(1, 'Objective ID is required'),
-  value: z.number().min(0.01, 'Value must be greater than 0'),
-  notes: z.string().optional(),
-});
 
 // Schema for undoing the last log
 const undoLogSchema = z.object({
@@ -91,6 +86,7 @@ export const actions: Actions = {
       });
 
       return {
+        form,
         success: true,
         message: `Added ${form.data.value} ${targetObjective.unit}`,
       };

@@ -8,7 +8,7 @@
     IoFolderOpenOutline,
     IoGlobeOutline,
   } from 'svelte-icons-pack/io';
-  import { FiEdit3, FiPlusCircle, FiTrash2, FiRotateCcw } from 'svelte-icons-pack/fi';
+  import { FiEdit3, FiTrash2, FiRotateCcw } from 'svelte-icons-pack/fi';
   import CreateNew from '$lib/components/CreateNew.svelte';
   import HomeLayout from '$lib/components/layouts/HomeLayout.svelte';
   import { HEADER_HEIGHT, SUB_NAV_HEIGHT } from '$lib/constants';
@@ -16,6 +16,7 @@
   import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index';
   import * as Dialog from '$lib/components/ui/dialog/index.js';
   import ConfirmDeleteDialog from '$lib/components/dialogs/ConfirmDeleteDialog.svelte';
+  import CustomLogDialog from '$lib/components/dialogs/CustomLogDialog.svelte';
   import * as Card from '$lib/components/ui/card/index';
   import { Badge } from '$lib/components/ui/badge/index';
   import { Progress } from '$lib/components/ui/progress/index';
@@ -23,6 +24,8 @@
   import type { Objective } from '$lib/server/db/schema';
   import { enhance } from '$app/forms';
   import toast from 'svelte-french-toast';
+  import { type LogFormSchema } from '$lib/components/forms/objective-log-form/schema';
+  import { type SuperValidated } from 'sveltekit-superforms';
 
   const { data, form }: PageProps = $props();
 
@@ -61,25 +64,25 @@
             <Card.Header class="pb-2">
               <div class="flex items-center justify-between">
                 <Card.Title class="line-clamp-1 text-lg">{objective.name}</Card.Title>
-                <DropdownMenu.Root>
-                  <DropdownMenu.Trigger class="h-8 w-8 rounded-full p-1 hover:bg-muted">
-                    <Icon src={IoEllipsisHorizontal} size="22" />
-                  </DropdownMenu.Trigger>
-                  <DropdownMenu.Content class="w-40">
-                    <DropdownMenu.Group>
-                      <DropdownMenu.Item class="cursor-pointer">
-                        {#snippet child({ props })}
-                          <a href="/objectives/{objective.id}" {...props}>
-                            <Icon src={FiEdit3} className="!text-muted-foreground" />
-                            Edit
-                          </a>
-                        {/snippet}
-                      </DropdownMenu.Item>
-                      <ConfirmDeleteDialog
-                        action="/objectives/delete"
-                        name="objectiveId"
-                        value={objective.id}
-                      >
+                <ConfirmDeleteDialog
+                  action="/objectives/delete"
+                  name="objectiveId"
+                  value={objective.id}
+                >
+                  <DropdownMenu.Root>
+                    <DropdownMenu.Trigger class="h-8 w-8 rounded-full p-1 hover:bg-muted">
+                      <Icon src={IoEllipsisHorizontal} size="22" />
+                    </DropdownMenu.Trigger>
+                    <DropdownMenu.Content class="w-40">
+                      <DropdownMenu.Group>
+                        <DropdownMenu.Item class="cursor-pointer">
+                          {#snippet child({ props })}
+                            <a href="/objectives/{objective.id}" {...props}>
+                              <Icon src={FiEdit3} className="!text-muted-foreground" />
+                              Edit
+                            </a>
+                          {/snippet}
+                        </DropdownMenu.Item>
                         <DropdownMenu.Item
                           class="w-full cursor-pointer !text-red-600 hover:!bg-red-600/5"
                         >
@@ -90,10 +93,10 @@
                             </Dialog.Trigger>
                           {/snippet}
                         </DropdownMenu.Item>
-                      </ConfirmDeleteDialog>
-                    </DropdownMenu.Group>
-                  </DropdownMenu.Content>
-                </DropdownMenu.Root>
+                      </DropdownMenu.Group>
+                    </DropdownMenu.Content>
+                  </DropdownMenu.Root>
+                </ConfirmDeleteDialog>
               </div>
               <div class="flex items-center gap-2">
                 <Badge
@@ -184,17 +187,7 @@
                 </form>
 
                 <div class="ml-auto">
-                  <Button
-                    size="xs"
-                    variant="secondary"
-                    class="flex items-center gap-1"
-                    onclick={() => {
-                      /* Open custom log dialog */
-                    }}
-                  >
-                    <Icon src={FiPlusCircle} size="14" />
-                    Custom
-                  </Button>
+                  <CustomLogDialog {objective} form={data.form as SuperValidated<LogFormSchema>} />
                 </div>
               </div>
             </Card.Footer>

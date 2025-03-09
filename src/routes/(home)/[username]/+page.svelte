@@ -1,6 +1,8 @@
 <script lang="ts">
   import type { PageProps } from './$types';
   import Profile from '$lib/components/account/Profile.svelte';
+  import IconButton from '$lib/components/ui/IconButton.svelte';
+  import { IoAdd } from 'svelte-icons-pack/io';
 
   const { data }: PageProps = $props();
 </script>
@@ -27,9 +29,12 @@
       </div>
     {:else}
       <div
-        class="flex h-48 w-full items-center justify-center rounded-lg border bg-muted p-4 text-muted-foreground"
+        class="flex h-48 w-full flex-col items-center justify-center gap-3 rounded-lg border bg-muted p-4 text-muted-foreground"
       >
         No public widgets yet
+        {#if data.isOwner}
+          <IconButton href="/widgets" size="sm" icon={IoAdd}>Create your first widget</IconButton>
+        {/if}
       </div>
     {/if}
   </div>

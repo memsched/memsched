@@ -133,4 +133,4 @@ describe('sanitizeUsername', () => {
     expect(sanitizeUsername('---___user--name___---')).toBe('user-name');
     expect(sanitizeUsername('  _-@#$user_-_-name$#@-_  ')).toBe('user_-_-name');
   });
-}); 
+});

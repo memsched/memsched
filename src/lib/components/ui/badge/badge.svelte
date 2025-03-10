@@ -9,7 +9,7 @@
         secondary: 'bg-secondary text-secondary-foreground border-transparent',
         destructive: 'bg-destructive text-destructive-foreground border-transparent',
         outline: 'text-foreground',
-        accent: 'bg-accent text-accent-foreground border-accent-foreground',
+        translucent: 'bg-primary/10 text-primary',
       },
     },
     defaultVariants: {

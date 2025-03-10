@@ -25,7 +25,8 @@
       <Button
         href="/account/settings"
         size="sm"
-        class="absolute bottom-2 left-2 size-12 rounded-full border-2 border-back !p-0 [&_svg]:size-5"
+        class="absolute bottom-2 left-2 size-12 rounded-full border-[3px] border-back !p-0 [&_svg]:size-5"
+        variant="translucent"
       >
         <Icon src={FiCamera} className="h-full w-full" />
       </Button>

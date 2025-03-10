@@ -30,7 +30,8 @@
           <TabNavLink name="Active" href="/widgets" isActive={isActiveTab} />
           <TabNavLink name="Completed" href="/widgets?completed" isActive={isCompletedTab} />
         </div>
-        <IconButton href="/widgets/new" size="sm" icon={IoAdd}>New</IconButton>
+        <IconButton href="/widgets/new" size="sm" icon={IoAdd} variant="translucent">New</IconButton
+        >
       </div>
     </div>
     {#if data.widgets.length > 0}

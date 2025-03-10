@@ -42,7 +42,9 @@
         <TabNavLink name="Completed" href="/objectives?completed" isActive={isCompletedTab} />
         <TabNavLink name="Archived" href="/objectives?archived" isActive={isArchivedTab} />
       </div>
-      <IconButton href="/objectives/new" size="sm" icon={IoAdd}>New</IconButton>
+      <IconButton href="/objectives/new" size="sm" icon={IoAdd} variant="translucent"
+        >New</IconButton
+      >
     </div>
   </div>
   {#if data.objectives.length > 0}

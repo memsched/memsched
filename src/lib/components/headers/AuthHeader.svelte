@@ -6,14 +6,14 @@
 
 <header class="w-full">
   <nav
-    class="mx-auto flex w-full max-w-screen-xl items-center justify-between px-2 lg:px-10"
+    class="mx-auto flex w-full max-w-screen-xl items-center justify-between px-6 lg:px-10"
     style="height: {HEADER_HEIGHT}px"
   >
     <a href="/">
       <Logo />
     </a>
     <div class="flex gap-3">
-      <Button href="mailto:info@memsched.com" size="sm">Contact</Button>
+      <Button href="mailto:info@memsched.com" size="sm" variant="translucent">Contact</Button>
     </div>
   </nav>
 </header>

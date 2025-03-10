@@ -16,14 +16,14 @@ export const load: PageServerLoad = async (event) => {
       objectives: [],
     };
   }
-  
+
   // Check which view we're loading
   const isArchived = event.url.searchParams.get('archived') !== null;
   const isCompleted = event.url.searchParams.get('completed') !== null;
-  
+
   // Base query for user's objectives
   let conditions = and(eq(table.objective.userId, event.locals.session.userId));
-  
+
   if (isCompleted) {
     // For completed view: show fixed objectives where value >= endValue and not archived
     conditions = and(
@@ -37,7 +37,7 @@ export const load: PageServerLoad = async (event) => {
   } else {
     // For active/archived views: filter by archived status
     conditions = and(conditions, eq(table.objective.archived, isArchived));
-    
+
     if (!isArchived) {
       // For active view: exclude completed fixed objectives
       conditions = and(
@@ -49,13 +49,13 @@ export const load: PageServerLoad = async (event) => {
       );
     }
   }
-  
+
   const objectives = await db
     .select()
     .from(table.objective)
     .where(conditions)
     .orderBy(desc(table.objective.createdAt));
-  
+
   return {
     objectives,
     form: await superValidate(zod(logSchema)),

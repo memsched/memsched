@@ -23,10 +23,10 @@
 
   // Custom isActive functions for the tabs
   const isActiveTab = (page: Page) =>
-    page.url.pathname === '/objectives' && 
-    !page.url.searchParams.has('archived') && 
+    page.url.pathname === '/objectives' &&
+    !page.url.searchParams.has('archived') &&
     !page.url.searchParams.has('completed');
-  
+
   const isArchivedTab = (page: Page) => page.url.searchParams.has('archived');
   const isCompletedTab = (page: Page) => page.url.searchParams.has('completed');
 </script>

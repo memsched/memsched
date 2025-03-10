@@ -1,4 +1,5 @@
 <script lang="ts">
+  import HomeFooter from '$lib/components/footers/HomeFooter.svelte';
   import HomeHeader from '$lib/components/headers/HomeHeader.svelte';
   import HomeLayout from '$lib/components/layouts/HomeLayout.svelte';
 
@@ -10,4 +11,5 @@
   <HomeLayout>
     {@render children()}
   </HomeLayout>
+  <HomeFooter />
 </div>

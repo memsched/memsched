@@ -2,10 +2,8 @@ import type { PageServerLoad, Actions } from './$types';
 import { error, fail, redirect } from '@sveltejs/kit';
 import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
-import { v4 as uuidv4 } from 'uuid';
 import { formSchema } from '$lib/components/forms/objective-form/schema';
-import { db } from '$lib/server/db';
-import * as table from '$lib/server/db/schema';
+import { createUserObjective } from '$lib/server/queries';
 
 export const load: PageServerLoad = async (event) => {
   if (!event.locals.session) {
@@ -30,37 +28,15 @@ export const actions: Actions = {
       });
     }
 
-    const userId = event.locals.session.userId;
-
-    await db.transaction(async (tx) => {
-      const objective = (
-        await tx
-          .insert(table.objective)
-          .values({
-            id: uuidv4(),
-            name: form.data.name,
-            description: form.data.description,
-            startValue: form.data.startValue,
-            value: form.data.startValue,
-            unit: form.data.unit,
-            visibility: form.data.visibility,
-            goalType: form.data.goalType,
-            endValue: form.data.endValue,
-            userId,
-          })
-          .returning()
-      )[0];
-
-      await tx.insert(table.objectiveLog).values({
-        id: uuidv4(),
-        value: form.data.startValue,
-        notes: '',
-        loggedAt: new Date(),
-        objectiveId: objective.id,
-        userId,
+    try {
+      await createUserObjective(form.data, event.locals.session.userId);
+    } catch (err) {
+      console.error('Error creating objective:', err);
+      return fail(500, {
+        form,
+        error: 'Failed to create objective',
       });
-    });
-
+    }
     return redirect(302, '/objectives');
   },
 };

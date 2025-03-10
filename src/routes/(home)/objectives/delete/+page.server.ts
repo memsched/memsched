@@ -1,8 +1,6 @@
-import { and, eq } from 'drizzle-orm';
 import type { Actions } from './$types';
 import { error, redirect } from '@sveltejs/kit';
-import { objective } from '$lib/server/db/schema';
-import { db } from '$lib/server/db';
+import { deleteUserObjective } from '$lib/server/queries';
 
 export const actions: Actions = {
   default: async (event) => {
@@ -11,18 +9,14 @@ export const actions: Actions = {
     }
 
     const objectiveId = (await event.request.formData()).get('objectiveId') as string;
-    const objectives = await db
-      .select()
-      .from(objective)
-      .where(and(eq(objective.id, objectiveId), eq(objective.userId, event.locals.session.userId)));
-
-    if (objectives.length === 0) {
-      return error(404, 'Objective not found');
+    if (!objectiveId) {
+      return error(400, 'Objective ID is required');
     }
 
-    await db
-      .delete(objective)
-      .where(and(eq(objective.id, objectiveId), eq(objective.userId, event.locals.session.userId)));
+    const result = await deleteUserObjective(objectiveId, event.locals.session.userId);
+    if (!result) {
+      return error(404, 'Objective not found');
+    }
 
     const refParts = event.request.headers.get('referer')?.split('/') ?? [];
     const ref = refParts[refParts.length - 1];

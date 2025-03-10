@@ -2,13 +2,10 @@ import type { PageServerLoad, Actions } from './$types';
 import { error, fail, redirect } from '@sveltejs/kit';
 import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
-import { v4 as uuidv4 } from 'uuid';
 import { formSchema } from '$lib/components/forms/widget-form/schema';
 import type { LocalUser } from '$lib/types';
-import * as table from '$lib/server/db/schema';
-import { db } from '$lib/server/db';
-import { eq, and } from 'drizzle-orm';
-import { computeMetricValue } from '$lib/server/queries';
+import { createUserWidget, getObjectiveFromWidgetId } from '$lib/server/queries';
+import type { Objective } from '$lib/server/db/schema';
 
 export const load: PageServerLoad = async (event) => {
   if (!event.locals.session) {
@@ -36,77 +33,25 @@ export const actions: Actions = {
     }
 
     const form = await superValidate(event, zod(formSchema));
-
     if (!form.valid) {
       return fail(400, {
         form,
       });
     }
 
-    const objectives = await db
-      .select()
-      .from(table.objective)
-      .where(
-        and(
-          eq(table.objective.id, form.data.objectiveId),
-          eq(table.objective.userId, event.locals.session.userId)
-        )
-      );
-    if (objectives.length === 0) {
-      return error(404, 'Objective not found');
-    }
-    const ob = objectives[0];
+    try {
+      const widgetId = await createUserWidget(form.data, event.locals.session.userId);
+      const objective = (await getObjectiveFromWidgetId(widgetId)) as Objective;
 
-    const userId = event.locals.session.userId;
-    const widgetId = uuidv4();
-    await db.transaction(async (tx) => {
-      const widget = (
-        await tx
-          .insert(table.widget)
-          .values({
-            id: widgetId,
-            title: form.data.title,
-            subtitle: form.data.subtitle,
-            // TODO: Sanitize imageUrl
-            imageUrl: form.data.imageUrl,
-            imagePlacement: form.data.imagePlacement,
-
-            padding: form.data.padding,
-            border: form.data.border,
-            borderWidth: 1,
-            borderRadius: form.data.borderRadius,
-            color: form.data.color,
-            accentColor: form.data.accentColor,
-            backgroundColor: form.data.backgroundColor,
-            // TODO: Update when user has pro plan
-            watermark: true,
-
-            objectiveId: form.data.objectiveId,
-            userId,
-          })
-          .returning()
-      )[0];
-
-      for (const [i, metric] of form.data.metrics.entries()) {
-        const value = await computeMetricValue(
-          tx,
-          ob.id,
-          metric.timeRange,
-          metric.valueDecimalPrecision
-        );
-        await tx.insert(table.widgetMetric).values({
-          id: uuidv4(),
-          value,
-          name: metric.name,
-          timeRange: metric.timeRange,
-          valueDecimalPrecision: metric.valueDecimalPrecision,
-
-          order: i + 1,
-          widgetId: widget.id,
-          userId,
-        });
+      if (objective.visibility !== 'public') {
+        return redirect(302, `/widgets`);
       }
-    });
-    return redirect(302, `/widgets/new/${widgetId}`);
+      return redirect(302, `/widgets/new/${widgetId}`);
+    } catch (err) {
+      if (err instanceof Error) {
+        return error(404, err.message);
+      }
+      throw err;
+    }
   },
 };

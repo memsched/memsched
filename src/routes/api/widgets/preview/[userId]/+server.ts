@@ -1,11 +1,10 @@
 import type { RequestHandler } from './$types';
 import { error } from '@sveltejs/kit';
-import { eq } from 'drizzle-orm';
-import { objective, type WidgetJoinMetricsPreview } from '$lib/server/db/schema';
-import { db } from '$lib/server/db';
+import { type WidgetJoinMetricsPreview } from '$lib/server/db/schema';
 import { formSchema } from '$lib/components/forms/widget-form/schema';
 import Widget from '$lib/components/Widget.svelte';
 import { renderWidget } from '$lib/server/svg';
+import { getUserObjective } from '$lib/server/queries';
 
 export const GET: RequestHandler = async (event) => {
   if (!event.locals.session || event.params.userId !== event.locals.session.userId) {
@@ -24,19 +23,17 @@ export const GET: RequestHandler = async (event) => {
     return error(400, 'Invalid widget config');
   }
 
-  const objectives = await db.select().from(objective).where(eq(objective.id, config.objectiveId));
-  if (objectives.length === 0 || objectives[0].visibility !== 'public') {
+  const objective = await getUserObjective(config.objectiveId, event.locals.session.userId);
+  if (!objective) {
     return error(404, 'Objective not found');
   }
-  const ob = objectives[0];
-
   // TODO: Sanitize imageUrl
   const props = {
     ...config,
     metrics: config.metrics.map((metric, i) => ({
       ...metric,
       order: i + 1,
-      value: ob.value,
+      value: objective.value,
     })),
   };
 

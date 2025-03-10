@@ -2,10 +2,8 @@ import type { PageServerLoad, Actions } from './$types';
 import { error, fail, redirect } from '@sveltejs/kit';
 import { message, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
-import { eq, and } from 'drizzle-orm';
 import { formSchema, type FormSchema } from '$lib/components/forms/objective-form/schema';
-import { db } from '$lib/server/db';
-import { objective } from '$lib/server/db/schema';
+import { getUserObjective, updateUserObjective } from '$lib/server/queries';
 import type { z } from 'zod';
 
 export const load: PageServerLoad = async (event) => {
@@ -14,25 +12,21 @@ export const load: PageServerLoad = async (event) => {
   }
 
   const objectiveId = event.params.id;
-  const objectives = await db
-    .select()
-    .from(objective)
-    .where(and(eq(objective.id, objectiveId), eq(objective.userId, event.locals.session.userId)));
+  const targetObjective = await getUserObjective(objectiveId, event.locals.session.userId);
 
-  if (objectives.length === 0) {
+  if (!targetObjective) {
     return error(404, 'Objective not found');
   }
 
   const form = await superValidate(zod(formSchema));
-  const ob = objectives[0];
   form.data = {
-    name: ob.name,
-    description: ob.description,
-    startValue: ob.startValue,
-    unit: ob.unit as z.infer<FormSchema>['unit'],
-    visibility: ob.visibility as z.infer<FormSchema>['visibility'],
-    goalType: ob.goalType as z.infer<FormSchema>['goalType'],
-    endValue: ob.endValue,
+    name: targetObjective.name,
+    description: targetObjective.description,
+    startValue: targetObjective.startValue,
+    unit: targetObjective.unit as z.infer<FormSchema>['unit'],
+    visibility: targetObjective.visibility as z.infer<FormSchema>['visibility'],
+    goalType: targetObjective.goalType as z.infer<FormSchema>['goalType'],
+    endValue: targetObjective.endValue,
   };
 
   return {
@@ -53,29 +47,17 @@ export const actions: Actions = {
       });
     }
 
-    const objectives = await db
-      .select()
-      .from(objective)
-      .where(
-        and(eq(objective.id, event.params.id), eq(objective.userId, event.locals.session.userId))
-      );
+    const objectiveId = event.params.id;
+    const updateResult = await updateUserObjective(
+      objectiveId,
+      form.data,
+      event.locals.session.userId
+    );
 
-    if (objectives.length === 0) {
+    if (!updateResult) {
       return error(404, 'Objective not found');
     }
 
-    const objectiveId = event.params.id;
-    await db
-      .update(objective)
-      .set({
-        name: form.data.name,
-        description: form.data.description,
-        unit: form.data.unit,
-        visibility: form.data.visibility,
-        endValue: form.data.endValue,
-      })
-      .where(and(eq(objective.id, objectiveId), eq(objective.userId, event.locals.session.userId)));
-
-    return message(form, 'Objective sucessfully updated!');
+    return message(form, 'Objective successfully updated!');
   },
 };

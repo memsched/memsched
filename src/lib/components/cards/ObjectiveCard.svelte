@@ -5,7 +5,7 @@
     IoEllipsisHorizontal,
     IoGlobeOutline,
   } from 'svelte-icons-pack/io';
-  import { FiEdit3, FiTrash2, FiRotateCcw } from 'svelte-icons-pack/fi';
+  import { FiEdit3, FiTrash2, FiRotateCcw, FiPlus } from 'svelte-icons-pack/fi';
   import * as Card from '$lib/components/ui/card/index';
   import { Badge } from '$lib/components/ui/badge/index';
   import { Progress } from '$lib/components/ui/progress/index';
@@ -51,6 +51,14 @@
                   <a href="/objectives/{objective.id}" {...props}>
                     <Icon src={FiEdit3} className="!text-muted-foreground" />
                     Edit
+                  </a>
+                {/snippet}
+              </DropdownMenu.Item>
+              <DropdownMenu.Item class="cursor-pointer">
+                {#snippet child({ props })}
+                  <a href="/widgets/new?objectiveId={objective.id}" {...props}>
+                    <Icon src={FiPlus} className="!text-muted-foreground" />
+                    Create widget
                   </a>
                 {/snippet}
               </DropdownMenu.Item>

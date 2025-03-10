@@ -7,6 +7,8 @@
   import IconButton from '$lib/components/ui/IconButton.svelte';
   import ObjectiveCard from '$lib/components/cards/ObjectiveCard.svelte';
   import toast from 'svelte-french-toast';
+  import { type SuperValidated } from 'sveltekit-superforms';
+  import { type LogFormSchema } from '$lib/components/forms/objective-log-form/schema';
 
   const { data, form }: PageProps = $props();
 
@@ -33,7 +35,7 @@
     <div class="mx-auto w-full max-w-screen-xl p-6 lg:px-10">
       <div class="flex flex-wrap gap-6">
         {#each data.objectives as objective}
-          <ObjectiveCard {objective} form={data.form} />
+          <ObjectiveCard {objective} form={data.form as SuperValidated<LogFormSchema>} />
         {/each}
       </div>
     </div>

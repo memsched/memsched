@@ -15,8 +15,15 @@ export const load: PageServerLoad = async (event) => {
     return redirect(302, '/auth/signin');
   }
 
+  const form = await superValidate(zod(formSchema));
+  const objectiveId = event.url.searchParams.get('objectiveId');
+
+  if (objectiveId) {
+    form.data.objectiveId = objectiveId;
+  }
+
   return {
-    form: await superValidate(zod(formSchema)),
+    form,
     // We tell typescript that the user is not null
     user: event.locals.user as LocalUser,
   };

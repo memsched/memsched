@@ -5,7 +5,7 @@
     IoEllipsisHorizontal,
     IoGlobeOutline,
   } from 'svelte-icons-pack/io';
-  import { FiEdit3, FiTrash2, FiRotateCcw, FiPlus } from 'svelte-icons-pack/fi';
+  import { FiEdit3, FiTrash2, FiRotateCcw, FiPlus, FiArchive } from 'svelte-icons-pack/fi';
   import * as Card from '$lib/components/ui/card/index';
   import { Badge } from '$lib/components/ui/badge/index';
   import { Progress } from '$lib/components/ui/progress/index';
@@ -62,6 +62,26 @@
                   </a>
                 {/snippet}
               </DropdownMenu.Item>
+              <DropdownMenu.Item class="w-full cursor-pointer">
+                {#snippet child({ props })}
+                  <form action="?/toggleArchive" method="POST" use:enhance>
+                    <input type="hidden" name="objectiveId" value={objective.id} />
+                    <input
+                      type="hidden"
+                      name="archived"
+                      value={objective.archived ? 'true' : 'false'}
+                    />
+                    <button
+                      type="submit"
+                      class="flex w-full items-center gap-2 px-2 py-1.5"
+                      {...props}
+                    >
+                      <Icon src={FiArchive} className="!text-muted-foreground" />
+                      {objective.archived ? 'Unarchive' : 'Archive'}
+                    </button>
+                  </form>
+                {/snippet}
+              </DropdownMenu.Item>
               <DropdownMenu.Item class="w-full cursor-pointer !text-red-600 hover:!bg-red-600/5">
                 {#snippet child({ props })}
                   <Dialog.Trigger {...props}>
@@ -90,6 +110,12 @@
         {/if}
         {objective.visibility}
       </Badge>
+      {#if objective.archived}
+        <Badge variant="secondary" class="flex items-center gap-1">
+          <Icon src={FiArchive} className="size-3.5" />
+          Archived
+        </Badge>
+      {/if}
     </div>
   </Card.Header>
 

@@ -51,6 +51,7 @@ export const objective = sqliteTable('objective', {
   visibility: text('visibility').notNull(),
   goalType: text('goal_type').notNull(),
   endValue: real('end_value'),
+  archived: integer('archived', { mode: 'boolean' }).notNull().default(false),
 
   userId: text('user_id')
     .notNull()

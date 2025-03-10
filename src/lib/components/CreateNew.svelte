@@ -6,11 +6,21 @@
 
   interface Props {
     title: string;
+    description?: string;
     icon: IconType;
     href: string;
+    buttonText?: string;
+    buttonIcon?: IconType;
   }
 
-  const { icon, title, href }: Props = $props();
+  const {
+    icon,
+    title,
+    href,
+    description,
+    buttonText = 'Create Now',
+    buttonIcon = IoAdd,
+  }: Props = $props();
   const finalHref = page.data.user === null ? '/auth/signin' : href;
 </script>
 
@@ -20,8 +30,11 @@
   </div>
 
   <h2 class="max-w-sm text-center text-2xl font-semibold">{title}</h2>
+  {#if description}
+    <p class="max-w-sm text-center text-muted-foreground">{description}</p>
+  {/if}
   <div class="text-center">
-    <IconButton icon={IoAdd} size="lg" href={finalHref}>Create Now</IconButton>
+    <IconButton icon={buttonIcon} size="lg" href={finalHref}>{buttonText}</IconButton>
     <p class="mt-2 text-xs text-muted-foreground">
       {#if page.data.user === null}
         Sign in to get started

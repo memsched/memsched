@@ -16,13 +16,23 @@ export const load: PageServerLoad = async (event) => {
       objectives: [],
     };
   }
+
+  // Check if we're viewing archived objectives
+  const isArchived = event.url.searchParams.get('archived') !== null;
+
   return {
     objectives: await db
       .select()
       .from(table.objective)
-      .where(eq(table.objective.userId, event.locals.session.userId))
+      .where(
+        and(
+          eq(table.objective.userId, event.locals.session.userId),
+          eq(table.objective.archived, isArchived) // Filter by archived status
+        )
+      )
       .orderBy(desc(table.objective.createdAt)),
     form: await superValidate(zod(logSchema)),
+    isArchived, // Pass this to the frontend to know which tab is active
   };
 };
 
@@ -177,6 +187,48 @@ export const actions: Actions = {
         form,
         error: 'Failed to undo log',
       });
+    }
+  },
+
+  toggleArchive: async (event) => {
+    if (!event.locals.session) {
+      return redirect(302, '/auth/signin');
+    }
+
+    const formData = await event.request.formData();
+    const objectiveId = formData.get('objectiveId')?.toString();
+    const archived = formData.get('archived') === 'true';
+
+    if (!objectiveId) {
+      return fail(400, { error: 'Objective ID is required' });
+    }
+
+    const userId = event.locals.session.userId;
+
+    try {
+      // First, get the objective to verify ownership
+      const objectives = await db
+        .select()
+        .from(table.objective)
+        .where(and(eq(table.objective.id, objectiveId), eq(table.objective.userId, userId)));
+
+      if (objectives.length === 0) {
+        return fail(404, { error: 'Objective not found' });
+      }
+
+      // Update the objective's archived status
+      await db
+        .update(table.objective)
+        .set({ archived: !archived }) // Toggle the archived status
+        .where(eq(table.objective.id, objectiveId));
+
+      return {
+        success: true,
+        message: archived ? 'Objective unarchived' : 'Objective archived',
+      };
+    } catch (error) {
+      console.error('Error toggling objective archive status:', error);
+      return fail(500, { error: 'Failed to update objective' });
     }
   },
 };

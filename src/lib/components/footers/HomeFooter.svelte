@@ -6,9 +6,9 @@
   import SwissFlag from '../svgs/SwissFlag.svelte';
 </script>
 
-<footer class="border-t bg-white text-sm">
+<footer class="border-t bg-background text-sm">
   <div class="mx-auto flex w-full max-w-screen-xl flex-col gap-6 divide-y px-6 py-8 lg:px-10">
-    <div class="flex gap-12 text-muted-foreground *:transition-colors hover:*:text-black">
+    <div class="flex gap-12 text-muted-foreground *:transition-colors hover:*:text-foreground">
       <a href="mailto:info@memsched.com">Contact</a>
       <a href="/tos">Terms of Service</a>
       <a href="/privacy">Privacy Policy</a>
@@ -18,7 +18,7 @@
         &copy; {new Date().getFullYear()} MEMsched. All rights reserved. Built with <Icon
           src={IoHeart}
           className="inline"
-        /> by Leo{' '}
+        /> by Leo
         <span class="text-nowrap">
           — a Swiss app
           <SwissFlag class="ms-1 inline h-4 w-4" />

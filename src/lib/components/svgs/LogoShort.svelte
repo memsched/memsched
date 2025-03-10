@@ -1,4 +1,16 @@
-<svg width="26" height="26" viewBox="0 0 31 31" fill="inherit" xmlns="http://www.w3.org/2000/svg">
+<script lang="ts">
+  import { cn } from '$lib/utils';
+</script>
+
+<svg
+  width="26"
+  height="26"
+  viewBox="0 0 31 31"
+  fill="inherit"
+  xmlns="http://www.w3.org/2000/svg"
+  {...$$props}
+  class={cn('fill-foreground', $$props.class)}
+>
   <path
     fill-rule="evenodd"
     clip-rule="evenodd"

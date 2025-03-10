@@ -9,7 +9,8 @@
         secondary: 'bg-secondary text-secondary-foreground border-transparent',
         destructive: 'bg-destructive text-destructive-foreground border-transparent',
         outline: 'text-foreground',
-        translucent: 'bg-primary/10 text-primary',
+        translucent:
+          'bg-primary/10 text-primary dark:border-primary dark:text-primary-foreground/75',
       },
     },
     defaultVariants: {

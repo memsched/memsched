@@ -25,7 +25,7 @@
 </script>
 
 <div class="flex flex-col items-center justify-center gap-4">
-  <div class="flex h-48 w-48 items-center justify-center rounded-full bg-primary/5 p-6">
+  <div class="flex h-48 w-48 items-center justify-center rounded-full bg-primary/10">
     <Icon src={icon} size="150" className="*:!stroke-[5px] !text-primary" />
   </div>
 

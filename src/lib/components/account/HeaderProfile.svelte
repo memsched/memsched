@@ -29,7 +29,7 @@
       <DropdownMenu.Item class="cursor-pointer hover:text-accent-foreground">
         {#snippet child({ props })}
           <a href="/settings/profile" {...props}>
-            <Icon src={FiSettings} className="" />
+            <Icon src={FiSettings} className="!text-muted-foreground" />
             Settings
           </a>
         {/snippet}

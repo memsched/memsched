@@ -22,7 +22,7 @@
 {#if data.objectives.length > 0}
   <HomeLayout container={false}>
     <div
-      class="sticky flex items-center border-b bg-white"
+      class="sticky flex items-center border-b bg-background"
       style="top: {HEADER_HEIGHT}px; height: {SUB_NAV_HEIGHT}px;"
     >
       <div class="mx-auto flex w-full max-w-screen-xl items-center justify-between px-6 lg:px-10">

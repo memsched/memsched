@@ -23,7 +23,7 @@
   variant="secondary"
   class={cn(
     'h-auto bg-transparent px-3 py-1.5  hover:bg-secondary',
-    isTabActive() && 'bg-zinc-200/50'
+    isTabActive() && 'bg-zinc-200/50 dark:bg-zinc-700'
   )}
 >
   {name}

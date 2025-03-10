@@ -13,6 +13,10 @@ export function scrollToElement(to: string, offset = 0) {
   }
 }
 
+export function scrollToTop() {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
 export function assert(condition: boolean, message: string) {
   if (import.meta.env.DEV && !condition) {
     throw new Error(message || 'Assertion failed');

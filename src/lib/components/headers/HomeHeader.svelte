@@ -7,7 +7,7 @@
     IoFolderOpenOutline,
   } from 'svelte-icons-pack/io';
   import { HEADER_HEIGHT } from '$lib/constants';
-  import { scrollToElement } from '$lib/utils';
+  import { scrollToTop } from '$lib/utils';
   import { Button } from '../ui/button';
   import IconButton from '../ui/IconButton.svelte';
   import LogoShort from '../svgs/LogoShort.svelte';
@@ -27,18 +27,18 @@
   ];
 </script>
 
-<header class="fixed z-50 w-full border-b bg-white">
+<header class="fixed z-50 w-full border-b bg-background">
   <nav
     class="mx-auto flex w-full max-w-screen-xl items-center justify-between px-6 lg:px-10"
     style="height: {HEADER_HEIGHT}px"
   >
     <div class="flex h-full items-center gap-12">
       {#if page.url.pathname === '/'}
-        <button onclick={() => scrollToElement('hero')} class="fill-black">
+        <button onclick={() => scrollToTop()}>
           <LogoShort />
         </button>
       {:else}
-        <a href="/" class="fill-black">
+        <a href="/">
           <LogoShort />
         </a>
       {/if}

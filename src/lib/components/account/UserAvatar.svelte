@@ -13,7 +13,7 @@
 
 {#if avatarUrl}
   <img
-    class={cn('inline-block rounded-full ring-2 ring-white', large ? 'size-[250px]' : 'size-8')}
+    class={cn('inline-block rounded-full ring-2 ring-border', large ? 'size-[250px]' : 'size-8')}
     src={avatarUrl}
     alt="User profile avatar"
   />

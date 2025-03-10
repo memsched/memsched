@@ -1,6 +1,7 @@
 <script lang="ts">
   import { browser } from '$app/environment';
   import { onMount } from 'svelte';
+  import { setMode, userPrefersMode } from 'mode-watcher';
 
   // Types
   type ColorPair = {
@@ -13,6 +14,8 @@
     name: string;
     label: string;
   };
+
+  type ThemeMode = 'system' | 'light' | 'dark';
 
   // Configuration
   const INITIAL_POSITION = { x: 20, y: 80 };
@@ -34,7 +37,11 @@
     { name: 'border', label: 'Border' },
     { name: 'input', label: 'Input' },
     { name: 'ring', label: 'Ring' },
+    { name: 'back', label: 'Back' },
   ];
+
+  // Theme modes
+  const THEME_MODES: ThemeMode[] = ['system', 'light', 'dark'];
 
   // State
   let hue = $state(190);
@@ -45,6 +52,7 @@
   let selectedStandalone = $state<StandaloneVariable | null>(null);
   let copySuccess = $state(false);
   let copyTimeout: number | null = null;
+  let currentTheme = $state<ThemeMode>('system');
 
   // Store all color values
   let colorValues = $state<Record<string, string>>({});
@@ -258,6 +266,19 @@
     isCollapsed = !isCollapsed;
   }
 
+  // Theme toggle functions
+  function handleThemeToggle(selectedMode: ThemeMode) {
+    if (!browser) return;
+
+    if (selectedMode === 'system') {
+      setMode('system');
+    } else {
+      setMode(selectedMode);
+    }
+
+    currentTheme = selectedMode;
+  }
+
   // Initialize from current CSS variables
   onMount(() => {
     if (!browser) return;
@@ -270,6 +291,14 @@
       loadColorFromCSS(selectedPair.base);
     } else if (selectedStandalone) {
       loadColorFromCSS(selectedStandalone.name);
+    }
+
+    // Get current theme mode
+    const prefersMode = $userPrefersMode;
+    if (prefersMode === 'system') {
+      currentTheme = 'system';
+    } else {
+      currentTheme = prefersMode as ThemeMode;
     }
   });
 
@@ -369,6 +398,23 @@
   <!-- Content -->
   {#if !isCollapsed}
     <div class="p-3">
+      <!-- Theme Mode Toggle -->
+      <div class="mb-3 border-b border-border pb-3">
+        <div class="mb-2 text-xs font-medium">Theme Mode:</div>
+        <div class="flex items-center justify-between gap-2">
+          {#each THEME_MODES as mode}
+            <button
+              class="flex-1 rounded border border-border px-2 py-1 text-xs transition-colors"
+              class:bg-primary={currentTheme === mode}
+              class:text-primary-foreground={currentTheme === mode}
+              onclick={() => handleThemeToggle(mode)}
+            >
+              {mode.charAt(0).toUpperCase() + mode.slice(1)}
+            </button>
+          {/each}
+        </div>
+      </div>
+
       <!-- Variable Selector -->
       <div class="mb-3">
         <label class="flex flex-col gap-1.5 text-xs font-medium">

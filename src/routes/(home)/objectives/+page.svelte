@@ -23,8 +23,12 @@
 
   // Custom isActive functions for the tabs
   const isActiveTab = (page: Page) =>
-    page.url.pathname === '/objectives' && !page.url.searchParams.has('archived');
+    page.url.pathname === '/objectives' && 
+    !page.url.searchParams.has('archived') && 
+    !page.url.searchParams.has('completed');
+  
   const isArchivedTab = (page: Page) => page.url.searchParams.has('archived');
+  const isCompletedTab = (page: Page) => page.url.searchParams.has('completed');
 </script>
 
 <HomeLayout container={false}>
@@ -35,6 +39,7 @@
     <div class="mx-auto flex w-full max-w-screen-xl items-center justify-between px-6 lg:px-10">
       <div class="flex gap-4">
         <TabNavLink name="Active" href="/objectives" isActive={isActiveTab} />
+        <TabNavLink name="Completed" href="/objectives?completed" isActive={isCompletedTab} />
         <TabNavLink name="Archived" href="/objectives?archived" isActive={isArchivedTab} />
       </div>
       <IconButton href="/objectives/new" size="sm" icon={IoAdd}>New</IconButton>
@@ -54,6 +59,15 @@
         <CreateNew
           title="No archived objectives"
           description="You haven't archived any objectives yet."
+          buttonText="View active objectives"
+          href="/objectives"
+          icon={IoFolderOpenOutline}
+          buttonIcon={IoArrowForward}
+        />
+      {:else if data.isCompleted}
+        <CreateNew
+          title="No completed objectives"
+          description="You haven't completed any fixed objectives yet."
           buttonText="View active objectives"
           href="/objectives"
           icon={IoFolderOpenOutline}

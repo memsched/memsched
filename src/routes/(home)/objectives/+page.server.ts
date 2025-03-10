@@ -1,7 +1,7 @@
 import type { PageServerLoad, Actions } from './$types';
 import { db } from '$lib/server/db';
 import * as table from '$lib/server/db/schema';
-import { desc, eq, and } from 'drizzle-orm';
+import { desc, eq, and, or, sql } from 'drizzle-orm';
 import { fail, redirect } from '@sveltejs/kit';
 import { v4 as uuidv4 } from 'uuid';
 import { z } from 'zod';
@@ -16,23 +16,51 @@ export const load: PageServerLoad = async (event) => {
       objectives: [],
     };
   }
-
-  // Check if we're viewing archived objectives
+  
+  // Check which view we're loading
   const isArchived = event.url.searchParams.get('archived') !== null;
-
-  return {
-    objectives: await db
-      .select()
-      .from(table.objective)
-      .where(
-        and(
-          eq(table.objective.userId, event.locals.session.userId),
-          eq(table.objective.archived, isArchived) // Filter by archived status
+  const isCompleted = event.url.searchParams.get('completed') !== null;
+  
+  // Base query for user's objectives
+  let conditions = and(eq(table.objective.userId, event.locals.session.userId));
+  
+  if (isCompleted) {
+    // For completed view: show fixed objectives where value >= endValue and not archived
+    conditions = and(
+      conditions,
+      eq(table.objective.archived, false),
+      eq(table.objective.goalType, 'fixed'),
+      // Only include objectives where current value meets or exceeds the end value
+      // and end value is not null
+      sql`${table.objective.value} >= ${table.objective.endValue} AND ${table.objective.endValue} IS NOT NULL`
+    );
+  } else {
+    // For active/archived views: filter by archived status
+    conditions = and(conditions, eq(table.objective.archived, isArchived));
+    
+    if (!isArchived) {
+      // For active view: exclude completed fixed objectives
+      conditions = and(
+        conditions,
+        or(
+          eq(table.objective.goalType, 'ongoing'),
+          sql`${table.objective.value} < ${table.objective.endValue} OR ${table.objective.endValue} IS NULL`
         )
-      )
-      .orderBy(desc(table.objective.createdAt)),
+      );
+    }
+  }
+  
+  const objectives = await db
+    .select()
+    .from(table.objective)
+    .where(conditions)
+    .orderBy(desc(table.objective.createdAt));
+  
+  return {
+    objectives,
     form: await superValidate(zod(logSchema)),
-    isArchived, // Pass this to the frontend to know which tab is active
+    isArchived,
+    isCompleted,
   };
 };
 

@@ -19,6 +19,12 @@ export const GET: RequestHandler = async (event) => {
     return error(401, 'Unauthorized');
   }
 
+  event.setHeaders({
+    'Cache-Control': 'no-cache, no-store, must-revalidate',
+    Pragma: 'no-cache',
+    Expires: '0',
+  });
+
   const renderSvg = event.url.searchParams.has('svg');
   return renderWidget<WidgetJoinMetrics>(event, Widget, widget, renderSvg);
 };

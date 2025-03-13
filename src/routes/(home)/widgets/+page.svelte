@@ -43,7 +43,7 @@
                 <img
                   src="/api/widgets/{widget}?svg&v={uuid4()}"
                   alt="MEMsched Widget"
-                  class="h-[90px]"
+                  class="h-[85px]"
                 />
               {/if}
             </a>

@@ -24,6 +24,7 @@
   import type { LocalUser } from '$lib/types';
   import IconPickerInput from '$lib/components/inputs/IconPickerInput.svelte';
   import { page } from '$app/state';
+  import { v4 as uuid4 } from 'uuid';
 
   interface Props {
     data: { form: SuperValidated<Infer<FormSchema>>; objectives: Objective[]; user: LocalUser };
@@ -406,7 +407,7 @@
         <div>
           <small class="ms-1 inline-block text-sm text-muted-foreground">Current</small>
           <img
-            src="/api/widgets/{page.params.id}?svg&v={updateCounter}"
+            src="/api/widgets/{page.params.id}?svg&v={uuid4()}{updateCounter}"
             alt="Current preview"
             class="max-h-[125px] object-contain object-left"
           />

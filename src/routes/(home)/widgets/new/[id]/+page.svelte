@@ -5,6 +5,7 @@
   import HomeLayout from '$lib/components/layouts/HomeLayout.svelte';
   import IconButton from '$lib/components/ui/IconButton.svelte';
   import ShareWidget from '$lib/components/ShareWidget.svelte';
+  import { v4 as uuid4 } from 'uuid';
 
   const { data }: PageProps = $props();
 </script>
@@ -16,7 +17,7 @@
   </div>
   <div class="flex gap-5">
     <img
-      src="/api/widgets/{page.params.id}?svg"
+      src="/api/widgets/{page.params.id}?svg&v={uuid4()}"
       alt="Widget Preview"
       class="h-[100px] object-contain object-left"
       loading="eager"

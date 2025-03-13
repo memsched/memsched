@@ -3,6 +3,7 @@
   import Profile from '$lib/components/account/Profile.svelte';
   import IconButton from '$lib/components/ui/IconButton.svelte';
   import { IoAdd } from 'svelte-icons-pack/io';
+  import { v4 as uuid4 } from 'uuid';
 
   const { data }: PageProps = $props();
 </script>
@@ -25,7 +26,11 @@
           <div class="flex flex-wrap gap-3">
             {#each data.publicUser.widgets as widget}
               <a href="/widgets/{widget}">
-                <img src="/api/widgets/{widget}?svg" alt="MEMsched Widget" class="h-[90px]" />
+                <img
+                  src="/api/widgets/{widget}?svg&v={uuid4()}"
+                  alt="MEMsched Widget"
+                  class="h-[85px]"
+                />
               </a>
             {/each}
           </div>

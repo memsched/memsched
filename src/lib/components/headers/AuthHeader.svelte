@@ -5,10 +5,7 @@
 </script>
 
 <header class="w-full">
-  <nav
-    class="mx-auto flex w-full max-w-screen-xl items-center justify-between px-6 lg:px-10"
-    style="height: {HEADER_HEIGHT}px"
-  >
+  <nav class="main-container flex items-center justify-between" style="height: {HEADER_HEIGHT}px">
     <a href="/">
       <Logo />
     </a>

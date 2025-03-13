@@ -29,7 +29,7 @@
 
 <header class="fixed z-50 w-full border-b bg-background">
   <nav
-    class="mx-auto flex w-full max-w-screen-xl items-center justify-between px-6 lg:px-10"
+    class="main-container flex w-full items-center justify-between"
     style="height: {HEADER_HEIGHT}px"
   >
     <div class="flex h-full items-center gap-12">

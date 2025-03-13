@@ -16,7 +16,7 @@
 <main
   class={cn(
     'flex w-full flex-grow flex-col',
-    container && 'mx-auto max-w-screen-xl px-6 py-8 lg:px-10 lg:py-14',
+    container && 'main-container py-8 lg:py-14',
     className
   )}
   style="margin-top: {HEADER_HEIGHT}px"

@@ -18,7 +18,7 @@
       class="sticky flex items-center border-b bg-background"
       style="top: {HEADER_HEIGHT}px; height: {SUB_NAV_HEIGHT}px;"
     >
-      <div class="mx-auto flex w-full max-w-screen-xl gap-4 px-6 lg:px-10">
+      <div class="main-container flex gap-4">
         {#each tabs as tab}
           <TabNavLink {...tab} />
         {/each}

@@ -25,7 +25,7 @@
       class="sticky flex items-center border-b bg-background"
       style="top: {HEADER_HEIGHT}px; height: {SUB_NAV_HEIGHT}px;"
     >
-      <div class="mx-auto flex w-full max-w-screen-xl items-center justify-between px-6 lg:px-10">
+      <div class="main-container flex items-center justify-between">
         <div class="flex gap-4">
           <TabNavLink name="Active" href="/widgets" isActive={isActiveTab} />
           <TabNavLink name="Completed" href="/widgets?completed" isActive={isCompletedTab} />
@@ -35,7 +35,7 @@
       </div>
     </div>
     {#if data.widgets.length > 0}
-      <div class="mx-auto w-full max-w-screen-xl p-6 lg:px-10">
+      <div class="main-container">
         <div class="flex flex-wrap gap-4">
           {#each data.widgets as widget}
             <a href="/widgets/{widget}">

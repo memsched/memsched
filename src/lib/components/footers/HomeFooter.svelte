@@ -7,7 +7,7 @@
 </script>
 
 <footer class="border-t bg-background text-sm">
-  <div class="mx-auto flex w-full max-w-screen-xl flex-col gap-6 divide-y px-6 py-8 lg:px-10">
+  <div class="main-container flex flex-col gap-6 divide-y py-8">
     <div class="flex gap-12 text-muted-foreground *:transition-colors hover:*:text-foreground">
       <a href="mailto:info@memsched.com">Contact</a>
       <a href="/tos">Terms of Service</a>

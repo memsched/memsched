@@ -13,7 +13,10 @@
 </script>
 
 <HomeLayout container={false} class="gap-16 *:py-20">
-  <section id="hero" class="flex flex-grow flex-col items-center justify-center text-center">
+  <section
+    id="hero"
+    class="main-container flex flex-grow flex-col items-center justify-center text-center"
+  >
     <div class="space-y-3">
       <Badge class="text-sm" variant="translucent">v2 Released 🎉</Badge>
       <h1>Show the world what you're learning.</h1>
@@ -225,8 +228,8 @@
   </section>
 
   <!-- CTA section -->
-  <section id="cta" class="bg-primary text-primary-foreground">
-    <div class="container mx-auto px-4 text-center">
+  <section id="cta" class="bg-back">
+    <div class="main-container">
       <h2 class="mb-6 text-3xl font-bold">Ready to showcase your learning journey?</h2>
       <p class="mx-auto mb-8 max-w-2xl text-xl">
         Join thousands of learners who are tracking their progress and sharing their achievements

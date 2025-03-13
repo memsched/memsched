@@ -136,7 +136,7 @@
                 >None</Tabs.Trigger
               >
               <Tabs.Trigger value="icon">Icon</Tabs.Trigger>
-              <Tabs.Trigger value="upload">Upload</Tabs.Trigger>
+              <!-- <Tabs.Trigger value="upload">Upload</Tabs.Trigger> -->
             </Tabs.List>
             <Form.Fieldset {form} name="imagePlacement" class="col-span-2">
               <input type="hidden" name="imagePlacement" bind:value={$formData.imagePlacement} />
@@ -153,18 +153,18 @@
                   </Tabs.Root>
                 </div>
               </Tabs.Content>
-              <Tabs.Content value="upload" class="space-y-6">
-                <div class="space-y-2">
-                  <Form.Legend>Placement</Form.Legend>
-                  <Tabs.Root bind:value={$formData.imagePlacement}>
-                    <Tabs.List class="w-full *:w-full">
-                      <Tabs.Trigger value="left">Left</Tabs.Trigger>
-                      <Tabs.Trigger value="right">Right</Tabs.Trigger>
-                    </Tabs.List>
-                    <Form.FieldErrors />
-                  </Tabs.Root>
-                </div>
-              </Tabs.Content>
+              <!-- <Tabs.Content value="upload" class="space-y-6"> -->
+              <!--   <div class="space-y-2"> -->
+              <!--     <Form.Legend>Placement</Form.Legend> -->
+              <!--     <Tabs.Root bind:value={$formData.imagePlacement}> -->
+              <!--       <Tabs.List class="w-full *:w-full"> -->
+              <!--         <Tabs.Trigger value="left">Left</Tabs.Trigger> -->
+              <!--         <Tabs.Trigger value="right">Right</Tabs.Trigger> -->
+              <!--       </Tabs.List> -->
+              <!--       <Form.FieldErrors /> -->
+              <!--     </Tabs.Root> -->
+              <!--   </div> -->
+              <!-- </Tabs.Content> -->
             </Form.Fieldset>
           </Tabs.Root>
         </div>

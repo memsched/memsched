@@ -32,21 +32,23 @@
 </script>
 
 <HomeLayout container={false}>
-  <div
-    class="sticky flex items-center border-b bg-background"
-    style="top: {HEADER_HEIGHT}px; height: {SUB_NAV_HEIGHT}px;"
-  >
-    <div class="main-container flex items-center justify-between">
-      <div class="flex gap-4">
-        <TabNavLink name="Active" href="/objectives" isActive={isActiveTab} />
-        <TabNavLink name="Completed" href="/objectives?completed" isActive={isCompletedTab} />
-        <TabNavLink name="Archived" href="/objectives?archived" isActive={isArchivedTab} />
+  {#if data.user !== null}
+    <div
+      class="sticky flex items-center border-b bg-background"
+      style="top: {HEADER_HEIGHT}px; height: {SUB_NAV_HEIGHT}px;"
+    >
+      <div class="main-container flex items-center justify-between">
+        <div class="flex gap-4">
+          <TabNavLink name="Active" href="/objectives" isActive={isActiveTab} />
+          <TabNavLink name="Completed" href="/objectives?completed" isActive={isCompletedTab} />
+          <TabNavLink name="Archived" href="/objectives?archived" isActive={isArchivedTab} />
+        </div>
+        <IconButton href="/objectives/new" size="sm" icon={IoAdd} variant="translucent"
+          >New</IconButton
+        >
       </div>
-      <IconButton href="/objectives/new" size="sm" icon={IoAdd} variant="translucent"
-        >New</IconButton
-      >
     </div>
-  </div>
+  {/if}
   {#if data.objectives.length > 0}
     <div class="main-container">
       <div class="flex flex-wrap gap-6">

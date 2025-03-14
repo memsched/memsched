@@ -22,8 +22,8 @@
     "deploy": "pnpm run build && wrangler pages deploy",
     "cf-typegen": "wrangler types && mv worker-configuration.d.ts src/",
     "d1:create": "wrangler d1 create memsched-db",
-    "d1:migrate": "wrangler d1 migrations apply memsched-db",
-    "d1:execute": "wrangler d1 execute memsched-db"
+    "d1:migrate": "wrangler d1 migrations apply memsched-db --remote",
+    "d1:execute": "wrangler d1 execute memsched-db --remote"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20250313.0",

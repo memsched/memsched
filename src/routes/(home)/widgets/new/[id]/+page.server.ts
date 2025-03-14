@@ -8,7 +8,7 @@ export const load: PageServerLoad = async (event) => {
     return redirect(302, '/auth/signin');
   }
 
-  const widget = await getUserWidget(event.params.id, event.locals.session.userId);
+  const widget = await getUserWidget(event.locals.db, event.params.id, event.locals.session.userId);
   if (!widget) {
     return error(404, 'Widget not found');
   }

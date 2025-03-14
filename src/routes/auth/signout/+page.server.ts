@@ -7,7 +7,7 @@ export const actions: Actions = {
     if (event.locals.session === null) {
       return error(401, 'Unauthorized');
     }
-    await invalidateSession(event.locals.session.id);
+    await invalidateSession(event.locals.db, event.locals.session.id);
     deleteSessionTokenCookie(event);
     return redirect(302, '/');
   },

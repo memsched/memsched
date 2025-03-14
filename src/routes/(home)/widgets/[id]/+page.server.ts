@@ -13,7 +13,7 @@ export const load: PageServerLoad = async (event) => {
   }
 
   const widgetId = event.params.id;
-  const widget = await getWidgetWithMetrics(widgetId);
+  const widget = await getWidgetWithMetrics(event.locals.db, widgetId);
   if (!widget || widget.userId !== event.locals.session.userId) {
     return error(404, 'Widget not found');
   }
@@ -66,7 +66,7 @@ export const actions: Actions = {
     const userId = event.locals.session.userId;
 
     try {
-      await updateUserWidget(widgetId, form.data, userId);
+      await updateUserWidget(event.locals.db, widgetId, form.data, userId);
       return message(form, 'Widget successfully updated!');
     } catch (err) {
       if (err instanceof Error) {

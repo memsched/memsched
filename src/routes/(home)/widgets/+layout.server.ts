@@ -9,6 +9,6 @@ export const load: LayoutServerLoad = async (event) => {
   }
 
   return {
-    objectives: await getUserObjectives(event.locals.session.userId),
+    objectives: await getUserObjectives(event.locals.db, event.locals.session.userId),
   };
 };

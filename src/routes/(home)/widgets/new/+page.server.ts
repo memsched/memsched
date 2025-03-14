@@ -40,8 +40,12 @@ export const actions: Actions = {
     }
 
     try {
-      const widgetId = await createUserWidget(form.data, event.locals.session.userId);
-      const objective = (await getObjectiveFromWidgetId(widgetId)) as Objective;
+      const widgetId = await createUserWidget(
+        event.locals.db,
+        form.data,
+        event.locals.session.userId
+      );
+      const objective = (await getObjectiveFromWidgetId(event.locals.db, widgetId)) as Objective;
 
       if (objective.visibility !== 'public') {
         return redirect(302, `/widgets`);

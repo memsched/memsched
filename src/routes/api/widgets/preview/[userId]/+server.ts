@@ -23,7 +23,11 @@ export const GET: RequestHandler = async (event) => {
     return error(400, 'Invalid widget config');
   }
 
-  const objective = await getUserObjective(config.objectiveId, event.locals.session.userId);
+  const objective = await getUserObjective(
+    event.locals.db,
+    config.objectiveId,
+    event.locals.session.userId
+  );
   if (!objective) {
     return error(404, 'Objective not found');
   }

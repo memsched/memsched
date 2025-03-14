@@ -55,10 +55,10 @@ export async function GET(event: RequestEvent): Promise<Response> {
   const name = githubUser.name;
   const avatarUrl = githubUser.avatar_url;
 
-  const existingUser = await getUserFromProviderUserId(githubUserId.toString());
+  const existingUser = await getUserFromProviderUserId(event.locals.db, githubUserId.toString());
   if (existingUser !== null) {
     const sessionToken = generateSessionToken();
-    const session = await createSession(sessionToken, existingUser.id);
+    const session = await createSession(event.locals.db, sessionToken, existingUser.id);
     setSessionTokenCookie(event, sessionToken, session.expiresAt);
     return new Response(null, {
       status: 302,
@@ -93,14 +93,14 @@ export async function GET(event: RequestEvent): Promise<Response> {
     });
   }
 
-  const user = await createUser('github', githubUserId.toString(), {
+  const user = await createUser(event.locals.db, 'github', githubUserId.toString(), {
     email,
     username,
     name,
     avatarUrl,
   });
   const sessionToken = generateSessionToken();
-  const session = await createSession(sessionToken, user.id);
+  const session = await createSession(event.locals.db, sessionToken, user.id);
   setSessionTokenCookie(event, sessionToken, session.expiresAt);
   return new Response(null, {
     status: 302,

@@ -1,21 +1,19 @@
 import * as table from '../db/schema';
-import { db } from '../db';
 import { eq, and, or, desc, sql } from 'drizzle-orm';
-import type { SQLiteTransaction } from 'drizzle-orm/sqlite-core';
-import type { ResultSet } from '@libsql/client';
-import type { ExtractTablesWithRelations } from 'drizzle-orm';
 import { computeMetricValue, updateMetricValue, getMetricsFromWidgetId } from './metric-queries';
 import { getWidgetFromObjectiveId } from './widget-queries';
 import { v4 as uuidv4 } from 'uuid';
 import type { z } from 'zod';
 import type { FormSchema } from '$lib/components/forms/objective-form/schema';
+import type { DBType } from '../db';
 
 /**
  * Gets all objectives for a user
+ * @param db The database instance
  * @param userId The user ID
  * @returns All objectives for the user
  */
-export async function getUserObjectives(userId: string) {
+export async function getUserObjectives(db: DBType, userId: string) {
   return await db
     .select()
     .from(table.objective)
@@ -25,10 +23,11 @@ export async function getUserObjectives(userId: string) {
 
 /**
  * Gets active objectives for a user (not archived, not completed if fixed)
+ * @param db The database instance
  * @param userId The user ID
  * @returns Active objectives
  */
-export async function getUserActiveObjectives(userId: string) {
+export async function getUserActiveObjectives(db: DBType, userId: string) {
   return await db
     .select()
     .from(table.objective)
@@ -47,10 +46,11 @@ export async function getUserActiveObjectives(userId: string) {
 
 /**
  * Gets completed objectives for a user (fixed goals that have reached their target)
+ * @param db The database instance
  * @param userId The user ID
  * @returns Completed objectives
  */
-export async function getUserCompletedObjectives(userId: string) {
+export async function getUserCompletedObjectives(db: DBType, userId: string) {
   return await db
     .select()
     .from(table.objective)
@@ -67,10 +67,11 @@ export async function getUserCompletedObjectives(userId: string) {
 
 /**
  * Gets archived objectives for a user
+ * @param db The database instance
  * @param userId The user ID
  * @returns Archived objectives
  */
-export async function getUserArchivedObjectives(userId: string) {
+export async function getUserArchivedObjectives(db: DBType, userId: string) {
   return await db
     .select()
     .from(table.objective)
@@ -80,21 +81,13 @@ export async function getUserArchivedObjectives(userId: string) {
 
 /**
  * Gets a specific objective by ID, ensuring it belongs to the specified user
+ * @param db The database instance
  * @param objectiveId The objective ID
  * @param userId The user ID
  * @returns The objective if found, null otherwise
  */
-export async function getUserObjective(
-  objectiveId: string,
-  userId: string,
-  tx?: SQLiteTransaction<
-    'async',
-    ResultSet,
-    Record<string, never>,
-    ExtractTablesWithRelations<Record<string, never>>
-  >
-) {
-  const objectives = await (tx ?? db)
+export async function getUserObjective(db: DBType, objectiveId: string, userId: string) {
+  const objectives = await db
     .select()
     .from(table.objective)
     .where(and(eq(table.objective.id, objectiveId), eq(table.objective.userId, userId)));
@@ -104,10 +97,11 @@ export async function getUserObjective(
 
 /**
  * Gets the objective associated with a widget
+ * @param db The database instance
  * @param widgetId The widget ID
  * @returns The associated objective, or null if not found
  */
-export async function getObjectiveFromWidgetId(widgetId: string) {
+export async function getObjectiveFromWidgetId(db: DBType, widgetId: string) {
   const objectives = await db
     .select({
       objective: table.objective,
@@ -126,60 +120,43 @@ export async function getObjectiveFromWidgetId(widgetId: string) {
 
 /**
  * Updates all widget metrics associated with an objective
- * @param tx The database transaction
+ * @param db The database instance
  * @param objectiveId The ID of the objective
  */
-export async function updateObjectiveWidgetMetrics(
-  tx: SQLiteTransaction<
-    'async',
-    ResultSet,
-    Record<string, never>,
-    ExtractTablesWithRelations<Record<string, never>>
-  >,
-  objectiveId: string
-) {
+export async function updateObjectiveWidgetMetrics(db: DBType, objectiveId: string) {
   // Get all widgets associated with this objective
-  const widgets = await getWidgetFromObjectiveId(objectiveId);
+  const widgets = await getWidgetFromObjectiveId(db, objectiveId);
 
   // For each widget, update its metrics
   for (const widgetItem of widgets) {
     // Get all metrics for this widget
-    const metrics = await getMetricsFromWidgetId(widgetItem.id, tx);
+    const metrics = await getMetricsFromWidgetId(db, widgetItem.id);
 
     // Update each metric with the new computed value
     for (const metric of metrics) {
       const newMetricValue = await computeMetricValue(
-        tx,
+        db,
         objectiveId,
         metric.timeRange,
         metric.valueDecimalPrecision
       );
 
       // Update the metric value
-      await updateMetricValue(metric.id, newMetricValue, tx);
+      await updateMetricValue(db, metric.id, newMetricValue);
     }
   }
 }
 
 /**
  * Updates the value of an objective
+ * @param db The database instance
  * @param objectiveId The objective ID
- * @param tx The database transaction
  * @param value The new value
  * @returns The updated objective
  */
-export async function updateObjectiveValue(
-  objectiveId: string,
-  value: number,
-  tx: SQLiteTransaction<
-    'async',
-    ResultSet,
-    Record<string, never>,
-    ExtractTablesWithRelations<Record<string, never>>
-  >
-) {
+export async function updateObjectiveValue(db: DBType, objectiveId: string, value: number) {
   return (
-    await tx
+    await db
       .update(table.objective)
       .set({ value })
       .where(eq(table.objective.id, objectiveId))
@@ -189,12 +166,13 @@ export async function updateObjectiveValue(
 
 /**
  * Toggles the archived status of an objective
+ * @param db The database instance
  * @param objectiveId The objective ID
  * @param userId The user ID
  * @throws Error if objective not found
  */
-export async function toggleArchivedObjective(objectiveId: string, userId: string) {
-  const objective = await getUserObjective(objectiveId, userId);
+export async function toggleArchivedObjective(db: DBType, objectiveId: string, userId: string) {
+  const objective = await getUserObjective(db, objectiveId, userId);
   if (!objective) {
     throw new Error('Objective not found');
   }
@@ -207,11 +185,16 @@ export async function toggleArchivedObjective(objectiveId: string, userId: strin
 
 /**
  * Creates a new objective with initial log entry
+ * @param db The database instance
  * @param objectiveData Objective data from the form
  * @param userId The user ID
  * @returns The created objective
  */
-export async function createUserObjective(objectiveData: z.infer<FormSchema>, userId: string) {
+export async function createUserObjective(
+  db: DBType,
+  objectiveData: z.infer<FormSchema>,
+  userId: string
+) {
   let createdObjective;
 
   await db.transaction(async (tx) => {
@@ -248,17 +231,19 @@ export async function createUserObjective(objectiveData: z.infer<FormSchema>, us
 
 /**
  * Updates an existing objective's details
+ * @param db The database instance
  * @param objectiveId The objective ID
  * @param objectiveData The updated objective data
  * @param userId The user ID
  * @returns True if successful
  */
 export async function updateUserObjective(
+  db: DBType,
   objectiveId: string,
   objectiveData: z.infer<FormSchema>,
   userId: string
 ) {
-  const objective = await getUserObjective(objectiveId, userId);
+  const objective = await getUserObjective(db, objectiveId, userId);
   if (!objective) {
     return false;
   }
@@ -279,12 +264,13 @@ export async function updateUserObjective(
 
 /**
  * Deletes an objective
+ * @param db The database instance
  * @param objectiveId The objective ID
  * @param userId The user ID
  * @returns True if successful
  */
-export async function deleteUserObjective(objectiveId: string, userId: string) {
-  const objective = await getUserObjective(objectiveId, userId);
+export async function deleteUserObjective(db: DBType, objectiveId: string, userId: string) {
+  const objective = await getUserObjective(db, objectiveId, userId);
   if (!objective) {
     return false;
   }

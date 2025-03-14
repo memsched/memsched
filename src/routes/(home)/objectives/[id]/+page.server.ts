@@ -12,7 +12,11 @@ export const load: PageServerLoad = async (event) => {
   }
 
   const objectiveId = event.params.id;
-  const targetObjective = await getUserObjective(event.locals.db, objectiveId, event.locals.session.userId);
+  const targetObjective = await getUserObjective(
+    event.locals.db,
+    objectiveId,
+    event.locals.session.userId
+  );
 
   if (!targetObjective) {
     return error(404, 'Objective not found');

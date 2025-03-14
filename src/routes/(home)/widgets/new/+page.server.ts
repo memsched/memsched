@@ -40,7 +40,11 @@ export const actions: Actions = {
     }
 
     try {
-      const widgetId = await createUserWidget(event.locals.db, form.data, event.locals.session.userId);
+      const widgetId = await createUserWidget(
+        event.locals.db,
+        form.data,
+        event.locals.session.userId
+      );
       const objective = (await getObjectiveFromWidgetId(event.locals.db, widgetId)) as Objective;
 
       if (objective.visibility !== 'public') {

@@ -54,7 +54,7 @@
       "binding": "DB",
       "database_name": "memsched-db",
       "database_id": "3d0f8058-1243-4694-9532-93f538360983",
-      "migrations_dir": "drizzle"
-    }
-  ]
+      "migrations_dir": "drizzle",
+    },
+  ],
 }

@@ -8,10 +8,7 @@ import { type DBType } from '../db';
  * @param db The database instance
  * @returns The metrics
  */
-export async function getMetricsFromWidgetId(
-  db: DBType,
-  widgetId: string,
-) {
+export async function getMetricsFromWidgetId(db: DBType, widgetId: string) {
   const metrics = await db
     .select()
     .from(table.widgetMetric)
@@ -26,15 +23,8 @@ export async function getMetricsFromWidgetId(
  * @param metricId The ID of the metric
  * @param value The new value
  */
-export async function updateMetricValue(
-  db: DBType,
-  metricId: string,
-  value: number,
-) {
-  await db
-    .update(table.widgetMetric)
-    .set({ value })
-    .where(eq(table.widgetMetric.id, metricId));
+export async function updateMetricValue(db: DBType, metricId: string, value: number) {
+  await db.update(table.widgetMetric).set({ value }).where(eq(table.widgetMetric.id, metricId));
 }
 
 /**

@@ -35,11 +35,7 @@ export async function getObjectiveLogs(db: DBType, objectiveId: string, userId: 
  * @param userId The user ID
  * @returns The most recent log, or null if no logs exist
  */
-export async function getMostRecentObjectiveLog(
-  db: DBType,
-  objectiveId: string,
-  userId: string,
-) {
+export async function getMostRecentObjectiveLog(db: DBType, objectiveId: string, userId: string) {
   const logs = await db
     .select()
     .from(table.objectiveLog)

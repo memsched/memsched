@@ -86,11 +86,7 @@ export async function getUserArchivedObjectives(db: DBType, userId: string) {
  * @param userId The user ID
  * @returns The objective if found, null otherwise
  */
-export async function getUserObjective(
-  db: DBType,
-  objectiveId: string,
-  userId: string,
-) {
+export async function getUserObjective(db: DBType, objectiveId: string, userId: string) {
   const objectives = await db
     .select()
     .from(table.objective)
@@ -127,10 +123,7 @@ export async function getObjectiveFromWidgetId(db: DBType, widgetId: string) {
  * @param db The database instance
  * @param objectiveId The ID of the objective
  */
-export async function updateObjectiveWidgetMetrics(
-  db: DBType,
-  objectiveId: string
-) {
+export async function updateObjectiveWidgetMetrics(db: DBType, objectiveId: string) {
   // Get all widgets associated with this objective
   const widgets = await getWidgetFromObjectiveId(db, objectiveId);
 
@@ -161,11 +154,7 @@ export async function updateObjectiveWidgetMetrics(
  * @param value The new value
  * @returns The updated objective
  */
-export async function updateObjectiveValue(
-  db: DBType,
-  objectiveId: string,
-  value: number,
-) {
+export async function updateObjectiveValue(db: DBType, objectiveId: string, value: number) {
   return (
     await db
       .update(table.objective)

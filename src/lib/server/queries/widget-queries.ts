@@ -92,11 +92,7 @@ export async function getWidgetWithMetrics(db: DBType, id: string) {
  * @param userId The user ID
  * @returns The widget or null if not found
  */
-export async function getUserWidget(
-  db: DBType,
-  widgetId: string,
-  userId: string,
-) {
+export async function getUserWidget(db: DBType, widgetId: string, userId: string) {
   const widgets = await db
     .select()
     .from(table.widget)

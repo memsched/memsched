@@ -3,6 +3,7 @@
 import type { LocalUser } from '$lib/types';
 import type { Session } from '$lib/server/db/schema';
 import type { DBType } from '$lib/server/db';
+
 declare global {
   namespace App {
     interface Locals {

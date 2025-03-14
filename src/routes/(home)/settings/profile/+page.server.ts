@@ -60,7 +60,11 @@ export const actions: Actions = {
 
     // Check if username is already taken by another user
     if (form.data.username !== currentUser.username) {
-      const usernameTaken = await isUsernameTaken(event.locals.db, form.data.username, currentUser.id);
+      const usernameTaken = await isUsernameTaken(
+        event.locals.db,
+        form.data.username,
+        currentUser.id
+      );
       if (usernameTaken) {
         setError(form, 'username', 'This username is already taken.');
         return fail(400, { form });
@@ -104,7 +108,11 @@ export const actions: Actions = {
 
     // Check if username is already taken by another user
     if (form.data.username !== currentUser.username) {
-      const usernameTaken = await isUsernameTaken(event.locals.db, form.data.username, currentUser.id);
+      const usernameTaken = await isUsernameTaken(
+        event.locals.db,
+        form.data.username,
+        currentUser.id
+      );
       if (usernameTaken) {
         setError(form, 'username', 'This username is already taken.');
         return fail(400, { form });

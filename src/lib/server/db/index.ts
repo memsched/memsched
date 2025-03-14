@@ -9,7 +9,7 @@ export type DBType = BaseSQLiteDatabase<'async', any, any, any>;
 // Function to get database instance based on environment
 export function getDB(platform?: App.Platform): DBType {
   // If we're on Cloudflare (has platform with DB binding)
-  if (platform?.env?.DB) {
+  if (!import.meta.env.DEV && platform?.env?.DB) {
     return drizzleD1(platform.env.DB);
   }
 

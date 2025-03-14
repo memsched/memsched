@@ -35,7 +35,7 @@
       </div>
     </div>
     {#if data.widgets.length > 0}
-      <div class="main-container">
+      <div class="main-container py-6">
         <div class="flex flex-wrap gap-4">
           {#each data.widgets as widget}
             <a href="/widgets/{widget}">

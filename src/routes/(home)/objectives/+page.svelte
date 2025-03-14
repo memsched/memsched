@@ -50,7 +50,7 @@
     </div>
   {/if}
   {#if data.objectives.length > 0}
-    <div class="main-container">
+    <div class="main-container py-6">
       <div class="flex flex-wrap gap-6">
         {#each data.objectives as objective}
           <ObjectiveCard {objective} form={data.form as SuperValidated<LogFormSchema>} />

@@ -9,7 +9,7 @@ export const load: PageServerLoad = async (event) => {
   }
 
   const isCompleted = event.url.searchParams.get('completed') !== null;
-  const widgetIds = await getUserWidgets(event.locals.session.userId, isCompleted);
+  const widgetIds = await getUserWidgets(event.locals.db, event.locals.session.userId, isCompleted);
 
   return {
     widgets: widgetIds.map((w) => w.id),

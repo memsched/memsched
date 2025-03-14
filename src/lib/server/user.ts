@@ -1,13 +1,14 @@
 import { eq } from 'drizzle-orm';
 import { v4 as uuidv4 } from 'uuid';
-import { db } from '$lib/server/db';
 import * as table from '$lib/server/db/schema';
 import type { ProviderId } from './oauth';
+import type { DBType } from '$lib/server/db';
 
 /**
  * We assume that the user is not already linked to the providerId
  */
 export async function createUser(
+  db: DBType,
   providerId: ProviderId,
   providerUserId: string,
   userData: Omit<table.UserInsert, 'id'>
@@ -65,6 +66,7 @@ export async function createUser(
 }
 
 export async function getUserFromProviderUserId(
+  db: DBType,
   providerUserId: string
 ): Promise<table.User | null> {
   const res = await db

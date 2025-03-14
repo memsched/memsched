@@ -27,7 +27,10 @@
    * Environment Variables
    * https://developers.cloudflare.com/workers/wrangler/configuration/#environment-variables
    */
-  // "vars": { "MY_VARIABLE": "production_value" },
+  "vars": {
+    "PUBLIC_GITHUB_REDIRECT_URI": "http://localhost:5173/auth/signin/github/callback",
+    "PUBLIC_GOOGLE_REDIRECT_URI": "http://localhost:5173/auth/signin/google/callback",
+  },
   /**
    * Note: Use secrets to store sensitive data.
    * https://developers.cloudflare.com/workers/configuration/secrets/
@@ -44,4 +47,14 @@
    * https://developers.cloudflare.com/workers/wrangler/configuration/#service-bindings
    */
   // "services": [{ "binding": "MY_SERVICE", "service": "my-service" }]
+
+  // Add D1 binding
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "memsched-db",
+      "database_id": "3d0f8058-1243-4694-9532-93f538360983",
+      "migrations_dir": "drizzle"
+    }
+  ]
 }

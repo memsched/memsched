@@ -20,7 +20,10 @@
     "db:migrate": "drizzle-kit migrate",
     "db:studio": "drizzle-kit studio",
     "deploy": "pnpm run build && wrangler pages deploy",
-    "cf-typegen": "wrangler types && mv worker-configuration.d.ts src/"
+    "cf-typegen": "wrangler types && mv worker-configuration.d.ts src/",
+    "d1:create": "wrangler d1 create memsched-db",
+    "d1:migrate": "wrangler d1 migrations apply memsched-db",
+    "d1:execute": "wrangler d1 execute memsched-db"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20250303.0",

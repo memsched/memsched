@@ -1,26 +1,18 @@
 import * as table from '../db/schema';
 import { eq } from 'drizzle-orm';
-import type { SQLiteTransaction } from 'drizzle-orm/sqlite-core';
-import type { ResultSet } from '@libsql/client';
-import type { ExtractTablesWithRelations } from 'drizzle-orm';
-import { db } from '../db';
+import { type DBType } from '../db';
 
 /**
  * Gets metrics from a widget ID
  * @param widgetId The ID of the widget
- * @param tx The database transaction
+ * @param db The database instance
  * @returns The metrics
  */
 export async function getMetricsFromWidgetId(
+  db: DBType,
   widgetId: string,
-  tx?: SQLiteTransaction<
-    'async',
-    ResultSet,
-    Record<string, never>,
-    ExtractTablesWithRelations<Record<string, never>>
-  >
 ) {
-  const metrics = await (tx ?? db)
+  const metrics = await db
     .select()
     .from(table.widgetMetric)
     .where(eq(table.widgetMetric.widgetId, widgetId));
@@ -30,21 +22,16 @@ export async function getMetricsFromWidgetId(
 
 /**
  * Updates a metric value
+ * @param db The database instance
  * @param metricId The ID of the metric
- * @param tx The database transaction
  * @param value The new value
  */
 export async function updateMetricValue(
+  db: DBType,
   metricId: string,
   value: number,
-  tx?: SQLiteTransaction<
-    'async',
-    ResultSet,
-    Record<string, never>,
-    ExtractTablesWithRelations<Record<string, never>>
-  >
 ) {
-  await (tx ?? db)
+  await db
     .update(table.widgetMetric)
     .set({ value })
     .where(eq(table.widgetMetric.id, metricId));
@@ -52,24 +39,19 @@ export async function updateMetricValue(
 
 /**
  * Computes metric values for objectives
- * @param tx The database transaction
+ * @param db The database instance
  * @param objectiveId The ID of the objective
  * @param timeRange The time range to compute the metric value for
  * @param valueDecimalPrecision The number of decimal places to round the metric value to
  * @returns The computed metric value
  */
 export async function computeMetricValue(
-  tx: SQLiteTransaction<
-    'async',
-    ResultSet,
-    Record<string, never>,
-    ExtractTablesWithRelations<Record<string, never>>
-  >,
+  db: DBType,
   objectiveId: string,
   timeRange: string,
   valueDecimalPrecision: number
 ) {
-  const logs = await tx
+  const logs = await db
     .select()
     .from(table.objectiveLog)
     .where(eq(table.objectiveLog.objectiveId, objectiveId));

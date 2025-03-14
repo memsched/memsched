@@ -8,7 +8,7 @@ export const actions: Actions = {
       return error(401, 'Unauthorized');
     }
     const widgetId = (await event.request.formData()).get('widgetId') as string;
-    const deleted = await deleteUserWidget(widgetId, event.locals.session.userId);
+    const deleted = await deleteUserWidget(event.locals.db, widgetId, event.locals.session.userId);
 
     if (!deleted) {
       return error(404, 'Widget not found');

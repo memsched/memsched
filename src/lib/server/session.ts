@@ -2,11 +2,10 @@ import type { RequestEvent } from '@sveltejs/kit';
 import { eq } from 'drizzle-orm';
 import { sha256 } from '@oslojs/crypto/sha2';
 import { encodeBase32, encodeHexLowerCase } from '@oslojs/encoding';
-import { db } from '$lib/server/db';
 import * as table from '$lib/server/db/schema';
+import type { DBType } from '$lib/server/db';
 
 const DAY_IN_MS = 1000 * 60 * 60 * 24;
-
 export const SESSION_COOKIE_NAME = 'auth-session';
 
 export function generateSessionToken() {
@@ -15,7 +14,7 @@ export function generateSessionToken() {
   return token;
 }
 
-export async function createSession(token: string, userId: string) {
+export async function createSession(db: DBType, token: string, userId: string) {
   const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(token)));
   const session: table.Session = {
     id: sessionId,
@@ -26,7 +25,7 @@ export async function createSession(token: string, userId: string) {
   return session;
 }
 
-export async function validateSessionToken(token: string) {
+export async function validateSessionToken(db: DBType, token: string) {
   const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(token)));
   const [result] = await db
     .select({
@@ -54,7 +53,7 @@ export async function validateSessionToken(token: string) {
 
   const sessionExpired = Date.now() >= session.expiresAt.getTime();
   if (sessionExpired) {
-    await invalidateSession(session.id);
+    await invalidateSession(db, session.id);
     return { session: null, user: null };
   }
 
@@ -72,11 +71,11 @@ export async function validateSessionToken(token: string) {
 
 export type SessionValidationResult = Awaited<ReturnType<typeof validateSessionToken>>;
 
-export async function invalidateSession(sessionId: string) {
+export async function invalidateSession(db: DBType, sessionId: string) {
   await db.delete(table.session).where(eq(table.session.id, sessionId));
 }
 
-export async function invalidateAllSessions(userId: string): Promise<void> {
+export async function invalidateAllSessions(db: DBType, userId: string): Promise<void> {
   await db.delete(table.session).where(eq(table.session.userId, userId));
 }
 

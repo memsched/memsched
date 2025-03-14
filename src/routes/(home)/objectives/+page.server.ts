@@ -26,11 +26,11 @@ export const load: PageServerLoad = async (event) => {
   let objectives;
 
   if (isCompleted) {
-    objectives = await getUserCompletedObjectives(event.locals.session.userId);
+    objectives = await getUserCompletedObjectives(event.locals.db, event.locals.session.userId);
   } else if (isArchived) {
-    objectives = await getUserArchivedObjectives(event.locals.session.userId);
+    objectives = await getUserArchivedObjectives(event.locals.db, event.locals.session.userId);
   } else {
-    objectives = await getUserActiveObjectives(event.locals.session.userId);
+    objectives = await getUserActiveObjectives(event.locals.db, event.locals.session.userId);
   }
 
   return {
@@ -55,7 +55,7 @@ export const actions: Actions = {
     }
 
     try {
-      const updatedObjective = (await logObjectiveProgress(form.data, userId)) as
+      const updatedObjective = (await logObjectiveProgress(event.locals.db, form.data, userId)) as
         | typeof schema.objective.$inferSelect
         | null;
 
@@ -94,7 +94,7 @@ export const actions: Actions = {
     }
 
     try {
-      const removedLog = (await undoObjectiveLog(objectiveId, userId)) as
+      const removedLog = (await undoObjectiveLog(event.locals.db, objectiveId, userId)) as
         | typeof schema.objectiveLog.$inferSelect
         | null;
 
@@ -126,7 +126,7 @@ export const actions: Actions = {
     }
 
     try {
-      await toggleArchivedObjective(objectiveId, event.locals.session.userId);
+      await toggleArchivedObjective(event.locals.db, objectiveId, event.locals.session.userId);
 
       return {
         success: true,

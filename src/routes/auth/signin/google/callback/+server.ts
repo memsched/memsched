@@ -46,10 +46,10 @@ export async function GET(event: RequestEvent): Promise<Response> {
   const avatarUrl = claims.picture;
   const email = claims.email;
 
-  const existingUser = await getUserFromProviderUserId(googleId);
+  const existingUser = await getUserFromProviderUserId(event.locals.db, googleId);
   if (existingUser !== null) {
     const sessionToken = generateSessionToken();
-    const session = await createSession(sessionToken, existingUser.id);
+    const session = await createSession(event.locals.db, sessionToken, existingUser.id);
     setSessionTokenCookie(event, sessionToken, session.expiresAt);
     return new Response(null, {
       status: 302,
@@ -59,14 +59,14 @@ export async function GET(event: RequestEvent): Promise<Response> {
     });
   }
 
-  const user = await createUser('google', googleId, {
+  const user = await createUser(event.locals.db, 'google', googleId, {
     email,
     username,
     name,
     avatarUrl,
   });
   const sessionToken = generateSessionToken();
-  const session = await createSession(sessionToken, user.id);
+  const session = await createSession(event.locals.db, sessionToken, user.id);
   setSessionTokenCookie(event, sessionToken, session.expiresAt);
   return new Response(null, {
     status: 302,

@@ -1,11 +1,10 @@
 import type { PageServerLoad } from './$types';
-import { db } from '$lib/server/db';
 import * as table from '$lib/server/db/schema';
 import { eq, and, desc } from 'drizzle-orm';
 import { error } from '@sveltejs/kit';
 
 export const load: PageServerLoad = async (event) => {
-  const users = await db
+  const users = await event.locals.db
     .select()
     .from(table.user)
     .where(eq(table.user.username, event.params.username));
@@ -15,7 +14,7 @@ export const load: PageServerLoad = async (event) => {
   }
   const user = users[0];
 
-  const widgets = await db
+  const widgets = await event.locals.db
     .select({
       id: table.widget.id,
     })
@@ -25,7 +24,7 @@ export const load: PageServerLoad = async (event) => {
     .orderBy(desc(table.widget.createdAt));
 
   // Fetch public objectives for this user
-  const publicObjectives = await db
+  const publicObjectives = await event.locals.db
     .select()
     .from(table.objective)
     .where(and(eq(table.objective.userId, user.id), eq(table.objective.visibility, 'public')))

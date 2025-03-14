@@ -1,6 +1,5 @@
 import type { PageServerLoad, Actions } from './$types';
 import { redirect, error } from '@sveltejs/kit';
-import { db } from '$lib/server/db';
 import { user } from '$lib/server/db/schema';
 import { eq } from 'drizzle-orm';
 import type { LocalUser } from '$lib/types';
@@ -30,7 +29,7 @@ export const actions: Actions = {
     }
 
     try {
-      await db.delete(user).where(eq(user.id, userId));
+      await event.locals.db.delete(user).where(eq(user.id, userId));
       event.cookies.delete('session_id', { path: '/' });
     } catch (err) {
       console.error('Error deleting account:', err);

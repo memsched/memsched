@@ -29,7 +29,7 @@ export const actions: Actions = {
     }
 
     try {
-      await createUserObjective(form.data, event.locals.session.userId);
+      await createUserObjective(event.locals.db, form.data, event.locals.session.userId);
     } catch (err) {
       console.error('Error creating objective:', err);
       return fail(500, {

@@ -6,11 +6,11 @@ import { getObjectiveFromWidgetId, getWidgetWithMetrics } from '$lib/server/quer
 import { renderWidget } from '$lib/server/svg';
 
 export const GET: RequestHandler = async (event) => {
-  const widget = await getWidgetWithMetrics(event.params.id);
+  const widget = await getWidgetWithMetrics(event.locals.db, event.params.id);
   if (!widget) {
     return error(404, 'Widget not found');
   }
-  const objective = await getObjectiveFromWidgetId(widget.id);
+  const objective = await getObjectiveFromWidgetId(event.locals.db, widget.id);
   if (!objective) {
     // TODO: Assert this instead as we should never get here (already checked above)
     return error(404, 'Widget not found');

@@ -26,7 +26,7 @@
     "d1:execute": "wrangler d1 execute memsched-db"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20250303.0",
+    "@cloudflare/workers-types": "^4.20250313.0",
     "@eslint/compat": "^1.2.7",
     "@eslint/js": "^9.21.0",
     "@playwright/test": "^1.51.0",
@@ -79,7 +79,8 @@
   "pnpm": {
     "overrides": {
       "cookie@<0.7.0": ">=0.7.0",
-      "esbuild@<=0.24.2": ">=0.25.0"
+      "esbuild@<=0.24.2": ">=0.25.0",
+      "@babel/runtime@<7.26.10": ">=7.26.10"
     }
   }
 }

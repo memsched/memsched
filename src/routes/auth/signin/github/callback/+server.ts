@@ -50,6 +50,7 @@ export async function GET(event: RequestEvent): Promise<Response> {
     const githubUserResponse = await fetch('https://api.github.com/user', {
       headers: {
         Authorization: `Bearer ${tokens.accessToken()}`,
+        'User-Agent': 'memsched',
       },
     });
 
@@ -100,6 +101,7 @@ export async function GET(event: RequestEvent): Promise<Response> {
     const githubEmailResponse = await fetch('https://api.github.com/user/emails', {
       headers: {
         Authorization: `Bearer ${tokens.accessToken()}`,
+        'User-Agent': 'memsched',
       },
     });
 

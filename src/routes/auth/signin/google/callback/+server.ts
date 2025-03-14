@@ -33,45 +33,62 @@ export async function GET(event: RequestEvent): Promise<Response> {
   let tokens: OAuth2Tokens;
   try {
     tokens = await google.validateAuthorizationCode(code, codeVerifier);
-  } catch (_) {
-    return new Response('Please restart the process.', {
+  } catch (error) {
+    console.error('Google authorization code validation error:', error);
+    return new Response('Error validating authorization code. Please restart the process.', {
       status: 400,
     });
   }
 
-  const claims = decodeIdToken(tokens.idToken()) as IClaims;
+  let claims: IClaims;
+  try {
+    claims = decodeIdToken(tokens.idToken()) as IClaims;
+  } catch (error) {
+    console.error('Error decoding Google ID token:', error);
+    return new Response('Error processing authentication data. Please try again.', {
+      status: 500,
+    });
+  }
+
   const googleId = claims.sub;
   const username = sanitizeUsername(claims.name);
   const name = claims.name;
   const avatarUrl = claims.picture;
   const email = claims.email;
 
-  const existingUser = await getUserFromProviderUserId(event.locals.db, googleId);
-  if (existingUser !== null) {
+  try {
+    const existingUser = await getUserFromProviderUserId(event.locals.db, googleId);
+    if (existingUser !== null) {
+      const sessionToken = generateSessionToken();
+      const session = await createSession(event.locals.db, sessionToken, existingUser.id);
+      setSessionTokenCookie(event, sessionToken, session.expiresAt);
+      return new Response(null, {
+        status: 302,
+        headers: {
+          Location: getUserOverviewUrl(existingUser.username),
+        },
+      });
+    }
+
+    const user = await createUser(event.locals.db, 'google', googleId, {
+      email,
+      username,
+      name,
+      avatarUrl,
+    });
     const sessionToken = generateSessionToken();
-    const session = await createSession(event.locals.db, sessionToken, existingUser.id);
+    const session = await createSession(event.locals.db, sessionToken, user.id);
     setSessionTokenCookie(event, sessionToken, session.expiresAt);
     return new Response(null, {
       status: 302,
       headers: {
-        Location: getUserOverviewUrl(existingUser.username),
+        Location: getUserOverviewUrl(user.username),
       },
     });
+  } catch (error) {
+    console.error('Error in user creation or session management:', error);
+    return new Response('Error creating user account. Please try again.', {
+      status: 500,
+    });
   }
-
-  const user = await createUser(event.locals.db, 'google', googleId, {
-    email,
-    username,
-    name,
-    avatarUrl,
-  });
-  const sessionToken = generateSessionToken();
-  const session = await createSession(event.locals.db, sessionToken, user.id);
-  setSessionTokenCookie(event, sessionToken, session.expiresAt);
-  return new Response(null, {
-    status: 302,
-    headers: {
-      Location: getUserOverviewUrl(user.username),
-    },
-  });
 }

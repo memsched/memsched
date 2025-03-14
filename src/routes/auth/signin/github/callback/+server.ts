@@ -38,18 +38,45 @@ export async function GET(event: RequestEvent): Promise<Response> {
   let tokens: OAuth2Tokens;
   try {
     tokens = await github.validateAuthorizationCode(code);
-  } catch (_) {
-    return new Response('Please restart the process.', {
+  } catch (error) {
+    console.error('GitHub authorization code validation error:', error);
+    return new Response('Error validating authorization code. Please restart the process.', {
       status: 400,
     });
   }
 
-  const githubUserResponse = await fetch('https://api.github.com/user', {
-    headers: {
-      Authorization: `Bearer ${tokens.accessToken()}`,
-    },
-  });
-  const githubUser: IGithubUser = await githubUserResponse.json();
+  let githubUser: IGithubUser;
+  try {
+    const githubUserResponse = await fetch('https://api.github.com/user', {
+      headers: {
+        Authorization: `Bearer ${tokens.accessToken()}`,
+      },
+    });
+
+    if (!githubUserResponse.ok) {
+      const errorText = await githubUserResponse.text();
+      console.error('GitHub API error:', githubUserResponse.status, errorText);
+      return new Response(`Error fetching user data: ${githubUserResponse.status}`, {
+        status: 500,
+      });
+    }
+
+    const responseText = await githubUserResponse.text();
+    try {
+      githubUser = JSON.parse(responseText) as IGithubUser;
+    } catch (e) {
+      console.error('Failed to parse GitHub user JSON:', e, 'Response:', responseText);
+      return new Response('Invalid response from GitHub. Please try again.', {
+        status: 500,
+      });
+    }
+  } catch (error) {
+    console.error('Error fetching GitHub user:', error);
+    return new Response('Error fetching user data. Please try again.', {
+      status: 500,
+    });
+  }
+
   const githubUserId = githubUser.id;
   const username = sanitizeUsername(githubUser.login);
   const name = githubUser.name;
@@ -68,17 +95,44 @@ export async function GET(event: RequestEvent): Promise<Response> {
     });
   }
 
-  const githubEmailResponse = await fetch('https://api.github.com/user/emails', {
-    headers: {
-      Authorization: `Bearer ${tokens.accessToken()}`,
-    },
-  });
-  const emailListResult: unknown = await githubEmailResponse.json();
+  let emailListResult: unknown;
+  try {
+    const githubEmailResponse = await fetch('https://api.github.com/user/emails', {
+      headers: {
+        Authorization: `Bearer ${tokens.accessToken()}`,
+      },
+    });
+
+    if (!githubEmailResponse.ok) {
+      const errorText = await githubEmailResponse.text();
+      console.error('GitHub email API error:', githubEmailResponse.status, errorText);
+      return new Response(`Error fetching email data: ${githubEmailResponse.status}`, {
+        status: 500,
+      });
+    }
+
+    const responseText = await githubEmailResponse.text();
+    try {
+      emailListResult = JSON.parse(responseText);
+    } catch (e) {
+      console.error('Failed to parse GitHub emails JSON:', e, 'Response:', responseText);
+      return new Response('Invalid response from GitHub. Please try again.', {
+        status: 500,
+      });
+    }
+  } catch (error) {
+    console.error('Error fetching GitHub emails:', error);
+    return new Response('Error fetching email data. Please try again.', {
+      status: 500,
+    });
+  }
+
   if (!Array.isArray(emailListResult) || emailListResult.length < 1) {
-    return new Response('Please restart the process.', {
+    return new Response('No emails found. Please restart the process.', {
       status: 400,
     });
   }
+
   let email: string | null = null;
   for (const emailRecord of emailListResult as IGithubUserEmail[]) {
     const primaryEmail = emailRecord.primary;

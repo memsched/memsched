@@ -8,7 +8,7 @@
   "compatibility_date": "2025-02-24",
   "pages_build_output_dir": ".svelte-kit/cloudflare",
   "observability": {
-    "enabled": true
+    "enabled": true,
   },
   /**
    * Smart Placement
@@ -29,7 +29,7 @@
    */
   "vars": {
     "PUBLIC_GITHUB_REDIRECT_URI": "https://memsched.pages.dev/auth/signin/github/callback",
-    "PUBLIC_GOOGLE_REDIRECT_URI": "https//memsched.pages.dev/auth/signin/google/callback"
+    "PUBLIC_GOOGLE_REDIRECT_URI": "https://memsched.pages.dev/auth/signin/google/callback",
   },
   /**
    * Note: Use secrets to store sensitive data.
@@ -54,7 +54,7 @@
       "binding": "DB",
       "database_name": "memsched-db",
       "database_id": "3d0f8058-1243-4694-9532-93f538360983",
-      "migrations_dir": "drizzle"
-    }
-  ]
+      "migrations_dir": "drizzle",
+    },
+  ],
 }

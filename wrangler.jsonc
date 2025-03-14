@@ -28,8 +28,8 @@
    * https://developers.cloudflare.com/workers/wrangler/configuration/#environment-variables
    */
   "vars": {
-    "PUBLIC_GITHUB_REDIRECT_URI": "http://localhost:5173/auth/signin/github/callback",
-    "PUBLIC_GOOGLE_REDIRECT_URI": "http://localhost:5173/auth/signin/google/callback"
+    "PUBLIC_GITHUB_REDIRECT_URI": "https://memsched.pages.dev/auth/signin/github/callback",
+    "PUBLIC_GOOGLE_REDIRECT_URI": "https//memsched.pages.dev/auth/signin/google/callback"
   },
   /**
    * Note: Use secrets to store sensitive data.

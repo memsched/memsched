@@ -2,12 +2,12 @@ import type { LocalUser } from '$lib/types';
 import type { PageServerLoad, Actions } from './$types';
 import { redirect, fail } from '@sveltejs/kit';
 import { user } from '$lib/server/db/schema';
-import { eq, and, not } from 'drizzle-orm';
+import { eq } from 'drizzle-orm';
 import { formSchema } from '$lib/components/forms/profile-form/schema';
 import { superValidate, message, setError } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { z } from 'zod';
-import type { DBType } from '$lib/server/db';
+import { isUsernameValid } from '$lib/server/user';
 
 export const load: PageServerLoad = async (event) => {
   if (!event.locals.session) {
@@ -34,17 +34,6 @@ export const load: PageServerLoad = async (event) => {
   };
 };
 
-// Helper function to check if username is already taken by another user
-async function isUsernameTaken(db: DBType, username: string, currentUserId: string) {
-  const existingUsers = await db
-    .select()
-    .from(user)
-    .where(and(eq(user.username, username), not(eq(user.id, currentUserId))))
-    .limit(1);
-
-  return existingUsers.length > 0;
-}
-
 export const actions: Actions = {
   post: async (event) => {
     if (!event.locals.session) {
@@ -60,12 +49,12 @@ export const actions: Actions = {
 
     // Check if username is already taken by another user
     if (form.data.username !== currentUser.username) {
-      const usernameTaken = await isUsernameTaken(
+      const usernameValid = await isUsernameValid(
         event.locals.db,
         form.data.username,
         currentUser.id
       );
-      if (usernameTaken) {
+      if (!usernameValid) {
         setError(form, 'username', 'This username is already taken.');
         return fail(400, { form });
       }
@@ -108,12 +97,12 @@ export const actions: Actions = {
 
     // Check if username is already taken by another user
     if (form.data.username !== currentUser.username) {
-      const usernameTaken = await isUsernameTaken(
+      const usernameValid = await isUsernameValid(
         event.locals.db,
         form.data.username,
         currentUser.id
       );
-      if (usernameTaken) {
+      if (!usernameValid) {
         setError(form, 'username', 'This username is already taken.');
         return fail(400, { form });
       }

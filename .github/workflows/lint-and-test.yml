@@ -1,10 +1,13 @@
-name: Lint
+name: Lint and Test
 
 on:
   pull_request:
+  push:
+    branches:
+      - main
 
 jobs:
-  check-format:
+  lint-and-test:
     runs-on: ubuntu-latest
 
     steps:
@@ -27,3 +30,6 @@ jobs:
 
       - name: Lint code
         run: pnpm lint
+
+      - name: Run unit tests
+        run: pnpm test:unit

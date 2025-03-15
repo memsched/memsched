@@ -3,16 +3,12 @@
   import { Badge } from '$lib/components/ui/badge';
   import { Button } from '$lib/components/ui/button';
   import { Icon } from 'svelte-icons-pack';
-  import { FiGithub, FiLinkedin, FiMonitor } from 'svelte-icons-pack/fi';
-  import PortfolioMockup from '$lib/components/mockups/PortfolioMockup.svelte';
-  import GitHubMockup from '$lib/components/mockups/GitHubMockup.svelte';
-  import LinkedInMockup from '$lib/components/mockups/LinkedInMockup.svelte';
-  import * as Tabs from '$lib/components/ui/tabs';
   import HomeLayout from '$lib/components/layouts/HomeLayout.svelte';
   import { IoArrowForward, IoCube, IoGlobe, IoPersonCircle } from 'svelte-icons-pack/io';
   import IconButton from '$lib/components/ui/IconButton.svelte';
   import WidgetCarousel from '$lib/components/WidgetCarousel.svelte';
   import { mockWidgets } from '$lib/widgets';
+  import * as Card from '$lib/components/ui/card';
 </script>
 
 <HomeLayout container={false} class="*:py-20">
@@ -36,62 +32,8 @@
     </div>
   </section>
 
-  <!-- Showcase Mockup section (2-column) -->
-  <section id="showcase" class="border-y bg-background">
-    <div class="main-container">
-      <div class="mb-10 text-center">
-        <h3 class="text-3xl font-bold">Embed Your Learning Journey Anywhere</h3>
-        <p class="mt-2 text-xl text-muted-foreground">
-          Seamlessly showcase your progress wherever your professional presence lives
-        </p>
-      </div>
-      <Tabs.Root value="portfolio" class="grid grid-cols-8 gap-8">
-        <Tabs.List
-          class="col-span-3 mt-2 flex h-fit flex-col gap-3 rounded-lg bg-transparent *:w-full *:justify-start *:text-wrap *:rounded-lg *:border *:py-4 *:text-start *:font-normal *:!shadow-none data-[state=active]:*:!border-primary"
-        >
-          <Tabs.Trigger value="portfolio">
-            <div class="rounded-full p-5">
-              <Icon src={FiMonitor} className="!text-primary size-6" />
-            </div>
-            <div>
-              <h3 class="text-lg font-semibold">Portfolio</h3>
-              <p>Add beautiful widgets to your personal website or portfolio.</p>
-            </div>
-          </Tabs.Trigger>
-          <Tabs.Trigger value="github">
-            <div class="rounded-full p-5">
-              <Icon src={FiGithub} className="!text-primary size-6" />
-            </div>
-            <div>
-              <h3 class="text-lg font-semibold">GitHub</h3>
-              <p>Display your learning progress directly on your GitHub profile.</p>
-            </div>
-          </Tabs.Trigger>
-          <Tabs.Trigger value="linkedin">
-            <div class="rounded-full p-5">
-              <Icon src={FiLinkedin} className="!text-primary size-6" />
-            </div>
-            <div>
-              <h3 class="text-lg font-semibold">LinkedIn</h3>
-              <p>Share your learning journey with your professional network.</p>
-            </div>
-          </Tabs.Trigger>
-        </Tabs.List>
-        <Tabs.Content value="portfolio" class="col-span-5">
-          <PortfolioMockup />
-        </Tabs.Content>
-        <Tabs.Content value="github" class="col-span-5">
-          <GitHubMockup />
-        </Tabs.Content>
-        <Tabs.Content value="linkedin" class="col-span-5">
-          <LinkedInMockup />
-        </Tabs.Content>
-      </Tabs.Root>
-    </div>
-  </section>
-
   <!-- How it works section -->
-  <section id="how-it-works" class="">
+  <section id="how-it-works" class="border-y bg-background">
     <div class="container mx-auto px-4">
       <div class="mb-16 text-center">
         <h3 class="text-3xl font-bold">How It Works</h3>
@@ -153,52 +95,67 @@
   </section>
 
   <!-- Use cases section -->
-  <!-- <section id="use-cases" class="bg-slate-50"> -->
-  <!--   <div class="container mx-auto px-4"> -->
-  <!--     <div class="mb-16 text-center"> -->
-  <!--       <h2 class="text-3xl font-bold">Perfect For</h2> -->
-  <!--       <p class="mt-4 text-xl text-slate-600">See how different people are using memsched</p> -->
-  <!--     </div> -->
-  <!-- -->
-  <!--     <div class="grid grid-cols-1 gap-12 md:grid-cols-2"> -->
-  <!--       <div class="rounded-lg p-8 shadow-sm"> -->
-  <!--         <h3 class="mb-4 text-2xl font-semibold">Developers</h3> -->
-  <!--         <p class="mb-4 text-slate-600"> -->
-  <!--           Showcase your coding progress, track languages you're learning, and display your metrics -->
-  <!--           on your GitHub profile to stand out to potential employers. -->
-  <!--         </p> -->
-  <!--         <Button variant="outline" href="/auth/signin">Start coding journey</Button> -->
-  <!--       </div> -->
-  <!-- -->
-  <!--       <div class="rounded-lg p-8 shadow-sm"> -->
-  <!--         <h3 class="mb-4 text-2xl font-semibold">Students</h3> -->
-  <!--         <p class="mb-4 text-slate-600"> -->
-  <!--           Keep track of courses completed, skills acquired, and study hours. Share your academic -->
-  <!--           progress on your portfolio or LinkedIn profile. -->
-  <!--         </p> -->
-  <!--         <Button variant="outline" href="/auth/signin">Track your studies</Button> -->
-  <!--       </div> -->
-  <!-- -->
-  <!--       <div class="rounded-lg p-8 shadow-sm"> -->
-  <!--         <h3 class="mb-4 text-2xl font-semibold">Language Learners</h3> -->
-  <!--         <p class="mb-4 text-slate-600"> -->
-  <!--           Monitor vocabulary growth, practice time, and fluency improvements. Share your language -->
-  <!--           learning journey on social media. -->
-  <!--         </p> -->
-  <!--         <Button variant="outline" href="/auth/signin">Learn languages</Button> -->
-  <!--       </div> -->
-  <!-- -->
-  <!--       <div class="rounded-lg p-8 shadow-sm"> -->
-  <!--         <h3 class="mb-4 text-2xl font-semibold">Content Creators</h3> -->
-  <!--         <p class="mb-4 text-slate-600"> -->
-  <!--           Track your content output, audience growth, and engagement metrics. Embed your progress -->
-  <!--           on your website to build transparency with your audience. -->
-  <!--         </p> -->
-  <!--         <Button variant="outline" href="/auth/signin">Grow your audience</Button> -->
-  <!--       </div> -->
-  <!--     </div> -->
-  <!--   </div> -->
-  <!-- </section> -->
+  <section id="use-cases" class="bg-slate-50">
+    <div class="container mx-auto px-4">
+      <div class="mb-10 text-center">
+        <h2 class="text-3xl font-bold">Perfect For</h2>
+        <p class="text-xl text-muted-foreground">See how different people are using memsched</p>
+      </div>
+      <div class="grid grid-cols-1 gap-12 md:grid-cols-2">
+        <Card.Root>
+          <Card.Header>
+            <Card.Title>Developers</Card.Title>
+          </Card.Header>
+          <Card.Content>
+            Showcase your coding progress, track languages you're learning, and display your metrics
+            on your GitHub profile to stand out to potential employers.
+          </Card.Content>
+          <Card.Footer>
+            <Button href="/auth/signin">Start coding journey</Button>
+          </Card.Footer>
+        </Card.Root>
+
+        <Card.Root>
+          <Card.Header>
+            <Card.Title>Students</Card.Title>
+          </Card.Header>
+          <Card.Content>
+            Keep track of courses completed, skills acquired, and study hours. Share your academic
+            progress on your portfolio or LinkedIn profile.
+          </Card.Content>
+          <Card.Footer>
+            <Button href="/auth/signin">Track your studies</Button>
+          </Card.Footer>
+        </Card.Root>
+
+        <Card.Root>
+          <Card.Header>
+            <Card.Title>Language Learners</Card.Title>
+          </Card.Header>
+          <Card.Content>
+            Monitor vocabulary growth, practice time, and fluency improvements. Share your language
+            learning journey on social media.
+          </Card.Content>
+          <Card.Footer>
+            <Button href="/auth/signin">Learn languages</Button>
+          </Card.Footer>
+        </Card.Root>
+
+        <Card.Root>
+          <Card.Header>
+            <Card.Title>Content Creators</Card.Title>
+          </Card.Header>
+          <Card.Content>
+            Track your content output, audience growth, and engagement metrics. Embed your progress
+            on your website to build transparency with your audience.
+          </Card.Content>
+          <Card.Footer>
+            <Button href="/auth/signin">Grow your audience</Button>
+          </Card.Footer>
+        </Card.Root>
+      </div>
+    </div>
+  </section>
 
   <!-- Testimonials (placeholder) -->
   <section id="testimonials" class="border-y bg-background">

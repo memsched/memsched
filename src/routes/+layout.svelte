@@ -5,6 +5,7 @@
   // import { ModeWatcher } from 'mode-watcher';
   import ColorPickerToolbar from '$lib/components/ColorPickerToolbar.svelte';
   import AccessibilityToolbar from '$lib/components/AccessibilityToolbar.svelte';
+  import UnderConstructionBanner from '$lib/components/UnderConstructionBanner.svelte';
   import '../app.css';
 
   beforeNavigate(({ willUnload, to }) => {
@@ -17,6 +18,7 @@
 </script>
 
 <!-- <ModeWatcher defaultMode="light" track={false} /> -->
+<UnderConstructionBanner />
 {@render children()}
 {#if browser}
   {#await import('svelte-french-toast') then { Toaster }}

@@ -33,6 +33,7 @@ const config = {
         'style-src': ['self', 'unsafe-inline'],
         'img-src': [
           'self',
+          'data:',
           'https://avatars.githubusercontent.com',
           'https://lh3.googleusercontent.com',
         ],

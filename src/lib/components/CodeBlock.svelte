@@ -31,7 +31,7 @@
 
 <pre
   class="flex items-start justify-between gap-3 text-wrap rounded-md border bg-muted p-4 font-mono text-xs">
-    <code>{code}</code>
+    <code class="overflow-hidden">{code}</code>
     <button class="flex items-center" onclick={copyToClipboard}>
         <Icon
       src={copied ? IoCheckmarkCircleOutline : IoCopyOutline}

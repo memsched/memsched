@@ -33,7 +33,7 @@
       <div class="rounded-lg border bg-background p-5">
         <div class="flex flex-col gap-4">
           <div class="flex items-center justify-between">
-            <h5 class="font-medium">Current Subscription</h5>
+            <h3 class="h5 font-medium">Current Subscription</h3>
             <Badge variant="secondary">Free Plan</Badge>
           </div>
 
@@ -80,7 +80,7 @@
         <div class="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
           <div>
             <div class="mb-1 flex items-center gap-3">
-              <h5>Pro Plan</h5>
+              <h3 class="h5 font-medium">Pro Plan</h3>
               <Badge>Recommended</Badge>
               <span class="font-medium">$3/month</span>
             </div>

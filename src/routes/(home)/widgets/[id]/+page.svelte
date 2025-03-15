@@ -14,7 +14,7 @@
 
 <HomeLayout class="gap-7">
   <div class="flex w-full items-center justify-between">
-    <h2>Edit Widget</h2>
+    <h1 class="h2">Edit Widget</h1>
     <ConfirmDeleteDialog action="/widgets/delete" name="widgetId" value={page.params.id}>
       <Dialog.Trigger>
         {#snippet child({ props })}
@@ -25,7 +25,7 @@
   </div>
   {#if data.objectives.find((o) => o.id === data.form.data.objectiveId)?.visibility === 'public'}
     <div class="space-y-4">
-      <h3>Sharing</h3>
+      <h2 class="h3">Sharing</h2>
       <ShareWidget
         title={data.form.data.title}
         subtitle={data.form.data.subtitle}

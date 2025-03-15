@@ -15,7 +15,7 @@
     <Icon src={icon} className="size-6" />
   </div>
   <div>
-    <h2>{title}</h2>
+    <h1 class="h2">{title}</h1>
     <p class=" mt-1 text-muted-foreground">
       {subtitle}
     </p>

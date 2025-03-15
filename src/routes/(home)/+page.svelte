@@ -22,9 +22,9 @@
     <div class="space-y-3">
       <Badge class="text-sm" variant="translucent">v2 Released 🎉</Badge>
       <h1>Show the world what you're learning.</h1>
-      <h4 class="font-medium">
+      <h2 class="h4 font-medium">
         Set goals, log progress, and showcase your journey with beautiful widgets.
-      </h4>
+      </h2>
     </div>
     <div class="relative mt-8 w-fit">
       <Button size="cta" href="/auth/signin">Get Started for Free</Button>
@@ -39,7 +39,7 @@
   <section id="showcase" class="border-y bg-background">
     <div class="main-container">
       <div class="mb-10 text-center">
-        <h2 class="text-3xl font-bold">Embed Your Learning Journey Anywhere</h2>
+        <h3 class="text-3xl font-bold">Embed Your Learning Journey Anywhere</h3>
         <p class="mt-2 text-xl text-muted-foreground">
           Seamlessly showcase your progress wherever your professional presence lives
         </p>
@@ -93,7 +93,7 @@
   <section id="how-it-works" class="">
     <div class="container mx-auto px-4">
       <div class="mb-16 text-center">
-        <h2 class="text-3xl font-bold">How It Works</h2>
+        <h3 class="text-3xl font-bold">How It Works</h3>
         <p class="text-xl text-muted-foreground">
           Three simple steps to showcase your learning journey
         </p>
@@ -203,7 +203,7 @@
   <section id="testimonials" class="border-y bg-background">
     <div class="main-container mx-auto px-4">
       <div class="mb-16 text-center">
-        <h2 class="text-3xl font-bold">What Our Users Say</h2>
+        <h3 class="text-3xl font-bold">What Our Users Say</h3>
         <p class="mt-4 text-xl text-slate-600">Join thousands of learners tracking their journey</p>
       </div>
 

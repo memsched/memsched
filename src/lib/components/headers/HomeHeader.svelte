@@ -34,11 +34,11 @@
   >
     <div class="flex h-full items-center gap-12">
       {#if page.url.pathname === '/'}
-        <button onclick={() => scrollToTop()}>
+        <button onclick={() => scrollToTop()} aria-label="Scroll to top">
           <LogoShort />
         </button>
       {:else}
-        <a href="/">
+        <a href="/" aria-label="Go to homepage">
           <LogoShort />
         </a>
       {/if}

@@ -21,7 +21,7 @@
   <div class="flex w-full flex-col gap-8">
     {#if data.publicObjectives.length > 0}
       <div class="w-full space-y-3">
-        <h3>Widgets</h3>
+        <h2 class="h3">Widgets</h2>
         {#if data.publicUser.widgets.length > 0}
           <div class="flex flex-wrap gap-3">
             {#each data.publicUser.widgets as widget}

@@ -13,7 +13,7 @@
 
 <HomeLayout class="gap-7">
   <div class="flex w-full items-center justify-between">
-    <h2>Edit Objective</h2>
+    <h1 class="h2">Edit Objective</h1>
     <ConfirmDeleteDialog action="/objectives/delete" name="objectiveId" value={page.params.id}>
       <Dialog.Trigger>
         {#snippet child({ props })}

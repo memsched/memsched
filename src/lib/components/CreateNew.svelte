@@ -29,7 +29,7 @@
     <Icon src={icon} size="150" className="*:!stroke-[5px] !text-primary" />
   </div>
 
-  <h2 class="max-w-sm text-center text-2xl font-semibold">{title}</h2>
+  <h1 class="h3 max-w-sm text-center">{title}</h1>
   {#if description}
     <p class="max-w-sm text-center text-muted-foreground">{description}</p>
   {/if}

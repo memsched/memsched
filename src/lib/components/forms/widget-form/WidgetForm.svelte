@@ -81,7 +81,7 @@
 <form method="POST" use:enhance class="relative grid w-full grid-cols-8 gap-x-16">
   <div class="col-span-5 space-y-16 last:space-y-6">
     <section class="space-y-6 first:space-y-3">
-      <h3>General</h3>
+      <h2 class="h3">General</h2>
       <div class="grid grid-cols-2 gap-x-16 gap-y-6">
         <Form.Field {form} name="objectiveId">
           <Form.Control>
@@ -175,7 +175,7 @@
     </section>
 
     <section class="space-y-6 first:space-y-3">
-      <h3>Metrics</h3>
+      <h2 class="h3">Metrics</h2>
       <div class="col-span-2">
         <Label>Number of Metrics</Label>
         <Tabs.Root value={metricsCount === 0 ? 'none' : metricsCount.toString()} class="mt-1">
@@ -268,7 +268,7 @@
       </div>
     </section>
     <section class="space-y-6 first:space-y-3">
-      <h3>Customization</h3>
+      <h2 class="h3">Customization</h2>
       <div class="grid grid-cols-3 gap-x-10 gap-y-6">
         <Form.Field {form} name="color">
           <Form.Control>
@@ -404,7 +404,7 @@
   </div>
 
   <div class="sticky col-span-3 h-fit space-y-4" style="top: calc({HEADER_HEIGHT}px + 2rem)">
-    <h5>Preview</h5>
+    <h2 class="h5">Preview</h2>
     <div class="space-y-2">
       {#if edit}
         <div>

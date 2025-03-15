@@ -16,12 +16,12 @@
     --card-foreground: 240 10% 3.9%;
     --border: 240 5.9% 90%;
     --input: 240 5.9% 90%;
-    --primary: 230 55% 43%;
+    --primary: 230 55% 40%;
     --primary-foreground: 230 80% 96%;
     --secondary: 240 4.8% 95.9%;
     --secondary-foreground: 240 5.9% 10%;
     --accent: 230 80% 97%;
-    --accent-foreground: 230 55% 43%;
+    --accent-foreground: 230 55% 40%;
     --destructive: 0 72.2% 50.6%;
     --destructive-foreground: 0 0% 98%;
     --ring: 240 10% 3.9%;
@@ -75,19 +75,24 @@
   body {
     @apply bg-back text-foreground;
   }
-  h1 {
+  h1,
+  .h1 {
     @apply scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl;
   }
-  h2 {
+  h2,
+  .h2 {
     @apply scroll-m-20 text-3xl font-semibold tracking-tight;
   }
-  h3 {
+  h3,
+  .h3 {
     @apply scroll-m-20 text-2xl font-semibold tracking-tight;
   }
-  h4 {
+  h4,
+  .h4 {
     @apply scroll-m-20 text-xl font-semibold tracking-tight;
   }
-  h5 {
+  h5,
+  .h5 {
     @apply text-lg font-semibold;
   }
   p a {

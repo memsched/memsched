@@ -4,6 +4,7 @@
   import { updated } from '$app/state';
   // import { ModeWatcher } from 'mode-watcher';
   import ColorPickerToolbar from '$lib/components/ColorPickerToolbar.svelte';
+  import AccessibilityToolbar from '$lib/components/AccessibilityToolbar.svelte';
   import '../app.css';
 
   beforeNavigate(({ willUnload, to }) => {
@@ -29,5 +30,8 @@
   {/await}
   {#if import.meta.env.VITE_DEBUG_COLOR_EDITOR === '1' && import.meta.env.DEV}
     <ColorPickerToolbar />
+  {/if}
+  {#if import.meta.env.VITE_DEBUG_A11Y === '1' && import.meta.env.DEV}
+    <AccessibilityToolbar />
   {/if}
 {/if}

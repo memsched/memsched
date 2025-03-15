@@ -7,6 +7,6 @@
 </script>
 
 <HomeLayout class="gap-7">
-  <h2>Create Objective</h2>
+  <h1 class="h2">Create Objective</h1>
   <ObjectiveForm {data} />
 </HomeLayout>

@@ -35,7 +35,7 @@
 
 <form method="POST" use:enhance class="w-full space-y-5">
   <section class="space-y-6 first:space-y-3">
-    <h3>General</h3>
+    <h2 class="h3">General</h2>
     <div class="grid grid-cols-2 gap-x-16 gap-y-6">
       <Form.Field {form} name="name">
         <Form.Control>

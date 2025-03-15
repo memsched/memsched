@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { page } from '$app/state';
   import { ICON_URLS } from '$lib/icons';
   import { Input } from '../ui/input';
   import { onMount } from 'svelte';
@@ -7,6 +8,8 @@
     value: string | null;
   }
   let { value = $bindable() }: Props = $props();
+
+  const origin = page.url.origin;
 
   // Create search index
   type IndexedIcon = {
@@ -171,8 +174,8 @@
           <small class="block font-semibold capitalize">{category}</small>
           <div class="flex flex-wrap gap-4">
             {#each icons as url}
-              <button type="button" class="cursor-pointer" onclick={() => (value = url)}>
-                <img src={url} alt="" class="size-8" loading="lazy" />
+              <button type="button" class="cursor-pointer" onclick={() => (value = origin + url)}>
+                <img src={origin + url} alt="" class="size-8" loading="lazy" />
               </button>
             {/each}
           </div>

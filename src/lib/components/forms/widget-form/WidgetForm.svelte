@@ -22,7 +22,6 @@
   } from './schema';
   import { HEADER_HEIGHT } from '$lib/constants';
   import type { LocalUser } from '$lib/types';
-  import IconPickerInput from '$lib/components/inputs/IconPickerInput.svelte';
   import { page } from '$app/state';
   import { v4 as uuid4 } from 'uuid';
 
@@ -141,7 +140,11 @@
             <Form.Fieldset {form} name="imagePlacement" class="col-span-2">
               <input type="hidden" name="imagePlacement" bind:value={$formData.imagePlacement} />
               <Tabs.Content value="icon" class="space-y-6">
-                <IconPickerInput bind:value={$formData.imageUrl} />
+                {#if browser}
+                  {#await import('$lib/components/inputs/IconPickerInput.svelte') then { default: IconPickerInput }}
+                    <IconPickerInput bind:value={$formData.imageUrl} />
+                  {/await}
+                {/if}
                 <div class="space-y-2">
                   <Form.Legend>Placement</Form.Legend>
                   <Tabs.Root bind:value={$formData.imagePlacement}>

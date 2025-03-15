@@ -2,7 +2,6 @@
   import Arrow from '$lib/components/svgs/Arrow.svelte';
   import { Badge } from '$lib/components/ui/badge';
   import { Button } from '$lib/components/ui/button';
-  import Widgets from '$lib/components/svgs/Widgets.svelte';
   import { Icon } from 'svelte-icons-pack';
   import { FiGithub, FiLinkedin, FiMonitor } from 'svelte-icons-pack/fi';
   import PortfolioMockup from '$lib/components/mockups/PortfolioMockup.svelte';
@@ -12,12 +11,14 @@
   import HomeLayout from '$lib/components/layouts/HomeLayout.svelte';
   import { IoArrowForward, IoCube, IoGlobe, IoPersonCircle } from 'svelte-icons-pack/io';
   import IconButton from '$lib/components/ui/IconButton.svelte';
+  import WidgetCarousel from '$lib/components/WidgetCarousel.svelte';
+  import { mockWidgets } from '$lib/widgets';
 </script>
 
 <HomeLayout container={false} class="*:py-20">
   <section
     id="hero"
-    class="main-container flex h-screen flex-grow flex-col items-center justify-center text-center"
+    class="main-container flex h-screen flex-grow flex-col items-center justify-center !pb-0 text-center"
   >
     <div class="space-y-3">
       <Badge class="text-sm" variant="translucent">v2 Released 🎉</Badge>
@@ -30,8 +31,8 @@
       <Button size="cta" href="/auth/signin">Get Started for Free</Button>
       <Arrow class="absolute left-[105%] top-[60%] -z-10 rotate-6" />
     </div>
-    <div class="mt-24">
-      <Widgets />
+    <div class="mt-20">
+      <WidgetCarousel widgets={mockWidgets} />
     </div>
   </section>
 

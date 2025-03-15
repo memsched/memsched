@@ -29,22 +29,19 @@ const config = {
       mode: 'auto',
       directives: {
         'default-src': ['self'],
-        'script-src': ['self'],
+        'script-src': ['self', 'unsafe-inline'],
         'style-src': ['self', 'unsafe-inline'],
         'img-src': [
           'self',
           'https://avatars.githubusercontent.com',
           'https://lh3.googleusercontent.com',
-          'https://hatscripts.github.io',
-          'https://cdn.svgporn.com',
         ],
         'font-src': ['self'],
         'object-src': ['none'],
         'base-uri': ['self'],
         'form-action': ['self'],
         'frame-ancestors': ['none'],
-        // TODO: Remove this comment in prod
-        // 'upgrade-insecure-requests': true,
+        'upgrade-insecure-requests': process.env.NODE_ENV !== 'development',
         'block-all-mixed-content': true,
       },
       // reportOnly: {

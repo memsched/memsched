@@ -16,7 +16,7 @@
     category: string;
     name: string;
     url: string;
-    searchTerms: string;
+    searchTerms: string[];
   };
 
   let iconIndex: IndexedIcon[] = [];
@@ -32,6 +32,22 @@
   let isLoading = $state(false);
   let hasMoreIcons = $state(true);
 
+  /**
+   * Generate search terms from an icon name by splitting on underscores and dashes
+   */
+  function generateSearchTerms(name: string): string[] {
+    const lowerName = name.toLowerCase();
+    // Include the original name as one of the search terms
+    const terms = [lowerName];
+
+    // Split by common word separators and add individual words
+    const words = lowerName.split(/[_\-\s]+/).filter((word) => word);
+    terms.push(...words);
+
+    // Remove duplicates
+    return [...new Set(terms)];
+  }
+
   onMount(() => {
     // Build the search index once on component mount
     iconIndex = Object.entries(ICON_URLS).flatMap(([category, icons]) =>
@@ -39,7 +55,7 @@
         category,
         name,
         url,
-        searchTerms: name.toLowerCase(),
+        searchTerms: generateSearchTerms(name),
       }))
     );
 
@@ -153,8 +169,16 @@
         return;
       }
 
-      // Filter the index
-      const filtered = iconIndex.filter((icon) => icon.searchTerms.includes(inputValue));
+      // Split search input to match against individual words
+      const searchTerms = inputValue.split(/\s+/).filter((term) => term);
+
+      // Filter the index - match if ANY search term matches ANY icon term
+      const filtered = iconIndex.filter((icon) => {
+        return searchTerms.some((searchTerm) =>
+          icon.searchTerms.some((iconTerm) => iconTerm.includes(searchTerm))
+        );
+      });
+
       updateFilteredIcons(filtered);
     }, 100);
   }

@@ -4,7 +4,7 @@
   import { Button } from '$lib/components/ui/button';
   import { Icon } from 'svelte-icons-pack';
   import HomeLayout from '$lib/components/layouts/HomeLayout.svelte';
-  import { IoArrowForward, IoCube, IoGlobe, IoPersonCircle } from 'svelte-icons-pack/io';
+  import { IoArrowForward, IoBook, IoCube, IoGlobe, IoPersonCircle } from 'svelte-icons-pack/io';
   import IconButton from '$lib/components/ui/IconButton.svelte';
   import WidgetCarousel from '$lib/components/WidgetCarousel.svelte';
   import { mockWidgets } from '$lib/widgets';
@@ -36,8 +36,8 @@
   <section id="how-it-works" class="border-y bg-background">
     <div class="container mx-auto px-4">
       <div class="mb-16 text-center">
-        <h3 class="text-3xl font-bold">How It Works</h3>
-        <p class="text-xl text-muted-foreground">
+        <h2 class="h2">How It Works</h2>
+        <p class="text-lg text-muted-foreground">
           Three simple steps to showcase your learning journey
         </p>
       </div>
@@ -95,62 +95,141 @@
   </section>
 
   <!-- Use cases section -->
-  <section id="use-cases" class="bg-slate-50">
-    <div class="container mx-auto px-4">
+  <section id="use-cases">
+    <div class="container mx-auto max-w-7xl px-4">
       <div class="mb-10 text-center">
-        <h2 class="text-3xl font-bold">Perfect For</h2>
-        <p class="text-xl text-muted-foreground">See how different people are using memsched</p>
+        <h2 class="h2">Perfect For</h2>
+        <p class="text-lg text-muted-foreground">
+          See how different people are using memsched to showcase their learning journey
+        </p>
       </div>
-      <div class="grid grid-cols-1 gap-12 md:grid-cols-2">
-        <Card.Root>
-          <Card.Header>
-            <Card.Title>Developers</Card.Title>
+
+      <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        <Card.Root
+          class="group overflow-hidden border border-border/50 transition-all duration-300 hover:border-primary/20 hover:shadow-md hover:shadow-primary/5"
+        >
+          <Card.Header class="pb-2">
+            <div class="mb-1 flex items-center gap-3">
+              <div
+                class="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100 text-blue-600"
+              >
+                <Icon src={IoPersonCircle} className="size-6" />
+              </div>
+              <Card.Title class="text-xl transition-colors group-hover:text-primary"
+                >Developers</Card.Title
+              >
+            </div>
           </Card.Header>
-          <Card.Content>
+          <Card.Content class="py-2 text-sm text-muted-foreground">
             Showcase your coding progress, track languages you're learning, and display your metrics
-            on your GitHub profile to stand out to potential employers.
+            on your GitHub profile.
           </Card.Content>
-          <Card.Footer>
-            <Button href="/auth/signin">Start coding journey</Button>
+          <Card.Footer class="pt-3">
+            <Button
+              variant="outline"
+              size="sm"
+              class="w-full justify-between transition-all group-hover:bg-primary group-hover:text-white"
+              href="/auth/signin"
+            >
+              Start coding journey
+              <Icon src={IoArrowForward} className="size-4" />
+            </Button>
           </Card.Footer>
         </Card.Root>
 
-        <Card.Root>
-          <Card.Header>
-            <Card.Title>Students</Card.Title>
+        <Card.Root
+          class="group overflow-hidden border border-border/50 transition-all duration-300 hover:border-primary/20 hover:shadow-md hover:shadow-primary/5"
+        >
+          <Card.Header class="pb-2">
+            <div class="mb-1 flex items-center gap-3">
+              <div
+                class="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-amber-100 text-amber-600"
+              >
+                <Icon src={IoBook} className="size-6" />
+              </div>
+              <Card.Title class="text-xl transition-colors group-hover:text-primary"
+                >Students</Card.Title
+              >
+            </div>
           </Card.Header>
-          <Card.Content>
+          <Card.Content class="py-2 text-sm text-muted-foreground">
             Keep track of courses completed, skills acquired, and study hours. Share your academic
-            progress on your portfolio or LinkedIn profile.
+            progress on your portfolio.
           </Card.Content>
-          <Card.Footer>
-            <Button href="/auth/signin">Track your studies</Button>
+          <Card.Footer class="pt-3">
+            <Button
+              variant="outline"
+              size="sm"
+              class="w-full justify-between transition-all group-hover:bg-primary group-hover:text-white"
+              href="/auth/signin"
+            >
+              Track your studies
+              <Icon src={IoArrowForward} className="size-4" />
+            </Button>
           </Card.Footer>
         </Card.Root>
 
-        <Card.Root>
-          <Card.Header>
-            <Card.Title>Language Learners</Card.Title>
+        <Card.Root
+          class="group overflow-hidden border border-border/50 transition-all duration-300 hover:border-primary/20 hover:shadow-md hover:shadow-primary/5"
+        >
+          <Card.Header class="pb-2">
+            <div class="mb-1 flex items-center gap-3">
+              <div
+                class="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-green-100 text-green-600"
+              >
+                <Icon src={IoGlobe} className="size-6" />
+              </div>
+              <Card.Title class="text-xl transition-colors group-hover:text-primary"
+                >Language Learners</Card.Title
+              >
+            </div>
           </Card.Header>
-          <Card.Content>
+          <Card.Content class="py-2 text-sm text-muted-foreground">
             Monitor vocabulary growth, practice time, and fluency improvements. Share your language
-            learning journey on social media.
+            learning journey.
           </Card.Content>
-          <Card.Footer>
-            <Button href="/auth/signin">Learn languages</Button>
+          <Card.Footer class="pt-3">
+            <Button
+              variant="outline"
+              size="sm"
+              class="w-full justify-between transition-all group-hover:bg-primary group-hover:text-white"
+              href="/auth/signin"
+            >
+              Learn languages
+              <Icon src={IoArrowForward} className="size-4" />
+            </Button>
           </Card.Footer>
         </Card.Root>
 
-        <Card.Root>
-          <Card.Header>
-            <Card.Title>Content Creators</Card.Title>
+        <Card.Root
+          class="group overflow-hidden border border-border/50 transition-all duration-300 hover:border-primary/20 hover:shadow-md hover:shadow-primary/5"
+        >
+          <Card.Header class="pb-2">
+            <div class="mb-1 flex items-center gap-3">
+              <div
+                class="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-purple-100 text-purple-600"
+              >
+                <Icon src={IoCube} className="size-6" />
+              </div>
+              <Card.Title class="text-xl transition-colors group-hover:text-primary"
+                >Content Creators</Card.Title
+              >
+            </div>
           </Card.Header>
-          <Card.Content>
+          <Card.Content class="py-2 text-sm text-muted-foreground">
             Track your content output, audience growth, and engagement metrics. Embed your progress
-            on your website to build transparency with your audience.
+            on your website.
           </Card.Content>
-          <Card.Footer>
-            <Button href="/auth/signin">Grow your audience</Button>
+          <Card.Footer class="pt-3">
+            <Button
+              variant="outline"
+              size="sm"
+              class="w-full justify-between transition-all group-hover:bg-primary group-hover:text-white"
+              href="/auth/signin"
+            >
+              Grow your audience
+              <Icon src={IoArrowForward} className="size-4" />
+            </Button>
           </Card.Footer>
         </Card.Root>
       </div>
@@ -161,8 +240,10 @@
   <section id="testimonials" class="border-y bg-background">
     <div class="main-container mx-auto px-4">
       <div class="mb-16 text-center">
-        <h3 class="text-3xl font-bold">What Our Users Say</h3>
-        <p class="mt-4 text-xl text-slate-600">Join thousands of learners tracking their journey</p>
+        <h2 class="h2">What Our Users Say</h2>
+        <p class="text-lg text-muted-foreground">
+          Join thousands of learners tracking their journey
+        </p>
       </div>
 
       <div class="grid grid-cols-1 gap-8 md:grid-cols-3">

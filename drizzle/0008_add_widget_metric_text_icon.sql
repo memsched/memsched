@@ -1,0 +1,1 @@
+ALTER TABLE `widget` ADD `text_icon` text;

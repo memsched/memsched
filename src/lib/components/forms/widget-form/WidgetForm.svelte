@@ -129,16 +129,80 @@
 
         <div class="col-span-2">
           <Label>Image</Label>
-          <Tabs.Root value={$formData.imageUrl ? 'icon' : 'none'} class="mt-1 space-y-6">
+          <Tabs.Root
+            value={data.form.data.textIcon
+              ? 'text-icon'
+              : data.form.data.imageUrl
+                ? 'icon'
+                : 'none'}
+            class="mt-1 space-y-6"
+          >
             <Tabs.List class="w-full *:w-full">
-              <Tabs.Trigger value="none" onclick={() => ($formData.imageUrl = null)}
-                >None</Tabs.Trigger
+              <Tabs.Trigger
+                value="none"
+                onclick={() => {
+                  $formData.imageUrl = null;
+                  $formData.textIcon = null;
+                }}
               >
-              <Tabs.Trigger value="icon">Icon</Tabs.Trigger>
+                None
+              </Tabs.Trigger>
+              <Tabs.Trigger
+                value="text-icon"
+                onclick={() => {
+                  $formData.imageUrl = null;
+                }}
+              >
+                Text
+              </Tabs.Trigger>
+              <Tabs.Trigger
+                value="icon"
+                onclick={() => {
+                  $formData.textIcon = null;
+                }}
+              >
+                Icon
+              </Tabs.Trigger>
               <!-- <Tabs.Trigger value="upload">Upload</Tabs.Trigger> -->
             </Tabs.List>
             <Form.Fieldset {form} name="imagePlacement" class="col-span-2">
               <input type="hidden" name="imagePlacement" bind:value={$formData.imagePlacement} />
+              <Tabs.Content value="text-icon" class="space-y-6">
+                <Form.Field {form} name="textIcon">
+                  <Form.Control>
+                    {#snippet children({ props })}
+                      <Form.Label>Text Icon (1-2 Capital Letters)</Form.Label>
+                      <Input
+                        {...props}
+                        value={$formData.textIcon}
+                        maxlength={2}
+                        placeholder="AB"
+                        oninput={(e) => {
+                          if (e.currentTarget.value === '') {
+                            $formData.textIcon = null;
+                          } else {
+                            $formData.textIcon = e.currentTarget.value.toUpperCase();
+                          }
+                        }}
+                      />
+                    {/snippet}
+                  </Form.Control>
+                  <Form.Description
+                    >Enter 1 or 2 capital letters to use as a text icon.</Form.Description
+                  >
+                  <Form.FieldErrors />
+                </Form.Field>
+                <div class="space-y-2">
+                  <Form.Legend>Placement</Form.Legend>
+                  <Tabs.Root bind:value={$formData.imagePlacement}>
+                    <Tabs.List class="w-full *:w-full">
+                      <Tabs.Trigger value="left">Left</Tabs.Trigger>
+                      <Tabs.Trigger value="right">Right</Tabs.Trigger>
+                    </Tabs.List>
+                    <Form.FieldErrors />
+                  </Tabs.Root>
+                </div>
+              </Tabs.Content>
               <Tabs.Content value="icon" class="space-y-6">
                 {#if browser}
                   {#await import('$lib/components/inputs/IconPickerInput.svelte') then { default: IconPickerInput }}

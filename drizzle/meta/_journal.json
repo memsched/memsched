@@ -57,6 +57,13 @@
       "when": 1741592240641,
       "tag": "0007_add_objective_archive",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "6",
+      "when": 1742130420647,
+      "tag": "0008_add_widget_metric_text_icon",
+      "breakpoints": true
     }
   ]
 }

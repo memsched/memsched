@@ -86,6 +86,7 @@ export const widget = sqliteTable('widget', {
   subtitle: text('subtitle'),
   imageUrl: text('image_url'),
   imagePlacement: text('image_placement').notNull(), // 'left' | 'right'
+  textIcon: text('text_icon'),
 
   padding: integer('padding').notNull(),
   border: integer('border', { mode: 'boolean' }).notNull(),

@@ -7,6 +7,7 @@
     subtitle,
     metrics,
     imageUrl,
+    textIcon,
     imagePlacement = 'left',
     padding = 16,
     border = true,
@@ -16,6 +17,20 @@
     accentColor = 'lime',
     watermark = true,
   }: WidgetJoinMetricsPreview = $props();
+
+  // Helper function to add opacity to a hex color
+  function addOpacity(hexColor: string, opacity: number): string {
+    // Remove # if present
+    const hex = hexColor.replace('#', '');
+
+    // Convert hex to RGB
+    const r = parseInt(hex.substring(0, 2), 16);
+    const g = parseInt(hex.substring(2, 4), 16);
+    const b = parseInt(hex.substring(4, 6), 16);
+
+    // Return rgba string
+    return `rgba(${r}, ${g}, ${b}, ${opacity})`;
+  }
 </script>
 
 <div
@@ -32,10 +47,12 @@
     style:padding="{padding}px"
     style:margin="1px"
     style:display="flex"
-    style:align-items={imageUrl && imagePlacement === 'right' ? 'flex-start' : 'center'}
+    style:align-items={(imageUrl || textIcon) && imagePlacement === 'right'
+      ? 'flex-start'
+      : 'center'}
     style:justify-content="center"
-    style:flex-direction={imageUrl && imagePlacement === 'right' ? 'column' : 'row'}
-    style:gap={imageUrl && imagePlacement === 'right' ? '1rem' : '2rem'}
+    style:flex-direction={(imageUrl || textIcon) && imagePlacement === 'right' ? 'column' : 'row'}
+    style:gap={(imageUrl || textIcon) && imagePlacement === 'right' ? '1rem' : '2rem'}
   >
     <div
       style:display="flex"
@@ -53,6 +70,21 @@
           loading="eager"
           style:object-fit="contain"
         />
+      {:else if textIcon && imagePlacement === 'left'}
+        <div
+          style:display="flex"
+          style:align-items="center"
+          style:justify-content="center"
+          style:width="48px"
+          style:height="48px"
+          style:background-color={addOpacity(accentColor, 0.1)}
+          style:border-radius="6px"
+          style:font-weight="600"
+          style:font-size="1.2rem"
+          style:color={accentColor}
+        >
+          {textIcon}
+        </div>
       {/if}
       <div
         style:display="flex"
@@ -76,6 +108,21 @@
           loading="eager"
           style:object-fit="contain"
         />
+      {:else if textIcon && imagePlacement === 'right'}
+        <div
+          style:display="flex"
+          style:align-items="center"
+          style:justify-content="center"
+          style:width="48px"
+          style:height="48px"
+          style:background-color={addOpacity(accentColor, 0.1)}
+          style:border-radius="6px"
+          style:font-weight="600"
+          style:font-size="1.2rem"
+          style:color={accentColor}
+        >
+          {textIcon}
+        </div>
       {/if}
     </div>
     {#if metrics.length > 0}

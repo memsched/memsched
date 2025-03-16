@@ -41,6 +41,12 @@ export const formSchema = z.object({
     })
     .nullable()
     .transform((v) => (v === '' ? null : v)),
+  textIcon: z
+    .string()
+    .max(2, { message: 'Text icon must be 1-2 characters.' })
+    .regex(/^[A-Z]{1,2}$/, { message: 'Text icon must be 1-2 capital letters.' })
+    .nullable()
+    .transform((v) => (v === '' ? null : v)),
   imagePlacement: z.enum(['left', 'right']).default('left'),
 
   // Styling options

@@ -17,7 +17,7 @@
   import {
     formSchema,
     type FormSchema,
-    WIDGET_METRIC_TIME_RANGES,
+    WIDGET_METRIC_CALCULATION_TYPES,
     WIDGET_METRIC_VALUE_DECIMAL_PRECISION_MAX,
   } from './schema';
   import { HEADER_HEIGHT } from '$lib/constants';
@@ -67,7 +67,7 @@
       for (let i = currentCount; i < count; i++) {
         metricsCopy.push({
           name: '',
-          timeRange: 'day',
+          calculationType: 'day',
           valueDecimalPrecision: 0,
         });
       }
@@ -266,25 +266,21 @@
                       <Form.FieldErrors />
                     </Form.Field>
 
-                    <Form.Field {form} name="metrics[{j}].timeRange" class="col-span-2">
+                    <Form.Field {form} name="metrics[{j}].calculationType" class="col-span-2">
                       <Form.Control>
                         {#snippet children({ props })}
-                          <Form.Label>Time Range</Form.Label>
+                          <Form.Label>Calculation Type</Form.Label>
                           <Select.Root
                             type="single"
-                            bind:value={$formData.metrics[j].timeRange}
+                            bind:value={$formData.metrics[j].calculationType}
                             name={props.name}
                           >
                             <Select.Trigger {...props} class="capitalize">
-                              {$formData.metrics[j].timeRange}
+                              {$formData.metrics[j].calculationType}
                             </Select.Trigger>
                             <Select.Content>
-                              {#each WIDGET_METRIC_TIME_RANGES as timeRange}
-                                <Select.Item
-                                  value={timeRange}
-                                  label={timeRange}
-                                  class="capitalize"
-                                />
+                              {#each WIDGET_METRIC_CALCULATION_TYPES as calcType}
+                                <Select.Item value={calcType} label={calcType} class="capitalize" />
                               {/each}
                             </Select.Content>
                           </Select.Root>

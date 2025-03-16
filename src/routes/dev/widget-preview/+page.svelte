@@ -12,15 +12,16 @@
   import { Switch } from '$lib/components/ui/switch';
   import ColorPickerInput from '$lib/components/inputs/ColorPickerInput.svelte';
   import type { WidgetJoinMetricsPreview } from '$lib/server/db/schema';
-
-  // Constants imported from the schema
-  const WIDGET_METRIC_TIME_RANGES = ['day', 'week', 'month', 'year', 'all time'] as const;
-  const WIDGET_METRIC_VALUE_DECIMAL_PRECISION_MAX = 2;
+  import {
+    WIDGET_METRIC_CALCULATION_TYPES,
+    WIDGET_METRIC_VALUE_DECIMAL_PRECISION_MAX,
+  } from '$lib/components/forms/widget-form/schema';
 
   // Create a default widget config
   let config = $state<WidgetJoinMetricsPreview>({
     title: 'Widget Title',
     subtitle: 'Widget Subtitle',
+    textIcon: null,
     imageUrl: null,
     imagePlacement: 'left',
     padding: 16,
@@ -35,7 +36,7 @@
       {
         name: 'Metric 1',
         value: 100,
-        timeRange: 'day',
+        calculationType: 'day',
         valueDecimalPrecision: 0,
         order: 1,
       },
@@ -75,15 +76,14 @@
   });
 
   function addMetric() {
-    const newOrder = config.metrics.length + 1;
     config.metrics = [
       ...config.metrics,
       {
-        name: `Metric ${newOrder}`,
-        value: 0,
-        timeRange: 'day',
+        name: `Metric ${config.metrics.length + 1}`,
+        value: Math.floor(Math.random() * 1000),
+        calculationType: 'day',
         valueDecimalPrecision: 0,
-        order: newOrder,
+        order: config.metrics.length + 1,
       },
     ];
   }
@@ -311,16 +311,16 @@
                     />
                   </div>
 
-                  <div>
-                    <Label for={`metric-${index}-timeRange`}>Time Range</Label>
-                    <Select.Root type="single" bind:value={metric.timeRange}>
-                      <Select.Trigger id={`metric-${index}-timeRange`} class="w-full">
-                        {metric.timeRange}
+                  <div class="space-y-1">
+                    <Label for={`metric-${index}-calculationType`}>Calculation Type</Label>
+                    <Select.Root type="single" bind:value={metric.calculationType}>
+                      <Select.Trigger id={`metric-${index}-calculationType`} class="w-full">
+                        {metric.calculationType}
                       </Select.Trigger>
                       <Select.Content>
-                        {#each WIDGET_METRIC_TIME_RANGES as timeRange}
-                          <Select.Item value={timeRange} class="capitalize">
-                            {timeRange}
+                        {#each WIDGET_METRIC_CALCULATION_TYPES as calcType}
+                          <Select.Item value={calcType} class="capitalize">
+                            {calcType}
                           </Select.Item>
                         {/each}
                       </Select.Content>

@@ -112,7 +112,7 @@ export const widgetMetric = sqliteTable('widget_metric', {
   id: text('id').primaryKey(),
   value: real('value').notNull(),
   name: text('name'),
-  timeRange: text('time_range').notNull(), // 'day' | 'week' | 'month' | 'year' | 'all time'
+  calculationType: text('calculation_type').notNull(), // 'day' | 'week' | 'month' | 'year' | 'all time' | 'percentage'
   valueDecimalPrecision: integer('value_decimal_precision').notNull(),
 
   order: integer('order').notNull(),

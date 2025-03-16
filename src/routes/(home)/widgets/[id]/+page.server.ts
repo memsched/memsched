@@ -24,6 +24,7 @@ export const load: PageServerLoad = async (event) => {
     subtitle: widget.subtitle,
     // TODO: Sanitize imageUrl
     imageUrl: widget.imageUrl,
+    textIcon: widget.textIcon,
     imagePlacement: widget.imagePlacement as z.infer<FormSchema>['imagePlacement'],
 
     padding: widget.padding,
@@ -38,7 +39,8 @@ export const load: PageServerLoad = async (event) => {
     objectiveId: widget.objectiveId,
     metrics: widget.metrics.map((metric) => ({
       name: metric.name,
-      timeRange: metric.timeRange as z.infer<FormSchema>['metrics'][0]['timeRange'],
+      calculationType:
+        metric.calculationType as z.infer<FormSchema>['metrics'][0]['calculationType'],
       valueDecimalPrecision: metric.valueDecimalPrecision,
     })),
   };

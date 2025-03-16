@@ -135,12 +135,21 @@
               style:line-height="1"
               style:display="flex"
               style:align-items="flex-end"
-              style:gap="0.3rem"
+              style:gap={metric.calculationType === 'percentage' ? '0.1rem' : '0.3rem'}
             >
-              {metric.value}
-              <TrendingUpArrow style="stroke: {accentColor}; color: {accentColor}" />
+              {#if metric.calculationType === 'percentage'}
+                {metric.value}
+                <span style:font-size="1.25rem" style:margin-bottom="0.1rem">
+                  {metric.calculationType === 'percentage' ? '%' : ''}
+                </span>
+              {:else}
+                {metric.value}
+                <TrendingUpArrow style="stroke: {accentColor}; color: {accentColor}" />
+              {/if}
             </div>
-            <div style:font-size="0.8rem">{metric.name}</div>
+            <div style:font-size="0.8rem">
+              {metric.name}
+            </div>
           </div>
         {/each}
       </div>

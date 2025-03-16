@@ -1,6 +1,13 @@
 import { z } from 'zod';
 
-export const WIDGET_METRIC_TIME_RANGES = ['day', 'week', 'month', 'year', 'all time'] as const;
+export const WIDGET_METRIC_CALCULATION_TYPES = [
+  'day',
+  'week',
+  'month',
+  'year',
+  'all time',
+  'percentage',
+] as const;
 export const WIDGET_METRIC_VALUE_DECIMAL_PRECISION_MAX = 2;
 
 const widgetMetricSchema = z.object({
@@ -9,8 +16,8 @@ const widgetMetricSchema = z.object({
     .max(25, { message: 'Name must be less than 25 characters.' })
     .nullable()
     .transform((v) => (v === '' ? null : v)),
-  timeRange: z.enum(WIDGET_METRIC_TIME_RANGES, {
-    message: 'Please select a valid time range: day, week, month, or year.',
+  calculationType: z.enum(WIDGET_METRIC_CALCULATION_TYPES, {
+    message: 'Please select a valid calculation type.',
   }),
   valueDecimalPrecision: z
     .number({ message: 'Please enter a valid value decimal precision: 0, 1, or 2.' })

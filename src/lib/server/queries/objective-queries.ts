@@ -137,7 +137,7 @@ export async function updateObjectiveWidgetMetrics(db: DBType, objectiveId: stri
       const newMetricValue = await computeMetricValue(
         db,
         objectiveId,
-        metric.timeRange,
+        metric.calculationType,
         metric.valueDecimalPrecision
       );
 

@@ -149,25 +149,32 @@ export async function createUserWidget(
     )[0];
 
     // Insert the metrics
-    for (const [i, metric] of widgetData.metrics.entries()) {
+    const metricInserts = widgetData.metrics.map((metric, i) => ({
+      id: uuidv4(),
+      value: 0, // Initial value is 0, will be computed later
+      name: metric.name,
+      calculationType: metric.calculationType,
+      valueDecimalPrecision: metric.valueDecimalPrecision,
+      order: i,
+      widgetId: widget.id,
+      userId,
+    }));
+
+    await tx.insert(table.widgetMetric).values(metricInserts).returning();
+
+    // Calculate and update the values for each metric
+    for (const metric of metricInserts) {
       const value = await computeMetricValue(
         tx,
         objective.id,
-        metric.timeRange,
+        metric.calculationType,
         metric.valueDecimalPrecision
       );
 
-      await tx.insert(table.widgetMetric).values({
-        id: uuidv4(),
-        value,
-        name: metric.name,
-        timeRange: metric.timeRange,
-        valueDecimalPrecision: metric.valueDecimalPrecision,
-
-        order: i + 1,
-        widgetId: widget.id,
-        userId,
-      });
+      await tx
+        .update(table.widgetMetric)
+        .set({ value })
+        .where(eq(table.widgetMetric.id, metric.id));
     }
   });
 
@@ -230,24 +237,32 @@ export async function updateUserWidget(
     await tx.delete(table.widgetMetric).where(eq(table.widgetMetric.widgetId, widgetId));
 
     // Insert new metrics
-    for (const [i, metric] of widgetData.metrics.entries()) {
+    const metricInserts = widgetData.metrics.map((metric, i) => ({
+      id: uuidv4(),
+      value: 0, // Initial value is 0, will be computed later
+      name: metric.name,
+      calculationType: metric.calculationType,
+      valueDecimalPrecision: metric.valueDecimalPrecision,
+      order: i,
+      widgetId: widgetId,
+      userId,
+    }));
+
+    await tx.insert(table.widgetMetric).values(metricInserts).returning();
+
+    // Calculate and update the values for each metric
+    for (const metric of metricInserts) {
       const value = await computeMetricValue(
         tx,
         objective.id,
-        metric.timeRange,
+        metric.calculationType,
         metric.valueDecimalPrecision
       );
 
-      await tx.insert(table.widgetMetric).values({
-        id: uuidv4(),
-        value,
-        name: metric.name,
-        timeRange: metric.timeRange,
-        valueDecimalPrecision: metric.valueDecimalPrecision,
-        order: i + 1,
-        widgetId: widgetId,
-        userId,
-      });
+      await tx
+        .update(table.widgetMetric)
+        .set({ value })
+        .where(eq(table.widgetMetric.id, metric.id));
     }
 
     success = true;

@@ -15,7 +15,13 @@ const config = {
     adapter: adapter({
       routes: {
         include: ['/*'],
-        exclude: ['<all>'],
+        exclude: [
+          '/fonts/*',
+          '/icons/*',
+          '/_app/immutable/*',
+          '/_app/version.json',
+          '/favicon.png',
+        ],
       },
       platformProxy: {
         configPath: 'wrangler.jsonc',

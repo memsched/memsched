@@ -1,9 +1,16 @@
 import { generateState } from 'arctic';
 import { github } from '$lib/server/oauth';
+import { error } from '@sveltejs/kit';
+import { authLimiter } from '$lib/server/rate-limiter';
 
 import type { RequestEvent } from './$types';
 
-export function GET(event: RequestEvent): Response {
+export async function GET(event: RequestEvent): Promise<Response> {
+  // Apply rate limiting to prevent abuse
+  if (await authLimiter.isLimited(event)) {
+    throw error(429, 'Too many requests. Please try again later.');
+  }
+
   const state = generateState();
   const url = github.createAuthorizationURL(state, ['user:email']);
 

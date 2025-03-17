@@ -1,6 +1,8 @@
 import { github } from '$lib/server/oauth';
 import { createUser, getUserFromProviderUserId } from '$lib/server/user';
 import { createSession, generateSessionToken, setSessionTokenCookie } from '$lib/server/session';
+import { error } from '@sveltejs/kit';
+import { oauthLimiter } from '$lib/server/rate-limiter';
 import type { OAuth2Tokens } from 'arctic';
 import type { RequestEvent } from './$types';
 import { getUserOverviewUrl } from '$lib/api';
@@ -20,6 +22,11 @@ interface IGithubUserEmail {
 }
 
 export async function GET(event: RequestEvent): Promise<Response> {
+  // Apply rate limiting to prevent abuse
+  if (await oauthLimiter.isLimited(event)) {
+    throw error(429, 'Too many requests. Please try again later.');
+  }
+
   const storedState = event.cookies.get('github_oauth_state') ?? null;
   const code = event.url.searchParams.get('code');
   const state = event.url.searchParams.get('state');

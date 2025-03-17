@@ -5,6 +5,8 @@ import { decodeIdToken, type OAuth2Tokens } from 'arctic';
 import type { RequestEvent } from './$types';
 import { getUserOverviewUrl } from '$lib/api';
 import { sanitizeUsername } from '$lib/server/utils';
+import { error } from '@sveltejs/kit';
+import { oauthLimiter } from '$lib/server/rate-limiter';
 
 interface IClaims {
   sub: string;
@@ -14,6 +16,11 @@ interface IClaims {
 }
 
 export async function GET(event: RequestEvent): Promise<Response> {
+  // Apply rate limiting to prevent abuse
+  if (await oauthLimiter.isLimited(event)) {
+    throw error(429, 'Too many requests. Please try again later.');
+  }
+
   const storedState = event.cookies.get('google_oauth_state') ?? null;
   const codeVerifier = event.cookies.get('google_code_verifier') ?? null;
   const code = event.url.searchParams.get('code');

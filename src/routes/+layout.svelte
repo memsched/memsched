@@ -16,6 +16,17 @@
   const { children } = $props();
 </script>
 
+<!-- Umami Web Analytics -->
+<svelte:head>
+  {#if import.meta.env.PROD}
+    <script
+      defer
+      src="https://cloud.umami.is/script.js"
+      data-website-id="048e05e6-5b46-463f-898e-7fb2d8f467e8"
+    ></script>
+  {/if}
+</svelte:head>
+
 <!-- <ModeWatcher defaultMode="light" track={false} /> -->
 {@render children()}
 {#if browser}

@@ -25,6 +25,8 @@ export const RESERVED_USERNAMES = [
   'home',
   'dashboard',
   'search',
+  'docs',
+  'new',
 ];
 
 /**

@@ -11,6 +11,13 @@
       "options": {
         "parser": "svelte"
       }
+    },
+    {
+      "files": "*.jsonc",
+      "options": {
+        "parser": "json",
+        "trailingComma": "none"
+      }
     }
   ]
 }

@@ -13,7 +13,7 @@ import {
 } from '$lib/server/queries';
 import { logSchema } from '$lib/components/forms/objective-log-form/schema';
 import * as schema from '$lib/server/db/schema';
-import { MAX_WIDGETS_PER_USER } from '$lib/server/constants';
+import { MAX_WIDGETS_PER_USER, MAX_OBJECTIVES_PER_USER } from '$lib/server/constants';
 
 export const load: PageServerLoad = async (event) => {
   if (!event.locals.session) {
@@ -21,6 +21,8 @@ export const load: PageServerLoad = async (event) => {
       objectives: [],
       widgetsLimitReached: false,
       maxWidgets: MAX_WIDGETS_PER_USER,
+      objectivesLimitReached: false,
+      maxObjectives: MAX_OBJECTIVES_PER_USER,
     };
   }
 
@@ -41,6 +43,10 @@ export const load: PageServerLoad = async (event) => {
   const widgetCount = await getUserWidgetCount(event.locals.db, event.locals.session.userId);
   const widgetsLimitReached = widgetCount >= MAX_WIDGETS_PER_USER;
 
+  // Check if user has reached the objectives limit
+  const objectivesCount = objectives.length;
+  const objectivesLimitReached = objectivesCount >= MAX_OBJECTIVES_PER_USER;
+
   return {
     objectives,
     form: await superValidate(zod(logSchema)),
@@ -48,6 +54,8 @@ export const load: PageServerLoad = async (event) => {
     isCompleted,
     widgetsLimitReached,
     maxWidgets: MAX_WIDGETS_PER_USER,
+    objectivesLimitReached,
+    maxObjectives: MAX_OBJECTIVES_PER_USER,
   };
 };
 

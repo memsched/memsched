@@ -11,6 +11,7 @@
   import { type LogFormSchema } from '$lib/components/forms/objective-log-form/schema';
   import TabNavLink from '$lib/components/headers/TabNavLink.svelte';
   import type { Page } from '@sveltejs/kit';
+  import * as Tooltip from '$lib/components/ui/tooltip';
 
   const { data, form }: PageProps = $props();
 
@@ -43,9 +44,27 @@
           <TabNavLink name="Completed" href="/objectives?completed" isActive={isCompletedTab} />
           <TabNavLink name="Archived" href="/objectives?archived" isActive={isArchivedTab} />
         </div>
-        <IconButton href="/objectives/new" size="sm" icon={IoAdd} variant="translucent"
-          >New</IconButton
-        >
+        {#if !data.isArchived && !data.isCompleted && data.objectivesLimitReached}
+          <Tooltip.Provider delayDuration={100}>
+            <Tooltip.Root>
+              <Tooltip.Trigger class="cursor-not-allowed">
+                <IconButton size="sm" icon={IoAdd} variant="outline" disabled>New</IconButton>
+              </Tooltip.Trigger>
+              <Tooltip.Content side="left" align="center">
+                <p>You've reached the maximum limit of {data.maxObjectives} objectives</p>
+              </Tooltip.Content>
+            </Tooltip.Root>
+          </Tooltip.Provider>
+        {:else}
+          <IconButton
+            href="/objectives/new"
+            size="sm"
+            icon={IoAdd}
+            variant="translucent"
+            disabled={!data.isArchived && !data.isCompleted && data.objectivesLimitReached}
+            >New</IconButton
+          >
+        {/if}
       </div>
     </div>
   {/if}

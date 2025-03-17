@@ -252,7 +252,7 @@
             <div class="mb-1 flex items-center gap-4">
               <div class="h-12 w-12 rounded-full bg-primary/20"></div>
               <div>
-                <h4 class="text-lg font-semibold">Alex Johnson</h4>
+                <h3 class="h5">Alex Johnson</h3>
                 <p class="text-sm text-muted-foreground">Software Developer</p>
               </div>
             </div>
@@ -269,7 +269,7 @@
             <div class="mb-1 flex items-center gap-4">
               <div class="h-12 w-12 rounded-full bg-primary/20"></div>
               <div>
-                <h4 class="text-lg font-semibold">Maria Rodriguez</h4>
+                <h3 class="h5">Maria Rodriguez</h3>
                 <p class="text-sm text-muted-foreground">Language Enthusiast</p>
               </div>
             </div>
@@ -286,7 +286,7 @@
             <div class="mb-1 flex items-center gap-4">
               <div class="h-12 w-12 rounded-full bg-primary/20"></div>
               <div>
-                <h4 class="text-lg font-semibold">David Lee</h4>
+                <h3 class="h5">David Lee</h3>
                 <p class="text-sm text-muted-foreground">CS Student</p>
               </div>
             </div>

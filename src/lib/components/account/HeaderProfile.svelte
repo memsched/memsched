@@ -1,6 +1,6 @@
 <script lang="ts">
   import { page } from '$app/state';
-  import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
+  import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
   import { Icon } from 'svelte-icons-pack';
   import { FiLifeBuoy, FiLogOut, FiSettings } from 'svelte-icons-pack/fi';
   import { enhance } from '$app/forms';

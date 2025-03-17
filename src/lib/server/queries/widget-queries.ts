@@ -289,3 +289,17 @@ export async function deleteUserWidget(db: DBType, widgetId: string, userId: str
     .where(and(eq(table.widget.id, widgetId), eq(table.widget.userId, userId)));
   return true;
 }
+
+/**
+ * Counts the number of widgets a user has
+ * @param db The database instance
+ * @param userId The user ID
+ * @returns The number of widgets the user has
+ */
+export async function getUserWidgetCount(db: DBType, userId: string): Promise<number> {
+  const result = await db
+    .select({ count: sql`count(*)` })
+    .from(table.widget)
+    .where(eq(table.widget.userId, userId));
+  return result[0].count as number;
+}

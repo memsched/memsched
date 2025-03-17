@@ -4,8 +4,13 @@ import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { formSchema } from '$lib/components/forms/widget-form/schema';
 import type { LocalUser } from '$lib/types';
-import { createUserWidget, getObjectiveFromWidgetId } from '$lib/server/queries';
+import {
+  createUserWidget,
+  getObjectiveFromWidgetId,
+  getUserWidgetCount,
+} from '$lib/server/queries';
 import type { Objective } from '$lib/server/db/schema';
+import { MAX_WIDGETS_PER_USER } from '$lib/server/constants';
 
 export const load: PageServerLoad = async (event) => {
   if (!event.locals.session) {
@@ -40,6 +45,16 @@ export const actions: Actions = {
     }
 
     try {
+      // Check if user has reached the widget limit
+      const widgetCount = await getUserWidgetCount(event.locals.db, event.locals.session.userId);
+      if (widgetCount >= MAX_WIDGETS_PER_USER) {
+        return fail(400, {
+          form,
+          widgetLimitReached: true,
+          message: `You've reached the maximum limit of ${MAX_WIDGETS_PER_USER} widgets.`,
+        });
+      }
+
       const widgetId = await createUserWidget(
         event.locals.db,
         form.data,

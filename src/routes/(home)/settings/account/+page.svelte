@@ -1,6 +1,6 @@
 <script lang="ts">
   import { Button } from '$lib/components/ui/button';
-  import * as Dialog from '$lib/components/ui/dialog/index.js';
+  import * as Dialog from '$lib/components/ui/dialog';
   import ConfirmDeleteDialog from '$lib/components/dialogs/ConfirmDeleteDialog.svelte';
   import type { PageProps } from './$types';
   import IconButton from '$lib/components/ui/IconButton.svelte';

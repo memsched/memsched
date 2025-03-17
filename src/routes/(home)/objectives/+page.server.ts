@@ -9,14 +9,18 @@ import {
   toggleArchivedObjective,
   logObjectiveProgress,
   undoObjectiveLog,
+  getUserWidgetCount,
 } from '$lib/server/queries';
 import { logSchema } from '$lib/components/forms/objective-log-form/schema';
 import * as schema from '$lib/server/db/schema';
+import { MAX_WIDGETS_PER_USER } from '$lib/server/constants';
 
 export const load: PageServerLoad = async (event) => {
   if (!event.locals.session) {
     return {
       objectives: [],
+      widgetsLimitReached: false,
+      maxWidgets: MAX_WIDGETS_PER_USER,
     };
   }
 
@@ -33,11 +37,17 @@ export const load: PageServerLoad = async (event) => {
     objectives = await getUserActiveObjectives(event.locals.db, event.locals.session.userId);
   }
 
+  // Check if user has reached the widget limit
+  const widgetCount = await getUserWidgetCount(event.locals.db, event.locals.session.userId);
+  const widgetsLimitReached = widgetCount >= MAX_WIDGETS_PER_USER;
+
   return {
     objectives,
     form: await superValidate(zod(logSchema)),
     isArchived,
     isCompleted,
+    widgetsLimitReached,
+    maxWidgets: MAX_WIDGETS_PER_USER,
   };
 };
 

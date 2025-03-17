@@ -5,7 +5,7 @@
   import CodeBlock from '$lib/components/CodeBlock.svelte';
   import * as Card from '$lib/components/ui/card';
   import * as Select from '$lib/components/ui/select';
-  import * as Tabs from '$lib/components/ui/tabs/index.js';
+  import * as Tabs from '$lib/components/ui/tabs';
   import { Input } from '$lib/components/ui/input';
   import { Label } from '$lib/components/ui/label';
   import { Button } from '$lib/components/ui/button';

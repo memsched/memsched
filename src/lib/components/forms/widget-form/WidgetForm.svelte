@@ -5,7 +5,7 @@
   import toast from 'svelte-french-toast';
   import * as Form from '$lib/components/ui/form';
   import * as Select from '$lib/components/ui/select';
-  import * as Tabs from '$lib/components/ui/tabs/index.js';
+  import * as Tabs from '$lib/components/ui/tabs';
   import { Input } from '$lib/components/ui/input';
   import { cn } from '$lib/utils';
   import { type Objective } from '$lib/server/db/schema';

@@ -9,6 +9,7 @@
   import { browser } from '$app/environment';
   import TabNavLink from '$lib/components/headers/TabNavLink.svelte';
   import type { Page } from '@sveltejs/kit';
+  import * as Tooltip from '$lib/components/ui/tooltip';
 
   const { data }: PageProps = $props();
 
@@ -30,8 +31,22 @@
           <TabNavLink name="Active" href="/widgets" isActive={isActiveTab} />
           <TabNavLink name="Completed" href="/widgets?completed" isActive={isCompletedTab} />
         </div>
-        <IconButton href="/widgets/new" size="sm" icon={IoAdd} variant="translucent">New</IconButton
-        >
+        {#if data.widgetsLimitReached}
+          <Tooltip.Provider delayDuration={100}>
+            <Tooltip.Root>
+              <Tooltip.Trigger class="cursor-not-allowed">
+                <IconButton size="sm" icon={IoAdd} variant="outline" disabled>New</IconButton>
+              </Tooltip.Trigger>
+              <Tooltip.Content side="left" align="center">
+                <p>You've reached the maximum limit of {data.maxWidgets} widgets</p>
+              </Tooltip.Content>
+            </Tooltip.Root>
+          </Tooltip.Provider>
+        {:else}
+          <IconButton href="/widgets/new" size="sm" icon={IoAdd} variant="translucent"
+            >New</IconButton
+          >
+        {/if}
       </div>
     </div>
     {#if data.widgets.length > 0}

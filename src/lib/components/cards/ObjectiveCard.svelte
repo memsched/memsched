@@ -13,18 +13,21 @@
   import type { Objective } from '$lib/server/db/schema';
   import { enhance } from '$app/forms';
   import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index';
-  import * as Dialog from '$lib/components/ui/dialog/index.js';
+  import * as Dialog from '$lib/components/ui/dialog';
   import ConfirmDeleteDialog from '$lib/components/dialogs/ConfirmDeleteDialog.svelte';
   import CustomLogDialog from '$lib/components/dialogs/CustomLogDialog.svelte';
   import type { SuperValidated } from 'sveltekit-superforms';
   import type { LogFormSchema } from '$lib/components/forms/objective-log-form/schema';
+  import * as Tooltip from '$lib/components/ui/tooltip';
 
   interface Props {
     objective: Objective;
     form: SuperValidated<LogFormSchema>;
+    widgetsLimitReached: boolean;
+    maxWidgets: number;
   }
 
-  const { objective, form }: Props = $props();
+  const { objective, form, widgetsLimitReached, maxWidgets }: Props = $props();
 
   // Function to calculate progress percentage for fixed goals
   function calculateProgress(objective: Objective): number {
@@ -54,14 +57,30 @@
                   </a>
                 {/snippet}
               </DropdownMenu.Item>
-              <DropdownMenu.Item class="cursor-pointer">
-                {#snippet child({ props })}
-                  <a href="/widgets/new?objectiveId={objective.id}" {...props}>
-                    <Icon src={FiPlus} className="!text-muted-foreground" />
-                    Create widget
-                  </a>
-                {/snippet}
-              </DropdownMenu.Item>
+              {#if widgetsLimitReached}
+                <Tooltip.Provider delayDuration={100}>
+                  <Tooltip.Root>
+                    <Tooltip.Trigger class="cursor-not-allowed">
+                      <DropdownMenu.Item disabled>
+                        <Icon src={FiPlus} className="!text-muted-foreground" />
+                        Create widget
+                      </DropdownMenu.Item>
+                    </Tooltip.Trigger>
+                    <Tooltip.Content side="right" align="center">
+                      <p>You've reached the maximum limit of {maxWidgets} widgets</p>
+                    </Tooltip.Content>
+                  </Tooltip.Root>
+                </Tooltip.Provider>
+              {:else}
+                <DropdownMenu.Item class="cursor-pointer">
+                  {#snippet child({ props })}
+                    <a href="/widgets/new?objectiveId={objective.id}" {...props}>
+                      <Icon src={FiPlus} className="!text-muted-foreground" />
+                      Create widget
+                    </a>
+                  {/snippet}
+                </DropdownMenu.Item>
+              {/if}
               <DropdownMenu.Item class="w-full cursor-pointer">
                 {#snippet child({ props })}
                   <form action="?/toggleArchive" method="POST" use:enhance>

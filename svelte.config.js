@@ -35,7 +35,7 @@ const config = {
       mode: 'auto',
       directives: {
         'default-src': ['self'],
-        'script-src': ['self', 'unsafe-inline'],
+        'script-src': ['self', 'unsafe-inline', 'https://cloud.umami.is/script.js'],
         'style-src': ['self', 'unsafe-inline'],
         'img-src': [
           'self',

@@ -12,8 +12,6 @@
   import { Label } from '$lib/components/ui/label';
   import ColorPickerInput from '$lib/components/inputs/ColorPickerInput.svelte';
   import { Switch } from '$lib/components/ui/switch';
-  import { Checkbox } from '$lib/components/ui/checkbox';
-  import { Badge } from '$lib/components/ui/badge';
   import {
     formSchema,
     type FormSchema,
@@ -444,7 +442,7 @@
           </Form.Control>
         </Form.Field>
       </div>
-      <Form.Field {form} name="watermark" class="flex items-center space-x-3 space-y-0 py-2">
+      <!-- <Form.Field {form} name="watermark" class="flex items-center space-x-3 space-y-0 py-2">
         <Form.Control>
           {#snippet children({ props })}
             <Checkbox
@@ -456,7 +454,7 @@
             <Badge>Pro</Badge>
           {/snippet}
         </Form.Control>
-      </Form.Field>
+      </Form.Field> -->
     </section>
     {#if browser && import.meta.env.VITE_DEBUG_FORMS === '1' && import.meta.env.DEV}
       <SuperDebug data={$formData} />

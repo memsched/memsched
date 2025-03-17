@@ -140,7 +140,7 @@ export async function createUserWidget(
           color: widgetData.color,
           accentColor: widgetData.accentColor,
           backgroundColor: widgetData.backgroundColor,
-          watermark: true, // Default to true, update when user has pro plan
+          watermark: true, // TODO: Default to true, update when user has pro plan
 
           objectiveId: widgetData.objectiveId,
           userId,

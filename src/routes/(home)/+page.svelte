@@ -242,55 +242,61 @@
       <div class="mb-16 text-center">
         <h2 class="h2">What Our Users Say</h2>
         <p class="text-lg text-muted-foreground">
-          Join thousands of learners tracking their journey
+          Join the community of learners tracking their journey
         </p>
       </div>
 
       <div class="grid grid-cols-1 gap-8 md:grid-cols-3">
-        <div class="rounded-lg border border-slate-100 p-6 shadow-sm">
-          <div class="mb-4 flex items-center">
-            <div class="h-12 w-12 rounded-full bg-primary/20"></div>
-            <div class="ml-4">
-              <h4 class="text-lg font-semibold">Alex Johnson</h4>
-              <p class="text-sm text-slate-500">Software Developer</p>
+        <Card.Root>
+          <Card.Header>
+            <div class="mb-1 flex items-center gap-4">
+              <div class="h-12 w-12 rounded-full bg-primary/20"></div>
+              <div>
+                <h4 class="text-lg font-semibold">Alex Johnson</h4>
+                <p class="text-sm text-muted-foreground">Software Developer</p>
+              </div>
             </div>
-          </div>
-          <p class="text-slate-600">
+          </Card.Header>
+          <Card.Content class="text-sm text-muted-foreground">
             "I've been using memsched to track my progress learning Rust. The widgets on my GitHub
             profile have attracted attention from recruiters who appreciate seeing my commitment to
             growing my skills."
-          </p>
-        </div>
+          </Card.Content>
+        </Card.Root>
 
-        <div class="rounded-lg border border-slate-100 p-6 shadow-sm">
-          <div class="mb-4 flex items-center">
-            <div class="h-12 w-12 rounded-full bg-primary/20"></div>
-            <div class="ml-4">
-              <h4 class="text-lg font-semibold">Maria Rodriguez</h4>
-              <p class="text-sm text-slate-500">Language Enthusiast</p>
+        <Card.Root>
+          <Card.Header>
+            <div class="mb-1 flex items-center gap-4">
+              <div class="h-12 w-12 rounded-full bg-primary/20"></div>
+              <div>
+                <h4 class="text-lg font-semibold">Maria Rodriguez</h4>
+                <p class="text-sm text-muted-foreground">Language Enthusiast</p>
+              </div>
             </div>
-          </div>
-          <p class="text-slate-600">
+          </Card.Header>
+          <Card.Content class="text-sm text-muted-foreground">
             "Being able to visualize my Japanese learning journey has been incredibly motivating. I
             love sharing my progress widgets on social media and seeing the support from my
             community."
-          </p>
-        </div>
+          </Card.Content>
+        </Card.Root>
 
-        <div class="rounded-lg border border-slate-100 p-6 shadow-sm">
-          <div class="mb-4 flex items-center">
-            <div class="h-12 w-12 rounded-full bg-primary/20"></div>
-            <div class="ml-4">
-              <h4 class="text-lg font-semibold">David Lee</h4>
-              <p class="text-sm text-slate-500">CS Student</p>
+        <Card.Root>
+          <Card.Header>
+            <div class="mb-1 flex items-center gap-4">
+              <div class="h-12 w-12 rounded-full bg-primary/20"></div>
+              <div>
+                <h4 class="text-lg font-semibold">David Lee</h4>
+                <p class="text-sm text-muted-foreground">CS Student</p>
+              </div>
             </div>
-          </div>
-          <p class="text-slate-600">
-            "As a computer science student, memsched helps me keep track of all the new technologies
-            I'm learning. My professor was impressed when I included my learning widgets in my final
-            project presentation."
-          </p>
-        </div>
+          </Card.Header>
+          <Card.Content class="text-sm text-muted-foreground">
+            "I use memsched to track my progress learning different programming languages and
+            frameworks. It helps me stay organized and motivated as I work through my CS
+            coursework."
+          </Card.Content>
+        </Card.Root>
       </div>
     </div>
   </section>

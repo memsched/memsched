@@ -36,7 +36,11 @@ const config = {
     csp: {
       mode: 'auto',
       directives: {
-        'default-src': ['self', 'https://api-gateway.umami.dev/api/send'],
+        'default-src': [
+          'self',
+          'https://api-gateway.umami.dev/api/send',
+          'https://stats.uptimerobot.com/',
+        ],
         'script-src': ['self', 'unsafe-inline', 'https://cloud.umami.is/script.js'],
         'style-src': ['self', 'unsafe-inline'],
         'img-src': [

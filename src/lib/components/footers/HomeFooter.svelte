@@ -1,17 +1,20 @@
 <script>
   import { Icon } from 'svelte-icons-pack';
-
-  import Logo from '../svgs/Logo.svelte';
   import { IoHeart } from 'svelte-icons-pack/io';
+  import Logo from '../svgs/Logo.svelte';
   import SwissFlag from '../svgs/SwissFlag.svelte';
+  import UptimeRobot from '../UptimeRobot.svelte';
 </script>
 
 <footer class="border-t bg-background text-sm">
-  <div class="main-container flex flex-col gap-6 divide-y py-8">
-    <div class="flex gap-12 text-muted-foreground *:transition-colors hover:*:text-foreground">
-      <a href="mailto:info@memsched.com">Contact</a>
-      <a href="/tos">Terms of Service</a>
-      <a href="/privacy">Privacy Policy</a>
+  <div class="main-container flex flex-col gap-6 divide-y py-10">
+    <div class="flex flex-col gap-3">
+      <div class="flex gap-12 text-muted-foreground *:transition-colors hover:*:text-foreground">
+        <a href="mailto:info@memsched.com">Contact</a>
+        <a href="/tos">Terms of Service</a>
+        <a href="/privacy">Privacy Policy</a>
+      </div>
+      <UptimeRobot />
     </div>
     <div class="flex items-center justify-between pt-6">
       <p class="text-xs">

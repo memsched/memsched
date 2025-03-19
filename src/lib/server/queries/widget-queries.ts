@@ -164,12 +164,12 @@ export async function createUserWidget(
   };
 
   if (metricInserts.length > 0) {
-    db.batch([
+    await db.batch([
       db.insert(table.widget).values(widgetInsert),
       db.insert(table.widgetMetric).values(metricInserts),
     ]);
   } else {
-    db.batch([db.insert(table.widget).values(widgetInsert)]);
+    await db.batch([db.insert(table.widget).values(widgetInsert)]);
   }
 
   return widgetId;
@@ -242,7 +242,7 @@ export async function updateUserWidget(
   };
 
   if (metricInserts.length > 0) {
-    db.batch([
+    await db.batch([
       db.update(table.widget).set(widgetUpdate),
       // Delete all existing metrics
       db.delete(table.widgetMetric).where(eq(table.widgetMetric.widgetId, widgetId)),
@@ -250,7 +250,7 @@ export async function updateUserWidget(
       db.insert(table.widgetMetric).values(metricInserts),
     ]);
   } else {
-    db.batch([
+    await db.batch([
       db.update(table.widget).set(widgetUpdate),
       // Delete all existing metrics
       db.delete(table.widgetMetric).where(eq(table.widgetMetric.widgetId, widgetId)),

@@ -18,7 +18,7 @@
     <img src="${widgetUrl}?svg" 
          alt="${title}${subtitle ? ' - ' + subtitle : ''}"
          loading="eager"
-         height="80px"
+	     style="height: 80px;"
     />
 </a>
 `.trim()

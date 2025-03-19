@@ -1,6 +1,6 @@
 import type { Handle } from '@sveltejs/kit';
 import { sequence } from '@sveltejs/kit/hooks';
-import { getDB } from '$lib/server/db';
+import { getDB, type DBType } from '$lib/server/db';
 import { getCache } from '$lib/server/cache';
 import {
   validateSessionToken,
@@ -12,7 +12,7 @@ import {
 // This will handle database injection
 const dbHandle: Handle = async ({ event, resolve }) => {
   // Make database available via event.platform
-  event.locals.db = getDB(event.platform);
+  event.locals.db = getDB(event.platform) as DBType;
   event.locals.cache = getCache(event.platform);
   return resolve(event);
 };

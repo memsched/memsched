@@ -78,6 +78,13 @@
       "when": 1742409861611,
       "tag": "0010_update_created_at",
       "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "6",
+      "when": 1742411979475,
+      "tag": "0011_add_user_admin",
+      "breakpoints": true
     }
   ]
 }

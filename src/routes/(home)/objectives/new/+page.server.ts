@@ -13,7 +13,8 @@ export const load: PageServerLoad = async (event) => {
 
   // Check if user has reached the objective limit
   const objectives = await getUserActiveObjectives(event.locals.db, event.locals.session.userId);
-  const objectivesLimitReached = objectives.length >= MAX_OBJECTIVES_PER_USER;
+  const objectivesLimitReached =
+    objectives.length >= MAX_OBJECTIVES_PER_USER && !event.locals.user?.admin;
 
   if (objectivesLimitReached) {
     return {
@@ -38,7 +39,8 @@ export const actions: Actions = {
 
     // Check if user has reached the objective limit
     const objectives = await getUserActiveObjectives(event.locals.db, event.locals.session.userId);
-    const objectivesLimitReached = objectives.length >= MAX_OBJECTIVES_PER_USER;
+    const objectivesLimitReached =
+      objectives.length >= MAX_OBJECTIVES_PER_USER && !event.locals.user?.admin;
 
     if (objectivesLimitReached) {
       return fail(400, {

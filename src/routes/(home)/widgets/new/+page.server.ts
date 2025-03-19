@@ -47,7 +47,7 @@ export const actions: Actions = {
     try {
       // Check if user has reached the widget limit
       const widgetCount = await getUserWidgetCount(event.locals.db, event.locals.session.userId);
-      if (widgetCount >= MAX_WIDGETS_PER_USER) {
+      if (widgetCount >= MAX_WIDGETS_PER_USER && !event.locals.user?.admin) {
         return fail(400, {
           form,
           widgetLimitReached: true,

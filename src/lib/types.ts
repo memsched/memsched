@@ -1,5 +1,6 @@
 export interface LocalUser {
   id: string;
+  admin: boolean;
   email: string;
   username: string;
   name: string;

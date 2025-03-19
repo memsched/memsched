@@ -14,7 +14,7 @@ export const load: PageServerLoad = async (event) => {
 
   // Check if user has reached the widget limit
   const widgetCount = await getUserWidgetCount(event.locals.db, event.locals.session.userId);
-  const widgetsLimitReached = widgetCount >= MAX_WIDGETS_PER_USER;
+  const widgetsLimitReached = widgetCount >= MAX_WIDGETS_PER_USER && !event.locals.user?.admin;
 
   return {
     widgets: widgetIds.map((w) => w.id),

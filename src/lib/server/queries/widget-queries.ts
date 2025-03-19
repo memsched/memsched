@@ -262,8 +262,10 @@ export async function updateUserWidget(
   }
 
   // Invalidate the widget cache
-  await cache.delete(`widget:${widgetId}:html`);
-  await cache.delete(`widget:${widgetId}:svg`);
+  await Promise.all([
+    cache.delete(`widget:${widgetId}:html`),
+    cache.delete(`widget:${widgetId}:svg`),
+  ]);
 }
 
 /**
@@ -290,8 +292,10 @@ export async function deleteUserWidget(
     .where(and(eq(table.widget.id, widgetId), eq(table.widget.userId, userId)));
 
   // Invalidate the widget cache
-  await cache.delete(`widget:${widgetId}:html`);
-  await cache.delete(`widget:${widgetId}:svg`);
+  await Promise.all([
+    cache.delete(`widget:${widgetId}:html`),
+    cache.delete(`widget:${widgetId}:svg`),
+  ]);
 
   return true;
 }
@@ -304,8 +308,8 @@ export async function deleteUserWidget(
  */
 export async function getUserWidgetCount(db: DBType, userId: string): Promise<number> {
   const result = await db
-    .select({ count: sql`count(*)` })
+    .select({ count: sql<number>`COUNT(*)` })
     .from(table.widget)
     .where(eq(table.widget.userId, userId));
-  return result[0].count as number;
+  return result[0].count;
 }

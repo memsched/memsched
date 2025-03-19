@@ -71,6 +71,13 @@
       "when": 1742132165415,
       "tag": "0009_add_widget_metric_rename_time_range",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "6",
+      "when": 1742409861611,
+      "tag": "0010_update_created_at",
+      "breakpoints": true
     }
   ]
 }

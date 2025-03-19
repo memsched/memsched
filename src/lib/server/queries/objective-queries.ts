@@ -104,9 +104,7 @@ export async function getUserObjective(db: DBType, objectiveId: string, userId: 
  */
 export async function getObjectiveFromWidgetId(db: DBType, widgetId: string) {
   const objectives = await db
-    .select({
-      objective: table.objective,
-    })
+    .select()
     .from(table.widget)
     .innerJoin(table.objective, eq(table.objective.id, table.widget.objectiveId))
     .where(eq(table.widget.id, widgetId))
@@ -133,24 +131,28 @@ export async function updateObjectiveWidgetMetrics(
   // Get all widgets associated with this objective
   const widgets = await getWidgetsFromObjectiveId(db, objectiveId);
 
-  // For each widget, update its metrics
-  for (const widgetItem of widgets) {
-    // Get all metrics for this widget
-    const metrics = await getMetricsFromWidgetId(db, widgetItem.id);
+  // For each widget, update its metrics in parallel
+  await Promise.all(
+    widgets.map(async (widgetItem) => {
+      // Get all metrics for this widget
+      const metrics = await getMetricsFromWidgetId(db, widgetItem.id);
 
-    // Update each metric with the new computed value
-    for (const metric of metrics) {
-      const newMetricValue = await computeMetricValue(
-        db,
-        objectiveId,
-        metric.calculationType,
-        metric.valueDecimalPrecision
+      // Update all metrics in parallel for this widget
+      await Promise.all(
+        metrics.map(async (metric) => {
+          const newMetricValue = await computeMetricValue(
+            db,
+            objectiveId,
+            metric.calculationType,
+            metric.valueDecimalPrecision
+          );
+
+          // Update the metric value
+          await updateMetricValue(db, metric.id, newMetricValue, cache);
+        })
       );
-
-      // Update the metric value
-      await updateMetricValue(db, metric.id, newMetricValue, cache);
-    }
-  }
+    })
+  );
 }
 
 /**

@@ -1,5 +1,5 @@
 import * as table from '../db/schema';
-import { eq } from 'drizzle-orm';
+import { eq, sql, and, gte } from 'drizzle-orm';
 import { type DBType } from '../db';
 import type { CacheService } from '../cache';
 
@@ -33,9 +33,11 @@ export async function updateMetricValue(
 ) {
   await db.update(table.widgetMetric).set({ value }).where(eq(table.widgetMetric.id, metricId));
 
-  // Invalidate the widget cache
-  await cache.delete(`widget:${metricId}:html`);
-  await cache.delete(`widget:${metricId}:svg`);
+  // Invalidate the widget cache - run in parallel
+  await Promise.all([
+    cache.delete(`widget:${metricId}:html`),
+    cache.delete(`widget:${metricId}:svg`),
+  ]);
 }
 
 /**
@@ -68,51 +70,46 @@ export async function computeMetricValue(
     return Math.round(percentage * 10 ** valueDecimalPrecision) / 10 ** valueDecimalPrecision;
   }
 
-  // For time-based calculations
-  const logs = await db
-    .select()
-    .from(table.objectiveLog)
-    .where(eq(table.objectiveLog.objectiveId, objectiveId));
-
-  if (logs.length === 0) {
-    return 0;
-  }
-
-  // Get current date for time range calculations
-  const now = new Date();
-  let value = 0;
-
   if (calculationType === 'all time') {
-    value = logs.reduce((acc, log) => acc + log.value, 0);
-  } else if (calculationType === 'day') {
-    // Filter logs from the past 24 hours
-    const oneDayAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
-    const recentLogs = logs.filter(
-      (log) => new Date(log.loggedAt).getTime() >= oneDayAgo.getTime()
-    );
-    value = recentLogs.reduce((acc, log) => acc + log.value, 0);
-  } else if (calculationType === 'week') {
-    // Filter logs from the past 7 days
-    const oneWeekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-    const recentLogs = logs.filter(
-      (log) => new Date(log.loggedAt).getTime() >= oneWeekAgo.getTime()
-    );
-    value = recentLogs.reduce((acc, log) => acc + log.value, 0);
-  } else if (calculationType === 'month') {
-    // Filter logs from the past 30 days
-    const oneMonthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
-    const recentLogs = logs.filter(
-      (log) => new Date(log.loggedAt).getTime() >= oneMonthAgo.getTime()
-    );
-    value = recentLogs.reduce((acc, log) => acc + log.value, 0);
-  } else if (calculationType === 'year') {
-    // Filter logs from the past 365 days
-    const oneYearAgo = new Date(now.getTime() - 365 * 24 * 60 * 60 * 1000);
-    const recentLogs = logs.filter(
-      (log) => new Date(log.loggedAt).getTime() >= oneYearAgo.getTime()
-    );
-    value = recentLogs.reduce((acc, log) => acc + log.value, 0);
-  }
+    // No time filter needed for all time calculation
+    const result = await db
+      .select({
+        total: sql<number>`SUM(${table.objectiveLog.value})`,
+      })
+      .from(table.objectiveLog)
+      .where(eq(table.objectiveLog.objectiveId, objectiveId));
 
-  return Math.round(value * 10 ** valueDecimalPrecision) / 10 ** valueDecimalPrecision;
+    const value = result[0]?.total || 0;
+    return Math.round(value * 10 ** valueDecimalPrecision) / 10 ** valueDecimalPrecision;
+  } else {
+    // Define time filter based on calculation type
+    const timeAgo = new Date();
+    if (calculationType === 'day') {
+      timeAgo.setDate(timeAgo.getDate() - 1);
+    } else if (calculationType === 'week') {
+      timeAgo.setDate(timeAgo.getDate() - 7);
+    } else if (calculationType === 'month') {
+      timeAgo.setMonth(timeAgo.getMonth() - 1);
+    } else if (calculationType === 'year') {
+      timeAgo.setFullYear(timeAgo.getFullYear() - 1);
+    } else {
+      return 0; // Unknown calculation type
+    }
+
+    // Use SQL to filter by date and calculate sum in one operation
+    const result = await db
+      .select({
+        total: sql<number>`SUM(${table.objectiveLog.value})`,
+      })
+      .from(table.objectiveLog)
+      .where(
+        and(
+          eq(table.objectiveLog.objectiveId, objectiveId),
+          gte(table.objectiveLog.loggedAt, timeAgo)
+        )
+      );
+
+    const value = result[0]?.total || 0;
+    return Math.round(value * 10 ** valueDecimalPrecision) / 10 ** valueDecimalPrecision;
+  }
 }

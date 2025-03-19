@@ -1,4 +1,4 @@
-import { sqliteTable, integer, text, primaryKey, real } from 'drizzle-orm/sqlite-core';
+import { sqliteTable, integer, text, primaryKey, real, index } from 'drizzle-orm/sqlite-core';
 import { sql } from 'drizzle-orm';
 
 export const user = sqliteTable('user', {
@@ -13,7 +13,7 @@ export const user = sqliteTable('user', {
 
   createdAt: integer('created_at', {
     mode: 'timestamp',
-  }).default(sql`CURRENT_TIMESTAMP`),
+  }).default(sql`(unixepoch())`),
 });
 
 export const authProvider = sqliteTable(
@@ -26,7 +26,7 @@ export const authProvider = sqliteTable(
       .references(() => user.id, { onDelete: 'cascade' }),
     createdAt: integer('created_at', {
       mode: 'timestamp',
-    }).default(sql`CURRENT_TIMESTAMP`),
+    }).default(sql`(unixepoch())`),
   },
   (table) => [primaryKey({ columns: [table.providerId, table.providerUserId] })]
 );
@@ -58,27 +58,31 @@ export const objective = sqliteTable('objective', {
     .references(() => user.id, { onDelete: 'cascade' }),
   createdAt: integer('created_at', {
     mode: 'timestamp',
-  }).default(sql`CURRENT_TIMESTAMP`),
+  }).default(sql`(unixepoch())`),
 });
 
-export const objectiveLog = sqliteTable('objective_log', {
-  id: text('id').primaryKey(),
-  value: real('value').notNull(),
-  notes: text('notes'),
-  loggedAt: integer('logged_at', {
-    mode: 'timestamp',
-  }).notNull(),
+export const objectiveLog = sqliteTable(
+  'objective_log',
+  {
+    id: text('id').primaryKey(),
+    value: real('value').notNull(),
+    notes: text('notes'),
+    loggedAt: integer('logged_at', {
+      mode: 'timestamp',
+    }).notNull(),
 
-  objectiveId: text('objective_id')
-    .notNull()
-    .references(() => objective.id, { onDelete: 'cascade' }),
-  userId: text('user_id')
-    .notNull()
-    .references(() => user.id, { onDelete: 'cascade' }),
-  createdAt: integer('created_at', {
-    mode: 'timestamp',
-  }).default(sql`CURRENT_TIMESTAMP`),
-});
+    objectiveId: text('objective_id')
+      .notNull()
+      .references(() => objective.id, { onDelete: 'cascade' }),
+    userId: text('user_id')
+      .notNull()
+      .references(() => user.id, { onDelete: 'cascade' }),
+    createdAt: integer('created_at', {
+      mode: 'timestamp',
+    }).default(sql`(unixepoch())`),
+  },
+  (table) => [index('logged_at_index').on(table.loggedAt)]
+);
 
 export const widget = sqliteTable('widget', {
   id: text('id').primaryKey(),
@@ -105,7 +109,7 @@ export const widget = sqliteTable('widget', {
     .references(() => user.id, { onDelete: 'cascade' }),
   createdAt: integer('created_at', {
     mode: 'timestamp',
-  }).default(sql`CURRENT_TIMESTAMP`),
+  }).default(sql`(unixepoch())`),
 });
 
 export const widgetMetric = sqliteTable('widget_metric', {
@@ -125,7 +129,7 @@ export const widgetMetric = sqliteTable('widget_metric', {
     .references(() => user.id, { onDelete: 'cascade' }),
   createdAt: integer('created_at', {
     mode: 'timestamp',
-  }).default(sql`CURRENT_TIMESTAMP`),
+  }).default(sql`(unixepoch())`),
 });
 
 export type User = typeof user.$inferSelect;

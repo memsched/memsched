@@ -69,18 +69,23 @@ export async function logObjectiveProgress(
   }
   const newValue = targetObjective.value + logData.value;
 
-  // Create the log entry
-  await db.insert(table.objectiveLog).values({
-    id: uuidv4(),
-    value: logData.value,
-    notes: logData.notes || null,
-    loggedAt: new Date(),
-    objectiveId: logData.objectiveId,
-    userId,
-  });
-  // Update the objective's current value
-  const updatedObjective = await updateObjectiveValue(db, logData.objectiveId, newValue);
-  // Update all widget metrics for this objective
+  // Perform database operations in parallel where possible
+  const [updatedObjective] = await Promise.all([
+    // Update the objective's current value
+    updateObjectiveValue(db, logData.objectiveId, newValue),
+
+    // Create the log entry
+    db.insert(table.objectiveLog).values({
+      id: uuidv4(),
+      value: logData.value,
+      notes: logData.notes || null,
+      loggedAt: new Date(),
+      objectiveId: logData.objectiveId,
+      userId,
+    }),
+  ]);
+
+  // Update metrics (must happen after value update)
   await updateObjectiveWidgetMetrics(db, logData.objectiveId, cache);
 
   return updatedObjective as Objective | null;
@@ -112,12 +117,19 @@ export async function undoObjectiveLog(
     throw new Error('No logs found to undo');
   }
 
-  // Delete the log entry
-  await db.delete(table.objectiveLog).where(eq(table.objectiveLog.id, lastLog.id));
-  // Update the objective's current value
+  // Calculate new value
   const newValue = Math.max(0, targetObjective.value - lastLog.value);
-  await updateObjectiveValue(db, objectiveId, newValue);
-  // Update all widget metrics for this objective
+
+  // Perform database operations in parallel where possible
+  await Promise.all([
+    // Delete the log entry
+    db.delete(table.objectiveLog).where(eq(table.objectiveLog.id, lastLog.id)),
+
+    // Update the objective's current value
+    updateObjectiveValue(db, objectiveId, newValue),
+  ]);
+
+  // Update metrics (must happen after value update)
   await updateObjectiveWidgetMetrics(db, objectiveId, cache);
 
   return lastLog;

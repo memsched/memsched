@@ -247,7 +247,7 @@ export async function updateUserWidget(
 
   if (metricInserts.length > 0) {
     await db.batch([
-      db.update(table.widget).set(widgetUpdate),
+      db.update(table.widget).set(widgetUpdate).where(eq(table.widget.id, widgetId)),
       // Delete all existing metrics
       db.delete(table.widgetMetric).where(eq(table.widgetMetric.widgetId, widgetId)),
       // Insert new metrics
@@ -255,7 +255,7 @@ export async function updateUserWidget(
     ]);
   } else {
     await db.batch([
-      db.update(table.widget).set(widgetUpdate),
+      db.update(table.widget).set(widgetUpdate).where(eq(table.widget.id, widgetId)),
       // Delete all existing metrics
       db.delete(table.widgetMetric).where(eq(table.widgetMetric.widgetId, widgetId)),
     ]);

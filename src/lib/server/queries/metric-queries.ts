@@ -1,6 +1,7 @@
 import * as table from '../db/schema';
 import { eq } from 'drizzle-orm';
 import { type DBType } from '../db';
+import type { CacheService } from '../cache';
 
 /**
  * Gets metrics from a widget ID
@@ -22,9 +23,19 @@ export async function getMetricsFromWidgetId(db: DBType, widgetId: string) {
  * @param db The database instance
  * @param metricId The ID of the metric
  * @param value The new value
+ * @param cache The cache instance
  */
-export async function updateMetricValue(db: DBType, metricId: string, value: number) {
+export async function updateMetricValue(
+  db: DBType,
+  metricId: string,
+  value: number,
+  cache: CacheService
+) {
   await db.update(table.widgetMetric).set({ value }).where(eq(table.widgetMetric.id, metricId));
+
+  // Invalidate the widget cache
+  await cache.delete(`widget:${metricId}:html`);
+  await cache.delete(`widget:${metricId}:svg`);
 }
 
 /**

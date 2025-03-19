@@ -7,6 +7,7 @@ import { type FormSchema } from '$lib/components/forms/widget-form/schema';
 import { computeMetricValue } from './metric-queries';
 import { getUserObjective } from './objective-queries';
 import type { DBType } from '../db';
+import type { CacheService } from '../cache';
 
 /**
  * Gets widgets for a user based on completion status
@@ -57,7 +58,7 @@ export async function getUserWidgets(db: DBType, userId: string, completed: bool
  * @param objectiveId The objective ID
  * @returns The widgets
  */
-export async function getWidgetFromObjectiveId(db: DBType, objectiveId: string) {
+export async function getWidgetsFromObjectiveId(db: DBType, objectiveId: string) {
   return await db.select().from(table.widget).where(eq(table.widget.objectiveId, objectiveId));
 }
 
@@ -187,7 +188,8 @@ export async function updateUserWidget(
   db: DBType,
   widgetId: string,
   widgetData: z.infer<FormSchema>,
-  userId: string
+  userId: string,
+  cache: CacheService
 ) {
   // Check if the widget exists and belongs to the user
   const widget = await getUserWidget(db, widgetId, userId);
@@ -258,6 +260,10 @@ export async function updateUserWidget(
       db.delete(table.widgetMetric).where(eq(table.widgetMetric.widgetId, widgetId)),
     ]);
   }
+
+  // Invalidate the widget cache
+  await cache.delete(`widget:${widgetId}:html`);
+  await cache.delete(`widget:${widgetId}:svg`);
 }
 
 /**
@@ -265,9 +271,15 @@ export async function updateUserWidget(
  * @param db The database instance
  * @param widgetId The widget ID
  * @param userId The user ID
+ * @param cache The cache instance
  * @returns True if successful, false if widget not found
  */
-export async function deleteUserWidget(db: DBType, widgetId: string, userId: string) {
+export async function deleteUserWidget(
+  db: DBType,
+  widgetId: string,
+  userId: string,
+  cache: CacheService
+) {
   const widget = await getUserWidget(db, widgetId, userId);
   if (!widget) {
     return false;
@@ -276,6 +288,11 @@ export async function deleteUserWidget(db: DBType, widgetId: string, userId: str
   await db
     .delete(table.widget)
     .where(and(eq(table.widget.id, widgetId), eq(table.widget.userId, userId)));
+
+  // Invalidate the widget cache
+  await cache.delete(`widget:${widgetId}:html`);
+  await cache.delete(`widget:${widgetId}:svg`);
+
   return true;
 }
 

@@ -73,9 +73,12 @@ export const actions: Actions = {
     }
 
     try {
-      const updatedObjective = (await logObjectiveProgress(event.locals.db, form.data, userId)) as
-        | typeof schema.objective.$inferSelect
-        | null;
+      const updatedObjective = (await logObjectiveProgress(
+        event.locals.db,
+        form.data,
+        userId,
+        event.locals.cache
+      )) as typeof schema.objective.$inferSelect | null;
 
       if (!updatedObjective) {
         return fail(404, {
@@ -112,9 +115,12 @@ export const actions: Actions = {
     }
 
     try {
-      const removedLog = (await undoObjectiveLog(event.locals.db, objectiveId, userId)) as
-        | typeof schema.objectiveLog.$inferSelect
-        | null;
+      const removedLog = (await undoObjectiveLog(
+        event.locals.db,
+        objectiveId,
+        userId,
+        event.locals.cache
+      )) as typeof schema.objectiveLog.$inferSelect | null;
 
       if (!removedLog) {
         return fail(404, { error: 'No logs found to undo' });

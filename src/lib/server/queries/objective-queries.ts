@@ -1,11 +1,12 @@
 import * as table from '../db/schema';
 import { eq, and, or, desc, sql } from 'drizzle-orm';
 import { computeMetricValue, updateMetricValue, getMetricsFromWidgetId } from './metric-queries';
-import { getWidgetFromObjectiveId } from './widget-queries';
+import { getWidgetsFromObjectiveId } from './widget-queries';
 import { v4 as uuidv4 } from 'uuid';
 import type { z } from 'zod';
 import type { FormSchema } from '$lib/components/forms/objective-form/schema';
 import type { DBType } from '../db';
+import type { CacheService } from '../cache';
 
 /**
  * Gets all objectives for a user
@@ -122,10 +123,15 @@ export async function getObjectiveFromWidgetId(db: DBType, widgetId: string) {
  * Updates all widget metrics associated with an objective
  * @param db The database instance
  * @param objectiveId The ID of the objective
+ * @param cache The cache instance
  */
-export async function updateObjectiveWidgetMetrics(db: DBType, objectiveId: string) {
+export async function updateObjectiveWidgetMetrics(
+  db: DBType,
+  objectiveId: string,
+  cache: CacheService
+) {
   // Get all widgets associated with this objective
-  const widgets = await getWidgetFromObjectiveId(db, objectiveId);
+  const widgets = await getWidgetsFromObjectiveId(db, objectiveId);
 
   // For each widget, update its metrics
   for (const widgetItem of widgets) {
@@ -142,7 +148,7 @@ export async function updateObjectiveWidgetMetrics(db: DBType, objectiveId: stri
       );
 
       // Update the metric value
-      await updateMetricValue(db, metric.id, newMetricValue);
+      await updateMetricValue(db, metric.id, newMetricValue, cache);
     }
   }
 }

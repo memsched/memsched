@@ -10,7 +10,7 @@ import {
 } from './objective-queries';
 import type { Objective } from '../db/schema';
 import type { DBType } from '../db';
-
+import type { CacheService } from '../cache';
 /**
  * Gets logs for a specific objective
  * @param db The database instance
@@ -53,12 +53,14 @@ export async function getMostRecentObjectiveLog(db: DBType, objectiveId: string,
  * @param db The database instance
  * @param logData Log data
  * @param userId The user ID
+ * @param cache The cache instance
  * @returns The objective after update, or null if objective not found
  */
 export async function logObjectiveProgress(
   db: DBType,
   logData: z.infer<LogSchema>,
-  userId: string
+  userId: string,
+  cache: CacheService
 ) {
   // Get the objective and verify ownership
   const targetObjective = await getUserObjective(db, logData.objectiveId, userId);
@@ -79,7 +81,7 @@ export async function logObjectiveProgress(
   // Update the objective's current value
   const updatedObjective = await updateObjectiveValue(db, logData.objectiveId, newValue);
   // Update all widget metrics for this objective
-  await updateObjectiveWidgetMetrics(db, logData.objectiveId);
+  await updateObjectiveWidgetMetrics(db, logData.objectiveId, cache);
 
   return updatedObjective as Objective | null;
 }
@@ -89,9 +91,15 @@ export async function logObjectiveProgress(
  * @param db The database instance
  * @param objectiveId The objective ID
  * @param userId The user ID
+ * @param cache The cache instance
  * @returns The removed log or null if no logs exist
  */
-export async function undoObjectiveLog(db: DBType, objectiveId: string, userId: string) {
+export async function undoObjectiveLog(
+  db: DBType,
+  objectiveId: string,
+  userId: string,
+  cache: CacheService
+) {
   // Get the objective and verify ownership
   const targetObjective = await getUserObjective(db, objectiveId, userId);
   if (!targetObjective) {
@@ -110,7 +118,7 @@ export async function undoObjectiveLog(db: DBType, objectiveId: string, userId: 
   const newValue = Math.max(0, targetObjective.value - lastLog.value);
   await updateObjectiveValue(db, objectiveId, newValue);
   // Update all widget metrics for this objective
-  await updateObjectiveWidgetMetrics(db, objectiveId);
+  await updateObjectiveWidgetMetrics(db, objectiveId, cache);
 
   return lastLog;
 }

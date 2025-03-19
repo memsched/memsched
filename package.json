@@ -22,6 +22,7 @@
     "deploy": "pnpm run build && wrangler pages deploy",
     "cf-typegen": "wrangler types && mv worker-configuration.d.ts src/",
     "d1:create": "wrangler d1 create memsched-db",
+    "kv:create": "wrangler kv namespace create memsched-kv",
     "d1:migrate": "wrangler d1 migrations apply memsched-db --remote",
     "d1:execute": "wrangler d1 execute memsched-db --remote"
   },

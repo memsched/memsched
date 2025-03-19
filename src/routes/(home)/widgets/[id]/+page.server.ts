@@ -68,7 +68,7 @@ export const actions: Actions = {
     const userId = event.locals.session.userId;
 
     try {
-      await updateUserWidget(event.locals.db, widgetId, form.data, userId);
+      await updateUserWidget(event.locals.db, widgetId, form.data, userId, event.locals.cache);
       return message(form, 'Widget successfully updated!');
     } catch (err) {
       if (err instanceof Error) {

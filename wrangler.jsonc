@@ -57,5 +57,13 @@
       "database_id": "3d0f8058-1243-4694-9532-93f538360983",
       "migrations_dir": "drizzle"
     }
+  ],
+
+  // Add KV namespace for caching
+  "kv_namespaces": [
+    {
+      "binding": "CACHE_KV",
+      "id": "c57c2e3e2de841abb6fae843d0b85936"
+    }
   ]
 }

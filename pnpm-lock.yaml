@@ -119,6 +119,9 @@ importers:
       svelte-markdown:
         specifier: ^0.4.1
         version: 0.4.1(svelte@5.23.1)
+      svelte-seo:
+        specifier: ^1.6.1
+        version: 1.6.1
       sveltekit-rate-limiter:
         specifier: ^0.6.1
         version: 0.6.1(@sveltejs/kit@2.19.2(@sveltejs/vite-plugin-svelte@5.0.3(svelte@5.23.1)(vite@6.2.2(@types/node@22.13.10)(jiti@1.21.7)(yaml@2.7.0)))(svelte@5.23.1)(vite@6.2.2(@types/node@22.13.10)(jiti@1.21.7)(yaml@2.7.0)))
@@ -1770,7 +1773,6 @@ packages:
 
   libsql@0.4.7:
     resolution: {integrity: sha512-T9eIRCs6b0J1SHKYIvD8+KCJMcWZ900iZyxdnSCdqxN12Z1ijzT+jY5nrk72Jw4B0HGzms2NgpryArlJqvc3Lw==}
-    cpu: [x64, arm64, wasm32]
     os: [darwin, linux, win32]
 
   lilconfig@2.1.0:
@@ -2208,6 +2210,9 @@ packages:
     resolution: {integrity: sha512-0SbjchvDrDbeXeQgxWVtSWxww7qcFgk3DtSE2/blHOSlLsSHwIqO2fCrtVa/EudJ7Eqno8A33QNx56rUyGbLuw==}
     engines: {node: '>=16'}
 
+  schema-dts@1.1.5:
+    resolution: {integrity: sha512-RJr9EaCmsLzBX2NDiO5Z3ux2BVosNZN5jo0gWgsyKvxKIUL5R3swNvoorulAeL9kLB0iTSX7V6aokhla2m7xbg==}
+
   semver@7.7.1:
     resolution: {integrity: sha512-hlq8tAfn0m/61p4BVRcPzIGr6LKiMwo4VM6dGi6pt4qcRkmNzTcWq6eCEjEh+qXjkMDvPlOFFSGwQjoEa6gyMA==}
     engines: {node: '>=10'}
@@ -2347,6 +2352,9 @@ packages:
     resolution: {integrity: sha512-pOlLY6EruKJaWI9my/2bKX8PdTeP5CM0s4VMmwmC2prlOkjAf+AOmTM4wW/l19Y6WZ87YmP8+ZCJCCwBChWjYw==}
     peerDependencies:
       svelte: ^4.0.0
+
+  svelte-seo@1.6.1:
+    resolution: {integrity: sha512-vTKvOA0rl3HVhgbyoMhwz0P1s+18ldOT+lHlTlrQn7Mn0SBx7Ia7MB+llF4O/mYoiV5idmNu8i3xWsam8COsbw==}
 
   svelte-toolbelt@0.5.0:
     resolution: {integrity: sha512-t3tenZcnfQoIeRuQf/jBU7bvTeT3TGkcEE+1EUr5orp0lR7NEpprflpuie3x9Dn0W9nOKqs3HwKGJeeN5Ok1sQ==}
@@ -4544,6 +4552,8 @@ snapshots:
       postcss-value-parser: 4.2.0
       yoga-wasm-web: 0.3.3
 
+  schema-dts@1.1.5: {}
+
   semver@7.7.1: {}
 
   set-cookie-parser@2.7.1: {}
@@ -4706,6 +4716,10 @@ snapshots:
       '@types/marked': 5.0.2
       marked: 5.1.2
       svelte: 5.23.1
+
+  svelte-seo@1.6.1:
+    dependencies:
+      schema-dts: 1.1.5
 
   svelte-toolbelt@0.5.0(svelte@5.23.1):
     dependencies:

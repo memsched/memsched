@@ -10,6 +10,8 @@
   import TabNavLink from '$lib/components/headers/TabNavLink.svelte';
   import type { Page } from '@sveltejs/kit';
   import * as Tooltip from '$lib/components/ui/tooltip';
+  import SvelteSeo from 'svelte-seo';
+  import { DOMAIN } from '$lib/constants';
 
   const { data }: PageProps = $props();
 
@@ -18,7 +20,32 @@
     page.url.pathname === '/widgets' && !page.url.searchParams.has('completed');
 
   const isCompletedTab = (page: Page) => page.url.searchParams.has('completed');
+
+  // Define page title based on active tab
+  const pageTitle = data.isCompleted
+    ? 'Completed Widgets - MEMsched'
+    : 'Learning Widgets - MEMsched';
+  const pageDescription =
+    'Create and manage your learning widgets on MEMsched. Showcase your progress and share them with the world.';
 </script>
+
+<SvelteSeo
+  title={pageTitle}
+  description={pageDescription}
+  openGraph={{
+    title: pageTitle,
+    description: pageDescription,
+    url: `${DOMAIN}/widgets${data.isCompleted ? '?completed' : ''}`,
+    type: 'website',
+    site_name: 'MEMsched',
+  }}
+  twitter={{
+    card: 'summary',
+    site: '@memsched',
+    title: pageTitle,
+    description: pageDescription,
+  }}
+/>
 
 {#if data.objectives.length > 0}
   <HomeLayout container={false}>

@@ -4,9 +4,32 @@
   import IconButton from '$lib/components/ui/IconButton.svelte';
   import { IoAdd } from 'svelte-icons-pack/io';
   import { v4 as uuid4 } from 'uuid';
+  import SvelteSeo from 'svelte-seo';
+  import { DOMAIN } from '$lib/constants';
 
   const { data }: PageProps = $props();
+
+  const pageTitle = `${data.publicUser.name || data.publicUser.username} - MEMsched Profile`;
+  const pageDescription = `View ${data.publicUser.name || data.publicUser.username}'s learning journey on MEMsched. See their learning widgets and progress.`;
 </script>
+
+<SvelteSeo
+  title={pageTitle}
+  description={pageDescription}
+  openGraph={{
+    title: pageTitle,
+    description: pageDescription,
+    url: `${DOMAIN}/${data.publicUser.username}`,
+    type: 'profile',
+    site_name: 'MEMsched',
+  }}
+  twitter={{
+    card: 'summary',
+    site: '@memsched',
+    title: pageTitle,
+    description: pageDescription,
+  }}
+/>
 
 <section class="flex gap-16">
   <Profile

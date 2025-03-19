@@ -8,9 +8,17 @@
   import * as Dialog from '$lib/components/ui/dialog';
   import WidgetForm from '$lib/components/forms/widget-form/WidgetForm.svelte';
   import ShareWidget from '$lib/components/ShareWidget.svelte';
+  import SvelteSeo from 'svelte-seo';
 
   const { data }: PageProps = $props();
 </script>
+
+<SvelteSeo
+  title="Edit Widget - MEMsched"
+  description="Edit your learning progress widget on MEMsched"
+  noindex={true}
+  nofollow={true}
+/>
 
 <HomeLayout class="gap-7">
   <div class="flex w-full items-center justify-between">

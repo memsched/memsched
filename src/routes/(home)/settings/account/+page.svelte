@@ -5,9 +5,17 @@
   import type { PageProps } from './$types';
   import { IoKey } from 'svelte-icons-pack/io';
   import SettingsTitle from '$lib/components/account/SettingsTitle.svelte';
+  import SvelteSeo from 'svelte-seo';
 
   const { data }: PageProps = $props();
 </script>
+
+<SvelteSeo
+  title="Account Settings - MEMsched"
+  description="Manage your MEMsched account settings and preferences"
+  noindex={true}
+  nofollow={true}
+/>
 
 <div class="mb-8">
   <SettingsTitle

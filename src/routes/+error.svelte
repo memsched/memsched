@@ -5,7 +5,31 @@
   import { IoArrowBack } from 'svelte-icons-pack/io';
   import AuthLayout from '$lib/components/layouts/AuthLayout.svelte';
   import IconButton from '$lib/components/ui/IconButton.svelte';
+  import SvelteSeo from 'svelte-seo';
+  import { DOMAIN } from '$lib/constants';
+
+  const pageTitle = page.status === 404 ? 'Page Not Found - MEMsched' : 'Error - MEMsched';
+  const pageDescription =
+    page.status === 404 ? "The page you're looking for doesn't exist." : 'Something went wrong.';
 </script>
+
+<SvelteSeo
+  title={pageTitle}
+  description={pageDescription}
+  openGraph={{
+    title: pageTitle,
+    description: pageDescription,
+    url: `${DOMAIN}${page.url.pathname}`,
+    type: 'website',
+    site_name: 'MEMsched',
+  }}
+  twitter={{
+    card: 'summary',
+    site: '@memsched',
+    title: pageTitle,
+    description: pageDescription,
+  }}
+/>
 
 <AuthLayout>
   <div class="flex flex-col items-center text-center">

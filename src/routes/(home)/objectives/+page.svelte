@@ -12,6 +12,8 @@
   import TabNavLink from '$lib/components/headers/TabNavLink.svelte';
   import type { Page } from '@sveltejs/kit';
   import * as Tooltip from '$lib/components/ui/tooltip';
+  import SvelteSeo from 'svelte-seo';
+  import { DOMAIN } from '$lib/constants';
 
   const { data, form }: PageProps = $props();
 
@@ -30,7 +32,33 @@
 
   const isArchivedTab = (page: Page) => page.url.searchParams.has('archived');
   const isCompletedTab = (page: Page) => page.url.searchParams.has('completed');
+
+  const pageTitle = data.isArchived
+    ? 'Archived Objectives - MEMsched'
+    : data.isCompleted
+      ? 'Completed Objectives - MEMsched'
+      : 'Learning Objectives - MEMsched';
+  const pageDescription =
+    'Manage your learning objectives on MEMsched. Set goals, track progress, and showcase your learning journey.';
 </script>
+
+<SvelteSeo
+  title={pageTitle}
+  description={pageDescription}
+  openGraph={{
+    title: pageTitle,
+    description: pageDescription,
+    url: `${DOMAIN}/objectives${data.isArchived ? '?archived' : data.isCompleted ? '?completed' : ''}`,
+    type: 'website',
+    site_name: 'MEMsched',
+  }}
+  twitter={{
+    card: 'summary',
+    site: '@memsched',
+    title: pageTitle,
+    description: pageDescription,
+  }}
+/>
 
 <HomeLayout container={false}>
   {#if data.user !== null}

@@ -7,9 +7,17 @@
   import { FiTrash2 } from 'svelte-icons-pack/fi';
   import * as Dialog from '$lib/components/ui/dialog';
   import HomeLayout from '$lib/components/layouts/HomeLayout.svelte';
+  import SvelteSeo from 'svelte-seo';
 
   const { data }: PageProps = $props();
 </script>
+
+<SvelteSeo
+  title="Edit Objective - MEMsched"
+  description="Edit your learning objective on MEMsched"
+  noindex={true}
+  nofollow={true}
+/>
 
 <HomeLayout class="gap-7">
   <div class="flex w-full items-center justify-between">

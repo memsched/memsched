@@ -2,7 +2,31 @@
   import IconButton from '$lib/components/ui/IconButton.svelte';
   import { AiOutlineGithub } from 'svelte-icons-pack/ai';
   import { FcGoogle } from '$lib/icons';
+  import SvelteSeo from 'svelte-seo';
+  import { DOMAIN } from '$lib/constants';
+
+  const pageTitle = 'Sign in to MEMsched - Track Your Learning Journey';
+  const pageDescription =
+    'Sign in to MEMsched to track your learning progress, set goals, and showcase your skills with beautiful widgets.';
 </script>
+
+<SvelteSeo
+  title={pageTitle}
+  description={pageDescription}
+  openGraph={{
+    title: pageTitle,
+    description: pageDescription,
+    url: `${DOMAIN}/auth/signin`,
+    type: 'website',
+    site_name: 'MEMsched',
+  }}
+  twitter={{
+    card: 'summary',
+    site: '@memsched',
+    title: pageTitle,
+    description: pageDescription,
+  }}
+/>
 
 <div class="flex w-[350px] flex-col items-center justify-center gap-5 text-center">
   <h2>Continue to MEMshed</h2>

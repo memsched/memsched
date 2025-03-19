@@ -4,9 +4,17 @@
   import ProfileForm from '$lib/components/forms/profile-form/ProfileForm.svelte';
   import { IoPerson } from 'svelte-icons-pack/io';
   import SettingsTitle from '$lib/components/account/SettingsTitle.svelte';
+  import SvelteSeo from 'svelte-seo';
 
   const { data }: PageProps = $props();
 </script>
+
+<SvelteSeo
+  title="Profile Settings - MEMsched"
+  description="Update your profile information on MEMsched"
+  noindex={true}
+  nofollow={true}
+/>
 
 <div class="flex justify-between gap-28">
   <div class="w-full min-w-0">

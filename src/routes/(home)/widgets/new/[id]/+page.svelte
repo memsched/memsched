@@ -6,9 +6,17 @@
   import IconButton from '$lib/components/ui/IconButton.svelte';
   import ShareWidget from '$lib/components/ShareWidget.svelte';
   import { v4 as uuid4 } from 'uuid';
+  import SvelteSeo from 'svelte-seo';
 
   const { data }: PageProps = $props();
 </script>
+
+<SvelteSeo
+  title="Share Your Widget - MEMsched"
+  description="Share your learning progress widget with others"
+  noindex={true}
+  nofollow={true}
+/>
 
 <HomeLayout class="w-[80%] items-center justify-center gap-6">
   <div class="w-full space-y-2 text-center">

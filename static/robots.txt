@@ -1,0 +1,18 @@
+# Global settings
+User-agent: *
+Allow: /
+
+# Disallowed paths
+Disallow: /api/
+Disallow: /dev/
+Disallow: /objectives/new
+Disallow: /objectives/*/
+Disallow: /settings/
+Disallow: /widgets/new
+Disallow: /widgets/*/
+
+# Host
+Host: https://memsched.com
+
+# Sitemaps
+Sitemap: https://memsched.com/sitemap.xml

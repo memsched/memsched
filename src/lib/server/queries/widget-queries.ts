@@ -113,70 +113,64 @@ export async function createUserWidget(
   widgetData: z.infer<FormSchema>,
   userId: string
 ) {
+  // First check if the objective exists and belongs to the user
+  const objective = await getUserObjective(db, widgetData.objectiveId, userId);
+  if (!objective) {
+    throw new Error('Objective not found');
+  }
+
   const widgetId = uuidv4();
 
-  await db.transaction(async (tx) => {
-    // First check if the objective exists and belongs to the user
-    const objective = await getUserObjective(tx, widgetData.objectiveId, userId);
-    if (!objective) {
-      throw new Error('Objective not found');
-    }
-
-    // Insert the widget
-    const widget = (
-      await tx
-        .insert(table.widget)
-        .values({
-          id: widgetId,
-          title: widgetData.title,
-          subtitle: widgetData.subtitle,
-          imageUrl: widgetData.imageUrl,
-          imagePlacement: widgetData.imagePlacement,
-
-          padding: widgetData.padding,
-          border: widgetData.border,
-          borderWidth: 1,
-          borderRadius: widgetData.borderRadius,
-          color: widgetData.color,
-          accentColor: widgetData.accentColor,
-          backgroundColor: widgetData.backgroundColor,
-          watermark: true, // TODO: Default to true, update when user has pro plan
-
-          objectiveId: widgetData.objectiveId,
-          userId,
-        })
-        .returning()
-    )[0];
-
-    // Insert the metrics
-    const metricInserts = widgetData.metrics.map((metric, i) => ({
+  // Create the metrics to insert
+  const metricInserts = [];
+  for (let i = 0; i < widgetData.metrics.length; i++) {
+    const metric = widgetData.metrics[i];
+    const value = await computeMetricValue(
+      db,
+      objective.id,
+      metric.calculationType,
+      metric.valueDecimalPrecision
+    );
+    metricInserts.push({
       id: uuidv4(),
-      value: 0, // Initial value is 0, will be computed later
+      value,
       name: metric.name,
       calculationType: metric.calculationType,
       valueDecimalPrecision: metric.valueDecimalPrecision,
       order: i,
-      widgetId: widget.id,
+      widgetId,
       userId,
-    }));
+    });
+  }
 
-    await tx.insert(table.widgetMetric).values(metricInserts).returning();
+  const widgetInsert = {
+    id: widgetId,
+    title: widgetData.title,
+    subtitle: widgetData.subtitle,
+    imageUrl: widgetData.imageUrl,
+    imagePlacement: widgetData.imagePlacement,
 
-    // Calculate and update the values for each metric
-    for (const metric of metricInserts) {
-      const value = await computeMetricValue(
-        tx,
-        objective.id,
-        metric.calculationType,
-        metric.valueDecimalPrecision
-      );
+    padding: widgetData.padding,
+    border: widgetData.border,
+    borderWidth: 1,
+    borderRadius: widgetData.borderRadius,
+    color: widgetData.color,
+    accentColor: widgetData.accentColor,
+    backgroundColor: widgetData.backgroundColor,
+    watermark: true, // TODO: Default to true, update when user has pro plan
 
-      await tx
-        .update(table.widgetMetric)
-        .set({ value })
-        .where(eq(table.widgetMetric.id, metric.id));
-    }
-  });
+    objectiveId: widgetData.objectiveId,
+    userId,
+  };
+
+  if (metricInserts.length > 0) {
+    db.batch([
+      db.insert(table.widget).values(widgetInsert),
+      db.insert(table.widgetMetric).values(metricInserts),
+    ]);
+  } else {
+    db.batch([db.insert(table.widget).values(widgetInsert)]);
+  }
 
   return widgetId;
 }
@@ -187,7 +181,6 @@ export async function createUserWidget(
  * @param widgetId The widget ID
  * @param widgetData Widget data from the form
  * @param userId The user ID
- * @returns True if successful
  */
 export async function updateUserWidget(
   db: DBType,
@@ -195,80 +188,74 @@ export async function updateUserWidget(
   widgetData: z.infer<FormSchema>,
   userId: string
 ) {
-  let success = false;
+  // Check if the widget exists and belongs to the user
+  const widget = await getUserWidget(db, widgetId, userId);
+  if (!widget) {
+    throw new Error('Widget not found');
+  }
 
-  await db.transaction(async (tx) => {
-    // Check if the widget exists and belongs to the user
-    const widget = await getUserWidget(tx, widgetId, userId);
-    if (!widget) {
-      throw new Error('Widget not found');
-    }
+  // Check if the objective exists and belongs to the user
+  const objective = await getUserObjective(db, widgetData.objectiveId, userId);
+  if (!objective) {
+    throw new Error('Objective not found');
+  }
 
-    // Check if the objective exists and belongs to the user
-    const objective = await getUserObjective(tx, widgetData.objectiveId, userId);
-    if (!objective) {
-      throw new Error('Objective not found');
-    }
-
-    // Update the widget
-    await tx
-      .update(table.widget)
-      .set({
-        title: widgetData.title,
-        subtitle: widgetData.subtitle,
-        imageUrl: widgetData.imageUrl,
-        imagePlacement: widgetData.imagePlacement,
-
-        padding: widgetData.padding,
-        border: widgetData.border,
-        borderWidth: 1,
-        borderRadius: widgetData.borderRadius,
-        color: widgetData.color,
-        accentColor: widgetData.accentColor,
-        backgroundColor: widgetData.backgroundColor,
-
-        objectiveId: widgetData.objectiveId,
-        // Don't update userId as it should remain the same
-        // Don't update watermark status as it's dependent on user plan
-      })
-      .where(eq(table.widget.id, widgetId));
-
-    // Delete all existing metrics
-    await tx.delete(table.widgetMetric).where(eq(table.widgetMetric.widgetId, widgetId));
-
-    // Insert new metrics
-    const metricInserts = widgetData.metrics.map((metric, i) => ({
+  // Create the metrics to insert
+  const metricInserts = [];
+  for (let i = 0; i < widgetData.metrics.length; i++) {
+    const metric = widgetData.metrics[i];
+    const value = await computeMetricValue(
+      db,
+      objective.id,
+      metric.calculationType,
+      metric.valueDecimalPrecision
+    );
+    metricInserts.push({
       id: uuidv4(),
-      value: 0, // Initial value is 0, will be computed later
+      value,
       name: metric.name,
       calculationType: metric.calculationType,
       valueDecimalPrecision: metric.valueDecimalPrecision,
       order: i,
-      widgetId: widgetId,
+      widgetId,
       userId,
-    }));
+    });
+  }
 
-    await tx.insert(table.widgetMetric).values(metricInserts).returning();
+  const widgetUpdate = {
+    title: widgetData.title,
+    subtitle: widgetData.subtitle,
+    imageUrl: widgetData.imageUrl,
+    imagePlacement: widgetData.imagePlacement,
 
-    // Calculate and update the values for each metric
-    for (const metric of metricInserts) {
-      const value = await computeMetricValue(
-        tx,
-        objective.id,
-        metric.calculationType,
-        metric.valueDecimalPrecision
-      );
+    padding: widgetData.padding,
+    border: widgetData.border,
+    borderWidth: 1,
+    borderRadius: widgetData.borderRadius,
+    color: widgetData.color,
+    accentColor: widgetData.accentColor,
+    backgroundColor: widgetData.backgroundColor,
 
-      await tx
-        .update(table.widgetMetric)
-        .set({ value })
-        .where(eq(table.widgetMetric.id, metric.id));
-    }
+    objectiveId: widgetData.objectiveId,
+    // Don't update userId as it should remain the same
+    // Don't update watermark status as it's dependent on user plan
+  };
 
-    success = true;
-  });
-
-  return success;
+  if (metricInserts.length > 0) {
+    db.batch([
+      db.update(table.widget).set(widgetUpdate),
+      // Delete all existing metrics
+      db.delete(table.widgetMetric).where(eq(table.widgetMetric.widgetId, widgetId)),
+      // Insert new metrics
+      db.insert(table.widgetMetric).values(metricInserts),
+    ]);
+  } else {
+    db.batch([
+      db.update(table.widget).set(widgetUpdate),
+      // Delete all existing metrics
+      db.delete(table.widgetMetric).where(eq(table.widgetMetric.widgetId, widgetId)),
+    ]);
+  }
 }
 
 /**

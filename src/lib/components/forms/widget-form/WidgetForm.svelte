@@ -48,6 +48,16 @@
   });
   const { form: formData, enhance } = form;
 
+  const calculationTypes = $derived.by(() => {
+    if ($formData.objectiveId) {
+      const objective = data.objectives.find((o) => o.id == $formData.objectiveId);
+      if (objective?.goalType === 'ongoing') {
+        return WIDGET_METRIC_CALCULATION_TYPES.filter((ct) => ct !== 'percentage');
+      }
+    }
+    return WIDGET_METRIC_CALCULATION_TYPES;
+  });
+
   let previewLoaded = $state(false);
 
   $effect(() => {
@@ -277,7 +287,7 @@
                               {$formData.metrics[j].calculationType}
                             </Select.Trigger>
                             <Select.Content>
-                              {#each WIDGET_METRIC_CALCULATION_TYPES as calcType}
+                              {#each calculationTypes as calcType}
                                 <Select.Item value={calcType} label={calcType} class="capitalize" />
                               {/each}
                             </Select.Content>

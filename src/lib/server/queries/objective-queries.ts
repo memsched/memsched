@@ -195,38 +195,34 @@ export async function createUserObjective(
   objectiveData: z.infer<FormSchema>,
   userId: string
 ) {
-  let createdObjective;
-
-  await db.transaction(async (tx) => {
-    createdObjective = (
-      await tx
-        .insert(table.objective)
-        .values({
-          id: uuidv4(),
-          name: objectiveData.name,
-          description: objectiveData.description,
-          startValue: objectiveData.startValue,
-          value: objectiveData.startValue,
-          unit: objectiveData.unit,
-          visibility: objectiveData.visibility,
-          goalType: objectiveData.goalType,
-          endValue: objectiveData.endValue,
-          userId,
-        })
-        .returning()
-    )[0];
-
-    await tx.insert(table.objectiveLog).values({
+  const objectiveId = uuidv4();
+  const batchRes = await db.batch([
+    db
+      .insert(table.objective)
+      .values({
+        id: objectiveId,
+        name: objectiveData.name,
+        description: objectiveData.description,
+        startValue: objectiveData.startValue,
+        value: objectiveData.startValue,
+        unit: objectiveData.unit,
+        visibility: objectiveData.visibility,
+        goalType: objectiveData.goalType,
+        endValue: objectiveData.endValue,
+        userId,
+      })
+      .returning(),
+    db.insert(table.objectiveLog).values({
       id: uuidv4(),
       value: objectiveData.startValue,
       notes: '',
       loggedAt: new Date(),
-      objectiveId: createdObjective.id,
+      objectiveId,
       userId,
-    });
-  });
+    }),
+  ]);
 
-  return createdObjective;
+  return batchRes[0][0];
 }
 
 /**

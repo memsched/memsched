@@ -68,6 +68,7 @@ export const actions: Actions = {
       return redirect(302, `/widgets/new/${widgetId}`);
     } catch (err) {
       if (err instanceof Error) {
+        console.error(err);
         return error(404, err.message);
       }
       throw err;

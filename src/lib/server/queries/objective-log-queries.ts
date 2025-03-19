@@ -60,32 +60,26 @@ export async function logObjectiveProgress(
   logData: z.infer<LogSchema>,
   userId: string
 ) {
-  let updatedObjective = null;
+  // Get the objective and verify ownership
+  const targetObjective = await getUserObjective(db, logData.objectiveId, userId);
+  if (!targetObjective) {
+    throw new Error('Objective not found');
+  }
+  const newValue = targetObjective.value + logData.value;
 
-  await db.transaction(async (tx) => {
-    // Get the objective and verify ownership
-    const targetObjective = await getUserObjective(tx, logData.objectiveId, userId);
-    if (!targetObjective) {
-      throw new Error('Objective not found');
-    }
-
-    // Create the log entry
-    await tx.insert(table.objectiveLog).values({
-      id: uuidv4(),
-      value: logData.value,
-      notes: logData.notes || null,
-      loggedAt: new Date(),
-      objectiveId: logData.objectiveId,
-      userId,
-    });
-
-    // Update the objective's current value
-    const newValue = targetObjective.value + logData.value;
-    updatedObjective = await updateObjectiveValue(tx, logData.objectiveId, newValue);
-
-    // Update all widget metrics for this objective
-    await updateObjectiveWidgetMetrics(tx, logData.objectiveId);
+  // Create the log entry
+  await db.insert(table.objectiveLog).values({
+    id: uuidv4(),
+    value: logData.value,
+    notes: logData.notes || null,
+    loggedAt: new Date(),
+    objectiveId: logData.objectiveId,
+    userId,
   });
+  // Update the objective's current value
+  const updatedObjective = await updateObjectiveValue(db, logData.objectiveId, newValue);
+  // Update all widget metrics for this objective
+  await updateObjectiveWidgetMetrics(db, logData.objectiveId);
 
   return updatedObjective as Objective | null;
 }
@@ -98,32 +92,25 @@ export async function logObjectiveProgress(
  * @returns The removed log or null if no logs exist
  */
 export async function undoObjectiveLog(db: DBType, objectiveId: string, userId: string) {
-  let removedLog = null;
+  // Get the objective and verify ownership
+  const targetObjective = await getUserObjective(db, objectiveId, userId);
+  if (!targetObjective) {
+    throw new Error('Objective not found');
+  }
 
-  await db.transaction(async (tx) => {
-    // Get the objective and verify ownership
-    const targetObjective = await getUserObjective(tx, objectiveId, userId);
-    if (!targetObjective) {
-      throw new Error('Objective not found');
-    }
+  // Find the most recent log
+  const lastLog = await getMostRecentObjectiveLog(db, objectiveId, userId);
+  if (!lastLog) {
+    throw new Error('No logs found to undo');
+  }
 
-    // Find the most recent log
-    const lastLog = await getMostRecentObjectiveLog(tx, objectiveId, userId);
-    if (!lastLog) {
-      throw new Error('No logs found to undo');
-    }
-    removedLog = lastLog;
+  // Delete the log entry
+  await db.delete(table.objectiveLog).where(eq(table.objectiveLog.id, lastLog.id));
+  // Update the objective's current value
+  const newValue = Math.max(0, targetObjective.value - lastLog.value);
+  await updateObjectiveValue(db, objectiveId, newValue);
+  // Update all widget metrics for this objective
+  await updateObjectiveWidgetMetrics(db, objectiveId);
 
-    // Delete the log entry
-    await tx.delete(table.objectiveLog).where(eq(table.objectiveLog.id, lastLog.id));
-
-    // Update the objective's current value
-    const newValue = Math.max(0, targetObjective.value - lastLog.value);
-    await updateObjectiveValue(tx, objectiveId, newValue);
-
-    // Update all widget metrics for this objective
-    await updateObjectiveWidgetMetrics(tx, objectiveId);
-  });
-
-  return removedLog;
+  return lastLog;
 }

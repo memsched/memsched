@@ -2,12 +2,11 @@ import { drizzle } from 'drizzle-orm/libsql';
 import { drizzle as drizzleD1 } from 'drizzle-orm/d1';
 import { createClient } from '@libsql/client';
 import { env } from '$env/dynamic/private';
-import type { BaseSQLiteDatabase } from 'drizzle-orm/sqlite-core';
 
-export type DBType = BaseSQLiteDatabase<'async', any, any, any>;
+export type DBType = ReturnType<typeof getDB>;
 
 // Function to get database instance based on environment
-export function getDB(platform?: App.Platform): DBType {
+export function getDB(platform?: App.Platform) {
   // If we're on Cloudflare (has platform with DB binding)
   if (!import.meta.env.DEV && platform?.env?.DB) {
     return drizzleD1(platform.env.DB);

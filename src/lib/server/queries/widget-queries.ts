@@ -122,7 +122,7 @@ export async function createUserWidget(
   const widgetId = uuidv4();
 
   // Create the metrics to insert
-  const metricInserts = [];
+  const metricInserts: Omit<table.WidgetMetric, 'createdAt'>[] = [];
   for (let i = 0; i < widgetData.metrics.length; i++) {
     const metric = widgetData.metrics[i];
     const value = await computeMetricValue(
@@ -143,12 +143,13 @@ export async function createUserWidget(
     });
   }
 
-  const widgetInsert = {
+  const widgetInsert: Omit<table.Widget, 'createdAt'> = {
     id: widgetId,
     title: widgetData.title,
     subtitle: widgetData.subtitle,
     imageUrl: widgetData.imageUrl,
     imagePlacement: widgetData.imagePlacement,
+    textIcon: widgetData.textIcon,
 
     padding: widgetData.padding,
     border: widgetData.border,
@@ -201,7 +202,7 @@ export async function updateUserWidget(
   }
 
   // Create the metrics to insert
-  const metricInserts = [];
+  const metricInserts: Omit<table.WidgetMetric, 'createdAt'>[] = [];
   for (let i = 0; i < widgetData.metrics.length; i++) {
     const metric = widgetData.metrics[i];
     const value = await computeMetricValue(
@@ -222,11 +223,12 @@ export async function updateUserWidget(
     });
   }
 
-  const widgetUpdate = {
+  const widgetUpdate: Omit<table.Widget, 'id' | 'watermark' | 'userId' | 'createdAt'> = {
     title: widgetData.title,
     subtitle: widgetData.subtitle,
     imageUrl: widgetData.imageUrl,
     imagePlacement: widgetData.imagePlacement,
+    textIcon: widgetData.textIcon,
 
     padding: widgetData.padding,
     border: widgetData.border,

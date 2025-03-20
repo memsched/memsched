@@ -1,8 +1,10 @@
 import { eq, and, not } from 'drizzle-orm';
 import { v4 as uuidv4 } from 'uuid';
 import * as table from '$lib/server/db/schema';
-import type { ProviderId } from './oauth';
+import type { ProviderId } from '../oauth';
 import type { DBType } from '$lib/server/db';
+import type { FormSchema } from '$lib/components/forms/profile-form/schema';
+import type { z } from 'zod';
 
 // List of reserved usernames that cannot be used (route paths)
 export const RESERVED_USERNAMES = [
@@ -139,4 +141,29 @@ export async function getUserFromProviderUserId(
     .limit(1);
 
   return res.length > 0 ? res[0].user : null;
+}
+
+export async function getUserByUsername(db: DBType, username: string) {
+  const users = await db.select().from(table.user).where(eq(table.user.username, username));
+  if (users.length === 0) {
+    return null;
+  }
+  return users[0];
+}
+
+export async function updateUser(db: DBType, userId: string, userData: z.infer<FormSchema>) {
+  await db
+    .update(table.user)
+    .set({
+      username: userData.username,
+      name: userData.name,
+      bio: userData.bio || null,
+      location: userData.location || null,
+      website: userData.website || null,
+    })
+    .where(eq(table.user.id, userId));
+}
+
+export async function deleteUser(db: DBType, userId: string) {
+  await db.delete(table.user).where(eq(table.user.id, userId));
 }

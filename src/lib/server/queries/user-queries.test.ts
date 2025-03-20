@@ -1,8 +1,8 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { isUsernameValid, generateUniqueUsername, RESERVED_USERNAMES } from './user';
-import type { DBType } from './db';
-import * as table from './db/schema';
-import { getTestDB, getTestUsers } from './test-utils/test-context';
+import { isUsernameValid, generateUniqueUsername, RESERVED_USERNAMES } from './user-queries';
+import type { DBType } from '$lib/server/db';
+import * as table from '$lib/server/db/schema';
+import { getTestDB, getTestUsers } from '$lib/server/test-utils/test-context';
 
 describe('User functions', () => {
   let db: DBType;

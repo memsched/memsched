@@ -22,6 +22,14 @@ export async function getUserObjectives(db: DBType, userId: string) {
     .orderBy(desc(table.objective.createdAt));
 }
 
+export async function getUserPublicObjectives(db: DBType, userId: string) {
+  return await db
+    .select()
+    .from(table.objective)
+    .where(and(eq(table.objective.userId, userId), eq(table.objective.visibility, 'public')))
+    .orderBy(desc(table.objective.createdAt));
+}
+
 /**
  * Gets active objectives for a user (not archived, not completed if fixed)
  * @param db The database instance

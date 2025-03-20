@@ -1,7 +1,7 @@
 import type { PageServerLoad, Actions } from './$types';
 import { redirect, error } from '@sveltejs/kit';
-import { user } from '$lib/server/db/schema';
-import { eq } from 'drizzle-orm';
+import { deleteUser } from '$lib/server/queries';
+import { deleteSessionTokenCookie } from '$lib/server/session';
 import type { LocalUser } from '$lib/types';
 
 export const load: PageServerLoad = async (event) => {
@@ -29,8 +29,8 @@ export const actions: Actions = {
     }
 
     try {
-      await event.locals.db.delete(user).where(eq(user.id, userId));
-      event.cookies.delete('session_id', { path: '/' });
+      await deleteUser(event.locals.db, userId);
+      deleteSessionTokenCookie(event);
     } catch (err) {
       console.error('Error deleting account:', err);
       return error(500, 'Failed to delete account');

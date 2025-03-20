@@ -53,6 +53,23 @@ export async function getUserWidgets(db: DBType, userId: string, completed: bool
 }
 
 /**
+ * Gets public widget IDs for a user
+ * @param db The database instance
+ * @param userId The user ID
+ * @returns The public widget IDs
+ */
+export async function getUserPublicWidgetIds(db: DBType, userId: string) {
+  const widgets = await db
+    .select({ id: table.widget.id })
+    .from(table.widget)
+    .innerJoin(table.objective, eq(table.widget.objectiveId, table.objective.id))
+    .where(and(eq(table.widget.userId, userId), eq(table.objective.visibility, 'public')))
+    .orderBy(desc(table.widget.createdAt));
+
+  return widgets.map(({ id }) => id);
+}
+
+/**
  * Gets widgets from an objective ID
  * @param db The database instance
  * @param objectiveId The objective ID

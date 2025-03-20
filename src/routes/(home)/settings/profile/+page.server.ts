@@ -1,13 +1,11 @@
 import type { LocalUser } from '$lib/types';
 import type { PageServerLoad, Actions } from './$types';
 import { redirect, fail } from '@sveltejs/kit';
-import { user } from '$lib/server/db/schema';
-import { eq } from 'drizzle-orm';
-import { formSchema } from '$lib/components/forms/profile-form/schema';
 import { superValidate, message, setError } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { z } from 'zod';
-import { isUsernameValid } from '$lib/server/user';
+import { formSchema } from '$lib/components/forms/profile-form/schema';
+import { isUsernameValid, updateUser } from '$lib/server/queries';
 
 export const load: PageServerLoad = async (event) => {
   if (!event.locals.session) {
@@ -61,16 +59,7 @@ export const actions: Actions = {
     }
 
     try {
-      await event.locals.db
-        .update(user)
-        .set({
-          username: form.data.username,
-          name: form.data.name,
-          bio: form.data.bio || null,
-          location: form.data.location || null,
-          website: form.data.website || null,
-        })
-        .where(eq(user.id, currentUser.id));
+      await updateUser(event.locals.db, currentUser.id, form.data);
 
       return message(form, 'Profile updated successfully.');
     } catch (error) {

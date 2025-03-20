@@ -1,5 +1,5 @@
 import { google } from '$lib/server/oauth';
-import { createUser, getUserFromProviderUserId } from '$lib/server/user';
+import { createUser, getUserFromProviderUserId } from '$lib/server/queries';
 import { createSession, generateSessionToken, setSessionTokenCookie } from '$lib/server/session';
 import { decodeIdToken, type OAuth2Tokens } from 'arctic';
 import type { RequestEvent } from './$types';

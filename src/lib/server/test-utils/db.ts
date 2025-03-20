@@ -36,7 +36,7 @@ export async function setupTestDB(): Promise<DBType> {
   // Run migrations
   await migrate(db, { migrationsFolder: MIGRATIONS_PATH });
 
-  return db;
+  return db as unknown as DBType;
 }
 
 /**

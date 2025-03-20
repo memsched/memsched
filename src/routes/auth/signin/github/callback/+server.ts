@@ -1,5 +1,5 @@
 import { github } from '$lib/server/oauth';
-import { createUser, getUserFromProviderUserId } from '$lib/server/user';
+import { createUser, getUserFromProviderUserId } from '$lib/server/queries';
 import { createSession, generateSessionToken, setSessionTokenCookie } from '$lib/server/session';
 import { error } from '@sveltejs/kit';
 import { oauthLimiter } from '$lib/server/rate-limiter';

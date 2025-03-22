@@ -321,25 +321,26 @@
   </section>
 
   <!-- CTA section -->
-  <section
-    id="cta"
-    class="main-container flex justify-between gap-10 max-md:flex-col max-md:items-center max-md:text-center"
-  >
-    <div>
-      <h2 class="mb-2 text-3xl font-bold">Ready to showcase your learning journey?</h2>
-      <p class="mx-auto max-w-2xl text-lg">
-        Join thousands of learners who are tracking their progress and sharing their achievements
-        with the world.
-      </p>
-    </div>
-    <div class="relative">
-      <Button size="cta" href="/auth/signin" data-umami-event="cta-get-started-button"
-        >Get Started for Free</Button
-      >
-      <Arrow class="absolute left-[-85%] top-[-85%] -z-10 rotate-180" />
-      <p class="mt-2 text-sm text-muted-foreground">
-        No credit card required. Free plan available.
-      </p>
+  <section id="cta" class="bg-primary/10 text-primary">
+    <div
+      class="main-container flex justify-between gap-10 max-md:flex-col max-md:items-center max-md:text-center"
+    >
+      <div>
+        <h2 class="mb-2 text-3xl font-bold">Ready to showcase your learning journey?</h2>
+        <p class="mx-auto max-w-2xl text-lg">
+          Join thousands of learners who are tracking their progress and sharing their achievements
+          with the world.
+        </p>
+      </div>
+      <div class="relative">
+        <Button size="cta" href="/auth/signin" data-umami-event="cta-get-started-button"
+          >Get Started for Free</Button
+        >
+        <Arrow class="absolute left-[-85%] top-[-85%] -z-10 rotate-180" />
+        <p class="mt-2 text-sm text-muted-foreground">
+          No credit card required. Free plan available.
+        </p>
+      </div>
     </div>
   </section>
 </HomeLayout>

@@ -10,6 +10,7 @@
   import { mockWidgets } from '$lib/widgets';
   import * as Card from '$lib/components/ui/card';
   import { HEADER_HEIGHT } from '$lib/constants';
+  import Path from '$lib/components/svgs/Path.svelte';
 </script>
 
 <HomeLayout container={false} class="*:py-20">
@@ -46,8 +47,12 @@
         </p>
       </div>
 
-      <div class="grid grid-cols-1 gap-12 md:grid-cols-3">
-        <div class="flex justify-center gap-6">
+      <div
+        class="relative grid w-full grid-cols-1 justify-center gap-12 py-8 max-lg:px-16 lg:grid-cols-3"
+      >
+        <Path class="absolute left-[21%] top-[-15%] -translate-x-1/2 max-lg:hidden" />
+        <Path class="absolute bottom-0 right-[18%] -translate-x-1/2 rotate-180 max-lg:hidden" />
+        <div class="flex justify-start gap-6">
           <div
             class="mt-1 inline-flex size-8 flex-shrink-0 items-center justify-center rounded-full bg-zinc-300 text-lg font-bold"
           >
@@ -71,7 +76,7 @@
           </div>
         </div>
 
-        <div class="flex justify-center gap-6">
+        <div class="flex justify-start gap-6">
           <div
             class="mt-1 inline-flex size-8 flex-shrink-0 items-center justify-center rounded-full bg-zinc-300 text-lg font-bold"
           >
@@ -86,7 +91,7 @@
           </div>
         </div>
 
-        <div class="flex justify-center gap-6">
+        <div class="flex justify-start gap-6">
           <div
             class="mt-1 inline-flex size-8 flex-shrink-0 items-center justify-center rounded-full bg-zinc-300 text-lg font-bold"
           >

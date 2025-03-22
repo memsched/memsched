@@ -1,16 +1,33 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
   import Arrow from '$lib/components/svgs/Arrow.svelte';
   import { Badge } from '$lib/components/ui/badge';
   import { Button } from '$lib/components/ui/button';
   import { Icon } from 'svelte-icons-pack';
   import HomeLayout from '$lib/components/layouts/HomeLayout.svelte';
-  import { IoArrowForward, IoBook, IoCube, IoGlobe, IoPersonCircle } from 'svelte-icons-pack/io';
+  import { IoArrowForward, IoCube, IoGlobe, IoPersonCircle } from 'svelte-icons-pack/io';
   import IconButton from '$lib/components/ui/IconButton.svelte';
   import WidgetCarousel from '$lib/components/WidgetCarousel.svelte';
   import { mockWidgets } from '$lib/widgets';
   import * as Card from '$lib/components/ui/card';
   import { HEADER_HEIGHT } from '$lib/constants';
   import Path from '$lib/components/svgs/Path.svelte';
+  import Widget from '$lib/components/Widget.svelte';
+  import { FLAT_COLOR_ICONS } from '$lib/icons';
+
+  const codeSnippet = `
+<img src="https://memsched.com/api/widgets/learning-progress?svg" />`;
+
+  let liveIncrement = $state(0);
+
+  onMount(() => {
+    setInterval(
+      () => {
+        liveIncrement++;
+      },
+      Math.floor(Math.random() * 2000) + 500
+    ); // Random interval between 1-4 seconds
+  });
 </script>
 
 <HomeLayout container={false} class="*:py-20">
@@ -40,8 +57,8 @@
   <!-- How it works section -->
   <section id="how-it-works" class="border-y bg-background">
     <div class="container mx-auto px-4">
-      <div class="mb-16 text-center">
-        <h2 class="h2">How It Works</h2>
+      <div class="mb-16 flex flex-col items-center text-center">
+        <h2 class="h2 mb-3 w-fit border-b-2 border-dashed border-primary pb-1">How It Works</h2>
         <p class="text-lg text-muted-foreground">
           Three simple steps to showcase your learning journey
         </p>
@@ -109,148 +126,65 @@
     </div>
   </section>
 
-  <!-- Use cases section -->
-  <section id="use-cases">
-    <div class="container mx-auto max-w-7xl px-4">
-      <div class="mb-10 text-center">
-        <h2 class="h2">Perfect For</h2>
-        <p class="text-lg text-muted-foreground">
-          See how different people are using memsched to showcase their learning journey
-        </p>
+  <!-- Your Website section -->
+  <section id="your-website" class="main-container mx-auto px-4">
+    <div class="mb-10 flex flex-col items-center text-center">
+      <h2 class="h2 mb-3 w-fit border-b-2 border-dashed border-green-500 pb-1">
+        <span class="me-1 font-bold text-green-500">Live</span>
+
+        On <span class="me-1 font-bold italic">Your</span> Website
+      </h2>
+      <p class="text-lg text-muted-foreground">
+        Beautiful widgets that seamlessly integrate with your website or portfolio
+      </p>
+    </div>
+
+    <div class="flex flex-col items-center gap-8">
+      <div class="relative">
+        <div class="absolute right-0 top-0 flex items-center justify-center">
+          <div class="absolute size-5 rounded-full bg-green-500"></div>
+          <div class="absolute size-5 animate-ping rounded-full bg-green-500"></div>
+        </div>
+        <Widget
+          title="Learning Progress"
+          subtitle="Hours invested in learning"
+          imageUrl={FLAT_COLOR_ICONS.graduation_cap}
+          imagePlacement="left"
+          textIcon={null}
+          metrics={[
+            {
+              name: 'this month',
+              value: 85 + liveIncrement,
+              calculationType: 'hour',
+              valueDecimalPrecision: 0,
+              order: 1,
+            },
+            {
+              name: 'total hours',
+              value: 450 + liveIncrement,
+              calculationType: 'hour',
+              valueDecimalPrecision: 0,
+              order: 2,
+            },
+          ]}
+          padding={13}
+          border={true}
+          borderWidth={1}
+          borderRadius={6}
+          color="#000000"
+          accentColor="#4f8bce"
+          backgroundColor="#ffffff"
+          watermark={false}
+        />
       </div>
 
-      <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-        <Card.Root
-          class="group overflow-hidden border border-border/50 transition-all duration-300 hover:border-primary/20 hover:shadow-md hover:shadow-primary/5"
-        >
-          <Card.Header class="pb-2">
-            <div class="mb-1 flex items-center gap-3">
-              <div
-                class="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100 text-blue-600"
-              >
-                <Icon src={IoPersonCircle} className="size-6" />
-              </div>
-              <Card.Title class="text-xl transition-colors group-hover:text-primary"
-                >Developers</Card.Title
-              >
-            </div>
-          </Card.Header>
-          <Card.Content class="py-2 text-sm text-muted-foreground">
-            Showcase your coding progress, track languages you're learning, and display your metrics
-            on your GitHub profile.
-          </Card.Content>
-          <Card.Footer class="pt-3">
-            <Button
-              variant="outline"
-              size="sm"
-              class="w-full justify-between transition-all group-hover:bg-primary group-hover:text-white"
-              href="/auth/signin"
-              data-umami-event="use-cases-coding-journey-button"
-            >
-              Start coding journey
-              <Icon src={IoArrowForward} className="size-4" />
-            </Button>
-          </Card.Footer>
-        </Card.Root>
-
-        <Card.Root
-          class="group overflow-hidden border border-border/50 transition-all duration-300 hover:border-primary/20 hover:shadow-md hover:shadow-primary/5"
-        >
-          <Card.Header class="pb-2">
-            <div class="mb-1 flex items-center gap-3">
-              <div
-                class="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-amber-100 text-amber-600"
-              >
-                <Icon src={IoBook} className="size-6" />
-              </div>
-              <Card.Title class="text-xl transition-colors group-hover:text-primary"
-                >Students</Card.Title
-              >
-            </div>
-          </Card.Header>
-          <Card.Content class="py-2 text-sm text-muted-foreground">
-            Keep track of courses completed, skills acquired, and study hours. Share your academic
-            progress on your portfolio.
-          </Card.Content>
-          <Card.Footer class="pt-3">
-            <Button
-              variant="outline"
-              size="sm"
-              class="w-full justify-between transition-all group-hover:bg-primary group-hover:text-white"
-              href="/auth/signin"
-              data-umami-event="use-cases-track-studies-button"
-            >
-              Track your studies
-              <Icon src={IoArrowForward} className="size-4" />
-            </Button>
-          </Card.Footer>
-        </Card.Root>
-
-        <Card.Root
-          class="group overflow-hidden border border-border/50 transition-all duration-300 hover:border-primary/20 hover:shadow-md hover:shadow-primary/5"
-        >
-          <Card.Header class="pb-2">
-            <div class="mb-1 flex items-center gap-3">
-              <div
-                class="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-green-100 text-green-600"
-              >
-                <Icon src={IoGlobe} className="size-6" />
-              </div>
-              <Card.Title class="text-xl transition-colors group-hover:text-primary"
-                >Language Learners</Card.Title
-              >
-            </div>
-          </Card.Header>
-          <Card.Content class="py-2 text-sm text-muted-foreground">
-            Monitor vocabulary growth, practice time, and fluency improvements. Share your language
-            learning journey.
-          </Card.Content>
-          <Card.Footer class="pt-3">
-            <Button
-              variant="outline"
-              size="sm"
-              class="w-full justify-between transition-all group-hover:bg-primary group-hover:text-white"
-              href="/auth/signin"
-              data-umami-event="use-cases-learn-languages-button"
-            >
-              Learn languages
-              <Icon src={IoArrowForward} className="size-4" />
-            </Button>
-          </Card.Footer>
-        </Card.Root>
-
-        <Card.Root
-          class="group overflow-hidden border border-border/50 transition-all duration-300 hover:border-primary/20 hover:shadow-md hover:shadow-primary/5"
-        >
-          <Card.Header class="pb-2">
-            <div class="mb-1 flex items-center gap-3">
-              <div
-                class="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-purple-100 text-purple-600"
-              >
-                <Icon src={IoCube} className="size-6" />
-              </div>
-              <Card.Title class="text-xl transition-colors group-hover:text-primary"
-                >Content Creators</Card.Title
-              >
-            </div>
-          </Card.Header>
-          <Card.Content class="py-2 text-sm text-muted-foreground">
-            Track your content output, audience growth, and engagement metrics. Embed your progress
-            on your website.
-          </Card.Content>
-          <Card.Footer class="pt-3">
-            <Button
-              variant="outline"
-              size="sm"
-              class="w-full justify-between transition-all group-hover:bg-primary group-hover:text-white"
-              href="/auth/signin"
-              data-umami-event="use-cases-grow-audience-button"
-            >
-              Grow your audience
-              <Icon src={IoArrowForward} className="size-4" />
-            </Button>
-          </Card.Footer>
-        </Card.Root>
+      <div class="flex flex-col items-center gap-4">
+        <p class="text-center text-lg">
+          Embed widgets like this one on your website with a single line of code
+        </p>
+        <pre class="w-full rounded-lg border bg-zinc-800 px-4 font-mono text-sm text-white">
+          <code>{codeSnippet}</code>
+        </pre>
       </div>
     </div>
   </section>
@@ -258,8 +192,10 @@
   <!-- Testimonials (placeholder) -->
   <section id="testimonials" class="border-y bg-background">
     <div class="main-container mx-auto px-4">
-      <div class="mb-16 text-center">
-        <h2 class="h2">What Our Users Say</h2>
+      <div class="mb-16 flex flex-col items-center text-center">
+        <h2 class="h2 mb-3 w-fit border-b-2 border-dashed border-primary pb-1">
+          What Our Users Say
+        </h2>
         <p class="text-lg text-muted-foreground">
           Join the community of learners tracking their journey
         </p>

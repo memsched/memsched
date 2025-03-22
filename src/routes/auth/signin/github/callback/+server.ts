@@ -1,12 +1,11 @@
 import { github } from '$lib/server/oauth';
-import { createUser, getUserFromProviderUserId } from '$lib/server/queries';
 import { createSession, generateSessionToken, setSessionTokenCookie } from '$lib/server/session';
 import { error } from '@sveltejs/kit';
 import { oauthLimiter } from '$lib/server/rate-limiter';
 import type { OAuth2Tokens } from 'arctic';
 import type { RequestEvent } from './$types';
 import { getUserOverviewUrl } from '$lib/api';
-import { sanitizeUsername } from '$lib/server/utils';
+import { sanitizeUsername, handleDbError } from '$lib/server/utils';
 
 interface IGithubUser {
   id: number;
@@ -90,7 +89,13 @@ export async function GET(event: RequestEvent): Promise<Response> {
   const name = githubUser.name;
   const avatarUrl = githubUser.avatar_url;
 
-  const existingUser = await getUserFromProviderUserId(event.locals.db, githubUserId.toString());
+  const existingUserResult = await event.locals.usersService.getUserFromProviderUserId(
+    githubUserId.toString()
+  );
+  if (existingUserResult.isErr()) {
+    return handleDbError(existingUserResult);
+  }
+  const existingUser = existingUserResult.value;
   if (existingUser !== null) {
     const sessionToken = generateSessionToken();
     const session = await createSession(event.locals.db, sessionToken, existingUser.id);
@@ -156,12 +161,16 @@ export async function GET(event: RequestEvent): Promise<Response> {
     });
   }
 
-  const user = await createUser(event.locals.db, 'github', githubUserId.toString(), {
+  const userResult = await event.locals.usersService.createUser('github', githubUserId.toString(), {
     email,
     username,
     name,
     avatarUrl,
   });
+  if (userResult.isErr()) {
+    return handleDbError(userResult);
+  }
+  const user = userResult.value;
   const sessionToken = generateSessionToken();
   const session = await createSession(event.locals.db, sessionToken, user.id);
   setSessionTokenCookie(event, sessionToken, session.expiresAt);

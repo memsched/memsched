@@ -1,19 +1,28 @@
+import { handleDbError } from '$lib/server/utils';
+import { ResultAsync, okAsync } from 'neverthrow';
 import type { PageServerLoad } from './$types';
-import { error } from '@sveltejs/kit';
-import {
-  getUserByUsername,
-  getUserPublicWidgetIds,
-  getUserPublicObjectives,
-} from '$lib/server/queries';
 
 export const load: PageServerLoad = async (event) => {
-  const user = await getUserByUsername(event.locals.db, event.params.username);
-  if (!user) {
-    return error(404, 'User not found');
+  const userResult = await event.locals.usersService.getUserByUsername(event.params.username);
+  if (userResult.isErr()) {
+    return handleDbError(userResult);
+  }
+  const user = userResult.value;
+
+  const result = await event.locals.widgetsService
+    .getUserPublicWidgetIds(user.id)
+    .andThen((publicWidgetIds) =>
+      ResultAsync.combine([
+        okAsync(publicWidgetIds),
+        event.locals.objectivesService.getUserPublicObjectives(user.id),
+      ])
+    );
+
+  if (result.isErr()) {
+    return handleDbError(result);
   }
 
-  const publicWidgetIds = await getUserPublicWidgetIds(event.locals.db, user.id);
-  const publicObjectives = await getUserPublicObjectives(event.locals.db, user.id);
+  const [publicWidgetIds, publicObjectives] = result.value;
 
   return {
     publicUser: {

@@ -10,6 +10,13 @@ import type {
   CfProperties,
   ExecutionContext,
 } from '@cloudflare/workers-types';
+import type {
+  UsersService,
+  ObjectivesService,
+  ObjectiveLogsService,
+  WidgetsService,
+  MetricsService,
+} from '$lib/server/services';
 
 declare global {
   namespace App {
@@ -18,6 +25,11 @@ declare global {
       session: Session | null;
       db: DBType;
       cache: CacheService;
+      usersService: UsersService;
+      objectivesService: ObjectivesService;
+      objectiveLogsService: ObjectiveLogsService;
+      widgetsService: WidgetsService;
+      metricsService: MetricsService;
     }
     interface Platform {
       env: {

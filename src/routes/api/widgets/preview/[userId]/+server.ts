@@ -4,8 +4,7 @@ import { type WidgetJoinMetricsPreview } from '$lib/server/db/schema';
 import { formSchema } from '$lib/components/forms/widget-form/schema';
 import Widget from '$lib/components/Widget.svelte';
 import { renderWidget } from '$lib/server/svg';
-import { getUserObjective } from '$lib/server/queries';
-import { computeMetricValue } from '$lib/server/queries/metric-queries';
+import { handleDbError } from '$lib/server/utils';
 
 export const GET: RequestHandler = async (event) => {
   if (!event.locals.session || event.params.userId !== event.locals.session.userId) {
@@ -24,37 +23,33 @@ export const GET: RequestHandler = async (event) => {
     return error(400, 'Invalid widget config');
   }
 
-  const objective = await getUserObjective(
-    event.locals.db,
+  const objective = await event.locals.objectivesService.getUserObjective(
     config.objectiveId,
     event.locals.session.userId
   );
-  if (!objective) {
-    return error(404, 'Objective not found');
+  if (objective.isErr()) {
+    return handleDbError(objective);
   }
 
   // Calculate metric values using proper calculation method
-  const metricsWithValues = await Promise.all(
-    config.metrics.map(async (metric, i) => {
-      const value = await computeMetricValue(
-        event.locals.db,
-        objective.id,
-        metric.calculationType,
-        metric.valueDecimalPrecision
-      );
-
-      return {
-        ...metric,
-        order: i + 1,
-        value,
-      };
-    })
+  const metricValuesResult = await event.locals.metricsService.computePreviewMetricValues(
+    objective.value.id,
+    config.metrics
   );
+  if (metricValuesResult.isErr()) {
+    return handleDbError(metricValuesResult);
+  }
+
+  const metricsValues = metricValuesResult.value.map((metric, i) => ({
+    ...config.metrics[i],
+    order: i + 1,
+    value: metric,
+  }));
 
   // TODO: Sanitize imageUrl
   const props = {
     ...config,
-    metrics: metricsWithValues,
+    metrics: metricsValues,
   };
 
   return renderWidget<WidgetJoinMetricsPreview>(event, Widget, props, true);

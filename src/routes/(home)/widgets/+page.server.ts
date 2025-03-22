@@ -1,25 +1,36 @@
 import type { PageServerLoad } from './$types';
-import { getUserWidgets, getUserWidgetCount } from '$lib/server/queries';
 import { MAX_WIDGETS_PER_USER } from '$lib/server/constants';
+import { ResultAsync } from 'neverthrow';
+import { okAsync } from 'neverthrow';
 
 export const load: PageServerLoad = async (event) => {
-  if (!event.locals.session) {
+  const session = event.locals.session;
+  if (!session) {
     return {
       widgets: [],
     };
   }
 
   const isCompleted = event.url.searchParams.get('completed') !== null;
-  const widgetIds = await getUserWidgets(event.locals.db, event.locals.session.userId, isCompleted);
-
-  // Check if user has reached the widget limit
-  const widgetCount = await getUserWidgetCount(event.locals.db, event.locals.session.userId);
-  const widgetsLimitReached = widgetCount >= MAX_WIDGETS_PER_USER && !event.locals.user?.admin;
+  const res = await event.locals.widgetsService
+    .getUserWidgets(session.userId, isCompleted)
+    .andThen((widgetsIds) => {
+      return ResultAsync.combine([
+        okAsync(widgetsIds),
+        event.locals.widgetsService.getUserWidgetCount(session.userId),
+      ]);
+    });
+  if (res.isErr()) {
+    return {
+      widgets: [],
+    };
+  }
+  const [widgetIds, widgetCount] = res.value;
 
   return {
     widgets: widgetIds.map((w) => w.id),
     isCompleted,
-    widgetsLimitReached,
+    widgetsLimitReached: widgetCount >= MAX_WIDGETS_PER_USER && !event.locals.user?.admin,
     maxWidgets: MAX_WIDGETS_PER_USER,
   };
 };

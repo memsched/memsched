@@ -4,8 +4,8 @@ import { message, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { formSchema, type FormSchema } from '$lib/components/forms/widget-form/schema';
 import type { z } from 'zod';
-import { getWidgetWithMetrics, updateUserWidget } from '$lib/server/queries';
 import type { LocalUser } from '$lib/types';
+import { handleDbError, handleFormDbError } from '$lib/server/utils';
 
 export const load: PageServerLoad = async (event) => {
   if (!event.locals.session) {
@@ -13,10 +13,14 @@ export const load: PageServerLoad = async (event) => {
   }
 
   const widgetId = event.params.id;
-  const widget = await getWidgetWithMetrics(event.locals.db, widgetId);
-  if (!widget || widget.userId !== event.locals.session.userId) {
-    return error(404, 'Widget not found');
+  const widgetResult = await event.locals.widgetsService.getWidgetWithMetrics(
+    widgetId,
+    event.locals.session.userId
+  );
+  if (widgetResult.isErr()) {
+    return handleDbError(widgetResult);
   }
+  const widget = widgetResult.value;
 
   const form = await superValidate(zod(formSchema));
   form.data = {
@@ -67,14 +71,16 @@ export const actions: Actions = {
     const widgetId = event.params.id;
     const userId = event.locals.session.userId;
 
-    try {
-      await updateUserWidget(event.locals.db, widgetId, form.data, userId, event.locals.cache);
-      return message(form, 'Widget successfully updated!');
-    } catch (err) {
-      if (err instanceof Error) {
-        return error(404, err.message);
-      }
-      throw err;
+    const result = await event.locals.widgetsService.updateUserWidget(
+      widgetId,
+      form.data,
+      userId,
+      event.locals.cache
+    );
+    if (result.isErr()) {
+      return handleFormDbError(result, form);
     }
+
+    return message(form, 'Widget successfully updated!');
   },
 };

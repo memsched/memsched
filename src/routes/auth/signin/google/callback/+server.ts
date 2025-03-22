@@ -1,10 +1,9 @@
 import { google } from '$lib/server/oauth';
-import { createUser, getUserFromProviderUserId } from '$lib/server/queries';
 import { createSession, generateSessionToken, setSessionTokenCookie } from '$lib/server/session';
 import { decodeIdToken, type OAuth2Tokens } from 'arctic';
 import type { RequestEvent } from './$types';
 import { getUserOverviewUrl } from '$lib/api';
-import { sanitizeUsername } from '$lib/server/utils';
+import { handleDbError, sanitizeUsername } from '$lib/server/utils';
 import { error } from '@sveltejs/kit';
 import { oauthLimiter } from '$lib/server/rate-limiter';
 
@@ -64,7 +63,13 @@ export async function GET(event: RequestEvent): Promise<Response> {
   const email = claims.email;
 
   try {
-    const existingUser = await getUserFromProviderUserId(event.locals.db, googleId);
+    const existingUserResult = await event.locals.usersService.getUserFromProviderUserId(googleId);
+    if (existingUserResult.isErr()) {
+      return handleDbError(existingUserResult);
+    }
+
+    const existingUser = existingUserResult.value;
+
     if (existingUser !== null) {
       const sessionToken = generateSessionToken();
       const session = await createSession(event.locals.db, sessionToken, existingUser.id);
@@ -77,12 +82,16 @@ export async function GET(event: RequestEvent): Promise<Response> {
       });
     }
 
-    const user = await createUser(event.locals.db, 'google', googleId, {
+    const userResult = await event.locals.usersService.createUser('google', googleId, {
       email,
       username,
       name,
       avatarUrl,
     });
+    if (userResult.isErr()) {
+      return handleDbError(userResult);
+    }
+    const user = userResult.value;
     const sessionToken = generateSessionToken();
     const session = await createSession(event.locals.db, sessionToken, user.id);
     setSessionTokenCookie(event, sessionToken, session.expiresAt);

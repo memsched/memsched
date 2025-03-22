@@ -1,8 +1,8 @@
 import type { PageServerLoad, Actions } from './$types';
 import { redirect, error } from '@sveltejs/kit';
-import { deleteUser } from '$lib/server/queries';
 import { deleteSessionTokenCookie } from '$lib/server/session';
 import type { LocalUser } from '$lib/types';
+import { handleDbError } from '$lib/server/utils';
 
 export const load: PageServerLoad = async (event) => {
   if (!event.locals.session) {
@@ -28,14 +28,12 @@ export const actions: Actions = {
       return error(403, 'Forbidden');
     }
 
-    try {
-      await deleteUser(event.locals.db, userId);
-      deleteSessionTokenCookie(event);
-    } catch (err) {
-      console.error('Error deleting account:', err);
-      return error(500, 'Failed to delete account');
+    const result = await event.locals.usersService.deleteUser(userId);
+    if (result.isErr()) {
+      return handleDbError(result);
     }
 
+    deleteSessionTokenCookie(event);
     return redirect(302, '/auth/signin');
   },
 };

@@ -1,5 +1,4 @@
 import type { LayoutServerLoad } from './$types';
-import { getUserObjectives } from '$lib/server/queries';
 
 export const load: LayoutServerLoad = async (event) => {
   if (!event.locals.session) {
@@ -8,7 +7,16 @@ export const load: LayoutServerLoad = async (event) => {
     };
   }
 
+  const objectives = await event.locals.objectivesService.getUserObjectives(
+    event.locals.session.userId
+  );
+  if (objectives.isErr()) {
+    return {
+      objectives: [],
+    };
+  }
+
   return {
-    objectives: await getUserObjectives(event.locals.db, event.locals.session.userId),
+    objectives: objectives.value,
   };
 };

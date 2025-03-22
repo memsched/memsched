@@ -1,5 +1,9 @@
-import type { WidgetJoinMetrics } from './db/schema';
 import crypto from 'crypto';
+import { error, fail } from '@sveltejs/kit';
+import type { Err } from 'neverthrow';
+import type { WidgetJoinMetrics } from './db/schema';
+import { DrizzleRecordNotFoundErrorCause, type DrizzleError } from './db/types';
+import type { SuperValidated } from 'sveltekit-superforms/client';
 
 export function sanitizeUsername(username: string): string {
   return username
@@ -48,4 +52,20 @@ export function generateWidgetEtag(widget: WidgetJoinMetrics): string {
 
   // Use crypto to create a hash
   return crypto.createHash('sha256').update(widgetData).digest('hex');
+}
+
+export function handleDbError(result: Err<any, DrizzleError>) {
+  if (result.error instanceof DrizzleRecordNotFoundErrorCause) {
+    return error(404, result.error.message);
+  }
+  console.error(result.error);
+  return error(500, 'Something went wrong');
+}
+
+export function handleFormDbError(result: Err<any, DrizzleError>, form: SuperValidated<any, any>) {
+  if (result.error instanceof DrizzleRecordNotFoundErrorCause) {
+    return fail(404, { form, error: result.error.message });
+  }
+  console.error(result.error);
+  return fail(500, { form, error: 'Something went wrong' });
 }

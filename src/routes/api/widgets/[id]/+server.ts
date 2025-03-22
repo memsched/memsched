@@ -2,9 +2,9 @@ import type { RequestHandler } from './$types';
 import { type WidgetJoinMetrics } from '$lib/server/db/schema';
 import Widget from '$lib/components/Widget.svelte';
 import { error } from '@sveltejs/kit';
-import { getObjectiveFromWidgetId, getWidgetWithMetrics } from '$lib/server/queries';
 import { renderWidget } from '$lib/server/svg';
 import { generateWidgetEtag } from '$lib/server/utils';
+import { handleDbError } from '$lib/server/utils';
 
 export const GET: RequestHandler = async (event) => {
   const widgetId = event.params.id;
@@ -32,10 +32,11 @@ export const GET: RequestHandler = async (event) => {
   }
 
   // Get the widget data
-  const widget = await getWidgetWithMetrics(event.locals.db, widgetId);
-  if (!widget) {
-    return error(404, 'Widget not found');
+  const widgetResult = await event.locals.widgetsService.getWidgetWithMetrics(widgetId);
+  if (widgetResult.isErr()) {
+    return handleDbError(widgetResult);
   }
+  const widget = widgetResult.value;
 
   // Generate a new etag based on widget data
   const newEtag = generateWidgetEtag(widget);
@@ -53,11 +54,11 @@ export const GET: RequestHandler = async (event) => {
     });
   }
 
-  const objective = await getObjectiveFromWidgetId(event.locals.db, widget.id);
-  if (!objective) {
-    // TODO: Assert this instead as we should never get here (already checked above)
-    return error(404, 'Widget not found');
+  const objectiveResult = await event.locals.objectivesService.getObjectiveFromWidgetId(widget.id);
+  if (objectiveResult.isErr()) {
+    return handleDbError(objectiveResult);
   }
+  const objective = objectiveResult.value;
 
   if (objective.visibility !== 'public' && event.locals.session?.userId !== objective.userId) {
     return error(401, 'Unauthorized');

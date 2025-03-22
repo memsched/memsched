@@ -2,18 +2,9 @@ import type { PageServerLoad, Actions } from './$types';
 import { fail, redirect } from '@sveltejs/kit';
 import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
-import {
-  getUserActiveObjectives,
-  getUserCompletedObjectives,
-  getUserArchivedObjectives,
-  toggleArchivedObjective,
-  logObjectiveProgress,
-  undoObjectiveLog,
-  getUserWidgetCount,
-} from '$lib/server/queries';
 import { logSchema } from '$lib/components/forms/objective-log-form/schema';
-import * as schema from '$lib/server/db/schema';
 import { MAX_WIDGETS_PER_USER, MAX_OBJECTIVES_PER_USER } from '$lib/server/constants';
+import { handleDbError } from '$lib/server/utils';
 
 export const load: PageServerLoad = async (event) => {
   if (!event.locals.session) {
@@ -29,24 +20,42 @@ export const load: PageServerLoad = async (event) => {
   const isArchived = event.url.searchParams.get('archived') !== null;
   const isCompleted = event.url.searchParams.get('completed') !== null;
 
-  let objectives;
+  let objectivesResult;
 
   if (isCompleted) {
-    objectives = await getUserCompletedObjectives(event.locals.db, event.locals.session.userId);
+    objectivesResult = await event.locals.objectivesService.getUserCompletedObjectives(
+      event.locals.session.userId
+    );
   } else if (isArchived) {
-    objectives = await getUserArchivedObjectives(event.locals.db, event.locals.session.userId);
+    objectivesResult = await event.locals.objectivesService.getUserArchivedObjectives(
+      event.locals.session.userId
+    );
   } else {
-    objectives = await getUserActiveObjectives(event.locals.db, event.locals.session.userId);
+    objectivesResult = await event.locals.objectivesService.getUserActiveObjectives(
+      event.locals.session.userId
+    );
   }
 
+  if (objectivesResult.isErr()) {
+    return handleDbError(objectivesResult);
+  }
+
+  const objectives = objectivesResult.value;
+
   // Check if user has reached the widget limit
-  const widgetCount = await getUserWidgetCount(event.locals.db, event.locals.session.userId);
-  const widgetsLimitReached = widgetCount >= MAX_WIDGETS_PER_USER && !event.locals.user?.admin;
+  const widgetCountResult = await event.locals.widgetsService.getUserWidgetCount(
+    event.locals.session.userId
+  );
+  if (widgetCountResult.isErr()) {
+    return handleDbError(widgetCountResult);
+  }
+
+  const widgetsLimitReached =
+    widgetCountResult.value >= MAX_WIDGETS_PER_USER && !event.locals.user?.admin;
 
   // Check if user has reached the objectives limit
-  const objectivesCount = objectives.length;
   const objectivesLimitReached =
-    objectivesCount >= MAX_OBJECTIVES_PER_USER && !event.locals.user?.admin;
+    objectives.length >= MAX_OBJECTIVES_PER_USER && !event.locals.user?.admin;
 
   return {
     objectives,
@@ -73,33 +82,23 @@ export const actions: Actions = {
       return fail(400, { form });
     }
 
-    try {
-      const updatedObjective = (await logObjectiveProgress(
-        event.locals.db,
-        form.data,
-        userId,
-        event.locals.cache
-      )) as typeof schema.objective.$inferSelect | null;
+    const result = await event.locals.objectiveLogsService.logObjectiveProgress(
+      form.data,
+      userId,
+      event.locals.cache
+    );
 
-      if (!updatedObjective) {
-        return fail(404, {
-          form,
-          error: 'Objective not found',
-        });
-      }
-
-      return {
-        form,
-        success: true,
-        message: `Added ${form.data.value} ${updatedObjective.unit}`,
-      };
-    } catch (error) {
-      console.error('Error logging objective progress:', error);
-      return fail(500, {
-        form,
-        error: 'Failed to log progress',
-      });
+    if (result.isErr()) {
+      return handleDbError(result);
     }
+
+    const updatedObjective = result.value[0];
+
+    return {
+      form,
+      success: true,
+      message: `Added ${form.data.value} ${updatedObjective.unit}`,
+    };
   },
 
   undoLog: async (event) => {
@@ -115,26 +114,22 @@ export const actions: Actions = {
       return fail(400, { error: 'Objective ID is required' });
     }
 
-    try {
-      const removedLog = (await undoObjectiveLog(
-        event.locals.db,
-        objectiveId,
-        userId,
-        event.locals.cache
-      )) as typeof schema.objectiveLog.$inferSelect | null;
+    const result = await event.locals.objectiveLogsService.undoObjectiveLog(
+      objectiveId,
+      userId,
+      event.locals.cache
+    );
 
-      if (!removedLog) {
-        return fail(404, { error: 'No logs found to undo' });
-      }
-
-      return {
-        success: true,
-        message: `Undid log of ${removedLog.value}`,
-      };
-    } catch (error) {
-      console.error('Error undoing objective log:', error);
-      return fail(500, { error: 'Failed to undo log' });
+    if (result.isErr()) {
+      return handleDbError(result);
     }
+
+    const removedLog = result.value[1];
+
+    return {
+      success: true,
+      message: `Undid log of ${removedLog.value}`,
+    };
   },
 
   toggleArchive: async (event) => {
@@ -150,16 +145,18 @@ export const actions: Actions = {
       return fail(400, { error: 'Objective ID is required' });
     }
 
-    try {
-      await toggleArchivedObjective(event.locals.db, objectiveId, event.locals.session.userId);
+    const result = await event.locals.objectivesService.toggleArchivedObjective(
+      objectiveId,
+      event.locals.session.userId
+    );
 
-      return {
-        success: true,
-        message: archived ? 'Objective unarchived' : 'Objective archived',
-      };
-    } catch (error) {
-      console.error('Error toggling objective archive status:', error);
-      return fail(500, { error: 'Failed to update objective' });
+    if (result.isErr()) {
+      return handleDbError(result);
     }
+
+    return {
+      success: true,
+      message: archived ? 'Objective unarchived' : 'Objective archived',
+    };
   },
 };

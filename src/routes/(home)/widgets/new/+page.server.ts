@@ -4,13 +4,9 @@ import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { formSchema } from '$lib/components/forms/widget-form/schema';
 import type { LocalUser } from '$lib/types';
-import {
-  createUserWidget,
-  getObjectiveFromWidgetId,
-  getUserWidgetCount,
-} from '$lib/server/queries';
-import type { Objective } from '$lib/server/db/schema';
 import { MAX_WIDGETS_PER_USER } from '$lib/server/constants';
+import { handleFormDbError } from '$lib/server/utils';
+import { ResultAsync, okAsync } from 'neverthrow';
 
 export const load: PageServerLoad = async (event) => {
   if (!event.locals.session) {
@@ -44,34 +40,38 @@ export const actions: Actions = {
       });
     }
 
-    try {
-      // Check if user has reached the widget limit
-      const widgetCount = await getUserWidgetCount(event.locals.db, event.locals.session.userId);
-      if (widgetCount >= MAX_WIDGETS_PER_USER && !event.locals.user?.admin) {
-        return fail(400, {
-          form,
-          widgetLimitReached: true,
-          message: `You've reached the maximum limit of ${MAX_WIDGETS_PER_USER} widgets.`,
-        });
-      }
-
-      const widgetId = await createUserWidget(
-        event.locals.db,
-        form.data,
-        event.locals.session.userId
-      );
-      const objective = (await getObjectiveFromWidgetId(event.locals.db, widgetId)) as Objective;
-
-      if (objective.visibility !== 'public') {
-        return redirect(302, `/widgets`);
-      }
-      return redirect(302, `/widgets/new/${widgetId}`);
-    } catch (err) {
-      if (err instanceof Error) {
-        console.error(err);
-        return error(404, err.message);
-      }
-      throw err;
+    const widgetCount = await event.locals.widgetsService.getUserWidgetCount(
+      event.locals.session.userId
+    );
+    if (widgetCount.isErr()) {
+      return handleFormDbError(widgetCount, form);
     }
+    if (widgetCount.value >= MAX_WIDGETS_PER_USER && !event.locals.user?.admin) {
+      return fail(400, {
+        form,
+        widgetLimitReached: true,
+        message: `You've reached the maximum limit of ${MAX_WIDGETS_PER_USER} widgets.`,
+      });
+    }
+
+    const res = await event.locals.widgetsService
+      .createUserWidget(form.data, event.locals.session.userId)
+      .andThen((widgetId) =>
+        ResultAsync.combine([
+          okAsync(widgetId),
+          event.locals.objectivesService.getObjectiveFromWidgetId(widgetId),
+        ])
+      );
+
+    if (res.isErr()) {
+      return handleFormDbError(res, form);
+    }
+
+    const [widgetId, objective] = res.value;
+    if (objective.visibility !== 'public') {
+      return redirect(302, `/widgets`);
+    }
+
+    return redirect(302, `/widgets/new/${widgetId}`);
   },
 };

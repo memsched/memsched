@@ -3,8 +3,8 @@ import { error, fail, redirect } from '@sveltejs/kit';
 import { message, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { formSchema, type FormSchema } from '$lib/components/forms/objective-form/schema';
-import { getUserObjective, updateUserObjective } from '$lib/server/queries';
 import type { z } from 'zod';
+import { handleDbError, handleFormDbError } from '$lib/server/utils';
 
 export const load: PageServerLoad = async (event) => {
   if (!event.locals.session) {
@@ -12,25 +12,26 @@ export const load: PageServerLoad = async (event) => {
   }
 
   const objectiveId = event.params.id;
-  const targetObjective = await getUserObjective(
-    event.locals.db,
+  const objectiveResult = await event.locals.objectivesService.getUserObjective(
     objectiveId,
     event.locals.session.userId
   );
 
-  if (!targetObjective) {
-    return error(404, 'Objective not found');
+  if (objectiveResult.isErr()) {
+    return handleDbError(objectiveResult);
   }
+
+  const objective = objectiveResult.value;
 
   const form = await superValidate(zod(formSchema));
   form.data = {
-    name: targetObjective.name,
-    description: targetObjective.description,
-    startValue: targetObjective.startValue,
-    unit: targetObjective.unit as z.infer<FormSchema>['unit'],
-    visibility: targetObjective.visibility as z.infer<FormSchema>['visibility'],
-    goalType: targetObjective.goalType as z.infer<FormSchema>['goalType'],
-    endValue: targetObjective.endValue,
+    name: objective.name,
+    description: objective.description,
+    startValue: objective.startValue,
+    unit: objective.unit as z.infer<FormSchema>['unit'],
+    visibility: objective.visibility as z.infer<FormSchema>['visibility'],
+    goalType: objective.goalType as z.infer<FormSchema>['goalType'],
+    endValue: objective.endValue,
   };
 
   return {
@@ -52,15 +53,14 @@ export const actions: Actions = {
     }
 
     const objectiveId = event.params.id;
-    const updateResult = await updateUserObjective(
-      event.locals.db,
+    const updateResult = await event.locals.objectivesService.updateUserObjective(
       objectiveId,
       form.data,
       event.locals.session.userId
     );
 
-    if (!updateResult) {
-      return error(404, 'Objective not found');
+    if (updateResult.isErr()) {
+      return handleFormDbError(updateResult, form);
     }
 
     return message(form, 'Objective successfully updated!');

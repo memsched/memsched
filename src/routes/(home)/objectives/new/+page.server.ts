@@ -3,8 +3,8 @@ import { error, fail, redirect } from '@sveltejs/kit';
 import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { formSchema } from '$lib/components/forms/objective-form/schema';
-import { createUserObjective, getUserActiveObjectives } from '$lib/server/queries';
 import { MAX_OBJECTIVES_PER_USER } from '$lib/server/constants';
+import { handleDbError, handleFormDbError } from '$lib/server/utils';
 
 export const load: PageServerLoad = async (event) => {
   if (!event.locals.session) {
@@ -12,7 +12,13 @@ export const load: PageServerLoad = async (event) => {
   }
 
   // Check if user has reached the objective limit
-  const objectives = await getUserActiveObjectives(event.locals.db, event.locals.session.userId);
+  const objectivesResult = await event.locals.objectivesService.getUserActiveObjectives(
+    event.locals.session.userId
+  );
+  if (objectivesResult.isErr()) {
+    return handleDbError(objectivesResult);
+  }
+  const objectives = objectivesResult.value;
   const objectivesLimitReached =
     objectives.length >= MAX_OBJECTIVES_PER_USER && !event.locals.user?.admin;
 
@@ -38,7 +44,13 @@ export const actions: Actions = {
     }
 
     // Check if user has reached the objective limit
-    const objectives = await getUserActiveObjectives(event.locals.db, event.locals.session.userId);
+    const objectivesResult = await event.locals.objectivesService.getUserActiveObjectives(
+      event.locals.session.userId
+    );
+    if (objectivesResult.isErr()) {
+      return handleDbError(objectivesResult);
+    }
+    const objectives = objectivesResult.value;
     const objectivesLimitReached =
       objectives.length >= MAX_OBJECTIVES_PER_USER && !event.locals.user?.admin;
 
@@ -56,14 +68,12 @@ export const actions: Actions = {
       });
     }
 
-    try {
-      await createUserObjective(event.locals.db, form.data, event.locals.session.userId);
-    } catch (err) {
-      console.error('Error creating objective:', err);
-      return fail(500, {
-        form,
-        error: 'Failed to create objective',
-      });
+    const result = await event.locals.objectivesService.createUserObjective(
+      form.data,
+      event.locals.session.userId
+    );
+    if (result.isErr()) {
+      return handleFormDbError(result, form);
     }
     return redirect(302, '/objectives');
   },

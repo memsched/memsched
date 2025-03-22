@@ -5,7 +5,7 @@ import { superValidate, message, setError } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { z } from 'zod';
 import { formSchema } from '$lib/components/forms/profile-form/schema';
-import { isUsernameValid, updateUser } from '$lib/server/queries';
+import { handleFormDbError } from '$lib/server/utils';
 
 export const load: PageServerLoad = async (event) => {
   if (!event.locals.session) {
@@ -47,28 +47,25 @@ export const actions: Actions = {
 
     // Check if username is already taken by another user
     if (form.data.username !== currentUser.username) {
-      const usernameValid = await isUsernameValid(
-        event.locals.db,
+      const usernameValid = await event.locals.usersService.isUsernameValid(
         form.data.username,
         currentUser.id
       );
-      if (!usernameValid) {
+      if (usernameValid.isErr()) {
+        return handleFormDbError(usernameValid, form);
+      }
+      if (!usernameValid.value) {
         setError(form, 'username', 'This username is already taken.');
         return fail(400, { form });
       }
     }
 
-    try {
-      await updateUser(event.locals.db, currentUser.id, form.data);
-
-      return message(form, 'Profile updated successfully.');
-    } catch (error) {
-      console.error('Error updating profile:', error);
-      return fail(500, {
-        form,
-        error: 'Failed to update profile. Please try again.',
-      });
+    const res = await event.locals.usersService.updateUser(currentUser.id, form.data);
+    if (res.isErr()) {
+      return handleFormDbError(res, form);
     }
+
+    return message(form, 'Profile updated successfully.');
   },
 
   // Add a check action for debounced username validation
@@ -86,12 +83,14 @@ export const actions: Actions = {
 
     // Check if username is already taken by another user
     if (form.data.username !== currentUser.username) {
-      const usernameValid = await isUsernameValid(
-        event.locals.db,
+      const usernameValid = await event.locals.usersService.isUsernameValid(
         form.data.username,
         currentUser.id
       );
-      if (!usernameValid) {
+      if (usernameValid.isErr()) {
+        return handleFormDbError(usernameValid, form);
+      }
+      if (!usernameValid.value) {
         setError(form, 'username', 'This username is already taken.');
         return fail(400, { form });
       }

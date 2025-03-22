@@ -1,6 +1,6 @@
 import type { Actions } from './$types';
 import { error, redirect } from '@sveltejs/kit';
-import { deleteUserObjective } from '$lib/server/queries';
+import { handleDbError } from '$lib/server/utils';
 
 export const actions: Actions = {
   default: async (event) => {
@@ -13,13 +13,12 @@ export const actions: Actions = {
       return error(400, 'Objective ID is required');
     }
 
-    const result = await deleteUserObjective(
-      event.locals.db,
+    const result = await event.locals.objectivesService.deleteUserObjective(
       objectiveId,
       event.locals.session.userId
     );
-    if (!result) {
-      return error(404, 'Objective not found');
+    if (result.isErr()) {
+      return handleDbError(result);
     }
 
     const refParts = event.request.headers.get('referer')?.split('/') ?? [];

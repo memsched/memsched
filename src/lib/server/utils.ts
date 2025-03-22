@@ -55,15 +55,15 @@ export function generateWidgetEtag(widget: WidgetJoinMetrics): string {
 }
 
 export function handleDbError(result: Err<any, DrizzleError>) {
-  if (result.error instanceof DrizzleRecordNotFoundErrorCause) {
+  if (result.error.cause instanceof DrizzleRecordNotFoundErrorCause) {
     return error(404, result.error.message);
   }
   console.error(result.error);
   return error(500, 'Something went wrong');
 }
 
-export function handleFormDbError(result: Err<any, DrizzleError>, form: SuperValidated<any, any>) {
-  if (result.error instanceof DrizzleRecordNotFoundErrorCause) {
+export function handleFormDbError(result: Err<any, DrizzleError>, form?: SuperValidated<any, any>) {
+  if (result.error.cause instanceof DrizzleRecordNotFoundErrorCause) {
     return fail(404, { form, error: result.error.message });
   }
   console.error(result.error);

@@ -10,7 +10,7 @@
         destructive: 'bg-destructive text-destructive-foreground border-transparent',
         outline: 'text-foreground',
         translucent:
-          'bg-primary/10 text-primary dark:border-primary dark:text-primary-foreground/75',
+          'bg-primary/10 text-primary dark:border-primary dark:text-primary-foreground/75 border-none',
       },
     },
     defaultVariants: {

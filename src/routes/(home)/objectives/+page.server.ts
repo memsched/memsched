@@ -4,7 +4,7 @@ import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { logSchema } from '$lib/components/forms/objective-log-form/schema';
 import { MAX_WIDGETS_PER_USER, MAX_OBJECTIVES_PER_USER } from '$lib/server/constants';
-import { handleDbError } from '$lib/server/utils';
+import { handleDbError, handleFormDbError } from '$lib/server/utils';
 
 export const load: PageServerLoad = async (event) => {
   if (!event.locals.session) {
@@ -89,7 +89,7 @@ export const actions: Actions = {
     );
 
     if (result.isErr()) {
-      return handleDbError(result);
+      return handleFormDbError(result, form);
     }
 
     const updatedObjective = result.value[0];
@@ -121,7 +121,7 @@ export const actions: Actions = {
     );
 
     if (result.isErr()) {
-      return handleDbError(result);
+      return handleFormDbError(result);
     }
 
     const removedLog = result.value[1];
@@ -151,7 +151,7 @@ export const actions: Actions = {
     );
 
     if (result.isErr()) {
-      return handleDbError(result);
+      return handleFormDbError(result);
     }
 
     return {

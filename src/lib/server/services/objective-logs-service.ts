@@ -1,13 +1,18 @@
 import type { DBType } from '../db';
 import * as table from '../db/schema';
 import { eq, and, desc } from 'drizzle-orm';
-import { DrizzleRecordNotFoundErrorCause, wrapResultAsync, wrapResultAsyncFn } from '../db/types';
+import {
+  createDrizzleError,
+  DrizzleRecordNotFoundErrorCause,
+  wrapResultAsync,
+  wrapResultAsyncFn,
+} from '../db/types';
 import type { LogSchema } from '$lib/components/forms/objective-log-form/schema';
 import type { CacheService } from '../cache';
 import { z } from 'zod';
 import type { ObjectivesService } from './objectives-service';
 import { v4 as uuidv4 } from 'uuid';
-import { okAsync, ResultAsync } from 'neverthrow';
+import { errAsync, okAsync, ResultAsync } from 'neverthrow';
 
 export class ObjectiveLogsService {
   constructor(
@@ -79,7 +84,9 @@ export class ObjectiveLogsService {
       )
       .andThen(([objective, lastLog]) => {
         if (!lastLog) {
-          throw new DrizzleRecordNotFoundErrorCause('No logs found to undo');
+          return errAsync(
+            createDrizzleError(new DrizzleRecordNotFoundErrorCause('No logs found to undo'))
+          );
         }
         const newValue = Math.max(0, objective.value - lastLog.value);
         return ResultAsync.combine([

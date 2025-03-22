@@ -3,17 +3,13 @@ import { sequence } from '@sveltejs/kit/hooks';
 import { getDB, type DBType } from '$lib/server/db';
 import { getCache } from '$lib/server/cache';
 import {
-  validateSessionToken,
-  setSessionTokenCookie,
-  deleteSessionTokenCookie,
-  SESSION_COOKIE_NAME,
-} from '$lib/server/session';
-import {
   UsersService,
   ObjectivesService,
   ObjectiveLogsService,
   WidgetsService,
   MetricsService,
+  SessionsService,
+  SESSION_COOKIE_NAME,
 } from '$lib/server/services';
 
 /**
@@ -25,6 +21,7 @@ function initializeServices(db: DBType) {
   // Create independent services first
   const usersService = new UsersService(db);
   const metricsService = new MetricsService(db);
+  const sessionsService = new SessionsService(db);
 
   // Create interdependent services with temporary null for circular dependencies
   const widgetsService = new WidgetsService(db, null, metricsService);
@@ -44,6 +41,7 @@ function initializeServices(db: DBType) {
     objectiveLogsService,
     widgetsService,
     metricsService,
+    sessionsService,
   };
 }
 
@@ -66,11 +64,21 @@ const authHandle: Handle = async ({ event, resolve }) => {
     return resolve(event);
   }
 
-  const { session, user } = await validateSessionToken(event.locals.db, token);
+  const result = await event.locals.sessionsService.validateSessionToken(token);
+
+  if (result.isErr()) {
+    event.locals.user = null;
+    event.locals.session = null;
+    event.locals.sessionsService.deleteSessionTokenCookie(event);
+    return resolve(event);
+  }
+
+  const { session, user } = result.value;
+
   if (session !== null) {
-    setSessionTokenCookie(event, token, session.expiresAt);
+    event.locals.sessionsService.setSessionTokenCookie(event, token, session.expiresAt);
   } else {
-    deleteSessionTokenCookie(event);
+    event.locals.sessionsService.deleteSessionTokenCookie(event);
   }
 
   event.locals.session = session;

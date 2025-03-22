@@ -1,9 +1,7 @@
 import { google } from '$lib/server/oauth';
-import { createSession, generateSessionToken, setSessionTokenCookie } from '$lib/server/session';
 import { decodeIdToken, type OAuth2Tokens } from 'arctic';
 import type { RequestEvent } from './$types';
-import { getUserOverviewUrl } from '$lib/api';
-import { handleDbError, sanitizeUsername } from '$lib/server/utils';
+import { sanitizeUsername } from '$lib/server/utils';
 import { error } from '@sveltejs/kit';
 import { oauthLimiter } from '$lib/server/rate-limiter';
 
@@ -56,55 +54,13 @@ export async function GET(event: RequestEvent): Promise<Response> {
     });
   }
 
-  const googleId = claims.sub;
-  const username = sanitizeUsername(claims.name);
-  const name = claims.name;
-  const avatarUrl = claims.picture;
-  const email = claims.email;
-
-  try {
-    const existingUserResult = await event.locals.usersService.getUserFromProviderUserId(googleId);
-    if (existingUserResult.isErr()) {
-      return handleDbError(existingUserResult);
-    }
-
-    const existingUser = existingUserResult.value;
-
-    if (existingUser !== null) {
-      const sessionToken = generateSessionToken();
-      const session = await createSession(event.locals.db, sessionToken, existingUser.id);
-      setSessionTokenCookie(event, sessionToken, session.expiresAt);
-      return new Response(null, {
-        status: 302,
-        headers: {
-          Location: getUserOverviewUrl(existingUser.username),
-        },
-      });
-    }
-
-    const userResult = await event.locals.usersService.createUser('google', googleId, {
-      email,
-      username,
-      name,
-      avatarUrl,
-    });
-    if (userResult.isErr()) {
-      return handleDbError(userResult);
-    }
-    const user = userResult.value;
-    const sessionToken = generateSessionToken();
-    const session = await createSession(event.locals.db, sessionToken, user.id);
-    setSessionTokenCookie(event, sessionToken, session.expiresAt);
-    return new Response(null, {
-      status: 302,
-      headers: {
-        Location: getUserOverviewUrl(user.username),
-      },
-    });
-  } catch (error) {
-    console.error('Error in user creation or session management:', error);
-    return new Response('Error creating user account. Please try again.', {
-      status: 500,
-    });
-  }
+  // Use the session service for authentication
+  return await event.locals.sessionsService.handleUserAuthentication(event, {
+    providerId: 'google',
+    providerUserId: claims.sub,
+    email: claims.email,
+    username: sanitizeUsername(claims.name),
+    name: claims.name,
+    avatarUrl: claims.picture,
+  });
 }

@@ -1,11 +1,9 @@
 import { github } from '$lib/server/oauth';
-import { createSession, generateSessionToken, setSessionTokenCookie } from '$lib/server/session';
 import { error } from '@sveltejs/kit';
 import { oauthLimiter } from '$lib/server/rate-limiter';
 import type { OAuth2Tokens } from 'arctic';
 import type { RequestEvent } from './$types';
-import { getUserOverviewUrl } from '$lib/api';
-import { sanitizeUsername, handleDbError } from '$lib/server/utils';
+import { sanitizeUsername } from '$lib/server/utils';
 
 interface IGithubUser {
   id: number;
@@ -51,6 +49,7 @@ export async function GET(event: RequestEvent): Promise<Response> {
     });
   }
 
+  // Fetch GitHub user data
   let githubUser: IGithubUser;
   try {
     const githubUserResponse = await fetch('https://api.github.com/user', {
@@ -84,30 +83,7 @@ export async function GET(event: RequestEvent): Promise<Response> {
     });
   }
 
-  const githubUserId = githubUser.id;
-  const username = sanitizeUsername(githubUser.login);
-  const name = githubUser.name;
-  const avatarUrl = githubUser.avatar_url;
-
-  const existingUserResult = await event.locals.usersService.getUserFromProviderUserId(
-    githubUserId.toString()
-  );
-  if (existingUserResult.isErr()) {
-    return handleDbError(existingUserResult);
-  }
-  const existingUser = existingUserResult.value;
-  if (existingUser !== null) {
-    const sessionToken = generateSessionToken();
-    const session = await createSession(event.locals.db, sessionToken, existingUser.id);
-    setSessionTokenCookie(event, sessionToken, session.expiresAt);
-    return new Response(null, {
-      status: 302,
-      headers: {
-        Location: getUserOverviewUrl(existingUser.username),
-      },
-    });
-  }
-
+  // Fetch GitHub email data
   let emailListResult: unknown;
   try {
     const githubEmailResponse = await fetch('https://api.github.com/user/emails', {
@@ -147,37 +123,28 @@ export async function GET(event: RequestEvent): Promise<Response> {
     });
   }
 
+  // Find primary and verified email
   let email: string | null = null;
   for (const emailRecord of emailListResult as IGithubUserEmail[]) {
-    const primaryEmail = emailRecord.primary;
-    const verifiedEmail = emailRecord.verified;
-    if (primaryEmail && verifiedEmail) {
+    if (emailRecord.primary && emailRecord.verified) {
       email = emailRecord.email;
+      break;
     }
   }
+
   if (email === null) {
     return new Response('Please verify your GitHub email address.', {
       status: 400,
     });
   }
 
-  const userResult = await event.locals.usersService.createUser('github', githubUserId.toString(), {
+  // Use the session service for authentication
+  return await event.locals.sessionsService.handleUserAuthentication(event, {
+    providerId: 'github',
+    providerUserId: githubUser.id.toString(),
     email,
-    username,
-    name,
-    avatarUrl,
-  });
-  if (userResult.isErr()) {
-    return handleDbError(userResult);
-  }
-  const user = userResult.value;
-  const sessionToken = generateSessionToken();
-  const session = await createSession(event.locals.db, sessionToken, user.id);
-  setSessionTokenCookie(event, sessionToken, session.expiresAt);
-  return new Response(null, {
-    status: 302,
-    headers: {
-      Location: getUserOverviewUrl(user.username),
-    },
+    username: sanitizeUsername(githubUser.login),
+    name: githubUser.name || githubUser.login,
+    avatarUrl: githubUser.avatar_url,
   });
 }

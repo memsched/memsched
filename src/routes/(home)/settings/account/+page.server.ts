@@ -1,6 +1,5 @@
 import type { PageServerLoad, Actions } from './$types';
 import { redirect, error } from '@sveltejs/kit';
-import { deleteSessionTokenCookie } from '$lib/server/session';
 import type { LocalUser } from '$lib/types';
 import { handleDbError } from '$lib/server/utils';
 
@@ -33,7 +32,7 @@ export const actions: Actions = {
       return handleDbError(result);
     }
 
-    deleteSessionTokenCookie(event);
+    event.locals.sessionsService.deleteSessionTokenCookie(event);
     return redirect(302, '/auth/signin');
   },
 };

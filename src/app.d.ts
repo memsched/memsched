@@ -11,6 +11,7 @@ import type {
   ExecutionContext,
 } from '@cloudflare/workers-types';
 import type {
+  SessionsService,
   UsersService,
   ObjectivesService,
   ObjectiveLogsService,
@@ -25,6 +26,7 @@ declare global {
       session: Session | null;
       db: DBType;
       cache: CacheService;
+      sessionsService: SessionsService;
       usersService: UsersService;
       objectivesService: ObjectivesService;
       objectiveLogsService: ObjectiveLogsService;

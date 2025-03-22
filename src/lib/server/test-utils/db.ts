@@ -1,33 +1,20 @@
 import { drizzle } from 'drizzle-orm/libsql';
 import { createClient } from '@libsql/client';
 import { migrate } from 'drizzle-orm/libsql/migrator';
-import fs from 'fs';
 import path from 'path';
 import * as schema from '$lib/server/db/schema';
 import type { DBType } from '$lib/server/db';
-import { v4 as uuidv4 } from 'uuid';
 
 // Path to the migrations directory
 const MIGRATIONS_PATH = path.resolve('./drizzle');
-
-// Generate a unique database file name for each test run to avoid conflicts
-export const TEST_DB_FILE = `.test-db-${uuidv4()}.sqlite`;
-// Can also use :memory: for completely in-memory database, but we use a file
-// so we can inspect it if needed during development
-export const TEST_DB_URL = `file:${TEST_DB_FILE}`;
 
 /**
  * Set up a test database, run migrations, and return a Drizzle client
  */
 export async function setupTestDB(): Promise<DBType> {
-  // Check if test database file exists and remove it (cleanup from previous failed runs)
-  if (fs.existsSync(TEST_DB_FILE)) {
-    fs.unlinkSync(TEST_DB_FILE);
-  }
-
   // Create a new SQLite client pointing to our test database
   const client = createClient({
-    url: TEST_DB_URL,
+    url: ':memory:',
   });
 
   // Create a Drizzle instance
@@ -85,14 +72,4 @@ export async function seedTestData(db: DBType): Promise<{
   return {
     testUsers: testUsers as schema.User[],
   };
-}
-
-/**
- * Clean up the test database
- */
-export async function teardownTestDB(): Promise<void> {
-  // Remove the test database file if it exists
-  if (fs.existsSync(TEST_DB_FILE)) {
-    fs.unlinkSync(TEST_DB_FILE);
-  }
 }

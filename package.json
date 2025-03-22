@@ -4,9 +4,10 @@
   "version": "0.0.1",
   "type": "module",
   "scripts": {
-    "dev": "vite dev",
+    "dev": "vite dev --open",
     "build": "vite build",
-    "preview": "pnpm run build && wrangler pages dev",
+    "build:e2e": "vite build --mode testing",
+    "preview": "wrangler pages dev --port 5173",
     "prepare": "svelte-kit sync || echo ''",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
@@ -21,10 +22,11 @@
     "db:studio": "drizzle-kit studio",
     "deploy": "pnpm run build && wrangler pages deploy",
     "cf-typegen": "wrangler types && mv worker-configuration.d.ts src/",
-    "d1:create": "wrangler d1 create memsched-db",
-    "kv:create": "wrangler kv namespace create memsched-kv",
-    "d1:migrate": "wrangler d1 migrations apply memsched-db --remote",
-    "d1:execute": "wrangler d1 execute memsched-db --remote"
+    "d1:migrate": "wrangler d1 migrations apply memsched-db --local",
+    "prod:d1:create": "wrangler d1 create memsched-db --remote",
+    "prod:kv:create": "wrangler kv namespace create memsched-kv",
+    "prod:d1:migrate": "wrangler d1 migrations apply memsched-db --remote",
+    "prod:d1:execute": "wrangler d1 execute memsched-db --remote"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20250313.0",

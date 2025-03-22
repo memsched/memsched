@@ -54,7 +54,7 @@ const config = {
         'base-uri': ['self'],
         'form-action': ['self'],
         'frame-ancestors': ['none'],
-        'upgrade-insecure-requests': process.env.NODE_ENV !== 'development',
+        'upgrade-insecure-requests': process.env.CF_PAGES !== undefined,
         'block-all-mixed-content': true,
       },
       // reportOnly: {

@@ -62,7 +62,7 @@ export const formSchema = z.object({
     .int()
     .min(0, { message: 'Padding must be 0 or greater.' })
     .max(30, { message: 'Padding must be less than 30.' })
-    .default(16),
+    .default(13),
   border: z.boolean().default(true),
   borderWidth: z
     .number()
@@ -75,7 +75,7 @@ export const formSchema = z.object({
     .int()
     .min(0, { message: 'Border radius must be 0 or greater.' })
     .max(50, { message: 'Border radius must be less than 50.' })
-    .default(8),
+    .default(6),
   color: z
     .string()
     .regex(/^#[0-9A-Fa-f]{6}$/, { message: 'Please enter a valid hex color code.' })

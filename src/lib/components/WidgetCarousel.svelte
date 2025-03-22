@@ -7,7 +7,7 @@
     columns?: number;
   }
 
-  const { widgets = [], columns = 2 }: Props = $props();
+  const { widgets = [], columns = 4 }: Props = $props();
 
   // Define default animation duration (in seconds)
   const animationDuration = 60;
@@ -40,10 +40,13 @@
   });
 </script>
 
-<div class="w-full overflow-hidden">
+<div class="relative w-full overflow-hidden">
+  <div
+    class="pointer-events-none absolute inset-0 z-10 bg-gradient-to-b from-transparent from-[0%] to-zinc-800 to-[200%]"
+  ></div>
   <!-- Generate rows based on columns prop with alternating directions -->
   {#each widgetColumns as column}
-    <div class="relative py-1">
+    <div class="relative py-1 last-of-type:pb-6">
       <div
         class="animate-scroll-{column.direction} inline-flex flex-shrink-0 gap-4"
         style="animation-duration: {animationDuration}s; animation-timing-function: linear; animation-iteration-count: infinite;"
@@ -70,10 +73,10 @@
 
   @keyframes scroll-right {
     0% {
-      transform: translateX(0);
+      transform: translateX(-33.33%); /* Start from the left (showing 2nd set) */
     }
     100% {
-      transform: translateX(33.33%); /* Move forward 1/3 of the total length */
+      transform: translateX(0); /* Move to the right (showing 1st set) */
     }
   }
 

@@ -9,29 +9,31 @@
   import WidgetCarousel from '$lib/components/WidgetCarousel.svelte';
   import { mockWidgets } from '$lib/widgets';
   import * as Card from '$lib/components/ui/card';
+  import { HEADER_HEIGHT } from '$lib/constants';
 </script>
 
 <HomeLayout container={false} class="*:py-20">
   <section
     id="hero"
-    class="main-container flex h-screen flex-grow flex-col items-center justify-center !pb-0 text-center"
+    class="flex h-full flex-col items-center justify-between !pb-0 text-center"
+    style="height: calc(100vh - {HEADER_HEIGHT}px)"
   >
-    <div class="space-y-3">
-      <Badge class="text-sm" variant="translucent">v2 Released 🎉</Badge>
-      <h1>Show the world what you're learning.</h1>
-      <h2 class="h4 font-medium">
-        Set goals, log progress, and showcase your journey with beautiful widgets.
-      </h2>
+    <div class="main-container flex flex-col items-center justify-center gap-8 py-20">
+      <div class="space-y-3">
+        <Badge class="text-sm" variant="translucent">v2 Released 🎉</Badge>
+        <h1>Show the world what you're learning.</h1>
+        <h2 class="h4 font-medium">
+          Set goals, log progress, and showcase your journey with beautiful widgets.
+        </h2>
+      </div>
+      <div class="relative w-fit">
+        <Button size="cta" href="/auth/signin" data-umami-event="hero-get-started-button"
+          >Get Started for Free</Button
+        >
+        <Arrow class="absolute left-[105%] top-[60%] -z-10 rotate-6" />
+      </div>
     </div>
-    <div class="relative mt-8 w-fit">
-      <Button size="cta" href="/auth/signin" data-umami-event="hero-get-started-button"
-        >Get Started for Free</Button
-      >
-      <Arrow class="absolute left-[105%] top-[60%] -z-10 rotate-6" />
-    </div>
-    <div class="mt-20">
-      <WidgetCarousel widgets={mockWidgets} />
-    </div>
+    <WidgetCarousel widgets={mockWidgets} />
   </section>
 
   <!-- How it works section -->

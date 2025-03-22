@@ -24,14 +24,14 @@
     textIcon: null,
     imageUrl: null,
     imagePlacement: 'left',
-    padding: 16,
+    padding: 13,
     border: true,
     borderWidth: 1,
-    borderRadius: 8,
+    borderRadius: 6,
     color: '#000000',
     accentColor: '#4fc59e',
     backgroundColor: '#ffffff',
-    watermark: true,
+    watermark: false,
     metrics: [
       {
         name: 'Metric 1',
@@ -45,7 +45,9 @@
 
   let svgString = $state('');
   let svgUrl = $state('');
-  let imageMode = $state(config.imageUrl ? 'url' : 'none');
+  let imageMode = $state(config.imageUrl ? 'url' : config.textIcon ? 'text-icon' : 'none');
+  let isSvgCodeVisible = $state(false);
+  let isConfigCodeVisible = $state(true);
 
   // Only allow this page in dev mode
   onMount(() => {
@@ -96,6 +98,14 @@
       order: i + 1,
     }));
   }
+
+  function configToString(cfg: typeof config): string {
+    // Convert config to a JS object string with proper formatting
+    return `${JSON.stringify(cfg, null, 2)
+      .replace(/"([^"]+)":/g, '$1:') // Remove quotes from property names
+      .replace(/"/g, "'") // Replace double quotes with single quotes for strings
+      .replace(/null/g, 'null')},`;
+  }
 </script>
 
 {#if dev}
@@ -133,14 +143,25 @@
                     onclick={() => {
                       imageMode = 'none';
                       config.imageUrl = null;
+                      config.textIcon = null;
                     }}
                   >
                     None
                   </Tabs.Trigger>
                   <Tabs.Trigger
+                    value="text-icon"
+                    onclick={() => {
+                      imageMode = 'text-icon';
+                      config.imageUrl = null;
+                    }}
+                  >
+                    Text
+                  </Tabs.Trigger>
+                  <Tabs.Trigger
                     value="url"
                     onclick={() => {
                       imageMode = 'url';
+                      config.textIcon = null;
                       if (!config.imageUrl) config.imageUrl = '';
                     }}
                   >
@@ -150,11 +171,40 @@
                     value="icon"
                     onclick={() => {
                       imageMode = 'icon';
+                      config.textIcon = null;
                     }}
                   >
                     Icon
                   </Tabs.Trigger>
                 </Tabs.List>
+
+                <Tabs.Content value="text-icon" class="space-y-4">
+                  <div>
+                    <Label for="textIcon">Text Icon (1-2 Capital Letters)</Label>
+                    <Input
+                      id="textIcon"
+                      value={config.textIcon}
+                      maxlength={2}
+                      placeholder="AB"
+                      oninput={(e) => {
+                        if (e.currentTarget.value === '') {
+                          config.textIcon = null;
+                        } else {
+                          config.textIcon = e.currentTarget.value.toUpperCase();
+                        }
+                      }}
+                    />
+                  </div>
+                  <div class="space-y-2">
+                    <Label>Placement</Label>
+                    <Tabs.Root bind:value={config.imagePlacement}>
+                      <Tabs.List class="w-full *:w-full">
+                        <Tabs.Trigger value="left">Left</Tabs.Trigger>
+                        <Tabs.Trigger value="right">Right</Tabs.Trigger>
+                      </Tabs.List>
+                    </Tabs.Root>
+                  </div>
+                </Tabs.Content>
 
                 <Tabs.Content value="url" class="space-y-4">
                   <Input
@@ -162,6 +212,15 @@
                     bind:value={config.imageUrl}
                     placeholder="https://example.com/icon.svg"
                   />
+                  <div class="space-y-2">
+                    <Label>Placement</Label>
+                    <Tabs.Root bind:value={config.imagePlacement}>
+                      <Tabs.List class="w-full *:w-full">
+                        <Tabs.Trigger value="left">Left</Tabs.Trigger>
+                        <Tabs.Trigger value="right">Right</Tabs.Trigger>
+                      </Tabs.List>
+                    </Tabs.Root>
+                  </div>
                 </Tabs.Content>
 
                 <Tabs.Content value="icon" class="space-y-4">
@@ -170,23 +229,17 @@
                       <IconPickerInput bind:value={config.imageUrl} />
                     {/await}
                   {/if}
+                  <div class="space-y-2">
+                    <Label>Placement</Label>
+                    <Tabs.Root bind:value={config.imagePlacement}>
+                      <Tabs.List class="w-full *:w-full">
+                        <Tabs.Trigger value="left">Left</Tabs.Trigger>
+                        <Tabs.Trigger value="right">Right</Tabs.Trigger>
+                      </Tabs.List>
+                    </Tabs.Root>
+                  </div>
                 </Tabs.Content>
               </Tabs.Root>
-
-              {#if config.imageUrl}
-                <div>
-                  <Label for="imagePlacement">Image Placement</Label>
-                  <Select.Root type="single" bind:value={config.imagePlacement}>
-                    <Select.Trigger id="imagePlacement" class="w-full">
-                      {config.imagePlacement}
-                    </Select.Trigger>
-                    <Select.Content>
-                      <Select.Item value="left">Left</Select.Item>
-                      <Select.Item value="right">Right</Select.Item>
-                    </Select.Content>
-                  </Select.Root>
-                </div>
-              {/if}
             </div>
           </div>
 
@@ -371,8 +424,35 @@
         </Card.Root>
 
         <Card.Root class="p-6">
-          <h2 class="mb-4 text-xl font-medium">SVG Code</h2>
-          <CodeBlock code={svgString} />
+          <div class="mb-4 flex items-center justify-between">
+            <h2 class="text-xl font-medium">SVG Code</h2>
+            <Button
+              variant="outline"
+              size="sm"
+              onclick={() => (isSvgCodeVisible = !isSvgCodeVisible)}
+            >
+              {isSvgCodeVisible ? 'Hide' : 'Show'} Code
+            </Button>
+          </div>
+          {#if isSvgCodeVisible}
+            <CodeBlock code={svgString} />
+          {/if}
+        </Card.Root>
+
+        <Card.Root class="p-6">
+          <div class="mb-4 flex items-center justify-between">
+            <h2 class="text-xl font-medium">Widget Configuration</h2>
+            <Button
+              variant="outline"
+              size="sm"
+              onclick={() => (isConfigCodeVisible = !isConfigCodeVisible)}
+            >
+              {isConfigCodeVisible ? 'Hide' : 'Show'} Code
+            </Button>
+          </div>
+          {#if isConfigCodeVisible}
+            <CodeBlock code={configToString(config)} />
+          {/if}
         </Card.Root>
       </div>
     </div>

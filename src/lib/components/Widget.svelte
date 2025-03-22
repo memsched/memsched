@@ -40,7 +40,7 @@
   style:gap="0.2rem"
 >
   <div
-    style:border={border ? '1px solid #e4e4e7' : 'none'}
+    style:border={border ? '1px solid #ededed' : 'none'}
     style:border-radius="{borderRadius}px"
     style:color
     style:background-color={backgroundColor}
@@ -90,7 +90,7 @@
         style:display="flex"
         style:flex-direction="column"
         style:justify-content="center"
-        style:gap="0.3rem"
+        style:gap="0.2rem"
       >
         <div style:font-size="1.2rem" style:font-weight="600" style:letter-spacing="-0.025em">
           {title}

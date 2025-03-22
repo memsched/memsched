@@ -24,7 +24,9 @@
       </h2>
     </div>
     <div class="relative mt-8 w-fit">
-      <Button size="cta" href="/auth/signin">Get Started for Free</Button>
+      <Button size="cta" href="/auth/signin" data-umami-event="hero-get-started-button"
+        >Get Started for Free</Button
+      >
       <Arrow class="absolute left-[105%] top-[60%] -z-10 rotate-6" />
     </div>
     <div class="mt-20">
@@ -55,7 +57,13 @@
             <p class="!mb-3 text-muted-foreground">
               Set up a new learning objective with your goals and metrics to track.
             </p>
-            <IconButton icon={IoArrowForward} size="lg" href="/auth/signin" class="animate-svg">
+            <IconButton
+              icon={IoArrowForward}
+              size="lg"
+              href="/auth/signin"
+              class="animate-svg"
+              data-umami-event="how-it-works-create-profile-button"
+            >
               Create Profile for Free
             </IconButton>
           </div>
@@ -130,6 +138,7 @@
               size="sm"
               class="w-full justify-between transition-all group-hover:bg-primary group-hover:text-white"
               href="/auth/signin"
+              data-umami-event="use-cases-coding-journey-button"
             >
               Start coding journey
               <Icon src={IoArrowForward} className="size-4" />
@@ -162,6 +171,7 @@
               size="sm"
               class="w-full justify-between transition-all group-hover:bg-primary group-hover:text-white"
               href="/auth/signin"
+              data-umami-event="use-cases-track-studies-button"
             >
               Track your studies
               <Icon src={IoArrowForward} className="size-4" />
@@ -194,6 +204,7 @@
               size="sm"
               class="w-full justify-between transition-all group-hover:bg-primary group-hover:text-white"
               href="/auth/signin"
+              data-umami-event="use-cases-learn-languages-button"
             >
               Learn languages
               <Icon src={IoArrowForward} className="size-4" />
@@ -226,6 +237,7 @@
               size="sm"
               class="w-full justify-between transition-all group-hover:bg-primary group-hover:text-white"
               href="/auth/signin"
+              data-umami-event="use-cases-grow-audience-button"
             >
               Grow your audience
               <Icon src={IoArrowForward} className="size-4" />
@@ -314,7 +326,9 @@
       </p>
     </div>
     <div class="relative">
-      <Button size="cta" href="/auth/signin">Get Started for Free</Button>
+      <Button size="cta" href="/auth/signin" data-umami-event="cta-get-started-button"
+        >Get Started for Free</Button
+      >
       <Arrow class="absolute left-[-85%] top-[-85%] -z-10 rotate-180" />
       <p class="mt-2 text-sm text-muted-foreground">
         No credit card required. Free plan available.

@@ -36,14 +36,16 @@
       iconPosition="left"
       variant="outline"
       size="lg"
-      href="/auth/signin/google">Continue with Google</IconButton
+      href="/auth/signin/google"
+      data-umami-event="auth-signin-google-button">Continue with Google</IconButton
     >
     <IconButton
       icon={AiOutlineGithub}
       iconPosition="left"
       size="lg"
       href="/auth/signin/github"
-      class="bg-black hover:bg-black/80">Continue with Github</IconButton
+      class="bg-black hover:bg-black/80"
+      data-umami-event="auth-signin-github-button">Continue with Github</IconButton
     >
   </div>
   <p class="text-sm text-muted-foreground">

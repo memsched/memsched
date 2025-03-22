@@ -52,13 +52,16 @@
       <HeaderProfile />
     {:else}
       <div class="flex gap-3">
-        <Button href="/auth/signin" size="sm">Join Now</Button>
+        <Button href="/auth/signin" size="sm" data-umami-event="home-header-join-now-button"
+          >Join Now</Button
+        >
         <IconButton
           icon={IoArrowForward}
           variant="outline"
           size="sm"
           class="animate-svg"
           href="/auth/signin"
+          data-umami-event="home-header-log-in-button"
         >
           Log In
         </IconButton>

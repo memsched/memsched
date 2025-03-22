@@ -126,7 +126,7 @@
   {/if}
   {#if data.objectives.length > 0}
     <div class="main-container py-6">
-      <div class="rounded-md border bg-background shadow-sm">
+      <div class="rounded-md border bg-background">
         <!-- Fixed header -->
         <div
           class="grid grid-cols-12 gap-20 overflow-hidden border-b px-6 py-3 text-sm font-medium text-muted-foreground"
@@ -138,11 +138,9 @@
 
         <!-- Scrollable content -->
         <div class="overflow-x-auto">
-          <div class="min-w-[900px]">
+          <div class="min-w-[900px] divide-y">
             {#each data.objectives as objective}
-              <div
-                class="grid grid-cols-12 items-center gap-20 border-b px-6 py-3.5 transition-colors hover:bg-accent/30"
-              >
+              <div class="grid grid-cols-12 items-center gap-20 px-6 py-3.5 transition-colors">
                 <!-- Objective name and badges -->
                 <div class="col-span-3 flex flex-col gap-1.5">
                   <div class="line-clamp-1 font-medium">{objective.name}</div>

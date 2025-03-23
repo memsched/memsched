@@ -25,8 +25,8 @@
     "d1:migrate": "wrangler d1 migrations apply memsched-db --local",
     "prod:d1:create": "wrangler d1 create memsched-db --remote",
     "prod:kv:create": "wrangler kv namespace create memsched-kv",
-    "prod:d1:migrate": "wrangler d1 migrations apply memsched-db --remote",
-    "prod:d1:execute": "wrangler d1 execute memsched-db --remote"
+    "prod:d1:migrate": "wrangler d1 migrations apply memsched-db --remote --env production",
+    "prod:d1:execute": "wrangler d1 execute memsched-db --remote --env production"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20250313.0",

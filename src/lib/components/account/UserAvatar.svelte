@@ -11,7 +11,8 @@
   const { username, avatarUrl, large = false }: Props = $props();
 </script>
 
-{#if avatarUrl}
+<!-- TODO: Remove this once we have a proper avatar -->
+{#if false}
   <img
     class={cn('inline-block rounded-full', large ? 'size-[250px] ring-2 ring-border' : 'size-8')}
     src={avatarUrl}

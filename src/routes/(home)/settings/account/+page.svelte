@@ -36,7 +36,7 @@
 <div class="mb-8">
   <SettingsTitle
     title="Account Settings"
-    subtitle="Manage your personal account settings and preferences."
+    subtitle="Manage your subscription and data."
     icon={IoKey}
   />
 </div>

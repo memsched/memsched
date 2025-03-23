@@ -103,8 +103,15 @@
         {#if !data.isArchived && !data.isCompleted && data.objectivesLimitReached}
           <Tooltip.Provider delayDuration={100}>
             <Tooltip.Root>
-              <Tooltip.Trigger class="cursor-not-allowed">
-                <IconButton size="sm" icon={IoAdd} variant="outline" disabled>New</IconButton>
+              <Tooltip.Trigger>
+                <IconButton
+                  icon={IoArrowForward}
+                  size="sm"
+                  href="/settings/account"
+                  class="animate-svg"
+                >
+                  Upgrade to Pro
+                </IconButton>
               </Tooltip.Trigger>
               <Tooltip.Content side="left" align="center">
                 <p>You've reached the maximum limit of {data.maxObjectives} objectives</p>
@@ -270,10 +277,22 @@
                                     Create widget
                                   </DropdownMenu.Item>
                                 </Tooltip.Trigger>
-                                <Tooltip.Content side="right" align="center">
+                                <Tooltip.Content
+                                  side="right"
+                                  align="center"
+                                  class="flex flex-col gap-2 p-4"
+                                >
                                   <p>
                                     You've reached the maximum limit of {data.maxWidgets} widgets
                                   </p>
+                                  <IconButton
+                                    icon={IoArrowForward}
+                                    size="sm"
+                                    href="/settings/account"
+                                    class="animate-svg"
+                                  >
+                                    Upgrade to Pro
+                                  </IconButton>
                                 </Tooltip.Content>
                               </Tooltip.Root>
                             </Tooltip.Provider>

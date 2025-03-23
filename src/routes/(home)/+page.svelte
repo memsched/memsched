@@ -9,11 +9,11 @@
   import IconButton from '$lib/components/ui/IconButton.svelte';
   import WidgetCarousel from '$lib/components/WidgetCarousel.svelte';
   import { mockWidgets } from '$lib/widgets';
-  import * as Card from '$lib/components/ui/card';
   import { HEADER_HEIGHT } from '$lib/constants';
   import Path from '$lib/components/svgs/Path.svelte';
   import Widget from '$lib/components/Widget.svelte';
   import { FLAT_COLOR_ICONS } from '$lib/icons';
+  import * as Accordion from '$lib/components/ui/accordion';
 
   const codeSnippet = `
 <img src="https://memsched.com/api/widgets/learning-progress?svg" />`;
@@ -189,69 +189,63 @@
     </div>
   </section>
 
-  <!-- Testimonials (placeholder) -->
-  <section id="testimonials" class="border-y bg-background">
+  <!-- FAQ Section -->
+  <section id="faq" class="border-y bg-background">
     <div class="main-container mx-auto px-4">
       <div class="mb-16 flex flex-col items-center text-center">
         <h2 class="h2 mb-3 w-fit border-b-2 border-dashed border-primary pb-1">
-          What Our Users Say
+          Frequently Asked Questions
         </h2>
         <p class="text-lg text-muted-foreground">
-          Join the community of learners tracking their journey
+          Common questions about MEMsched and how it works
         </p>
       </div>
 
-      <div class="grid grid-cols-1 gap-8 md:grid-cols-3">
-        <Card.Root>
-          <Card.Header>
-            <div class="mb-1 flex items-center gap-4">
-              <div class="h-12 w-12 rounded-full bg-primary/20"></div>
-              <div>
-                <h3 class="h5">Alex Johnson</h3>
-                <p class="text-sm text-muted-foreground">Software Developer</p>
-              </div>
-            </div>
-          </Card.Header>
-          <Card.Content class="text-sm text-muted-foreground">
-            "I've been using memsched to track my progress learning Rust. The widgets on my GitHub
-            profile have attracted attention from recruiters who appreciate seeing my commitment to
-            growing my skills."
-          </Card.Content>
-        </Card.Root>
+      <div class="mx-auto max-w-3xl">
+        <Accordion.Root type="single">
+          <Accordion.Item>
+            <Accordion.Trigger>What is MEMsched and how does it work?</Accordion.Trigger>
+            <Accordion.Content>
+              MEMsched is a web app that helps you track learning objectives and create widgets to
+              showcase your progress on websites, GitHub profiles, and portfolios.
+            </Accordion.Content>
+          </Accordion.Item>
 
-        <Card.Root>
-          <Card.Header>
-            <div class="mb-1 flex items-center gap-4">
-              <div class="h-12 w-12 rounded-full bg-primary/20"></div>
-              <div>
-                <h3 class="h5">Maria Rodriguez</h3>
-                <p class="text-sm text-muted-foreground">Language Enthusiast</p>
-              </div>
-            </div>
-          </Card.Header>
-          <Card.Content class="text-sm text-muted-foreground">
-            "Being able to visualize my Japanese learning journey has been incredibly motivating. I
-            love sharing my progress widgets on social media and seeing the support from my
-            community."
-          </Card.Content>
-        </Card.Root>
+          <Accordion.Item>
+            <Accordion.Trigger>How do I embed widgets on my website?</Accordion.Trigger>
+            <Accordion.Content>
+              Simply copy the provided HTML image tag and paste it into your website's code. Your
+              widget will automatically update whenever you log new progress.
+            </Accordion.Content>
+          </Accordion.Item>
 
-        <Card.Root>
-          <Card.Header>
-            <div class="mb-1 flex items-center gap-4">
-              <div class="h-12 w-12 rounded-full bg-primary/20"></div>
-              <div>
-                <h3 class="h5">David Lee</h3>
-                <p class="text-sm text-muted-foreground">CS Student</p>
-              </div>
-            </div>
-          </Card.Header>
-          <Card.Content class="text-sm text-muted-foreground">
-            "I use memsched to track my progress learning different programming languages and
-            frameworks. It helps me stay organized and motivated as I work through my CS
-            coursework."
-          </Card.Content>
-        </Card.Root>
+          <Accordion.Item>
+            <Accordion.Trigger>What are the available subscription plans?</Accordion.Trigger>
+            <Accordion.Content>
+              We offer a Free Plan that's free forever - no credit card required. For those who want
+              to support our mission, we offer a Pro Plan (the price of two coffees per month) that
+              includes unlimited widgets and premium features. Your support helps us grow and
+              improve MEMsched for everyone!
+            </Accordion.Content>
+          </Accordion.Item>
+
+          <Accordion.Item>
+            <Accordion.Trigger>How is my data protected?</Accordion.Trigger>
+            <Accordion.Content>
+              We encrypt all data and store it on European servers in compliance with FADP and GDPR
+              regulations. We never share or sell your personal information.
+            </Accordion.Content>
+          </Accordion.Item>
+
+          <Accordion.Item>
+            <Accordion.Trigger>Can I delete my account and data?</Accordion.Trigger>
+            <Accordion.Content>
+              You can delete your account at any time. We'll immediately anonymize your data and
+              remove your objectives and widgets, with all remaining data being permanently deleted
+              after 30 days.
+            </Accordion.Content>
+          </Accordion.Item>
+        </Accordion.Root>
       </div>
     </div>
   </section>

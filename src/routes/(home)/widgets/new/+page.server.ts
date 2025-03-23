@@ -4,9 +4,9 @@ import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { formSchema } from '$lib/components/forms/widget-form/schema';
 import type { LocalUser } from '$lib/types';
-import { MAX_WIDGETS_PER_USER } from '$lib/server/constants';
 import { handleFormDbError } from '$lib/server/utils';
-import { ResultAsync, okAsync } from 'neverthrow';
+import { okAsync } from 'neverthrow';
+import { ResultAsync } from 'neverthrow';
 
 export const load: PageServerLoad = async (event) => {
   if (!event.locals.session) {
@@ -46,11 +46,17 @@ export const actions: Actions = {
     if (widgetCount.isErr()) {
       return handleFormDbError(widgetCount, form);
     }
-    if (widgetCount.value >= MAX_WIDGETS_PER_USER && !event.locals.user?.admin) {
+
+    const planLimits = await event.locals.paymentService.getPlanLimits(event.locals.user);
+    if (planLimits.isErr()) {
+      return handleFormDbError(planLimits, form);
+    }
+
+    if (widgetCount.value >= planLimits.value.maxWidgets) {
       return fail(400, {
         form,
         widgetLimitReached: true,
-        message: `You've reached the maximum limit of ${MAX_WIDGETS_PER_USER} widgets.`,
+        message: `You've reached the maximum limit of ${planLimits.value.maxWidgets} widgets.`,
       });
     }
 

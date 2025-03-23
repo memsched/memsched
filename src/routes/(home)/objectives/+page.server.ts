@@ -3,17 +3,17 @@ import { fail, redirect } from '@sveltejs/kit';
 import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { logSchema } from '$lib/components/forms/objective-log-form/schema';
-import { MAX_WIDGETS_PER_USER, MAX_OBJECTIVES_PER_USER } from '$lib/server/constants';
 import { handleDbError, handleFormDbError } from '$lib/server/utils';
+import { FREE_PLAN_LIMITS } from '$lib/constants';
 
 export const load: PageServerLoad = async (event) => {
   if (!event.locals.session) {
     return {
       objectives: [],
       widgetsLimitReached: false,
-      maxWidgets: MAX_WIDGETS_PER_USER,
+      maxWidgets: FREE_PLAN_LIMITS.maxWidgets,
       objectivesLimitReached: false,
-      maxObjectives: MAX_OBJECTIVES_PER_USER,
+      maxObjectives: FREE_PLAN_LIMITS.maxObjectives,
     };
   }
 
@@ -50,12 +50,17 @@ export const load: PageServerLoad = async (event) => {
     return handleDbError(widgetCountResult);
   }
 
+  const planLimits = await event.locals.paymentService.getPlanLimits(event.locals.user);
+  if (planLimits.isErr()) {
+    return handleDbError(planLimits);
+  }
+
   const widgetsLimitReached =
-    widgetCountResult.value >= MAX_WIDGETS_PER_USER && !event.locals.user?.admin;
+    widgetCountResult.value >= planLimits.value.maxWidgets && !event.locals.user?.admin;
 
   // Check if user has reached the objectives limit
   const objectivesLimitReached =
-    objectives.length >= MAX_OBJECTIVES_PER_USER && !event.locals.user?.admin;
+    objectives.length >= planLimits.value.maxObjectives && !event.locals.user?.admin;
 
   return {
     objectives,
@@ -63,9 +68,9 @@ export const load: PageServerLoad = async (event) => {
     isArchived,
     isCompleted,
     widgetsLimitReached,
-    maxWidgets: MAX_WIDGETS_PER_USER,
+    maxWidgets: planLimits.value.maxWidgets,
     objectivesLimitReached,
-    maxObjectives: MAX_OBJECTIVES_PER_USER,
+    maxObjectives: planLimits.value.maxObjectives,
   };
 };
 

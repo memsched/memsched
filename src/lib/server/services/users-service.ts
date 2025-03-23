@@ -10,6 +10,7 @@ import {
   wrapResultAsyncFn,
   DrizzleRecordNotFoundErrorCause,
 } from '$lib/server/db/types';
+import { PaymentService } from './payment-service';
 
 // List of reserved usernames that cannot be used (route paths)
 export const RESERVED_USERNAMES = [
@@ -35,6 +36,13 @@ export const RESERVED_USERNAMES = [
   'docs',
   'new',
 ];
+
+// Add these types at the top after the imports
+interface AnonymizedUserData {
+  email: string;
+  name: string;
+  username: string;
+}
 
 export class UsersService {
   constructor(private readonly db: DBType) {}
@@ -183,7 +191,70 @@ export class UsersService {
     );
   }
 
-  public deleteUser(userId: string) {
-    return wrapResultAsync(this.db.delete(table.user).where(eq(table.user.id, userId)));
+  private async createAnonymizedData(): Promise<AnonymizedUserData> {
+    const uuid = uuidv4();
+    return {
+      email: `deleted_${uuid}@deleted.local`,
+      name: 'Deleted User',
+      username: `deleted_${uuid}`,
+    };
+  }
+
+  public deleteUser(userId: string, reason?: string) {
+    return wrapResultAsyncFn(async () => {
+      // 1. Get user data before deletion
+      const users = await this.db.select().from(table.user).where(eq(table.user.id, userId));
+      if (users.length === 0) {
+        throw new DrizzleRecordNotFoundErrorCause('User not found');
+      }
+      const user = users[0];
+
+      // 2. Clean up Stripe data if exists
+      if (user.stripeCustomerId) {
+        const paymentService = new PaymentService(this.db);
+        const cleanupResult = await paymentService.cleanupCustomerData(userId);
+        if (cleanupResult.isErr()) {
+          throw cleanupResult.error;
+        }
+      }
+      // Anonymize user data
+      const anonymizedData = await this.createAnonymizedData();
+
+      await this.db.batch([
+        // Delete all related data
+        this.db.delete(table.session).where(eq(table.session.userId, userId)),
+        this.db.delete(table.authProvider).where(eq(table.authProvider.userId, userId)),
+        this.db.delete(table.objective).where(eq(table.objective.userId, userId)),
+        // Anonymize user data
+        this.db
+          .update(table.user)
+          .set({
+            email: anonymizedData.email,
+            name: anonymizedData.name,
+            username: anonymizedData.username,
+            avatarUrl: null,
+            bio: null,
+            location: null,
+            website: null,
+            stripeCustomerId: null,
+            stripePlanId: null,
+            subscriptionStatus: null,
+            subscriptionPeriodEnd: null,
+            cancelAtPeriodEnd: null,
+            deletedAt: new Date(),
+            anonymized: true,
+          })
+          .where(eq(table.user.id, userId)),
+        // Create audit log entry
+        this.db.insert(table.userDeletionLog).values({
+          id: uuidv4(),
+          userId: userId,
+          reason: reason || 'user_requested',
+          deletedAt: new Date(),
+        }),
+      ]);
+
+      return { success: true };
+    });
   }
 }

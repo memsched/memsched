@@ -29,10 +29,12 @@ const initializeStripe = () => {
   });
 };
 
-const stripe = initializeStripe();
-
 export class PaymentService {
-  constructor(private readonly db: DBType) {}
+  private readonly stripe: Stripe;
+
+  constructor(private readonly db: DBType) {
+    this.stripe = initializeStripe();
+  }
 
   /**
    * Creates a subscription for a user and returns the checkout URL
@@ -59,7 +61,7 @@ export class PaymentService {
       // 3. Handle Stripe customer creation/retrieval
       let customerId = user.stripeCustomerId;
       if (!customerId) {
-        const customer = await stripe.customers.create({
+        const customer = await this.stripe.customers.create({
           email: user.email,
           name: user.name,
           metadata: {
@@ -76,13 +78,13 @@ export class PaymentService {
       }
 
       // 4. Verify the price exists and is active
-      const price = await stripe.prices.retrieve(priceId);
+      const price = await this.stripe.prices.retrieve(priceId);
       if (!price.active) {
         throw new SubscriptionError('Selected price is not active');
       }
 
       // 5. Create checkout session with proper configuration
-      const session = await stripe.checkout.sessions.create({
+      const session = await this.stripe.checkout.sessions.create({
         customer: customerId,
         client_reference_id: userId,
         payment_method_types: ['card'],
@@ -132,7 +134,7 @@ export class PaymentService {
       }
 
       // 3. Create a customer portal session
-      const portalSession = await stripe.billingPortal.sessions.create({
+      const portalSession = await this.stripe.billingPortal.sessions.create({
         customer: user.stripeCustomerId,
         return_url: returnUrl,
       });
@@ -159,7 +161,7 @@ export class PaymentService {
       // If user has a Stripe customer ID, fetch the latest subscription info
       if (user.stripeCustomerId) {
         try {
-          const subscriptions = await stripe.subscriptions.list({
+          const subscriptions = await this.stripe.subscriptions.list({
             customer: user.stripeCustomerId,
             status: 'all',
             limit: 1,
@@ -270,7 +272,7 @@ export class PaymentService {
       }
 
       // 2. Find the active subscription
-      const subscriptions = await stripe.subscriptions.list({
+      const subscriptions = await this.stripe.subscriptions.list({
         customer: user.stripeCustomerId,
         status: 'active',
       });
@@ -284,7 +286,7 @@ export class PaymentService {
 
       if (atPeriodEnd) {
         // Cancel at period end
-        const updatedSubscription = await stripe.subscriptions.update(subscription.id, {
+        const updatedSubscription = await this.stripe.subscriptions.update(subscription.id, {
           cancel_at_period_end: true,
         });
 
@@ -301,7 +303,7 @@ export class PaymentService {
         };
       } else {
         // Cancel immediately
-        await stripe.subscriptions.cancel(subscription.id);
+        await this.stripe.subscriptions.cancel(subscription.id);
 
         // Update database
         await this.updateSubscriptionStatus(userId, {
@@ -327,7 +329,7 @@ export class PaymentService {
     return wrapResultAsyncFn(async () => {
       try {
         // Validate webhook signature
-        const event = stripe.webhooks.constructEvent(payload, signature, endpointSecret);
+        const event = this.stripe.webhooks.constructEvent(payload, signature, endpointSecret);
 
         // Process the validated event
         return await this.handleWebhookEvent(event);
@@ -389,7 +391,7 @@ export class PaymentService {
         throw new SubscriptionError('No user ID found in checkout session');
       }
 
-      const subscription = await stripe.subscriptions.retrieve(session.subscription as string);
+      const subscription = await this.stripe.subscriptions.retrieve(session.subscription as string);
 
       await this.db
         .update(table.user)
@@ -503,24 +505,24 @@ export class PaymentService {
       }
 
       // 2. Cancel any active subscriptions
-      const subscriptions = await stripe.subscriptions.list({
+      const subscriptions = await this.stripe.subscriptions.list({
         customer: stripeCustomerId,
         status: 'active',
       });
 
       for (const subscription of subscriptions.data) {
-        await stripe.subscriptions.cancel(subscription.id);
+        await this.stripe.subscriptions.cancel(subscription.id);
       }
 
       // 3. Schedule customer deletion (delayed to allow for refunds/disputes)
-      await stripe.customers.del(stripeCustomerId);
+      await this.stripe.customers.del(stripeCustomerId);
 
       return { success: true };
     });
   }
 
   public async getPrice(priceId: string) {
-    const price = await stripe.prices.retrieve(priceId);
+    const price = await this.stripe.prices.retrieve(priceId);
     return {
       amount: price.unit_amount ? price.unit_amount / 100 : 0,
       currency: price.currency,

@@ -121,11 +121,12 @@
                       </div>
                     {/if}
                     <form action="?/subscribe" method="POST">
-                      <Button type="submit" variant="default" class="flex-1">Subscribe</Button>
-                    </form>
-                  {:else}
-                    <form action="?/cancelSubscription" method="POST">
-                      <Button type="submit" variant="outline" class="flex-1">Cancel Plan</Button>
+                      <Button
+                        type="submit"
+                        variant="default"
+                        class="flex-1"
+                        data-umami-event="account-subscribe-button">Subscribe</Button
+                      >
                     </form>
                   {/if}
                   <form action="?/manageSubscription" method="POST">
@@ -134,6 +135,7 @@
                       type="submit"
                       variant="outline"
                       class="animate-svg flex-1"
+                      data-umami-event="account-manage-subscription-button"
                     >
                       Manage Plan
                     </IconButton>
@@ -174,6 +176,7 @@
                 variant="default"
                 size="sm"
                 class="animate-svg whitespace-nowrap bg-amber-800 text-amber-200 hover:bg-amber-700"
+                data-umami-event="account-upgrade-to-pro-button"
               >
                 Upgrade to Pro
               </IconButton>
@@ -215,7 +218,11 @@
           <DeleteAccountDialog action="?/deleteAccount" name="userId" value={data.user.id}>
             <Dialog.Trigger>
               {#snippet child({ props })}
-                <Button variant="destructive" {...props}>Delete Account</Button>
+                <Button
+                  variant="destructive"
+                  {...props}
+                  data-umami-event="account-delete-account-button">Delete Account</Button
+                >
               {/snippet}
             </Dialog.Trigger>
           </DeleteAccountDialog>

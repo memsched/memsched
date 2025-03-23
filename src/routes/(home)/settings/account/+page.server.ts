@@ -3,8 +3,7 @@ import { redirect, error, fail } from '@sveltejs/kit';
 import type { LocalUser } from '$lib/types';
 import { handleDbError } from '$lib/server/utils';
 import { getPlanLimits } from '$lib/server/subscription';
-
-const PRICE_ID = 'price_1R5jykLbnAcoN7rzDYDJtJvK';
+import { PUBLIC_STRIPE_MONTHLY_PRO_PRICE_ID } from '$env/static/public';
 
 export const load: PageServerLoad = async (event) => {
   if (!event.locals.session) {
@@ -25,7 +24,7 @@ export const load: PageServerLoad = async (event) => {
     user: event.locals.user as LocalUser,
     subscription: subscriptionResult.value,
     planLimits,
-    price: event.locals.paymentService.getPrice(PRICE_ID),
+    price: event.locals.paymentService.getPrice(PUBLIC_STRIPE_MONTHLY_PRO_PRICE_ID),
   };
 };
 
@@ -77,7 +76,7 @@ export const actions: Actions = {
 
     const result = await event.locals.paymentService.createSubscription(
       event.locals.session.userId,
-      PRICE_ID,
+      PUBLIC_STRIPE_MONTHLY_PRO_PRICE_ID,
       event.url.origin + '/settings/account',
       event.url.origin + '/settings/account'
     );
@@ -89,20 +88,20 @@ export const actions: Actions = {
     return redirect(302, result.value.checkoutUrl);
   },
 
-  cancelSubscription: async (event) => {
-    if (!event.locals.session) {
-      return error(401, 'Unauthorized');
-    }
-
-    const result = await event.locals.paymentService.cancelSubscription(
-      event.locals.session.userId,
-      true // Cancel at period end
-    );
-
-    if (result.isErr()) {
-      return fail(400, { error: 'Failed to cancel subscription' });
-    }
-
-    return { success: true };
-  },
+  // cancelSubscription: async (event) => {
+  //   if (!event.locals.session) {
+  //     return error(401, 'Unauthorized');
+  //   }
+  //
+  //   const result = await event.locals.paymentService.cancelSubscription(
+  //     event.locals.session.userId,
+  //     true // Cancel at period end
+  //   );
+  //
+  //   if (result.isErr()) {
+  //     return fail(400, { error: 'Failed to cancel subscription' });
+  //   }
+  //
+  //   return { success: true };
+  // },
 };

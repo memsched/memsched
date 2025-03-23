@@ -290,6 +290,7 @@
                                     size="sm"
                                     href="/settings/account"
                                     class="animate-svg"
+                                    data-umami-event="objectives-upgrade-to-pro-button"
                                   >
                                     Upgrade to Pro
                                   </IconButton>

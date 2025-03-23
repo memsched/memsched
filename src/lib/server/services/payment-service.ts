@@ -518,4 +518,13 @@ export class PaymentService {
       return { success: true };
     });
   }
+
+  public async getPrice(priceId: string) {
+    const price = await stripe.prices.retrieve(priceId);
+    return {
+      amount: price.unit_amount ? price.unit_amount / 100 : 0,
+      currency: price.currency,
+      interval: price.recurring?.interval || null,
+    };
+  }
 }

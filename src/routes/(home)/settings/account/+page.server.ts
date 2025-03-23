@@ -4,6 +4,8 @@ import type { LocalUser } from '$lib/types';
 import { handleDbError } from '$lib/server/utils';
 import { getPlanLimits } from '$lib/server/subscription';
 
+const PRICE_ID = 'price_1R5jykLbnAcoN7rzDYDJtJvK';
+
 export const load: PageServerLoad = async (event) => {
   if (!event.locals.session) {
     return redirect(302, '/auth/signin');
@@ -23,6 +25,7 @@ export const load: PageServerLoad = async (event) => {
     user: event.locals.user as LocalUser,
     subscription: subscriptionResult.value,
     planLimits,
+    price: event.locals.paymentService.getPrice(PRICE_ID),
   };
 };
 
@@ -74,7 +77,7 @@ export const actions: Actions = {
 
     const result = await event.locals.paymentService.createSubscription(
       event.locals.session.userId,
-      'price_1R5jykLbnAcoN7rzDYDJtJvK',
+      PRICE_ID,
       event.url.origin + '/settings/account',
       event.url.origin + '/settings/account'
     );

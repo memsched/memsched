@@ -40,3 +40,11 @@ export const debounce = <F extends (...args: any[]) => any>(func: F, waitFor: nu
       timeout = setTimeout(() => resolve(func(...args)), waitFor);
     });
 };
+
+export const formatCurrency = (amount: number, currency: string) => {
+  return new Intl.NumberFormat(navigator.language || 'en-US', {
+    style: 'currency',
+    currency,
+    minimumFractionDigits: 0,
+  }).format(amount);
+};

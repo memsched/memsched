@@ -124,6 +124,21 @@
   .md ul {
     @apply mb-3 list-disc pl-10;
   }
+
+  .md ol {
+    @apply mb-3 list-decimal pl-6;
+    counter-reset: item;
+  }
+
+  .md ol li {
+    display: block;
+  }
+
+  .md ol li:before {
+    @apply me-2 text-muted-foreground;
+    content: counter(item) '. ';
+    counter-increment: item;
+  }
 }
 
 @layer components {

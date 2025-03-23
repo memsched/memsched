@@ -85,6 +85,20 @@
       "when": 1742411979475,
       "tag": "0011_add_user_admin",
       "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "6",
+      "when": 1742713954871,
+      "tag": "0012_add_stripe_user_subscription",
+      "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "6",
+      "when": 1742718153011,
+      "tag": "0013_add_user_deletion_log",
+      "breakpoints": true
     }
   ]
 }

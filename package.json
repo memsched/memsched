@@ -17,16 +17,16 @@
     "test": "pnpm run test:unit -- --run && pnpm run test:e2e",
     "test:e2e": "playwright test",
     "db:push": "drizzle-kit push",
-    "db:generate": "drizzle-kit generate",
-    "db:migrate": "drizzle-kit migrate",
-    "db:studio": "drizzle-kit studio",
+    "db:generate": "DATABASE_URL=file:local.db drizzle-kit generate",
+    "db:migrate": "DATABASE_URL=file:local.db drizzle-kit migrate",
+    "db:studio": "DATABASE_URL=file:local.db drizzle-kit studio",
     "deploy": "pnpm run build && wrangler pages deploy",
     "cf-typegen": "wrangler types && mv worker-configuration.d.ts src/",
     "d1:migrate": "wrangler d1 migrations apply memsched-db --local",
     "prod:d1:create": "wrangler d1 create memsched-db --remote",
     "prod:kv:create": "wrangler kv namespace create memsched-kv",
-    "prod:d1:migrate": "wrangler d1 migrations apply memsched-db --remote",
-    "prod:d1:execute": "wrangler d1 execute memsched-db --remote"
+    "prod:d1:migrate": "wrangler d1 migrations apply memsched-db --remote --env production",
+    "prod:d1:execute": "wrangler d1 execute memsched-db --remote --env production"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20250313.0",
@@ -78,6 +78,7 @@
     "html-react-parser": "^5.2.2",
     "mode-watcher": "^0.5.1",
     "satori": "^0.12.1",
+    "stripe": "^17.7.0",
     "svelte-french-toast": "^1.2.0",
     "uuid": "^11.1.0"
   },

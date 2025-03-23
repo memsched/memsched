@@ -1,7 +1,7 @@
 import type { PageServerLoad } from './$types';
-import { MAX_WIDGETS_PER_USER } from '$lib/server/constants';
 import { ResultAsync } from 'neverthrow';
 import { okAsync } from 'neverthrow';
+import { handleDbError } from '$lib/server/utils';
 
 export const load: PageServerLoad = async (event) => {
   const session = event.locals.session;
@@ -21,16 +21,19 @@ export const load: PageServerLoad = async (event) => {
       ]);
     });
   if (res.isErr()) {
-    return {
-      widgets: [],
-    };
+    return handleDbError(res);
   }
   const [widgetIds, widgetCount] = res.value;
+
+  const planLimits = await event.locals.paymentService.getPlanLimits(event.locals.user);
+  if (planLimits.isErr()) {
+    return handleDbError(planLimits);
+  }
 
   return {
     widgets: widgetIds.map((w) => w.id),
     isCompleted,
-    widgetsLimitReached: widgetCount >= MAX_WIDGETS_PER_USER && !event.locals.user?.admin,
-    maxWidgets: MAX_WIDGETS_PER_USER,
+    widgetsLimitReached: widgetCount >= planLimits.value.maxWidgets,
+    maxWidgets: planLimits.value.maxWidgets,
   };
 };

@@ -13,6 +13,19 @@ export const user = sqliteTable('user', {
   location: text('location'),
   website: text('website'),
 
+  // Subscription fields
+  stripeCustomerId: text('stripe_customer_id'),
+  subscriptionStatus: text('subscription_status').default('inactive'),
+  stripePlanId: text('stripe_plan_id'),
+  subscriptionPeriodEnd: integer('subscription_period_end', {
+    mode: 'timestamp',
+  }),
+  cancelAtPeriodEnd: integer('cancel_at_period_end', { mode: 'boolean' }).default(false),
+
+  // GDPR fields
+  deletedAt: integer('deleted_at', { mode: 'timestamp' }),
+  anonymized: integer('anonymized', { mode: 'boolean' }).default(false),
+
   createdAt: integer('created_at', {
     mode: 'timestamp',
   }).default(sql`(unixepoch())`),
@@ -129,6 +142,16 @@ export const widgetMetric = sqliteTable('widget_metric', {
   userId: text('user_id')
     .notNull()
     .references(() => user.id, { onDelete: 'cascade' }),
+  createdAt: integer('created_at', {
+    mode: 'timestamp',
+  }).default(sql`(unixepoch())`),
+});
+
+export const userDeletionLog = sqliteTable('user_deletion_log', {
+  id: text('id').primaryKey(),
+  userId: text('user_id').notNull(),
+  reason: text('reason').notNull(),
+  deletedAt: integer('deleted_at', { mode: 'timestamp' }).notNull(),
   createdAt: integer('created_at', {
     mode: 'timestamp',
   }).default(sql`(unixepoch())`),

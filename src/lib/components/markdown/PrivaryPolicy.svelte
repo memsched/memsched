@@ -4,87 +4,136 @@
 
   const origin = page.url.origin;
   const source = `
-_Effective Date: March 10, 2025_
+_Effective Date: March 23, 2025_
 
 Your privacy is important to us. It is MEMsched's policy to respect your privacy regarding any information we may collect from you across our website, ${origin}, and other sites we own and operate.
 
 ## 1. Information We Collect
 
-We collect both personal and non-personal information for the following purposes:
+We collect information through the following means:
 
-- **Personal Data:** We may ask for your name, email address, and payment information to process your orders.
-- **Non-Personal Data:** We use web cookies for authentication and functionality purposes.
+### 1.1 OAuth Authentication
+When you sign in using GitHub or Google, we collect:
+- Your email address
+- Your name
+- Your profile picture (optional)
+- A unique identifier from the authentication provider
 
-## 2. Data Usage
+### 1.2 Service Usage
+When you use our service, we collect:
+- Objectives and widgets data you create
+- Usage analytics (anonymized)
+- Performance metrics
 
-We use the personal information collected only for processing orders and providing you with the services you request. Non-personal data helps enhance the website's functionality and user experience.
+### 1.3 Payment Information
+When you subscribe to our Pro plan:
+- Stripe, our payment processor, collects and processes your payment information
+- We never store your complete payment details
+- We maintain subscription and transaction records as required by law
 
-## 3. Data Sharing
+## 2. How We Use Your Information
 
-We do not share your personal data with any third parties.
+We use your information for:
+- Account creation and management
+- Processing payments and managing subscriptions
+- Providing and improving our services
+- Sending important service notifications
+- Analytics to improve user experience (anonymized)
 
-## 4. Third-Party Services and OAuth Integration
+## 3. Data Sharing and Third-Party Services
 
-MEMsched offers integration with third-party services to enhance your experience:
+We share minimal required data with:
 
-### 4.1 Authentication Services
+### 3.1 Payment Processing
+- **Stripe:** Processes payments and manages subscriptions
+  - Receives: Payment information, email
+  - Purpose: Payment processing, subscription management
+  - Privacy Policy: [Stripe Privacy Policy](https://stripe.com/privacy)
 
-We use third-party OAuth authentication services to provide secure login options:
+### 3.2 Authentication Providers
+- **GitHub:**
+  - Receives: Authentication request
+  - Accesses: Email address (scope: user:email)
+  - Purpose: Account creation and verification
 
-- **GitHub OAuth:** When you sign in with GitHub, we request access to your email address (scope: user:email). This is used solely to create and manage your account.
+- **Google:**
+  - Receives: Authentication request
+  - Accesses: Basic profile (scopes: openid, profile, email)
+  - Purpose: Account creation and verification
 
-- **Google OAuth:** When you sign in with Google, we request access to your basic profile information (scopes: openid, profile, email). This is used solely to create and manage your account.
+We do not sell or share your personal data with any other third parties.
 
-## 5. Legal Basis for Processing (Swiss FADP)
+## 4. Data Storage and Security
 
-In accordance with the Swiss Federal Act on Data Protection (FADP), we process your personal data based on the following legal grounds:
+- Our servers are located in Europe
+- Data is encrypted in transit and at rest
+- We implement industry-standard security measures
+- Regular security audits and updates are performed
 
-- Your consent when you agree to this Privacy Policy
-- The fulfillment of our contractual obligations to you
-- Compliance with legal obligations
-- Our legitimate interests, which do not override your fundamental rights and freedoms
+## 5. Your Privacy Rights
 
-## 6. Data Transfer and Storage
+Under Swiss data protection law (FADP), you have the right to:
+- Access your personal data
+- Correct inaccurate data
+- Request data deletion
+- Export your data
+- Withdraw consent
+- Lodge complaints with the Swiss FDPIC
 
-Our servers are located in Europe. By using our services, you consent to the transfer of your data to these servers. We implement appropriate safeguards to protect your information during transfer and storage.
+## 6. Account Deletion and Data Retention
 
-## 7. Your Rights
+When you delete your account:
 
-Under Swiss data protection law, you have the following rights:
+### 6.1 Immediate Actions
+- Personal information is anonymized
+- Active subscriptions are cancelled
+- Objectives and widgets are deleted
+- Stripe customer profile is scheduled for deletion
 
-- The right to access your personal data
-- The right to rectify inaccurate personal data
-- The right to erasure ("right to be forgotten")
-- The right to restrict processing
-- The right to data portability
-- The right to object to processing
-- The right to withdraw consent
+### 6.2 Data Retention
+- Anonymized data is retained for 30 days
+- After 30 days, all user data is permanently deleted
+- Payment records are retained as required by law
+- Analytics data remains anonymized
 
-To exercise these rights, please contact us at [info@memsched.com](mailto:info@memsched.com).
+### 6.3 Exceptions
+- Financial records (as required by law)
+- Aggregate analytics (anonymized)
+- Logs required for security purposes
+
+## 7. Cookies and Tracking
+
+We use:
+- Essential cookies for authentication
+- Session management cookies
+- [Umami Analytics](https://umami.is) for anonymous usage statistics
+- No third-party tracking cookies
 
 ## 8. Children's Privacy
 
-MEMsched does not knowingly collect any personal information from children under the age of 16.
+MEMsched does not knowingly collect information from children under 16. If you believe a child has provided us data, contact us for immediate removal.
 
-## 9. Cookies
+## 9. Changes to This Policy
 
-MEMsched uses web cookies strictly for authentication and functionality purposes. These cookies help ensure a smooth user experience by allowing you to remain logged in and access our services securely. We do not use cookies for tracking or collecting any non-personal data related to your browsing behavior.
+We may update this policy. You will be notified of significant changes via:
+- Email notification
+- Website announcement
+- Service notification
 
-In addition, we use [Umami Web Analytics](https://umami.is) to monitor website activity and performance. This helps us analyze traffic patterns and scale our services effectively to meet user demand. Umami is a privacy-focused analytics platform that does not create cookies and does not track personal information or browsing behavior across other sites. All analytics data is collected anonymously.
+## 10. Contact Information
 
-## 10. Privacy Policy Updates
+For privacy inquiries:
+- Email: [info@memsched.com](mailto:info@memsched.com)
+- Subject: "Privacy Concern"
 
-We may update our Privacy Policy from time to time. If significant changes occur, we will notify you via email.
+## 11. Legal Compliance
 
-## 11. Supervisory Authority
+We comply with:
+- Swiss Federal Act on Data Protection (FADP)
+- EU General Data Protection Regulation (GDPR) where applicable
+- Financial services regulations regarding payment processing
 
-If you believe that our processing of your personal data infringes data protection laws, you have the right to lodge a complaint with the Swiss Federal Data Protection and Information Commissioner (FDPIC).
-
-## 12. Contact Us
-
-For any questions or concerns regarding this policy, please contact us at [info@memsched.com](mailto:info@memsched.com).
-
-By using our services, you consent to the collection and use of your information as described in this Privacy Policy.`;
+For complaints, contact the Swiss Federal Data Protection and Information Commissioner (FDPIC).`;
 
   // Our registered address is:
   // MEMsched

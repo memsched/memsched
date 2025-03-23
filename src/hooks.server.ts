@@ -9,6 +9,7 @@ import {
   WidgetsService,
   MetricsService,
   SessionsService,
+  PaymentService,
   SESSION_COOKIE_NAME,
 } from '$lib/server/services';
 
@@ -22,6 +23,7 @@ function initializeServices(db: DBType) {
   const usersService = new UsersService(db);
   const metricsService = new MetricsService(db);
   const sessionsService = new SessionsService(db);
+  const paymentService = new PaymentService(db);
 
   // Create interdependent services with temporary null for circular dependencies
   const widgetsService = new WidgetsService(db, null, metricsService);
@@ -42,6 +44,7 @@ function initializeServices(db: DBType) {
     widgetsService,
     metricsService,
     sessionsService,
+    paymentService,
   };
 }
 

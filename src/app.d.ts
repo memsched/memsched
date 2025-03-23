@@ -17,6 +17,7 @@ import type {
   ObjectiveLogsService,
   WidgetsService,
   MetricsService,
+  PaymentService,
 } from '$lib/server/services';
 
 declare global {
@@ -32,6 +33,7 @@ declare global {
       objectiveLogsService: ObjectiveLogsService;
       widgetsService: WidgetsService;
       metricsService: MetricsService;
+      paymentService: PaymentService;
     }
     interface Platform {
       env: {

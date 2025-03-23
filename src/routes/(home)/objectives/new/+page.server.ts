@@ -3,7 +3,6 @@ import { error, fail, redirect } from '@sveltejs/kit';
 import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { formSchema } from '$lib/components/forms/objective-form/schema';
-import { MAX_OBJECTIVES_PER_USER } from '$lib/server/constants';
 import { handleDbError, handleFormDbError } from '$lib/server/utils';
 
 export const load: PageServerLoad = async (event) => {
@@ -19,21 +18,26 @@ export const load: PageServerLoad = async (event) => {
     return handleDbError(objectivesResult);
   }
   const objectives = objectivesResult.value;
-  const objectivesLimitReached =
-    objectives.length >= MAX_OBJECTIVES_PER_USER && !event.locals.user?.admin;
+
+  const planLimits = await event.locals.paymentService.getPlanLimits(event.locals.user);
+  if (planLimits.isErr()) {
+    return handleDbError(planLimits);
+  }
+
+  const objectivesLimitReached = objectives.length >= planLimits.value.maxObjectives;
 
   if (objectivesLimitReached) {
     return {
       form: await superValidate(zod(formSchema)),
       objectivesLimitReached,
-      maxObjectives: MAX_OBJECTIVES_PER_USER,
+      maxObjectives: planLimits.value.maxObjectives,
     };
   }
 
   return {
     form: await superValidate(zod(formSchema)),
     objectivesLimitReached: false,
-    maxObjectives: MAX_OBJECTIVES_PER_USER,
+    maxObjectives: planLimits.value.maxObjectives,
   };
 };
 
@@ -51,12 +55,15 @@ export const actions: Actions = {
       return handleDbError(objectivesResult);
     }
     const objectives = objectivesResult.value;
-    const objectivesLimitReached =
-      objectives.length >= MAX_OBJECTIVES_PER_USER && !event.locals.user?.admin;
 
-    if (objectivesLimitReached) {
+    const planLimits = await event.locals.paymentService.getPlanLimits(event.locals.user);
+    if (planLimits.isErr()) {
+      return handleDbError(planLimits);
+    }
+
+    if (objectives.length >= planLimits.value.maxObjectives) {
       return fail(400, {
-        error: `You have reached the maximum limit of ${MAX_OBJECTIVES_PER_USER} objectives.`,
+        error: `You have reached the maximum limit of ${planLimits.value.maxObjectives} objectives.`,
       });
     }
 

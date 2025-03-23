@@ -61,8 +61,16 @@
         {#if data.widgetsLimitReached}
           <Tooltip.Provider delayDuration={100}>
             <Tooltip.Root>
-              <Tooltip.Trigger class="cursor-not-allowed">
-                <IconButton size="sm" icon={IoAdd} variant="outline" disabled>New</IconButton>
+              <Tooltip.Trigger>
+                <IconButton
+                  icon={IoArrowForward}
+                  size="sm"
+                  href="/settings/account"
+                  class="animate-svg"
+                  data-umami-event="widgets-upgrade-to-pro-button"
+                >
+                  Upgrade to Pro
+                </IconButton>
               </Tooltip.Trigger>
               <Tooltip.Content side="left" align="center">
                 <p>You've reached the maximum limit of {data.maxWidgets} widgets</p>

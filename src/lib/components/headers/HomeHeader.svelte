@@ -27,7 +27,7 @@
   ];
 </script>
 
-<header class="fixed z-50 w-full border-b bg-background">
+<header class="fixed z-40 w-full border-b bg-background">
   <nav
     class="main-container flex w-full items-center justify-between"
     style="height: {HEADER_HEIGHT}px"

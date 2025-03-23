@@ -52,7 +52,7 @@ const config = {
         'font-src': ['self'],
         'object-src': ['none'],
         'base-uri': ['self'],
-        'form-action': ['self'],
+        'form-action': ['self', 'https://checkout.stripe.com', 'https://billing.stripe.com'],
         'frame-ancestors': ['none'],
         'upgrade-insecure-requests': process.env.CF_PAGES !== undefined,
         'block-all-mixed-content': true,

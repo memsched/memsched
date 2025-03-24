@@ -439,30 +439,6 @@
     return ratio.toFixed(2) + ':1';
   }
 
-  function scrollToHeading(headingData: HeadingElement) {
-    if (!browser) return;
-
-    const element = headingData.element;
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-
-      // Highlight the element temporarily
-      const originalOutline = element.style.outline;
-      const originalBackground = element.style.backgroundColor;
-      const originalTransition = element.style.transition;
-
-      element.style.transition = 'all 0.3s ease';
-      element.style.backgroundColor = 'rgba(255, 215, 0, 0.3)';
-      element.style.outline = '2px solid rgba(255, 165, 0, 0.8)';
-
-      setTimeout(() => {
-        element.style.backgroundColor = originalBackground;
-        element.style.outline = originalOutline;
-        element.style.transition = originalTransition;
-      }, 1500);
-    }
-  }
-
   // Dragging functionality
   function startDrag(event: MouseEvent) {
     isDragging = true;
@@ -566,6 +542,9 @@
   <div
     class="flex h-8 cursor-move items-center justify-between border-b border-border bg-muted px-2.5 py-1"
     onmousedown={startDrag}
+    role="button"
+    aria-label="Drag to move accessibility toolbar"
+    tabindex="0"
   >
     <span class="text-sm font-semibold">Accessibility Toolbar</span>
     <div class="flex items-center gap-1">
@@ -573,10 +552,9 @@
         class="flex h-5 w-5 cursor-pointer items-center justify-center rounded border-none bg-transparent text-xs hover:bg-muted-foreground/10"
         onclick={() => {
           if (activeTab === 'headings') scanHeadings();
-          else if (activeTab === 'landmarks') scanLandmarks();
-          else if (activeTab === 'contrast') scanContrast();
+          if (activeTab === 'contrast') scanContrast();
         }}
-        title="Rescan page"
+        aria-label="Refresh accessibility scan"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -677,18 +655,23 @@
           <div class="max-h-[300px] overflow-y-auto">
             {#each headingElements as heading, index}
               {@const prevHeading = index > 0 ? headingElements[index - 1] : null}
-              <div
-                class="mb-1 flex cursor-pointer items-start rounded px-1 py-0.5 text-xs hover:bg-muted/50"
+              <button
+                type="button"
+                class="mb-1 flex w-full cursor-pointer items-start rounded px-1 py-0.5 text-left text-xs hover:bg-muted/50"
                 class:text-destructive={prevHeading &&
                   heading.level > prevHeading.level &&
                   heading.level - prevHeading.level > 1}
-                style="padding-left: {heading.depth * 12 + 4}px;"
-                onclick={() => scrollToHeading(heading)}
-                title="Click to scroll to this heading"
+                onclick={() => scrollToElement(heading.element)}
+                onkeydown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    scrollToElement(heading.element);
+                  }
+                }}
               >
                 <div class="mr-1 font-mono text-primary">H{heading.level}</div>
                 <div class="truncate">{heading.text}</div>
-              </div>
+              </button>
             {/each}
           </div>
 
@@ -788,9 +771,16 @@
 
           <div class="max-h-[300px] overflow-y-auto">
             {#each contrastIssues as issue}
-              <div
-                class="mb-2 cursor-pointer rounded border border-border p-2 text-xs hover:bg-muted/50"
+              <button
+                type="button"
+                class="mb-2 w-full cursor-pointer rounded border border-border p-2 text-left text-xs hover:bg-muted/50"
                 onclick={() => scrollToElement(issue.element)}
+                onkeydown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    scrollToElement(issue.element);
+                  }
+                }}
               >
                 <div class="mb-1 truncate font-medium">{issue.text}</div>
 
@@ -826,7 +816,7 @@
                     ? 'Large'
                     : 'Normal'} text)
                 </div>
-              </div>
+              </button>
             {/each}
           </div>
 

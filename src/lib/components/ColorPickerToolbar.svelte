@@ -318,6 +318,9 @@
   <div
     class="flex h-8 cursor-move items-center justify-between border-b border-border bg-muted px-2.5 py-1"
     onmousedown={startDrag}
+    role="button"
+    aria-label="Drag to move color picker"
+    tabindex="0"
   >
     <span class="text-sm font-semibold">Theme Color Editor</span>
     <div class="flex items-center gap-1">

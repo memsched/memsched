@@ -20,7 +20,7 @@
       if (window.history.length > 1) {
         window.history.back();
       } else {
-        goto('/');
+        goto('/', { invalidateAll: true });
       }
     }}
   >

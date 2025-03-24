@@ -34,7 +34,6 @@
           </a>
         {/snippet}
       </DropdownMenu.Item>
-      <!-- TODO: Probably remove this -->
       <DropdownMenu.Item class="cursor-pointer hover:text-accent-foreground">
         {#snippet child({ props })}
           <a href="mailto:info@memsched.com" {...props}>

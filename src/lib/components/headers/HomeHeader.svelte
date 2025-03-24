@@ -17,7 +17,7 @@
 
   const NAV_ITEMS = [
     {
-      href: page.data.user === null ? '/' : getUserOverviewUrl(page.data.user.username),
+      href: !page.data.user ? '/' : getUserOverviewUrl(page.data.user.username),
       text: 'Overview',
       icon: IoFlashOutline,
     },
@@ -48,7 +48,7 @@
         {/each}
       </div>
     </div>
-    {#if page.data.user !== null}
+    {#if page.data.user}
       <HeaderProfile />
     {:else}
       <div class="flex gap-3">

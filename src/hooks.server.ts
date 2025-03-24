@@ -1,5 +1,6 @@
 import type { Handle } from '@sveltejs/kit';
 import { sequence } from '@sveltejs/kit/hooks';
+import { building } from '$app/environment';
 import { getDB, type DBType } from '$lib/server/db';
 import { getCache } from '$lib/server/cache';
 import {
@@ -12,6 +13,12 @@ import {
   PaymentService,
   SESSION_COOKIE_NAME,
 } from '$lib/server/services';
+
+const PRERENDERED_ROUTES = ['/docs', '/privacy', '/tos'];
+
+function isPrerenderedRoute(url: URL) {
+  return PRERENDERED_ROUTES.some((route) => url.pathname.startsWith(route));
+}
 
 /**
  * Initializes all services using dependency injection
@@ -50,6 +57,10 @@ function initializeServices(db: DBType) {
 
 // This will handle database injection
 const dbHandle: Handle = async ({ event, resolve }) => {
+  if (building || isPrerenderedRoute(event.url)) {
+    return resolve(event);
+  }
+
   // Make database available via event.platform
   event.locals.db = getDB(event.platform) as DBType;
   event.locals.cache = getCache(event.platform);
@@ -60,6 +71,10 @@ const dbHandle: Handle = async ({ event, resolve }) => {
 };
 
 const authHandle: Handle = async ({ event, resolve }) => {
+  if (building || isPrerenderedRoute(event.url)) {
+    return resolve(event);
+  }
+
   const token = event.cookies.get(SESSION_COOKIE_NAME) ?? null;
   if (token === null) {
     event.locals.user = null;

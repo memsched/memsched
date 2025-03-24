@@ -27,18 +27,14 @@
 </script>
 
 <SvelteSeo
-  title="Account Settings - MEMsched"
+  title="Account - MEMsched"
   description="Manage your MEMsched account settings and preferences"
   noindex={true}
   nofollow={true}
 />
 
 <div class="mb-8">
-  <SettingsTitle
-    title="Account Settings"
-    subtitle="Manage your subscription and data."
-    icon={IoKey}
-  />
+  <SettingsTitle title="Account" subtitle="Manage your subscription and data." icon={IoKey} />
 </div>
 
 <div class="space-y-10">
@@ -187,10 +183,10 @@
     </div>
   </section>
 
-  <!-- Security Section -->
+  <!-- Privacy Section -->
   <section>
     <div class="mb-4 flex items-center">
-      <h2 class="text-2xl font-semibold">Security</h2>
+      <h2 class="text-2xl font-semibold">Privacy</h2>
     </div>
 
     <!-- Delete Account Section -->

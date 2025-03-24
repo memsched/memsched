@@ -62,6 +62,12 @@
           <Tooltip.Provider delayDuration={100}>
             <Tooltip.Root>
               <Tooltip.Trigger>
+                <IconButton disabled size="sm" icon={IoAdd} variant="translucent">New</IconButton>
+              </Tooltip.Trigger>
+              <Tooltip.Content side="bottom" align="center" class="flex flex-col gap-2 p-4">
+                <p>
+                  You've reached the maximum limit of {data.maxWidgets} widgets
+                </p>
                 <IconButton
                   icon={IoArrowForward}
                   size="sm"
@@ -71,9 +77,6 @@
                 >
                   Upgrade to Pro
                 </IconButton>
-              </Tooltip.Trigger>
-              <Tooltip.Content side="left" align="center">
-                <p>You've reached the maximum limit of {data.maxWidgets} widgets</p>
               </Tooltip.Content>
             </Tooltip.Root>
           </Tooltip.Provider>

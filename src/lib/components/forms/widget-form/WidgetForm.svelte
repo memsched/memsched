@@ -277,7 +277,7 @@
                     <Form.Field {form} name="metrics[{j}].calculationType" class="col-span-2">
                       <Form.Control>
                         {#snippet children({ props })}
-                          <Form.Label>Calculation Type</Form.Label>
+                          <Form.Label>Duration</Form.Label>
                           <Select.Root
                             type="single"
                             bind:value={$formData.metrics[j].calculationType}
@@ -487,7 +487,7 @@
       <div>
         {#if formSchema.safeParse($formData).success}
           {#if edit}
-            <small class="ms-1 inline-block text-sm text-muted-foreground">New</small>
+            <small class="ms-1 inline-block text-sm text-muted-foreground">Updated</small>
           {/if}
           <img
             src="/api/widgets/preview/{data.user.id}?config={btoa(JSON.stringify($formData))}"

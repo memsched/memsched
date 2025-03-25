@@ -142,7 +142,7 @@
     </button>
   </div>
 
-  <div class="flex gap-6 py-16">
+  <div class="flex gap-6 py-16 max-lg:justify-center">
     <!-- Mobile Sidebar Overlay -->
     {#if isMobileMenuOpen}
       <div
@@ -159,14 +159,15 @@
     <div
       id="mobile-navigation"
       class={cn(
-        'fixed inset-y-0 left-0 z-30 w-64 transform overflow-y-auto p-6 transition-transform duration-200 ease-in-out max-lg:border-e max-lg:bg-background max-lg:pt-12 lg:static lg:block lg:transform-none lg:p-0 lg:shadow-none',
+        'fixed inset-y-0 left-0 z-30 w-64 transform overflow-y-auto transition-transform duration-200 ease-in-out max-lg:border-e max-lg:bg-background max-lg:pt-12 lg:fixed lg:block lg:transform-none lg:shadow-none',
+        'px-6 py-8 lg:mx-4 lg:px-8 lg:py-12 lg:pt-16 xl:mx-8',
         isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
       )}
       role="navigation"
       aria-label="Documentation navigation"
     >
       <!-- Logo -->
-      <div class="mb-8 mt-8 lg:mt-0">
+      <div class="mb-12">
         <a href="/docs" class="inline-block">
           <Logo class="h-6 w-auto text-primary" />
         </a>
@@ -176,8 +177,8 @@
       <nav class="h-[calc(100vh-12rem)] space-y-8 overflow-y-auto pb-16">
         {#each sidebarLinks as section}
           <div>
-            <h4 class="mb-2 text-sm font-semibold text-primary">{section.title}</h4>
-            <ul class="space-y-2 text-sm">
+            <h4 class="mb-3 text-sm font-semibold text-primary">{section.title}</h4>
+            <ul class="space-y-2.5 text-sm">
               {#each section.links as link}
                 <li>
                   <a
@@ -203,7 +204,7 @@
         {/each}
 
         <!-- Return Home Link -->
-        <div class="mt-8 border-t pt-4">
+        <div class="mt-8 border-t pt-6">
           <a
             href="/"
             class="block rounded-md px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
@@ -216,7 +217,7 @@
     </div>
 
     <!-- Main content -->
-    <div class="min-w-0 max-w-3xl flex-auto">
+    <div class="min-w-0 max-w-3xl flex-auto lg:ml-64">
       <div class="prose prose-slate dark:prose-invert max-w-none">
         {@render children()}
 

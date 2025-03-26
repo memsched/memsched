@@ -10,9 +10,10 @@
   <div class="main-container flex flex-col gap-6 divide-y py-10">
     <div class="flex flex-col gap-3">
       <div class="flex gap-12 text-muted-foreground *:transition-colors hover:*:text-foreground">
-        <a href="mailto:info@memsched.com">Contact</a>
+        <a href="/docs"> Documentation </a>
         <a href="/tos">Terms of Service</a>
         <a href="/privacy">Privacy Policy</a>
+        <a href="mailto:info@memsched.com">Contact</a>
       </div>
       <UptimeRobot />
     </div>

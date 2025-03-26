@@ -2,7 +2,7 @@
   import { page } from '$app/state';
   import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
   import { Icon } from 'svelte-icons-pack';
-  import { FiLifeBuoy, FiLogOut, FiSettings } from 'svelte-icons-pack/fi';
+  import { FiBookOpen, FiLifeBuoy, FiLogOut, FiSettings } from 'svelte-icons-pack/fi';
   import { enhance } from '$app/forms';
   import UserAvatar from './UserAvatar.svelte';
   import DropdownMenuSeparator from '../ui/dropdown-menu/dropdown-menu-separator.svelte';
@@ -31,6 +31,14 @@
           <a href="/settings/profile" {...props}>
             <Icon src={FiSettings} className="!text-muted-foreground" />
             Settings
+          </a>
+        {/snippet}
+      </DropdownMenu.Item>
+      <DropdownMenu.Item class="cursor-pointer hover:text-accent-foreground">
+        {#snippet child({ props })}
+          <a href="/docs" {...props}>
+            <Icon src={FiBookOpen} className="!text-muted-foreground" />
+            Docs
           </a>
         {/snippet}
       </DropdownMenu.Item>

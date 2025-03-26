@@ -1,6 +1,6 @@
 <script lang="ts">
   import { Icon } from 'svelte-icons-pack';
-  import { IoRocket, IoCode, IoBrush, IoHelpCircle } from 'svelte-icons-pack/io';
+  import { IoRocket, IoCode } from 'svelte-icons-pack/io';
 </script>
 
 <div class="space-y-12">
@@ -45,40 +45,6 @@
       <p class="text-sm text-muted-foreground">
         Learn how to embed your widgets in various platforms.
       </p>
-      <div class="absolute bottom-3 right-4 opacity-0 transition-opacity group-hover:opacity-100">
-        <span class="text-sm text-primary">Learn more →</span>
-      </div>
-    </a>
-
-    <a
-      href="/docs/customization/styling"
-      class="group relative rounded-lg border bg-card p-6 transition-colors hover:bg-muted/50"
-    >
-      <div class="mb-3 flex items-center gap-3">
-        <div class="rounded-md bg-primary/10 p-2 text-primary">
-          <Icon src={IoBrush} className="size-5" />
-        </div>
-        <h2 class="h3">Customization</h2>
-      </div>
-      <p class="text-sm text-muted-foreground">
-        Customize your widgets to match your brand and style.
-      </p>
-      <div class="absolute bottom-3 right-4 opacity-0 transition-opacity group-hover:opacity-100">
-        <span class="text-sm text-primary">Learn more →</span>
-      </div>
-    </a>
-
-    <a
-      href="/docs/troubleshooting"
-      class="group relative rounded-lg border bg-card p-6 transition-colors hover:bg-muted/50"
-    >
-      <div class="mb-3 flex items-center gap-3">
-        <div class="rounded-md bg-primary/10 p-2 text-primary">
-          <Icon src={IoHelpCircle} className="size-5" />
-        </div>
-        <h2 class="h3">Troubleshooting</h2>
-      </div>
-      <p class="text-sm text-muted-foreground">Find solutions to common issues and get help.</p>
       <div class="absolute bottom-3 right-4 opacity-0 transition-opacity group-hover:opacity-100">
         <span class="text-sm text-primary">Learn more →</span>
       </div>

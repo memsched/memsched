@@ -37,14 +37,6 @@
               'Quick start guide for MEMsched - set up your first learning widget in minutes.',
           },
         },
-        {
-          href: '/docs/troubleshooting',
-          label: 'Troubleshooting',
-          seo: {
-            title: 'MEMsched Documentation - Troubleshooting',
-            description: 'Find solutions to common issues and get help with MEMsched.',
-          },
-        },
       ],
     },
     {
@@ -57,19 +49,6 @@
             title: 'MEMsched Documentation - HTML & Markdown Embedding',
             description:
               'Learn how to embed MEMsched widgets in your website or markdown documents.',
-          },
-        },
-      ],
-    },
-    {
-      title: 'Customization',
-      links: [
-        {
-          href: '/docs/customization/styling',
-          label: 'Styling',
-          seo: {
-            title: 'MEMsched Documentation - Styling Guide',
-            description: 'Customize the appearance of your MEMsched widgets to match your brand.',
           },
         },
       ],

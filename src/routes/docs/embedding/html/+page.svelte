@@ -1,7 +1,7 @@
 <script lang="ts">
   import { page } from '$app/state';
   import CodeBlock from '$lib/components/CodeBlock.svelte';
-  import { Alert } from '$lib/components/ui/alert';
+  import * as Alert from '$lib/components/ui/alert';
 
   // Example widget for documentation
   const exampleWidgetUrl = `${page.url.origin}/api/widgets/example`;
@@ -19,8 +19,6 @@
      alt="${exampleTitle}"
      height="80"
 />`;
-
-  const markdownSnippet = `[![${exampleTitle}](${exampleWidgetUrl}?svg)](${exampleUserUrl})`;
 </script>
 
 <div class="space-y-8">
@@ -31,18 +29,21 @@
     </p>
   </div>
 
-  <Alert>
-    <p>
-      Before embedding your widget, make sure you have created one in your dashboard. Each widget
-      has its unique URL that you'll use in the code snippets below.
-    </p>
-  </Alert>
+  <Alert.Root>
+    <Alert.Description>
+      Before embedding your widget, make sure you have created one in your dashboard <strong
+        >linked to a public objective</strong
+      >. Each widget has its unique URL that you'll use in the code snippets below.
+    </Alert.Description>
+  </Alert.Root>
 
   <div class="space-y-6">
-    <h2 class="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight">HTML Embedding</h2>
+    <h2 class="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight">
+      HTML and Markdown Embedding
+    </h2>
     <p>
-      You can embed your widget in any HTML page. We provide two options: with or without a link to
-      your profile.
+      You can embed your widget in any HTML page or Markdown document. You can decide to link the
+      widget to your profile or not.
     </p>
 
     <div class="space-y-4">
@@ -59,38 +60,6 @@
       <p>Use this option if you want to display the widget without making it clickable:</p>
       <CodeBlock code={htmlSnippetNoLink} />
     </div>
-
-    <div class="space-y-4">
-      <h3 class="text-2xl font-semibold tracking-tight">Common Use Cases</h3>
-      <ul class="list-disc space-y-2 pl-6">
-        <li>Personal websites and portfolios</li>
-        <li>Blog posts and articles</li>
-        <li>Company websites</li>
-        <li>Educational platforms</li>
-      </ul>
-    </div>
-  </div>
-
-  <div class="space-y-6">
-    <h2 class="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight">
-      Markdown Embedding
-    </h2>
-    <p>
-      For platforms that use Markdown (like GitHub READMEs, wikis, or documentation), you can use
-      our Markdown syntax:
-    </p>
-
-    <CodeBlock code={markdownSnippet} />
-
-    <div class="space-y-4">
-      <h3 class="text-2xl font-semibold tracking-tight">Popular Platforms</h3>
-      <ul class="list-disc space-y-2 pl-6">
-        <li>GitHub Profile README</li>
-        <li>GitLab Wikis</li>
-        <li>Notion Pages</li>
-        <li>Documentation Sites</li>
-      </ul>
-    </div>
   </div>
 
   <div class="space-y-6">
@@ -100,13 +69,6 @@
     <p>You can customize how your widget appears by adding parameters to the widget URL:</p>
     <ul class="list-disc space-y-2 pl-6">
       <li><code>height</code> - Adjust the height of the widget (default: 80px)</li>
-      <li><code>theme</code> - Switch between light and dark themes (if available)</li>
-      <li>
-        <code>style</code> - Apply custom styles (see
-        <a href="/docs/customization/styling" class="text-primary hover:underline"
-          >styling documentation</a
-        >)
-      </li>
     </ul>
   </div>
 
@@ -123,7 +85,8 @@
           <strong>Wrong size:</strong> Check if you've specified the correct height value
         </li>
         <li>
-          <strong>Styling conflicts:</strong> Try using the iframe embedding method instead
+          <strong>Styling conflicts:</strong> Try using <code>style="height: 80px"</code> instead of
+          the <code>height="80"</code> parameter
         </li>
       </ul>
     </div>

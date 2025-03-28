@@ -139,8 +139,8 @@
       </p>
     </div>
 
-    <div class="flex flex-col items-center gap-8">
-      <div class="relative">
+    <div class="space-y-8">
+      <div class="relative mx-auto w-fit">
         <div class="absolute right-0 top-0 flex items-center justify-center">
           <div class="absolute size-5 rounded-full bg-green-500"></div>
           <div class="absolute size-5 animate-ping rounded-full bg-green-500"></div>
@@ -178,12 +178,12 @@
         />
       </div>
 
-      <div class="flex flex-col items-center gap-4">
+      <div class="space-y-4">
         <p class="text-center text-lg">
           Embed widgets like this one on your website with a single line of code
         </p>
-        <pre class="w-full rounded-lg border bg-zinc-800 px-4 font-mono text-sm text-white">
-          <code>{codeSnippet}</code>
+        <pre class="mx-auto w-fit rounded-lg border bg-zinc-800 px-4 font-mono text-sm text-white">
+          <code class="whitespace-pre-wrap">{codeSnippet}</code>
         </pre>
       </div>
     </div>

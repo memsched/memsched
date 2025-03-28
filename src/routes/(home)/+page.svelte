@@ -16,7 +16,7 @@
   import * as Accordion from '$lib/components/ui/accordion';
 
   const codeSnippet = `
-<img src="https://memsched.com/api/widgets/learning-progress?svg" />`;
+<img src="https://memsched.com/api/widgets/example?svg" />`;
 
   let liveIncrement = $state(0);
 
@@ -33,7 +33,7 @@
 <HomeLayout container={false} class="*:py-20">
   <section
     id="hero"
-    class="flex h-full flex-col items-center justify-between !pb-0 text-center"
+    class="flex h-full max-h-[900px] flex-col items-center justify-between !pb-0 text-center"
     style="height: calc(100vh - {HEADER_HEIGHT}px)"
   >
     <div class="main-container flex flex-col items-center justify-center gap-8 py-20">

@@ -62,7 +62,7 @@
     <div class="space-y-1">
       <p>
         For detailed setup instructions and troubleshooting, check out our <a
-          href="/docs/widgets"
+          href="/docs/embedding/html"
           class="text-primary hover:underline">widget documentation</a
         >.
       </p>

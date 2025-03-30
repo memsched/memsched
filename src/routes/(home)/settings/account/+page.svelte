@@ -3,14 +3,16 @@
   import * as Dialog from '$lib/components/ui/dialog';
   import DeleteAccountDialog from '$lib/components/dialogs/DeleteAccountDialog.svelte';
   import type { PageProps } from './$types';
-  import { IoKey, IoArrowForward } from 'svelte-icons-pack/io';
+  import { IoKey, IoArrowForward, IoCheckmark } from 'svelte-icons-pack/io';
   import SettingsTitle from '$lib/components/account/SettingsTitle.svelte';
   import SvelteSeo from 'svelte-seo';
-  import * as Separator from '$lib/components/ui/separator';
   import { Badge } from '$lib/components/ui/badge';
+  import * as Card from '$lib/components/ui/card';
   import { FREE_PLAN_LIMITS } from '$lib/constants';
   import { formatCurrency } from '$lib/utils';
   import IconButton from '$lib/components/ui/IconButton.svelte';
+  import { Icon } from 'svelte-icons-pack';
+  import { cn } from '$lib/utils';
 
   const { data }: PageProps = $props();
 
@@ -44,142 +46,131 @@
       <h2 class="text-2xl font-semibold">Support MEMsched</h2>
     </div>
 
-    <div class="space-y-6">
-      <div class="rounded-lg border bg-background p-5">
-        <div class="flex flex-col gap-4">
+    <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+      <!-- Free Plan Card -->
+      <Card.Root class={cn('border bg-card', !isSubscribed && 'border-primary')}>
+        <Card.Header>
           <div class="flex items-center justify-between">
-            <h3 class="h5 font-medium">Your Support Level</h3>
-            {#if isSubscribed}
-              <div class="flex gap-2">
-                <Badge variant="secondary" class="bg-amber-100 text-amber-800">
-                  {isCanceled ? '☕️ Thanks for the coffee!' : '☕️ Coffee Supporter'}
-                </Badge>
-                <Badge variant="translucent">MEMsched Pro</Badge>
-              </div>
-            {:else}
-              <Badge variant="secondary">Free Plan</Badge>
+            <Card.Title>Free Plan</Card.Title>
+            {#if !isSubscribed}
+              <Badge variant="translucent">Current Plan</Badge>
             {/if}
           </div>
+          <Card.Description>Basic features for personal use</Card.Description>
+        </Card.Header>
+        <Card.Content class="space-y-4">
+          <span class="text-2xl font-bold">Free</span>
+          <ul class="space-y-2">
+            <li class="flex items-center gap-2">
+              <Icon src={IoCheckmark} className="size-5 !text-muted-foreground" />
+              <span>Up to {FREE_PLAN_LIMITS.maxObjectives} objectives</span>
+            </li>
+            <li class="flex items-center gap-2">
+              <Icon src={IoCheckmark} className="size-5 !text-muted-foreground" />
+              <span>Up to {FREE_PLAN_LIMITS.maxWidgets} public widget</span>
+            </li>
+            <li class="flex items-center gap-2">
+              <Icon src={IoCheckmark} className="size-5 !text-muted-foreground" />
+              <span>Community support</span>
+            </li>
+          </ul>
+        </Card.Content>
+      </Card.Root>
 
-          <Separator.Root />
-
-          <div class="flex justify-between gap-4 max-lg:flex-col">
-            <div>
-              <p class="mb-3 text-base text-muted-foreground">What you get:</p>
-              <ul class="grid gap-2.5 text-sm">
-                {#if isSubscribed}
-                  <li class="flex items-center gap-2">
-                    <span class="text-amber-500">☕️</span>
-                    <span class="whitespace-nowrap"
-                      >Unlimited objectives (that's a lot of coffee!)</span
-                    >
-                  </li>
-                  <li class="flex items-center gap-2">
-                    <span class="text-violet-500">⚡️</span>
-                    <span class="whitespace-nowrap">Full Pro features & premium widgets</span>
-                  </li>
-                  <li class="flex items-center gap-2">
-                    <span class="text-amber-500">💝</span>
-                    <span class="whitespace-nowrap">Priority support from our team</span>
-                  </li>
-                  <li class="flex items-center gap-2">
-                    <span class="text-violet-500">🚀</span>
-                    <span class="whitespace-nowrap">Early access to new features</span>
-                  </li>
-                  <li class="flex items-center gap-2">
-                    <span class="text-amber-500">💪</span>
-                    <span class="whitespace-nowrap">Help support active development</span>
-                  </li>
-                {:else}
-                  <li class="flex items-center gap-2">
-                    <span class="text-zinc-500">☕️</span>
-                    <span>Up to {FREE_PLAN_LIMITS.maxObjectives} objectives</span>
-                  </li>
-                  <li class="flex items-center gap-2">
-                    <span class="text-zinc-500">✨</span>
-                    <span>Up to {FREE_PLAN_LIMITS.maxWidgets} public widget</span>
-                  </li>
-                  <li class="flex items-center gap-2">
-                    <span class="text-zinc-500">💭</span>
-                    <span>Community support</span>
-                  </li>
-                {/if}
-              </ul>
-            </div>
-
-            <div class="flex flex-col justify-end lg:items-end">
-              <div class="mt-2 flex flex-row items-center gap-2">
-                {#if isSubscribed}
-                  {#if isCanceled}
-                    {#if periodEnd}
-                      <div class="text-sm text-muted-foreground max-lg:order-3">
-                        Your subscription ends on {new Date(periodEnd).toLocaleDateString()}
-                      </div>
-                    {/if}
-                    <form action="?/subscribe" method="POST">
-                      <Button
-                        type="submit"
-                        variant="default"
-                        class="flex-1"
-                        data-umami-event="account-subscribe-button">Subscribe</Button
-                      >
-                    </form>
-                  {/if}
-                  <form action="?/manageSubscription" method="POST">
-                    <IconButton
-                      icon={IoArrowForward}
-                      type="submit"
-                      variant="outline"
-                      class="animate-svg flex-1"
-                      data-umami-event="account-manage-subscription-button"
-                    >
-                      Manage Plan
-                    </IconButton>
-                  </form>
-                {/if}
-              </div>
-            </div>
+      <!-- Pro Plan Card -->
+      <Card.Root
+        class={cn(
+          'border bg-gradient-to-br from-white to-amber-50',
+          isSubscribed && 'border-amber-500'
+        )}
+      >
+        <Card.Header>
+          <div class="flex items-center justify-between">
+            <Card.Title>MEMsched Pro</Card.Title>
+            <Badge variant="secondary" class="bg-amber-100 text-amber-800"
+              >☕️ Coffee Supporter</Badge
+            >
           </div>
-        </div>
-      </div>
-
-      {#if !isSubscribed}
-        <div class="rounded-lg border bg-gradient-to-br from-white to-amber-100 p-5">
-          <div class="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-            <div>
-              <div class="mb-1 flex items-center gap-3">
-                <h3 class="h5 font-medium">MEMsched Pro + Coffee Support</h3>
-                <Badge class="bg-amber-200 text-amber-800">2 coffees/month</Badge>
-                {#await data.price}
-                  <span class="h-6 w-28 animate-pulse rounded bg-amber-200"></span>
-                {:then price}
-                  <span class="font-medium text-amber-800"
-                    >{formatCurrency(price.amount, price.currency)}/{price.interval}</span
-                  >
-                {:catch}
-                  <span class="text-sm text-destructive">Error loading price</span>
-                {/await}
-              </div>
-              <p class="max-w-prose text-sm text-amber-800/80">
-                Get MEMsched Pro and support our development with the equivalent of two coffees per
-                month! Unlock unlimited access and premium features ✨
-              </p>
-            </div>
-            <form action="?/subscribe" method="POST">
+          <Card.Description>Enhanced features with priority support</Card.Description>
+        </Card.Header>
+        <Card.Content class="space-y-4">
+          <div>
+            {#await data.price}
+              <div class="h-6 w-28 animate-pulse rounded bg-amber-200"></div>
+            {:then price}
+              <span class="text-2xl font-bold">{formatCurrency(price.amount, price.currency)}</span>
+              <span class="text-muted-foreground">/{price.interval}</span>
+            {:catch}
+              <span class="text-sm text-destructive">Error loading price</span>
+            {/await}
+          </div>
+          <ul class="space-y-2">
+            <li class="flex items-center gap-2">
+              <Icon src={IoCheckmark} className="size-5 !text-amber-500" />
+              <span>Unlimited objectives</span>
+            </li>
+            <li class="flex items-center gap-2">
+              <Icon src={IoCheckmark} className="size-5 !text-amber-500" />
+              <span>Full Pro features & premium widgets</span>
+            </li>
+            <li class="flex items-center gap-2">
+              <Icon src={IoCheckmark} className="size-5 !text-amber-500" />
+              <span>Priority support from our team</span>
+            </li>
+            <li class="flex items-center gap-2">
+              <Icon src={IoCheckmark} className="size-5 !text-amber-500" />
+              <span>Early access to new features</span>
+            </li>
+            <li class="flex items-center gap-2">
+              <Icon src={IoCheckmark} className="size-5 !text-amber-500" />
+              <span>Help support active development</span>
+            </li>
+          </ul>
+        </Card.Content>
+        <Card.Footer class="flex flex-col gap-2">
+          {#if isSubscribed}
+            {#if isCanceled}
+              <form action="?/subscribe" method="POST" class="w-full">
+                <Button
+                  type="submit"
+                  variant="default"
+                  class="w-full"
+                  data-umami-event="account-subscribe-button">Subscribe</Button
+                >
+              </form>
+              {#if periodEnd}
+                <div class="text-sm text-muted-foreground">
+                  Your subscription ends on {new Date(periodEnd).toLocaleDateString()}
+                </div>
+              {/if}
+            {:else}
+              <form action="?/manageSubscription" method="POST" class="w-full">
+                <IconButton
+                  icon={IoArrowForward}
+                  type="submit"
+                  variant="outline"
+                  class="animate-svg w-full"
+                  data-umami-event="account-manage-subscription-button"
+                >
+                  Manage Plan
+                </IconButton>
+              </form>
+            {/if}
+          {:else}
+            <form action="?/subscribe" method="POST" class="w-full">
               <IconButton
                 icon={IoArrowForward}
                 type="submit"
                 variant="default"
-                size="sm"
-                class="animate-svg whitespace-nowrap bg-amber-800 text-amber-200 hover:bg-amber-700"
+                class="animate-svg w-full bg-amber-800 text-amber-200 hover:bg-amber-700"
                 data-umami-event="account-upgrade-to-pro-button"
               >
                 Upgrade to Pro
               </IconButton>
             </form>
-          </div>
-        </div>
-      {/if}
+          {/if}
+        </Card.Footer>
+      </Card.Root>
     </div>
   </section>
 

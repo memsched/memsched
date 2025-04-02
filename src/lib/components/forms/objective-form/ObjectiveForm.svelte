@@ -74,7 +74,9 @@
             />
           {/snippet}
         </Form.Control>
-        <Form.Description>Set a start value for your objective.</Form.Description>
+        <Form.Description
+          >Set a start value for your objective. This will be the initial total value.</Form.Description
+        >
         <Form.FieldErrors />
       </Form.Field>
       <!-- TODO: Allow for any unit for an objective -->

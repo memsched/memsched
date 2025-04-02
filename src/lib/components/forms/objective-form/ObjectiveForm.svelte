@@ -161,7 +161,7 @@
                   <Input {...props} bind:value={$formData.endValue} type="number" min={0} />
                 {/snippet}
               </Form.Control>
-              <Form.Description>Set a start value for your objective.</Form.Description>
+              <Form.Description>Set a end value for your objective.</Form.Description>
               <Form.FieldErrors />
             </Form.Field>
           </Tabs.Content>

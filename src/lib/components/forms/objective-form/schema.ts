@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const OBJECTIVE_UNITS = ['minutes', 'hours', 'pages', 'words', 'lines'] as const;
+export const OBJECTIVE_UNITS = ['minutes', 'hours', 'pages', 'words', 'lines', 'other'] as const;
 
 export const formSchema = z
   .object({

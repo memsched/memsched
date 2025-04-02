@@ -194,39 +194,24 @@
                 <!-- Actions section -->
                 <div class="col-span-5 flex items-center justify-between">
                   <div class="flex flex-wrap items-center gap-2">
-                    {#if objective.goalType === 'fixed'}
-                      <form action="?/log" method="POST" use:enhance>
-                        <input type="hidden" name="objectiveId" value={objective.id} />
-                        <input type="hidden" name="value" value="1" />
-                        <Button size="xs" variant="outline" class="h-7 px-2" type="submit"
-                          >+1</Button
-                        >
-                      </form>
+                    <form action="?/log" method="POST" use:enhance>
+                      <input type="hidden" name="objectiveId" value={objective.id} />
+                      <input type="hidden" name="value" value="1" />
+                      <Button size="xs" variant="outline" class="h-7 px-2" type="submit">+1</Button>
+                    </form>
 
-                      <form action="?/log" method="POST" use:enhance>
-                        <input type="hidden" name="objectiveId" value={objective.id} />
-                        <input type="hidden" name="value" value="5" />
-                        <Button size="xs" variant="outline" class="h-7 px-2" type="submit"
-                          >+5</Button
-                        >
-                      </form>
+                    <form action="?/log" method="POST" use:enhance>
+                      <input type="hidden" name="objectiveId" value={objective.id} />
+                      <input type="hidden" name="value" value="5" />
+                      <Button size="xs" variant="outline" class="h-7 px-2" type="submit">+5</Button>
+                    </form>
 
-                      <form action="?/log" method="POST" use:enhance>
-                        <input type="hidden" name="objectiveId" value={objective.id} />
-                        <input type="hidden" name="value" value="10" />
-                        <Button size="xs" variant="outline" class="h-7 px-2" type="submit"
-                          >+10</Button
-                        >
-                      </form>
-                    {:else}
-                      <form action="?/log" method="POST" use:enhance>
-                        <input type="hidden" name="objectiveId" value={objective.id} />
-                        <input type="hidden" name="value" value="1" />
-                        <Button size="xs" variant="outline" class="h-7 px-2" type="submit"
-                          >Log</Button
-                        >
-                      </form>
-                    {/if}
+                    <form action="?/log" method="POST" use:enhance>
+                      <input type="hidden" name="objectiveId" value={objective.id} />
+                      <input type="hidden" name="value" value="10" />
+                      <Button size="xs" variant="outline" class="h-7 px-2" type="submit">+10</Button
+                      >
+                    </form>
 
                     <form action="?/undoLog" method="POST" use:enhance>
                       <input type="hidden" name="objectiveId" value={objective.id} />

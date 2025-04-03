@@ -17,9 +17,6 @@ export const formSchema = z
     unit: z.enum(OBJECTIVE_UNITS, {
       message: 'Please select a valid unit.',
     }),
-    visibility: z.enum(['public', 'private'], {
-      message: 'Visibility should be either "public" or "private".',
-    }),
     goalType: z.enum(['fixed', 'ongoing'], { message: 'Please select a goal type.' }),
     endValue: z
       .number()

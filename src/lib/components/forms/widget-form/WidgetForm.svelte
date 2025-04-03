@@ -22,6 +22,9 @@
   import type { LocalUser } from '$lib/types';
   import { page } from '$app/state';
   import { v4 as uuid4 } from 'uuid';
+  import * as RadioGroup from '$lib/components/ui/radio-group';
+  import { Icon } from 'svelte-icons-pack';
+  import { IoGlobeOutline, IoDocumentLockOutline } from 'svelte-icons-pack/io';
 
   interface Props {
     data: { form: SuperValidated<Infer<FormSchema>>; objectives: Objective[]; user: LocalUser };
@@ -48,20 +51,21 @@
   });
   const { form: formData, enhance } = form;
 
-  const calculationTypes = $derived.by(() => {
-    if ($formData.objectiveId) {
-      const objective = data.objectives.find((o) => o.id == $formData.objectiveId);
-      if (objective?.goalType === 'ongoing') {
-        return WIDGET_METRIC_CALCULATION_TYPES.filter((ct) => ct !== 'percentage');
-      }
+  // Used to get calculation types for a specific objective
+  function getCalculationTypesForObjective(objectiveId: string) {
+    if (!objectiveId) return WIDGET_METRIC_CALCULATION_TYPES;
+
+    const objective = data.objectives.find((o) => o.id === objectiveId);
+    if (objective?.goalType === 'ongoing') {
+      return WIDGET_METRIC_CALCULATION_TYPES.filter((ct) => ct !== 'percentage');
     }
     return WIDGET_METRIC_CALCULATION_TYPES;
-  });
+  }
 
   let previewLoaded = $state(false);
 
   $effect(() => {
-    if (!$formData.objectiveId || !$formData.title) {
+    if (!$formData.title) {
       previewLoaded = false;
     }
   });
@@ -77,6 +81,7 @@
           name: '',
           calculationType: 'day',
           valueDecimalPrecision: 0,
+          objectiveId: '',
         });
       }
     } else if (currentCount > count) {
@@ -91,29 +96,6 @@
     <section class="space-y-6 first:space-y-3">
       <h2 class="h3">General</h2>
       <div class="grid grid-cols-2 gap-x-16 gap-y-6">
-        <Form.Field {form} name="objectiveId">
-          <Form.Control>
-            {#snippet children({ props })}
-              <Form.Label>Objective*</Form.Label>
-              <Select.Root type="single" bind:value={$formData.objectiveId} name={props.name}>
-                <Select.Trigger {...props}>
-                  {$formData.objectiveId
-                    ? data.objectives.find((o) => o.id === $formData.objectiveId)?.name
-                    : 'Select an objective'}
-                </Select.Trigger>
-                <Select.Content>
-                  {#each data.objectives as objective}
-                    <Select.Item value={objective.id} label={objective.name} />
-                  {/each}
-                </Select.Content>
-              </Select.Root>
-            {/snippet}
-          </Form.Control>
-          <Form.Description>
-            Choose the objective that this widget will be linked to.
-          </Form.Description>
-          <Form.FieldErrors />
-        </Form.Field>
         <Form.Field {form} name="title" class="col-start-1">
           <Form.Control>
             {#snippet children({ props })}
@@ -134,6 +116,49 @@
           <Form.Description>Set the subtitle for your widget.</Form.Description>
           <Form.FieldErrors />
         </Form.Field>
+
+        <Form.Fieldset {form} name="visibility" class="col-span-2 space-y-4">
+          <Form.Legend>Visibility</Form.Legend>
+          <RadioGroup.Root
+            bind:value={$formData.visibility}
+            class="flex flex-col space-y-3 *:flex *:items-center *:space-x-4"
+            name="visibility"
+          >
+            <div>
+              <Form.Control>
+                {#snippet children({ props })}
+                  <RadioGroup.Item value="public" {...props} />
+                  <Form.Label class="flex gap-1.5">
+                    <Icon src={IoGlobeOutline} className="size-8 *:!stroke-[16px]" />
+                    <div class="flex flex-col gap-1.5">
+                      <div class="font-medium">Public</div>
+                      <div class="font-normal text-muted-foreground">
+                        Share your progress with everyone
+                      </div>
+                    </div>
+                  </Form.Label>
+                {/snippet}
+              </Form.Control>
+            </div>
+            <div>
+              <Form.Control>
+                {#snippet children({ props })}
+                  <RadioGroup.Item value="private" {...props} />
+                  <Form.Label class="flex gap-1.5">
+                    <Icon src={IoDocumentLockOutline} className="size-8 *:!stroke-[16px]" />
+                    <div class="flex flex-col gap-1.5">
+                      <div class="font-medium">Private</div>
+                      <div class="font-normal text-muted-foreground">
+                        Keep your progress to yourself. Widgets will be visible to you only.
+                      </div>
+                    </div>
+                  </Form.Label>
+                {/snippet}
+              </Form.Control>
+            </div>
+          </RadioGroup.Root>
+          <Form.FieldErrors />
+        </Form.Fieldset>
 
         <div class="col-span-2">
           <Label>Image</Label>
@@ -260,10 +285,38 @@
             <Tabs.Trigger value="3" onmousedown={() => updateDefaultMetrics(3)}>3</Tabs.Trigger>
           </Tabs.List>
           {#each [1, 2, 3] as i}
-            <Tabs.Content value={i.toString()} class="space-y-4">
+            <Tabs.Content value={i.toString()} class="space-y-6 divide-y *:pt-6">
               {#if metricsCount === i}
                 {#each Array(i) as _, j}
-                  <div class="grid grid-cols-8 gap-4">
+                  <div class="grid grid-cols-8 gap-x-4 gap-y-2">
+                    <Form.Field {form} name="metrics[{j}].objectiveId" class="col-span-4">
+                      <Form.Control>
+                        {#snippet children({ props })}
+                          <Form.Label>Objective*</Form.Label>
+                          <Select.Root
+                            type="single"
+                            bind:value={$formData.metrics[j].objectiveId}
+                            name={props.name}
+                          >
+                            <Select.Trigger {...props}>
+                              {$formData.metrics[j].objectiveId
+                                ? data.objectives.find(
+                                    (o) => o.id === $formData.metrics[j].objectiveId
+                                  )?.name
+                                : 'Select an objective'}
+                            </Select.Trigger>
+                            <Select.Content>
+                              {#each data.objectives as objective}
+                                <Select.Item value={objective.id} label={objective.name} />
+                              {/each}
+                            </Select.Content>
+                          </Select.Root>
+                        {/snippet}
+                      </Form.Control>
+                      <Form.Description>Choose the objective for this metric.</Form.Description>
+                      <Form.FieldErrors />
+                    </Form.Field>
+
                     <Form.Field {form} name="metrics[{j}].name" class="col-span-4">
                       <Form.Control>
                         {#snippet children({ props })}
@@ -274,7 +327,7 @@
                       <Form.FieldErrors />
                     </Form.Field>
 
-                    <Form.Field {form} name="metrics[{j}].calculationType" class="col-span-2">
+                    <Form.Field {form} name="metrics[{j}].calculationType" class="col-span-4">
                       <Form.Control>
                         {#snippet children({ props })}
                           <Form.Label>Duration</Form.Label>
@@ -287,7 +340,7 @@
                               {$formData.metrics[j].calculationType}
                             </Select.Trigger>
                             <Select.Content>
-                              {#each calculationTypes as calcType}
+                              {#each getCalculationTypesForObjective($formData.metrics[j].objectiveId) as calcType}
                                 <Select.Item value={calcType} label={calcType} class="capitalize" />
                               {/each}
                             </Select.Content>
@@ -297,7 +350,7 @@
                       <Form.FieldErrors />
                     </Form.Field>
 
-                    <Form.Field {form} name="metrics[{j}].valueDecimalPrecision" class="col-span-2">
+                    <Form.Field {form} name="metrics[{j}].valueDecimalPrecision" class="col-span-4">
                       <Form.Control>
                         {#snippet children({ props })}
                           <Form.Label>Decimal Precision</Form.Label>

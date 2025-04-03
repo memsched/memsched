@@ -1,12 +1,12 @@
 import * as table from '../db/schema';
 import type { WidgetJoinMetrics } from '../db/schema';
-import { eq, and, or, desc, sql } from 'drizzle-orm';
+import { eq, and, desc, sql } from 'drizzle-orm';
 import { v4 as uuidv4 } from 'uuid';
 import type { z } from 'zod';
 import { type FormSchema } from '$lib/components/forms/widget-form/schema';
 import type { DBType } from '../db';
 import type { CacheService } from '../cache';
-import { DrizzleRecordNotFoundErrorCause, wrapResultAsync, wrapResultAsyncFn } from '../db/types';
+import { DrizzleRecordNotFoundErrorCause, wrapResultAsyncFn } from '../db/types';
 import type { ObjectivesService } from './objectives-service';
 import type { MetricsService } from './metrics-service';
 
@@ -28,51 +28,28 @@ export class WidgetsService {
     return this.objectivesService;
   }
 
-  public getUserWidgets(userId: string, completed: boolean = false) {
+  public getUserWidgets(userId: string) {
     return wrapResultAsyncFn(async () => {
-      const conditions = eq(table.widget.userId, userId);
+      // Get all user widgets
+      const widgets = await this.db
+        .select()
+        .from(table.widget)
+        .where(eq(table.widget.userId, userId))
+        .orderBy(desc(table.widget.createdAt));
 
-      if (completed) {
-        // Get completed widgets (associated with completed fixed objectives)
-        return await this.db
-          .select({ id: table.widget.id })
-          .from(table.widget)
-          .innerJoin(table.objective, eq(table.widget.objectiveId, table.objective.id))
-          .where(
-            and(
-              conditions,
-              eq(table.objective.goalType, 'fixed'),
-              sql`${table.objective.value} >= ${table.objective.endValue} AND ${table.objective.endValue} IS NOT NULL`
-            )
-          )
-          .orderBy(desc(table.widget.createdAt));
-      } else {
-        // Get active widgets (associated with non-completed or ongoing objectives)
-        return await this.db
-          .select({ id: table.widget.id })
-          .from(table.widget)
-          .innerJoin(table.objective, eq(table.widget.objectiveId, table.objective.id))
-          .where(
-            and(
-              conditions,
-              or(
-                eq(table.objective.goalType, 'ongoing'),
-                sql`${table.objective.value} < ${table.objective.endValue} OR ${table.objective.endValue} IS NULL`
-              )
-            )
-          )
-          .orderBy(desc(table.widget.createdAt));
-      }
+      // No need to filter by objective completion status anymore
+      // Each widget can have metrics from multiple objectives
+      return widgets.map((widget) => ({ id: widget.id }));
     });
   }
 
   public getUserPublicWidgetIds(userId: string) {
     return wrapResultAsyncFn(async () => {
+      // Get widgets that are public
       const widgets = await this.db
         .select({ id: table.widget.id })
         .from(table.widget)
-        .innerJoin(table.objective, eq(table.widget.objectiveId, table.objective.id))
-        .where(and(eq(table.widget.userId, userId), eq(table.objective.visibility, 'public')))
+        .where(and(eq(table.widget.userId, userId), eq(table.widget.visibility, 'public')))
         .orderBy(desc(table.widget.createdAt));
 
       return widgets.map(({ id }) => id);
@@ -80,9 +57,17 @@ export class WidgetsService {
   }
 
   public getWidgetsFromObjectiveId(objectiveId: string) {
-    return wrapResultAsync(
-      this.db.select().from(table.widget).where(eq(table.widget.objectiveId, objectiveId))
-    );
+    return wrapResultAsyncFn(async () => {
+      // Find widgets that have metrics referencing this objective
+      const widgets = await this.db
+        .select({ widget: table.widget })
+        .from(table.widgetMetric)
+        .innerJoin(table.widget, eq(table.widgetMetric.widgetId, table.widget.id))
+        .where(eq(table.widgetMetric.objectiveId, objectiveId))
+        .groupBy(table.widget.id);
+
+      return widgets.map(({ widget }) => widget);
+    });
   }
 
   public getWidgetWithMetrics(widgetId: string, userId?: string) {
@@ -125,70 +110,79 @@ export class WidgetsService {
   }
 
   public createUserWidget(widgetData: z.infer<FormSchema>, userId: string) {
-    return this.getObjectivesService()
-      .getUserObjective(widgetData.objectiveId, userId)
-      .andThen((objective) =>
-        wrapResultAsyncFn(async () => {
-          const widgetId = uuidv4();
+    return wrapResultAsyncFn(async () => {
+      const widgetId = uuidv4();
 
-          // Create the metrics to insert
-          const metricInserts: Omit<table.WidgetMetric, 'createdAt'>[] = [];
-          for (let i = 0; i < widgetData.metrics.length; i++) {
-            const metric = widgetData.metrics[i];
-            const metricValue = await this.metricsService.computeMetricValue(
-              objective.id,
-              metric.calculationType,
-              metric.valueDecimalPrecision
-            );
-            if (metricValue.isErr()) {
-              throw metricValue.error;
-            }
+      // Create the metrics to insert
+      const metricInserts: Omit<table.WidgetMetric, 'createdAt'>[] = [];
+      for (let i = 0; i < widgetData.metrics.length; i++) {
+        const metric = widgetData.metrics[i];
 
-            metricInserts.push({
-              id: uuidv4(),
-              value: metricValue.value,
-              name: metric.name,
-              calculationType: metric.calculationType,
-              valueDecimalPrecision: metric.valueDecimalPrecision,
-              order: i,
-              widgetId,
-              userId,
-            });
-          }
+        // Verify the user has access to the objective
+        const objectiveResult = await this.getObjectivesService().getUserObjective(
+          metric.objectiveId,
+          userId
+        );
 
-          const widgetInsert: Omit<table.Widget, 'createdAt'> = {
-            id: widgetId,
-            title: widgetData.title,
-            subtitle: widgetData.subtitle,
-            imageUrl: widgetData.imageUrl,
-            imagePlacement: widgetData.imagePlacement,
-            textIcon: widgetData.textIcon,
+        if (objectiveResult.isErr()) {
+          throw objectiveResult.error;
+        }
 
-            padding: widgetData.padding,
-            border: widgetData.border,
-            borderWidth: 1,
-            borderRadius: widgetData.borderRadius,
-            color: widgetData.color,
-            accentColor: widgetData.accentColor,
-            backgroundColor: widgetData.backgroundColor,
-            watermark: true, // TODO: Default to true, update when user has pro plan
+        const metricValueResult = await this.metricsService.computeMetricValue(
+          metric.objectiveId,
+          metric.calculationType,
+          metric.valueDecimalPrecision
+        );
 
-            objectiveId: widgetData.objectiveId,
-            userId,
-          };
+        if (metricValueResult.isErr()) {
+          throw metricValueResult.error;
+        }
 
-          if (metricInserts.length > 0) {
-            await this.db.batch([
-              this.db.insert(table.widget).values(widgetInsert),
-              this.db.insert(table.widgetMetric).values(metricInserts),
-            ]);
-          } else {
-            await this.db.batch([this.db.insert(table.widget).values(widgetInsert)]);
-          }
+        metricInserts.push({
+          id: uuidv4(),
+          value: metricValueResult.value,
+          name: metric.name,
+          calculationType: metric.calculationType,
+          valueDecimalPrecision: metric.valueDecimalPrecision,
+          order: i,
+          objectiveId: metric.objectiveId,
+          widgetId,
+          userId,
+        });
+      }
 
-          return widgetId;
-        })
-      );
+      const widgetInsert: Omit<table.Widget, 'createdAt'> = {
+        id: widgetId,
+        title: widgetData.title,
+        subtitle: widgetData.subtitle,
+        imageUrl: widgetData.imageUrl,
+        imagePlacement: widgetData.imagePlacement,
+        textIcon: widgetData.textIcon,
+        visibility: widgetData.visibility,
+
+        padding: widgetData.padding,
+        border: widgetData.border,
+        borderWidth: 1,
+        borderRadius: widgetData.borderRadius,
+        color: widgetData.color,
+        accentColor: widgetData.accentColor,
+        backgroundColor: widgetData.backgroundColor,
+        watermark: true, // TODO: Default to true, update when user has pro plan
+
+        userId,
+      };
+
+      if (metricInserts.length > 0) {
+        await this.db.batch([
+          this.db.insert(table.widget).values(widgetInsert),
+          this.db.insert(table.widgetMetric).values(metricInserts),
+        ]);
+      } else {
+        await this.db.batch([this.db.insert(table.widget).values(widgetInsert)]);
+      }
+
+      return widgetId;
+    });
   }
 
   public updateUserWidget(
@@ -197,78 +191,84 @@ export class WidgetsService {
     userId: string,
     cache: CacheService
   ) {
-    return this.getUserWidget(widgetId, userId)
-      .andThen(() => this.getObjectivesService().getUserObjective(widgetData.objectiveId, userId))
-      .andThen((objective) =>
-        wrapResultAsyncFn(async () => {
-          // Create the metrics to insert
-          const metricInserts: Omit<table.WidgetMetric, 'createdAt'>[] = [];
-          for (let i = 0; i < widgetData.metrics.length; i++) {
-            const metric = widgetData.metrics[i];
-            const metricValue = await this.metricsService.computeMetricValue(
-              objective.id,
-              metric.calculationType,
-              metric.valueDecimalPrecision
-            );
-            if (metricValue.isErr()) {
-              throw metricValue.error;
-            }
+    return this.getUserWidget(widgetId, userId).andThen(() =>
+      wrapResultAsyncFn(async () => {
+        // Delete all current metrics - we'll re-create them
+        await this.db.delete(table.widgetMetric).where(eq(table.widgetMetric.widgetId, widgetId));
 
-            metricInserts.push({
-              id: uuidv4(),
-              value: metricValue.value,
-              name: metric.name,
-              calculationType: metric.calculationType,
-              valueDecimalPrecision: metric.valueDecimalPrecision,
-              order: i,
-              widgetId,
-              userId,
-            });
+        // Create the metrics to insert
+        const metricInserts: Omit<table.WidgetMetric, 'createdAt'>[] = [];
+        for (let i = 0; i < widgetData.metrics.length; i++) {
+          const metric = widgetData.metrics[i];
+
+          // Verify the user has access to the objective
+          const objectiveResult = await this.getObjectivesService().getUserObjective(
+            metric.objectiveId,
+            userId
+          );
+
+          if (objectiveResult.isErr()) {
+            throw objectiveResult.error;
           }
 
-          const widgetUpdate: Omit<table.Widget, 'id' | 'watermark' | 'userId' | 'createdAt'> = {
+          const metricValueResult = await this.metricsService.computeMetricValue(
+            metric.objectiveId,
+            metric.calculationType,
+            metric.valueDecimalPrecision
+          );
+
+          if (metricValueResult.isErr()) {
+            throw metricValueResult.error;
+          }
+
+          metricInserts.push({
+            id: uuidv4(),
+            value: metricValueResult.value,
+            name: metric.name,
+            calculationType: metric.calculationType,
+            valueDecimalPrecision: metric.valueDecimalPrecision,
+            order: i,
+            objectiveId: metric.objectiveId,
+            widgetId,
+            userId,
+          });
+        }
+
+        // Update the widget
+        await this.db
+          .update(table.widget)
+          .set({
             title: widgetData.title,
             subtitle: widgetData.subtitle,
             imageUrl: widgetData.imageUrl,
             imagePlacement: widgetData.imagePlacement,
             textIcon: widgetData.textIcon,
+            visibility: widgetData.visibility,
 
             padding: widgetData.padding,
             border: widgetData.border,
-            borderWidth: 1,
             borderRadius: widgetData.borderRadius,
             color: widgetData.color,
             accentColor: widgetData.accentColor,
             backgroundColor: widgetData.backgroundColor,
+            watermark: widgetData.watermark,
+          })
+          .where(eq(table.widget.id, widgetId));
 
-            objectiveId: widgetData.objectiveId,
-            // Don't update userId as it should remain the same
-            // Don't update watermark status as it's dependent on user plan
-          };
+        // Add new metrics if there are any
+        if (metricInserts.length > 0) {
+          await this.db.insert(table.widgetMetric).values(metricInserts);
+        }
 
-          if (metricInserts.length > 0) {
-            await this.db.batch([
-              this.db.update(table.widget).set(widgetUpdate).where(eq(table.widget.id, widgetId)),
-              // Delete all existing metrics
-              this.db.delete(table.widgetMetric).where(eq(table.widgetMetric.widgetId, widgetId)),
-              // Insert new metrics
-              this.db.insert(table.widgetMetric).values(metricInserts),
-            ]);
-          } else {
-            await this.db.batch([
-              this.db.update(table.widget).set(widgetUpdate).where(eq(table.widget.id, widgetId)),
-              // Delete all existing metrics
-              this.db.delete(table.widgetMetric).where(eq(table.widgetMetric.widgetId, widgetId)),
-            ]);
-          }
+        // Clear the widget cache
+        await Promise.all([
+          cache.delete(`widget:${widgetId}:html`),
+          cache.delete(`widget:${widgetId}:svg`),
+        ]);
 
-          // Invalidate the widget cache
-          await Promise.all([
-            cache.delete(`widget:${widgetId}:html`),
-            cache.delete(`widget:${widgetId}:svg`),
-          ]);
-        })
-      );
+        return widgetId;
+      })
+    );
   }
 
   public deleteUserWidget(widgetId: string, userId: string, cache: CacheService) {

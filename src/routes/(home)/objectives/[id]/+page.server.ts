@@ -29,7 +29,6 @@ export const load: PageServerLoad = async (event) => {
     description: objective.description,
     startValue: objective.startValue,
     unit: objective.unit as z.infer<FormSchema>['unit'],
-    visibility: objective.visibility as z.infer<FormSchema>['visibility'],
     goalType: objective.goalType as z.infer<FormSchema>['goalType'],
     endValue: objective.endValue,
   };

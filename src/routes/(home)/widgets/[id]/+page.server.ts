@@ -2,8 +2,7 @@ import type { PageServerLoad, Actions } from './$types';
 import { error, fail, redirect } from '@sveltejs/kit';
 import { message, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
-import { formSchema, type FormSchema } from '$lib/components/forms/widget-form/schema';
-import type { z } from 'zod';
+import { formSchema } from '$lib/components/forms/widget-form/schema';
 import type { LocalUser } from '$lib/types';
 import { handleDbError, handleFormDbError } from '$lib/server/utils';
 
@@ -26,10 +25,11 @@ export const load: PageServerLoad = async (event) => {
   form.data = {
     title: widget.title,
     subtitle: widget.subtitle,
+    visibility: widget.visibility,
     // TODO: Sanitize imageUrl
     imageUrl: widget.imageUrl,
     textIcon: widget.textIcon,
-    imagePlacement: widget.imagePlacement as z.infer<FormSchema>['imagePlacement'],
+    imagePlacement: widget.imagePlacement,
 
     padding: widget.padding,
     border: widget.border,
@@ -40,12 +40,11 @@ export const load: PageServerLoad = async (event) => {
     backgroundColor: widget.backgroundColor,
     watermark: widget.watermark,
 
-    objectiveId: widget.objectiveId,
     metrics: widget.metrics.map((metric) => ({
       name: metric.name,
-      calculationType:
-        metric.calculationType as z.infer<FormSchema>['metrics'][0]['calculationType'],
+      calculationType: metric.calculationType,
       valueDecimalPrecision: metric.valueDecimalPrecision,
+      objectiveId: metric.objectiveId,
     })),
   };
 

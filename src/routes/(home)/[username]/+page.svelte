@@ -62,7 +62,7 @@
         >
           No public widgets yet
           {#if data.isOwner}
-            {#if data.publicObjectives.length > 0}
+            {#if data.objectives.length > 0}
               <IconButton href="/widgets/new" size="sm" icon={IoAdd}
                 >Create your first widget</IconButton
               >

@@ -31,7 +31,7 @@
       </Dialog.Trigger>
     </ConfirmDeleteDialog>
   </div>
-  {#if data.objectives.find((o) => o.id === data.form.data.objectiveId)?.visibility === 'public'}
+  {#if data.form.data.visibility === 'public'}
     <div class="space-y-4">
       <h2 class="h3">Sharing</h2>
       <ShareWidget

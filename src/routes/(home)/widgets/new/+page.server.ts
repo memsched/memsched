@@ -6,7 +6,6 @@ import { formSchema } from '$lib/components/forms/widget-form/schema';
 import type { LocalUser } from '$lib/types';
 import { handleFormDbError } from '$lib/server/utils';
 import { okAsync } from 'neverthrow';
-import { ResultAsync } from 'neverthrow';
 
 export const load: PageServerLoad = async (event) => {
   if (!event.locals.session) {
@@ -14,11 +13,6 @@ export const load: PageServerLoad = async (event) => {
   }
 
   const form = await superValidate(zod(formSchema));
-  const objectiveId = event.url.searchParams.get('objectiveId');
-
-  if (objectiveId) {
-    form.data.objectiveId = objectiveId;
-  }
 
   return {
     form,
@@ -62,19 +56,14 @@ export const actions: Actions = {
 
     const res = await event.locals.widgetsService
       .createUserWidget(form.data, event.locals.session.userId)
-      .andThen((widgetId) =>
-        ResultAsync.combine([
-          okAsync(widgetId),
-          event.locals.objectivesService.getObjectiveFromWidgetId(widgetId),
-        ])
-      );
+      .andThen((widgetId) => okAsync(widgetId));
 
     if (res.isErr()) {
       return handleFormDbError(res, form);
     }
 
-    const [widgetId, objective] = res.value;
-    if (objective.visibility !== 'public') {
+    const widgetId = res.value;
+    if (form.data.visibility !== 'public') {
       return redirect(302, `/widgets`);
     }
 

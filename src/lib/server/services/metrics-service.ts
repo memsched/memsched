@@ -16,15 +16,11 @@ export class MetricsService {
     );
   }
 
-  public updateMetricValues(
-    objectiveId: string,
-    metrics: table.WidgetMetric[],
-    cache: CacheService
-  ) {
+  public updateMetricValues(metrics: table.WidgetMetric[], cache: CacheService) {
     return ResultAsync.combine(
       metrics.map((metric) =>
         this.computeMetricValue(
-          objectiveId,
+          metric.objectiveId,
           metric.calculationType,
           metric.valueDecimalPrecision
         ).andThen((value) => this.updateMetricValue(metric.id, value, cache))
@@ -113,10 +109,14 @@ export class MetricsService {
     });
   }
 
-  public computePreviewMetricValues(objectiveId: string, metrics: z.infer<FormSchema>['metrics']) {
+  public computePreviewMetricValues(metrics: z.infer<FormSchema>['metrics']) {
     return ResultAsync.combine(
       metrics.map((metric) =>
-        this.computeMetricValue(objectiveId, metric.calculationType, metric.valueDecimalPrecision)
+        this.computeMetricValue(
+          metric.objectiveId,
+          metric.calculationType,
+          metric.valueDecimalPrecision
+        )
       )
     );
   }

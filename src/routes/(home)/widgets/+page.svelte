@@ -7,24 +7,14 @@
   import IconButton from '$lib/components/ui/IconButton.svelte';
   import { HEADER_HEIGHT, SUB_NAV_HEIGHT } from '$lib/constants';
   import { browser } from '$app/environment';
-  import TabNavLink from '$lib/components/headers/TabNavLink.svelte';
-  import type { Page } from '@sveltejs/kit';
   import * as Tooltip from '$lib/components/ui/tooltip';
   import SvelteSeo from 'svelte-seo';
   import { DOMAIN } from '$lib/constants';
 
   const { data }: PageProps = $props();
 
-  // Custom isActive functions for the tabs
-  const isActiveTab = (page: Page) =>
-    page.url.pathname === '/widgets' && !page.url.searchParams.has('completed');
-
-  const isCompletedTab = (page: Page) => page.url.searchParams.has('completed');
-
   // Define page title based on active tab
-  const pageTitle = data.isCompleted
-    ? 'Completed Widgets - MEMsched'
-    : 'Learning Widgets - MEMsched';
+  const pageTitle = 'Learning Widgets - MEMsched';
   const pageDescription =
     'Create and manage your learning widgets on MEMsched. Showcase your progress and share them with the world.';
 </script>
@@ -35,7 +25,7 @@
   openGraph={{
     title: pageTitle,
     description: pageDescription,
-    url: `${DOMAIN}/widgets${data.isCompleted ? '?completed' : ''}`,
+    url: `${DOMAIN}/widgets`,
     type: 'website',
     site_name: 'MEMsched',
   }}
@@ -55,8 +45,7 @@
     >
       <div class="main-container flex items-center justify-between">
         <div class="flex gap-4">
-          <TabNavLink name="Active" href="/widgets" isActive={isActiveTab} />
-          <TabNavLink name="Completed" href="/widgets?completed" isActive={isCompletedTab} />
+          <!-- <TabNavLink name="Active" href="/widgets" isActive={isActiveTab} /> -->
         </div>
         {#if data.widgetsLimitReached}
           <Tooltip.Provider delayDuration={100}>
@@ -105,18 +94,7 @@
       </div>
     {:else}
       <div class="flex flex-grow flex-col items-center justify-center p-6">
-        {#if data.isCompleted}
-          <CreateNew
-            title="No completed widgets"
-            description="You haven't completed any widgets with fixed goals yet."
-            buttonText="View active widgets"
-            href="/widgets"
-            icon={IoCubeOutline}
-            buttonIcon={IoArrowForward}
-          />
-        {:else}
-          <CreateNew title="Create your first widget" icon={IoCubeOutline} href="/widgets/new" />
-        {/if}
+        <CreateNew title="Create your first widget" icon={IoCubeOutline} href="/widgets/new" />
       </div>
     {/if}
   </HomeLayout>

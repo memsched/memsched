@@ -11,9 +11,8 @@ export const load: PageServerLoad = async (event) => {
     };
   }
 
-  const isCompleted = event.url.searchParams.get('completed') !== null;
   const res = await event.locals.widgetsService
-    .getUserWidgets(session.userId, isCompleted)
+    .getUserWidgets(session.userId)
     .andThen((widgetsIds) => {
       return ResultAsync.combine([
         okAsync(widgetsIds),
@@ -32,7 +31,6 @@ export const load: PageServerLoad = async (event) => {
 
   return {
     widgets: widgetIds.map((w) => w.id),
-    isCompleted,
     widgetsLimitReached: widgetCount >= planLimits.value.maxWidgets,
     maxWidgets: planLimits.value.maxWidgets,
   };

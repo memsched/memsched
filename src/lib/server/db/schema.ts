@@ -34,7 +34,7 @@ export const user = sqliteTable('user', {
 export const authProvider = sqliteTable(
   'auth_provider',
   {
-    providerId: text('provider_id').notNull(), // "github", "google"
+    providerId: text('provider_id', { enum: ['github', 'google'] }).notNull(),
     providerUserId: text('provider_user_id').notNull(), // Provider-specific user ID
     userId: text('user_id')
       .notNull()
@@ -63,8 +63,7 @@ export const objective = sqliteTable('objective', {
   startValue: real('start_value').notNull(),
   value: real('value').notNull(),
   unit: text('unit').notNull(),
-  visibility: text('visibility').notNull(),
-  goalType: text('goal_type').notNull(),
+  goalType: text('goal_type', { enum: ['fixed', 'ongoing'] }).notNull(),
   endValue: real('end_value'),
   archived: integer('archived', { mode: 'boolean' }).notNull().default(false),
 
@@ -104,8 +103,11 @@ export const widget = sqliteTable('widget', {
   title: text('title').notNull(),
   subtitle: text('subtitle'),
   imageUrl: text('image_url'),
-  imagePlacement: text('image_placement').notNull(), // 'left' | 'right'
+  imagePlacement: text('image_placement', { enum: ['left', 'right'] }).notNull(),
   textIcon: text('text_icon'),
+  visibility: text('visibility', { enum: ['private', 'public'] })
+    .notNull()
+    .default('private'),
 
   padding: integer('padding').notNull(),
   border: integer('border', { mode: 'boolean' }).notNull(),
@@ -116,9 +118,6 @@ export const widget = sqliteTable('widget', {
   backgroundColor: text('background_color').notNull(),
   watermark: integer('watermark', { mode: 'boolean' }).notNull(),
 
-  objectiveId: text('objective_id')
-    .notNull()
-    .references(() => objective.id, { onDelete: 'cascade' }),
   userId: text('user_id')
     .notNull()
     .references(() => user.id, { onDelete: 'cascade' }),
@@ -131,11 +130,16 @@ export const widgetMetric = sqliteTable('widget_metric', {
   id: text('id').primaryKey(),
   value: real('value').notNull(),
   name: text('name'),
-  calculationType: text('calculation_type').notNull(), // 'day' | 'week' | 'month' | 'year' | 'all time' | 'percentage'
+  calculationType: text('calculation_type', {
+    enum: ['day', 'week', 'month', 'year', 'all time', 'percentage'],
+  }).notNull(),
   valueDecimalPrecision: integer('value_decimal_precision').notNull(),
 
   order: integer('order').notNull(),
 
+  objectiveId: text('objective_id')
+    .notNull()
+    .references(() => objective.id, { onDelete: 'cascade' }),
   widgetId: text('widget_id')
     .notNull()
     .references(() => widget.id, { onDelete: 'cascade' }),
@@ -167,8 +171,11 @@ export type WidgetMetric = typeof widgetMetric.$inferSelect;
 export type WidgetJoinMetrics = Widget & {
   metrics: WidgetMetric[];
 };
-export type WidgetMetricPreview = Omit<WidgetMetric, 'id' | 'userId' | 'createdAt' | 'widgetId'>;
-export type WidgetPreview = Omit<Widget, 'id' | 'userId' | 'createdAt' | 'objectiveId'>;
+export type WidgetMetricPreview = Omit<
+  WidgetMetric,
+  'id' | 'userId' | 'createdAt' | 'widgetId' | 'objectiveId'
+>;
+export type WidgetPreview = Omit<Widget, 'id' | 'userId' | 'createdAt' | 'visibility'>;
 export type WidgetJoinMetricsPreview = WidgetPreview & {
   metrics: WidgetMetricPreview[];
 };

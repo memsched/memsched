@@ -11,6 +11,8 @@ export const GET: RequestHandler = async (event) => {
     return error(401, 'Unauthorized');
   }
 
+  const userId = event.locals.session.userId;
+
   const base64Config = event.url.searchParams.get('config');
   if (!base64Config) {
     return error(400, 'Missing widget config');
@@ -23,19 +25,37 @@ export const GET: RequestHandler = async (event) => {
     return error(400, 'Invalid widget config');
   }
 
-  const objective = await event.locals.objectivesService.getUserObjective(
-    config.objectiveId,
-    event.locals.session.userId
+  // Verify user has access to all objectives referenced in metrics
+  const objectiveIds = config.metrics.map((metric) => metric.objectiveId).filter(Boolean);
+
+  if (objectiveIds.length === 0) {
+    // No metrics with objectives, render widget without metrics
+    const props = {
+      ...config,
+      metrics: [],
+    };
+    return renderWidget<WidgetJoinMetricsPreview>(event, Widget, props, true);
+  }
+
+  // Verify access to all objectives
+  const objectiveVerifications = await Promise.all(
+    objectiveIds.map((objectiveId) =>
+      event.locals.objectivesService.getUserObjective(objectiveId, userId)
+    )
   );
-  if (objective.isErr()) {
-    return handleDbError(objective);
+
+  // Check if any objective verification failed
+  for (const verification of objectiveVerifications) {
+    if (verification.isErr()) {
+      return handleDbError(verification);
+    }
   }
 
   // Calculate metric values using proper calculation method
   const metricValuesResult = await event.locals.metricsService.computePreviewMetricValues(
-    objective.value.id,
     config.metrics
   );
+
   if (metricValuesResult.isErr()) {
     return handleDbError(metricValuesResult);
   }

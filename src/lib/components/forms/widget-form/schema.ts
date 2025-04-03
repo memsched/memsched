@@ -28,6 +28,7 @@ const widgetMetricSchema = z.object({
     .max(WIDGET_METRIC_VALUE_DECIMAL_PRECISION_MAX, {
       message: 'Value decimal precision must be less than or equal to 2.',
     }),
+  objectiveId: z.string().min(1, { message: 'Objective is required.' }),
 });
 
 export const formSchema = z.object({
@@ -55,6 +56,11 @@ export const formSchema = z.object({
     .nullable()
     .transform((v) => (v === '' ? null : v)),
   imagePlacement: z.enum(['left', 'right']).default('left'),
+  visibility: z
+    .enum(['public', 'private'], {
+      message: 'Visibility should be either "public" or "private".',
+    })
+    .default('public'),
 
   // Styling options
   padding: z
@@ -91,9 +97,6 @@ export const formSchema = z.object({
     })
     .default('#ffffff'),
   watermark: z.boolean().default(true),
-
-  // Reference fields
-  objectiveId: z.string().min(1, { message: 'Objective is required.' }),
 
   // Metrics
   metrics: z

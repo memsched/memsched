@@ -2,12 +2,9 @@
   import { browser } from '$app/environment';
   import SuperDebug, { type SuperValidated, type Infer, superForm } from 'sveltekit-superforms';
   import { zodClient } from 'sveltekit-superforms/adapters';
-  import { Icon } from 'svelte-icons-pack';
-  import { IoDocumentLockOutline, IoGlobeOutline } from 'svelte-icons-pack/io';
   import toast from 'svelte-french-toast';
   import * as Form from '$lib/components/ui/form';
   import * as Select from '$lib/components/ui/select';
-  import * as RadioGroup from '$lib/components/ui/radio-group';
   import * as Tabs from '$lib/components/ui/tabs/index';
   import { Input } from '$lib/components/ui/input';
   import { Textarea } from '$lib/components/ui/textarea';
@@ -74,7 +71,9 @@
             />
           {/snippet}
         </Form.Control>
-        <Form.Description>Set a start value for your objective.</Form.Description>
+        <Form.Description
+          >Set a start value for your objective. This will be the initial total value.</Form.Description
+        >
         <Form.FieldErrors />
       </Form.Field>
       <!-- TODO: Allow for any unit for an objective -->
@@ -99,48 +98,6 @@
         </Form.Description>
         <Form.FieldErrors />
       </Form.Field>
-      <Form.Fieldset {form} name="visibility" class="col-span-2 space-y-4">
-        <Form.Legend>Visibility</Form.Legend>
-        <RadioGroup.Root
-          bind:value={$formData.visibility}
-          class="flex flex-col space-y-3 *:flex *:items-center *:space-x-4"
-          name="visibility"
-        >
-          <div>
-            <Form.Control>
-              {#snippet children({ props })}
-                <RadioGroup.Item value="public" {...props} />
-                <Form.Label class="flex gap-1.5">
-                  <Icon src={IoGlobeOutline} className="size-8 *:!stroke-[16px]" />
-                  <div class="flex flex-col gap-1.5">
-                    <div class="font-medium">Public</div>
-                    <div class="font-normal text-muted-foreground">
-                      Share your progress with everyone
-                    </div>
-                  </div>
-                </Form.Label>
-              {/snippet}
-            </Form.Control>
-          </div>
-          <div>
-            <Form.Control>
-              {#snippet children({ props })}
-                <RadioGroup.Item value="private" {...props} />
-                <Form.Label class="flex gap-1.5">
-                  <Icon src={IoDocumentLockOutline} className="size-8 *:!stroke-[16px]" />
-                  <div class="flex flex-col gap-1.5">
-                    <div class="font-medium">Private</div>
-                    <div class="font-normal text-muted-foreground">
-                      Keep your progress to yourself. Widgets will be visible to you only.
-                    </div>
-                  </div>
-                </Form.Label>
-              {/snippet}
-            </Form.Control>
-          </div>
-        </RadioGroup.Root>
-        <Form.FieldErrors />
-      </Form.Fieldset>
       <Form.Fieldset {form} name="goalType">
         <Form.Legend>Type</Form.Legend>
         <input type="hidden" name="goalType" bind:value={$formData.goalType} />

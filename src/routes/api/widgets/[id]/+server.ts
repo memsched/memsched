@@ -38,6 +38,11 @@ export const GET: RequestHandler = async (event) => {
   }
   const widget = widgetResult.value;
 
+  // Check visibility permissions
+  if (widget.visibility !== 'public' && event.locals.session?.userId !== widget.userId) {
+    return error(401, 'Unauthorized');
+  }
+
   // Generate a new etag based on widget data
   const newEtag = generateWidgetEtag(widget);
 
@@ -54,23 +59,13 @@ export const GET: RequestHandler = async (event) => {
     });
   }
 
-  const objectiveResult = await event.locals.objectivesService.getObjectiveFromWidgetId(widget.id);
-  if (objectiveResult.isErr()) {
-    return handleDbError(objectiveResult);
-  }
-  const objective = objectiveResult.value;
-
-  if (objective.visibility !== 'public' && event.locals.session?.userId !== objective.userId) {
-    return error(401, 'Unauthorized');
-  }
-
   // Render the widget
   const rendered = await renderWidget<WidgetJoinMetrics>(event, Widget, widget, renderSvg);
   const renderedContent = await rendered.text();
 
   // Cache the result
   await event.locals.cache.set(cacheKey, renderedContent, newEtag, {
-    visibility: objective.visibility,
+    visibility: widget.visibility,
     userId: event.locals.session?.userId ?? null,
   });
 

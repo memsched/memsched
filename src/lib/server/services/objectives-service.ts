@@ -27,16 +27,6 @@ export class ObjectivesService {
     );
   }
 
-  public getUserPublicObjectives(userId: string) {
-    return wrapResultAsync(
-      this.db
-        .select()
-        .from(table.objective)
-        .where(and(eq(table.objective.userId, userId), eq(table.objective.visibility, 'public')))
-        .orderBy(desc(table.objective.createdAt))
-    );
-  }
-
   public getUserActiveObjectives(userId: string) {
     return wrapResultAsync(
       this.db
@@ -98,36 +88,19 @@ export class ObjectivesService {
     });
   }
 
-  public getObjectiveFromWidgetId(widgetId: string) {
-    return wrapResultAsyncFn(async () => {
-      const objectives = await this.db
-        .select()
-        .from(table.objective)
-        .innerJoin(table.widget, eq(table.objective.id, table.widget.objectiveId))
-        .where(eq(table.widget.id, widgetId))
-        .limit(1);
-
-      if (objectives.length === 0) {
-        throw new DrizzleRecordNotFoundErrorCause('Objective not found');
-      }
-      return objectives[0].objective;
-    });
-  }
-
   public updateObjectiveWidgetMetrics(objectiveId: string, cache: CacheService) {
-    return this.widgetService
-      .getWidgetsFromObjectiveId(objectiveId)
-      .andThen((widgets) =>
-        ResultAsync.combine(
-          widgets.map((widget) =>
-            this.metricsService
-              .getMetricsFromWidgetId(widget.id)
-              .andThen((metrics) =>
-                this.metricsService.updateMetricValues(objectiveId, metrics, cache)
-              )
-          )
+    return this.widgetService.getWidgetsFromObjectiveId(objectiveId).andThen((widgets) =>
+      ResultAsync.combine(
+        widgets.map((widget) =>
+          this.metricsService.getMetricsFromWidgetId(widget.id).andThen((metrics) => {
+            const objectiveMetrics = metrics.filter((metric) => metric.objectiveId === objectiveId);
+            if (objectiveMetrics.length === 0)
+              return ResultAsync.fromPromise(Promise.resolve([]), (e) => e);
+            return this.metricsService.updateMetricValues(objectiveMetrics, cache);
+          })
         )
-      );
+      )
+    );
   }
 
   public updateObjectiveValue(objectiveId: string, value: number) {
@@ -166,7 +139,6 @@ export class ObjectivesService {
             startValue: objectiveData.startValue,
             value: objectiveData.startValue,
             unit: objectiveData.unit,
-            visibility: objectiveData.visibility,
             goalType: objectiveData.goalType,
             endValue: objectiveData.endValue,
             userId,
@@ -199,7 +171,6 @@ export class ObjectivesService {
             name: objectiveData.name,
             description: objectiveData.description,
             unit: objectiveData.unit,
-            visibility: objectiveData.visibility,
             goalType: objectiveData.goalType,
             endValue: objectiveData.endValue,
           })

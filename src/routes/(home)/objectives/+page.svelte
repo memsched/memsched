@@ -5,10 +5,8 @@
     IoFolderOpenOutline,
     IoArrowForward,
     IoEllipsisHorizontal,
-    IoGlobeOutline,
-    IoDocumentLockOutline,
   } from 'svelte-icons-pack/io';
-  import { FiEdit3, FiTrash2, FiRotateCcw, FiPlus, FiArchive } from 'svelte-icons-pack/fi';
+  import { FiEdit3, FiTrash2, FiRotateCcw, FiArchive } from 'svelte-icons-pack/fi';
   import CreateNew from '$lib/components/CreateNew.svelte';
   import HomeLayout from '$lib/components/layouts/HomeLayout.svelte';
   import { HEADER_HEIGHT, SUB_NAV_HEIGHT } from '$lib/constants';
@@ -153,17 +151,6 @@
                   <div class="line-clamp-1 font-medium">{objective.name}</div>
                   <div class="flex items-center gap-1.5">
                     <Badge
-                      variant={objective.visibility === 'public' ? 'default' : 'outline'}
-                      class="flex items-center gap-1 text-xs capitalize"
-                    >
-                      {#if objective.visibility === 'public'}
-                        <Icon src={IoGlobeOutline} className="size-3" />
-                      {:else}
-                        <Icon src={IoDocumentLockOutline} className="size-3" />
-                      {/if}
-                      {objective.visibility}
-                    </Badge>
-                    <Badge
                       variant={objective.goalType === 'fixed' ? 'outline' : 'secondary'}
                       class="text-xs capitalize"
                     >
@@ -253,45 +240,6 @@
                               </a>
                             {/snippet}
                           </DropdownMenu.Item>
-                          {#if data.widgetsLimitReached}
-                            <Tooltip.Provider delayDuration={100}>
-                              <Tooltip.Root>
-                                <Tooltip.Trigger class="cursor-not-allowed">
-                                  <DropdownMenu.Item disabled>
-                                    <Icon src={FiPlus} className="!text-muted-foreground" />
-                                    Create widget
-                                  </DropdownMenu.Item>
-                                </Tooltip.Trigger>
-                                <Tooltip.Content
-                                  side="right"
-                                  align="center"
-                                  class="flex flex-col gap-2 p-4"
-                                >
-                                  <p>
-                                    You've reached the maximum limit of {data.maxWidgets} widgets
-                                  </p>
-                                  <IconButton
-                                    icon={IoArrowForward}
-                                    size="sm"
-                                    href="/settings/account"
-                                    class="animate-svg"
-                                    data-umami-event="objectives-upgrade-to-pro-button"
-                                  >
-                                    Upgrade to Pro
-                                  </IconButton>
-                                </Tooltip.Content>
-                              </Tooltip.Root>
-                            </Tooltip.Provider>
-                          {:else}
-                            <DropdownMenu.Item class="cursor-pointer">
-                              {#snippet child({ props })}
-                                <a href="/widgets/new?objectiveId={objective.id}" {...props}>
-                                  <Icon src={FiPlus} className="!text-muted-foreground" />
-                                  Create widget
-                                </a>
-                              {/snippet}
-                            </DropdownMenu.Item>
-                          {/if}
                           <DropdownMenu.Item class="w-full cursor-pointer">
                             {#snippet child({ props })}
                               <form action="?/toggleArchive" method="POST" use:enhance>

@@ -105,9 +105,9 @@ export const widget = sqliteTable('widget', {
   imageUrl: text('image_url'),
   imagePlacement: text('image_placement', { enum: ['left', 'right'] }).notNull(),
   textIcon: text('text_icon'),
-  visibility: text('visibility', { enum: ['private', 'public'] })
+  visibility: text('visibility', { enum: ['public', 'private'] })
     .notNull()
-    .default('private'),
+    .default('public'),
 
   padding: integer('padding').notNull(),
   border: integer('border', { mode: 'boolean' }).notNull(),

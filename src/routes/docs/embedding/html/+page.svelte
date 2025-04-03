@@ -31,9 +31,8 @@
 
   <Alert.Root>
     <Alert.Description>
-      Before embedding your widget, make sure you have created one in your dashboard <strong
-        >linked to a public objective</strong
-      >. Each widget has its unique URL that you'll use in the code snippets below.
+      Before embedding your widget, make sure you have created a <strong>public widget</strong> in your
+      dashboard. Each widget has its unique URL that you'll use in the code snippets below.
     </Alert.Description>
   </Alert.Root>
 

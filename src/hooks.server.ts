@@ -11,6 +11,7 @@ import {
   MetricsService,
   SessionsService,
   PaymentService,
+  GithubMetricsService,
   SESSION_COOKIE_NAME,
 } from '$lib/server/services';
 
@@ -28,7 +29,8 @@ function isPrerenderedRoute(url: URL) {
 function initializeServices(db: DBType) {
   // Create independent services first
   const usersService = new UsersService(db);
-  const metricsService = new MetricsService(db);
+  const githubMetricsService = new GithubMetricsService(db);
+  const metricsService = new MetricsService(db, githubMetricsService);
   const sessionsService = new SessionsService(db);
   const paymentService = new PaymentService(db);
 
@@ -50,6 +52,7 @@ function initializeServices(db: DBType) {
     objectiveLogsService,
     widgetsService,
     metricsService,
+    githubMetricsService,
     sessionsService,
     paymentService,
   };

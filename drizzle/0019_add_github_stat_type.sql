@@ -1,0 +1,1 @@
+ALTER TABLE `widget_metric` ADD `github_stat_type` text DEFAULT 'commits';

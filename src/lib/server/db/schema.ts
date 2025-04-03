@@ -135,11 +135,20 @@ export const widgetMetric = sqliteTable('widget_metric', {
   }).notNull(),
   valueDecimalPrecision: integer('value_decimal_precision').notNull(),
 
+  // New field to determine if this is a GitHub or Objective metric
+  metricType: text('metric_type', { enum: ['objective', 'github'] })
+    .notNull()
+    .default('objective'),
+
+  // GitHub integration fields
+  githubUsername: text('github_username'),
+  githubStatType: text('github_stat_type', {
+    enum: ['commits', 'repositories', 'followers'],
+  }).default('commits'),
+
   order: integer('order').notNull(),
 
-  objectiveId: text('objective_id')
-    .notNull()
-    .references(() => objective.id, { onDelete: 'cascade' }),
+  objectiveId: text('objective_id').references(() => objective.id, { onDelete: 'cascade' }),
   widgetId: text('widget_id')
     .notNull()
     .references(() => widget.id, { onDelete: 'cascade' }),
@@ -161,6 +170,29 @@ export const userDeletionLog = sqliteTable('user_deletion_log', {
   }).default(sql`(unixepoch())`),
 });
 
+export const githubStatsCache = sqliteTable('github_stats_cache', {
+  id: text('id').primaryKey(),
+  username: text('username').notNull(),
+  statType: text('stat_type', { enum: ['commits', 'repositories', 'followers'] })
+    .notNull()
+    .default('commits'),
+  timeRange: text('time_range', {
+    enum: ['day', 'week', 'month', 'year', 'all time'],
+  }).notNull(),
+  value: real('value').notNull(),
+  lastUpdated: integer('last_updated', {
+    mode: 'timestamp',
+  })
+    .notNull()
+    .default(sql`(unixepoch())`),
+  expiresAt: integer('expires_at', {
+    mode: 'timestamp',
+  }).notNull(),
+  createdAt: integer('created_at', {
+    mode: 'timestamp',
+  }).default(sql`(unixepoch())`),
+});
+
 export type User = typeof user.$inferSelect;
 export type UserInsert = typeof user.$inferInsert;
 export type AuthProvider = typeof authProvider.$inferSelect;
@@ -173,9 +205,18 @@ export type WidgetJoinMetrics = Widget & {
 };
 export type WidgetMetricPreview = Omit<
   WidgetMetric,
-  'id' | 'userId' | 'createdAt' | 'widgetId' | 'objectiveId'
+  | 'id'
+  | 'userId'
+  | 'createdAt'
+  | 'widgetId'
+  | 'objectiveId'
+  | 'metricType'
+  | 'githubUsername'
+  | 'githubStatType'
 >;
 export type WidgetPreview = Omit<Widget, 'id' | 'userId' | 'createdAt' | 'visibility'>;
 export type WidgetJoinMetricsPreview = WidgetPreview & {
   metrics: WidgetMetricPreview[];
 };
+export type GithubStatsCache = typeof githubStatsCache.$inferSelect;
+export type GithubStatsCacheInsert = typeof githubStatsCache.$inferInsert;

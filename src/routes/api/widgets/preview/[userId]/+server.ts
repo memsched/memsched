@@ -5,6 +5,7 @@ import { formSchema } from '$lib/components/forms/widget-form/schema';
 import Widget from '$lib/components/Widget.svelte';
 import { renderWidget } from '$lib/server/svg';
 import { handleDbError } from '$lib/server/utils';
+import { okAsync } from 'neverthrow';
 
 export const GET: RequestHandler = async (event) => {
   if (!event.locals.session || event.params.userId !== event.locals.session.userId) {
@@ -28,20 +29,14 @@ export const GET: RequestHandler = async (event) => {
   // Verify user has access to all objectives referenced in metrics
   const objectiveIds = config.metrics.map((metric) => metric.objectiveId).filter(Boolean);
 
-  if (objectiveIds.length === 0) {
-    // No metrics with objectives, render widget without metrics
-    const props = {
-      ...config,
-      metrics: [],
-    };
-    return renderWidget<WidgetJoinMetricsPreview>(event, Widget, props, true);
-  }
-
   // Verify access to all objectives
   const objectiveVerifications = await Promise.all(
-    objectiveIds.map((objectiveId) =>
-      event.locals.objectivesService.getUserObjective(objectiveId, userId)
-    )
+    objectiveIds.map((objectiveId) => {
+      if (!objectiveId) {
+        return okAsync();
+      }
+      return event.locals.objectivesService.getUserObjective(objectiveId, userId);
+    })
   );
 
   // Check if any objective verification failed

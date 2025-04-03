@@ -5,3 +5,4 @@ export * from './widgets-service';
 export * from './metrics-service';
 export * from './sessions-service';
 export * from './payment-service';
+export * from './github-metrics-service';

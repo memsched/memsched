@@ -120,6 +120,27 @@
       "when": 1743664103238,
       "tag": "0016_widget_visibility_default",
       "breakpoints": true
+    },
+    {
+      "idx": 17,
+      "version": "6",
+      "when": 1743680804762,
+      "tag": "0017_widget_metric_github",
+      "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "6",
+      "when": 1743681922967,
+      "tag": "0018_add_github_stats_cache",
+      "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "6",
+      "when": 1743683366941,
+      "tag": "0019_add_github_stat_type",
+      "breakpoints": true
     }
   ]
 }

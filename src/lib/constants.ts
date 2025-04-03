@@ -5,6 +5,6 @@ export const DOMAIN = 'https://memsched.com';
 
 // Plan limits for free tier
 export const FREE_PLAN_LIMITS = {
-  maxWidgets: 1,
-  maxObjectives: 20,
+  maxObjectives: 3,
+  maxWidgets: 3,
 } as const;

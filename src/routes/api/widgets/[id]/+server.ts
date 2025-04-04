@@ -1,6 +1,6 @@
 import type { RequestHandler } from './$types';
 import { type WidgetJoinMetrics } from '$lib/server/db/schema';
-import Widget from '$lib/components/Widget.svelte';
+import Widget from '$lib/components/widgets/Widget.svelte';
 import { error } from '@sveltejs/kit';
 import { renderWidget } from '$lib/server/svg';
 import { generateWidgetEtag } from '$lib/server/utils';

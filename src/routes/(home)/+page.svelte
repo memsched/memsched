@@ -11,7 +11,7 @@
   import { mockWidgets } from '$lib/widgets';
   import { HEADER_HEIGHT } from '$lib/constants';
   import Path from '$lib/components/svgs/Path.svelte';
-  import Widget from '$lib/components/Widget.svelte';
+  import Widget from '$lib/components/widgets/Widget.svelte';
   import { FLAT_COLOR_ICONS } from '$lib/icons';
   import * as Accordion from '$lib/components/ui/accordion';
 
@@ -155,14 +155,14 @@
             {
               name: 'this month',
               value: 85 + liveIncrement,
-              calculationType: 'hour',
+              calculationType: 'month',
               valueDecimalPrecision: 0,
               order: 1,
             },
             {
               name: 'total hours',
               value: 450 + liveIncrement,
-              calculationType: 'hour',
+              calculationType: 'all time',
               valueDecimalPrecision: 0,
               order: 2,
             },

@@ -1,5 +1,6 @@
 import { sqliteTable, integer, text, primaryKey, real, index } from 'drizzle-orm/sqlite-core';
 import { sql } from 'drizzle-orm';
+import type { PlotData } from '../services';
 
 export const user = sqliteTable('user', {
   id: text('id').primaryKey(),
@@ -217,6 +218,9 @@ export type WidgetMetricPreview = Omit<
 export type WidgetPreview = Omit<Widget, 'id' | 'userId' | 'createdAt' | 'visibility'>;
 export type WidgetJoinMetricsPreview = WidgetPreview & {
   metrics: WidgetMetricPreview[];
+};
+export type WidgetJoinMetricsPreviewPlotData = WidgetJoinMetricsPreview & {
+  metrics: (WidgetMetricPreview & { plotData: PlotData })[];
 };
 export type GithubStatsCache = typeof githubStatsCache.$inferSelect;
 export type GithubStatsCacheInsert = typeof githubStatsCache.$inferInsert;

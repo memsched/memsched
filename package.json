@@ -75,6 +75,7 @@
     "@oslojs/crypto": "^1.0.1",
     "@oslojs/encoding": "^1.1.0",
     "arctic": "^3.6.0",
+    "date-fns": "^4.1.0",
     "drizzle-orm": "^0.41.0",
     "html-react-parser": "^5.2.3",
     "mode-watcher": "^0.5.1",

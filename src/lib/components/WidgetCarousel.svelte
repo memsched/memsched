@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Widget from './Widget.svelte';
+  import Widget from '$lib/components/widgets/Widget.svelte';
   import type { WidgetJoinMetricsPreview } from '$lib/server/db/schema';
 
   interface Props {

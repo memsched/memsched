@@ -11,18 +11,18 @@
   import { Button } from '$lib/components/ui/button';
   import { Switch } from '$lib/components/ui/switch';
   import ColorPickerInput from '$lib/components/inputs/ColorPickerInput.svelte';
-  import type { WidgetJoinMetricsPreview } from '$lib/server/db/schema';
+  import type { WidgetJoinMetricsPreviewPlotData } from '$lib/server/db/schema';
   import {
     WIDGET_METRIC_CALCULATION_TYPES,
     WIDGET_METRIC_VALUE_DECIMAL_PRECISION_MAX,
   } from '$lib/components/forms/widget-form/schema';
 
   // Create a default widget config
-  let config = $state<WidgetJoinMetricsPreview>({
-    title: 'Widget Title',
-    subtitle: 'Widget Subtitle',
+  let config = $state<WidgetJoinMetricsPreviewPlotData>({
+    title: 'GitHub Commits',
+    subtitle: 'Last 10 days',
     textIcon: null,
-    imageUrl: null,
+    imageUrl: 'http://localhost:5174/icons/vscode-icons/folder_type_github.svg',
     imagePlacement: 'left',
     padding: 13,
     border: true,
@@ -34,11 +34,55 @@
     watermark: false,
     metrics: [
       {
-        name: 'Metric 1',
-        value: 100,
+        name: 'commits',
+        value: 1235,
         calculationType: 'day',
         valueDecimalPrecision: 0,
         order: 1,
+        plotData: {
+          points: [
+            { date: '2023-01-01', value: 100 },
+            { date: '2023-01-02', value: 150 },
+            { date: '2023-01-03', value: 120 },
+            { date: '2023-01-04', value: 200 },
+            { date: '2023-01-05', value: 180 },
+            { date: '2023-01-06', value: 250 },
+            { date: '2023-01-07', value: 300 },
+            { date: '2023-01-08', value: 350 },
+            { date: '2023-01-09', value: 280 },
+            { date: '2023-01-10', value: 320 },
+            { date: '2023-01-16', value: 486 },
+            { date: '2023-01-17', value: 505 },
+            { date: '2023-01-18', value: 523 },
+            { date: '2023-01-19', value: 493 },
+            { date: '2023-01-20', value: 463 },
+            { date: '2023-01-21', value: 433 },
+            { date: '2023-01-22', value: 500 },
+            { date: '2023-01-23', value: 550 },
+            { date: '2023-01-24', value: 600 },
+            { date: '2023-01-25', value: 650 },
+          ],
+          timeRange: 'day',
+        },
+      },
+      {
+        name: 'PRs',
+        value: 431,
+        calculationType: 'day',
+        valueDecimalPrecision: 0,
+        order: 2,
+        plotData: {
+          points: [
+            { date: '2023-01-01', value: 130 },
+            { date: '2023-01-02', value: 150 },
+            { date: '2023-01-03', value: 120 },
+            { date: '2023-01-04', value: 200 },
+            { date: '2023-01-05', value: 180 },
+            { date: '2023-01-06', value: 250 },
+            { date: '2023-01-07', value: 300 },
+          ],
+          timeRange: 'day',
+        },
       },
     ],
   });
@@ -61,10 +105,10 @@
     try {
       // Create URL for SVG preview
       const encodedConfig = encodeURIComponent(JSON.stringify(config));
-      svgUrl = `/dev/widget-preview?config=${encodedConfig}&raw=1`;
+      svgUrl = `/dev/widget-preview/api?config=${encodedConfig}&raw=1`;
 
       // Fetch SVG as string
-      const response = await fetch(`/dev/widget-preview?config=${encodedConfig}`);
+      const response = await fetch(`/dev/widget-preview/api?config=${encodedConfig}`);
       const data = (await response.json()) as { svg: string };
       svgString = data.svg;
     } catch (error) {
@@ -78,25 +122,100 @@
   });
 
   function addMetric() {
-    config.metrics = [
-      ...config.metrics,
-      {
-        name: `Metric ${config.metrics.length + 1}`,
-        value: Math.floor(Math.random() * 1000),
-        calculationType: 'day',
-        valueDecimalPrecision: 0,
-        order: config.metrics.length + 1,
-      },
-    ];
+    // const newMetric = {
+    //   name: `Metric ${config.metrics.length + 1}`,
+    //   value: Math.floor(Math.random() * 1000),
+    //   calculationType: 'day',
+    //   valueDecimalPrecision: 0,
+    //   order: config.metrics.length + 1,
+    //   plotData: generateRandomPlotData('day'),
+    // };
+    // config.metrics = [...config.metrics, newMetric];
   }
 
   function removeMetric(index: number) {
-    config.metrics = config.metrics.filter((_, i) => i !== index);
-    // Update order
-    config.metrics = config.metrics.map((metric, i) => ({
-      ...metric,
-      order: i + 1,
-    }));
+    // config.metrics = config.metrics.filter((_, i) => i !== index);
+    // // Update order
+    // config.metrics = config.metrics.map((metric, i) => ({
+    //   ...metric,
+    //   order: i + 1,
+    // }));
+  }
+
+  function generateRandomPlotData(timeRange: 'day' | 'week' | 'month' | 'year'): {
+    points: { date: string; value: number }[];
+    timeRange: string;
+  } {
+    const points = [];
+    const now = new Date();
+
+    let numPoints = 10;
+    let formatString = 'yyyy-MM-dd';
+
+    switch (timeRange) {
+      case 'day':
+        numPoints = 24;
+        formatString = 'HH:mm';
+        for (let i = 0; i < numPoints; i++) {
+          const date = new Date(now);
+          date.setHours(date.getHours() - (numPoints - i));
+          // Create an upward trend with some noise
+          const value = 100 + i * 10 + Math.random() * 20 - 10;
+          points.push({
+            date: `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`,
+            value,
+          });
+        }
+        break;
+
+      case 'week':
+        numPoints = 7;
+        for (let i = 0; i < numPoints; i++) {
+          const date = new Date(now);
+          date.setDate(date.getDate() - (numPoints - i - 1));
+          // Create a curve with some randomness
+          const value = 300 + Math.sin((i / numPoints) * Math.PI) * 200 + Math.random() * 50 - 25;
+          points.push({
+            date: `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`,
+            value,
+          });
+        }
+        break;
+
+      case 'month':
+        numPoints = 30;
+        for (let i = 0; i < numPoints; i++) {
+          const date = new Date(now);
+          date.setDate(date.getDate() - (numPoints - i - 1));
+          // Create a zigzag pattern
+          const value = 500 + (i % 2 === 0 ? 100 : -100) + Math.random() * 50;
+          points.push({
+            date: `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`,
+            value,
+          });
+        }
+        break;
+
+      case 'year':
+        numPoints = 12;
+        for (let i = 0; i < numPoints; i++) {
+          const date = new Date(now);
+          date.setMonth(date.getMonth() - (numPoints - i - 1));
+          // Upward trend with a dip in the middle
+          const progress = i / (numPoints - 1);
+          const value = 200 + progress * 800 - Math.sin(progress * Math.PI) * 300;
+          points.push({
+            date: `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}`,
+            value,
+          });
+        }
+        break;
+    }
+
+    return {
+      points,
+      timeRange,
+    };
   }
 
   function configToString(cfg: typeof config): string {
@@ -413,15 +532,32 @@
       <!-- Preview and code -->
       <div class="space-y-6">
         <Card.Root class="p-6">
-          <h2 class="mb-4 text-xl font-medium">Preview</h2>
+          <h2 class="mb-4 text-xl font-medium">Preview (SVG)</h2>
           <div class="flex flex-col items-center justify-center rounded-lg border bg-gray-50 p-4">
             {#if svgUrl}
-              <img src={svgUrl} alt="Widget preview" class="max-w-full" />
+              <img src={svgUrl + '&svg=1'} alt="Widget preview" class="max-w-full" />
             {:else}
               <div class="h-32 w-full animate-pulse rounded-lg bg-gray-200"></div>
             {/if}
           </div>
         </Card.Root>
+
+        <!-- <Card.Root class="p-6">
+          <h2 class="mb-4 text-xl font-medium">Preview (HTML)</h2>
+          <div class="flex flex-col items-center justify-center rounded-lg border bg-gray-50 p-4">
+            {#if svgUrl}
+              <iframe
+                src={svgUrl}
+                class="max-w-full"
+                title="Widget preview"
+                width="100%"
+                height="100%"
+              ></iframe>
+            {:else}
+              <div class="h-32 w-full animate-pulse rounded-lg bg-gray-200"></div>
+            {/if}
+          </div>
+        </Card.Root> -->
 
         <Card.Root class="p-6">
           <div class="mb-4 flex items-center justify-between">

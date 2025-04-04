@@ -2,7 +2,7 @@ import type { RequestHandler } from './$types';
 import { error } from '@sveltejs/kit';
 import { type WidgetJoinMetricsPreview } from '$lib/server/db/schema';
 import { formSchema } from '$lib/components/forms/widget-form/schema';
-import Widget from '$lib/components/Widget.svelte';
+import Widget from '$lib/components/widgets/Widget.svelte';
 import { renderWidget } from '$lib/server/svg';
 import { handleDbError } from '$lib/server/utils';
 import { okAsync } from 'neverthrow';

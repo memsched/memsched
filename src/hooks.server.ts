@@ -12,6 +12,7 @@ import {
   SessionsService,
   PaymentService,
   GithubMetricsService,
+  PlotDataService,
   SESSION_COOKIE_NAME,
 } from '$lib/server/services';
 
@@ -45,6 +46,7 @@ function initializeServices(db: DBType) {
 
   // Create services that depend on objectivesService
   const objectiveLogsService = new ObjectiveLogsService(db, objectivesService);
+  const plotDataService = new PlotDataService(objectiveLogsService, githubMetricsService);
 
   return {
     usersService,
@@ -55,6 +57,7 @@ function initializeServices(db: DBType) {
     githubMetricsService,
     sessionsService,
     paymentService,
+    plotDataService,
   };
 }
 

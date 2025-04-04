@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { WidgetJoinMetricsPreview } from '$lib/server/db/schema';
-  import Watermark from './svgs/Watermark.svelte';
-  import TrendingUpArrow from './svgs/TrendingUpArrow.svelte';
+  import Watermark from '$lib/components/svgs/Watermark.svelte';
+  import TrendingUpArrow from '$lib/components/svgs/TrendingUpArrow.svelte';
   const {
     title,
     subtitle,

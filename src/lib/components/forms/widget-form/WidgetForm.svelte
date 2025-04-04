@@ -428,7 +428,7 @@
                                   />
                                 {/each}
                               {:else}
-                                {#each WIDGET_METRIC_CALCULATION_TYPES as calcType}
+                                {#each WIDGET_METRIC_CALCULATION_TYPES.filter((ct) => ct !== 'percentage') as calcType}
                                   <Select.Item
                                     value={calcType}
                                     label={calcType}

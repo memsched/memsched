@@ -128,6 +128,7 @@ export class GithubMetricsService {
             const response = await fetch(url, {
               headers: {
                 Accept: 'application/vnd.github.v3+json',
+                'User-Agent': 'request',
               },
             });
 
@@ -143,6 +144,7 @@ export class GithubMetricsService {
             const response = await fetch(url, {
               headers: {
                 Accept: 'application/vnd.github.v3+json',
+                'User-Agent': 'request',
               },
             });
 
@@ -157,7 +159,11 @@ export class GithubMetricsService {
         case 'repositories': {
           // Get user's repositories count
           const reposUrl = `https://api.github.com/users/${username}`;
-          const reposResponse = await fetch(reposUrl);
+          const reposResponse = await fetch(reposUrl, {
+            headers: {
+              'User-Agent': 'request',
+            },
+          });
 
           if (!reposResponse.ok) {
             throw new Error(`GitHub API error: ${reposResponse.statusText}`);
@@ -173,7 +179,11 @@ export class GithubMetricsService {
         case 'followers': {
           // Get user's followers count
           const followersUrl = `https://api.github.com/users/${username}`;
-          const followersResponse = await fetch(followersUrl);
+          const followersResponse = await fetch(followersUrl, {
+            headers: {
+              'User-Agent': 'request',
+            },
+          });
 
           if (!followersResponse.ok) {
             throw new Error(`GitHub API error: ${followersResponse.statusText}`);
@@ -203,54 +213,18 @@ export class GithubMetricsService {
     useCache = true
   ) {
     return wrapResultAsyncFn(async () => {
-      try {
-        // Check cache first if enabled
-        if (useCache) {
-          const cachedValue = await this.getGitHubStatsFromCache(username, statType, timeRange);
-          if (cachedValue !== null) {
-            return cachedValue;
-          }
+      // Check cache first if enabled
+      if (useCache) {
+        const cachedValue = await this.getGitHubStatsFromCache(username, statType, timeRange);
+        if (cachedValue !== null) {
+          return cachedValue;
         }
+      }
 
-        // For repositories and followers, the time range doesn't matter
-        // since we're getting the current count
-        if (statType === 'repositories' || statType === 'followers') {
-          const value = await this.fetchGitHubData(username, statType);
-
-          // Save to cache if caching is enabled
-          if (useCache) {
-            await this.saveGitHubStatsToCache(username, statType, timeRange, value);
-          }
-
-          return value;
-        }
-
-        // For commits, determine the time range
-        const now = new Date();
-        let fromDate = new Date();
-
-        switch (timeRange) {
-          case 'day':
-            fromDate.setDate(now.getDate() - 1);
-            break;
-          case 'week':
-            fromDate.setDate(now.getDate() - 7);
-            break;
-          case 'month':
-            fromDate.setMonth(now.getMonth() - 1);
-            break;
-          case 'year':
-            fromDate.setFullYear(now.getFullYear() - 1);
-            break;
-          case 'all time':
-            // No date restriction for all time
-            fromDate = new Date(0);
-            break;
-          default:
-            fromDate.setDate(now.getDate() - 7); // Default to week
-        }
-
-        const value = await this.fetchGitHubData(username, statType, fromDate);
+      // For repositories and followers, the time range doesn't matter
+      // since we're getting the current count
+      if (statType === 'repositories' || statType === 'followers') {
+        const value = await this.fetchGitHubData(username, statType);
 
         // Save to cache if caching is enabled
         if (useCache) {
@@ -258,10 +232,41 @@ export class GithubMetricsService {
         }
 
         return value;
-      } catch (error) {
-        console.error('Error fetching GitHub stats:', error);
-        throw error;
       }
+
+      // For commits, determine the time range
+      const now = new Date();
+      let fromDate = new Date();
+
+      switch (timeRange) {
+        case 'day':
+          fromDate.setDate(now.getDate() - 1);
+          break;
+        case 'week':
+          fromDate.setDate(now.getDate() - 7);
+          break;
+        case 'month':
+          fromDate.setMonth(now.getMonth() - 1);
+          break;
+        case 'year':
+          fromDate.setFullYear(now.getFullYear() - 1);
+          break;
+        case 'all time':
+          // No date restriction for all time
+          fromDate = new Date(0);
+          break;
+        default:
+          fromDate.setDate(now.getDate() - 7); // Default to week
+      }
+
+      const value = await this.fetchGitHubData(username, statType, fromDate);
+
+      // Save to cache if caching is enabled
+      if (useCache) {
+        await this.saveGitHubStatsToCache(username, statType, timeRange, value);
+      }
+
+      return value;
     });
   }
 

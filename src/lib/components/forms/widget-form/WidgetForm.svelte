@@ -17,6 +17,7 @@
     type FormSchema,
     WIDGET_METRIC_CALCULATION_TYPES,
     WIDGET_METRIC_VALUE_DECIMAL_PRECISION_MAX,
+    GITHUB_STAT_TYPES,
   } from './schema';
   import { HEADER_HEIGHT } from '$lib/constants';
   import type { LocalUser } from '$lib/types';
@@ -79,9 +80,10 @@
       for (let i = currentCount; i < count; i++) {
         metricsCopy.push({
           name: '',
+          metricType: 'objective',
+          objectiveId: '',
           calculationType: 'day',
           valueDecimalPrecision: 0,
-          objectiveId: '',
         });
       }
     } else if (currentCount > count) {
@@ -288,36 +290,112 @@
             <Tabs.Content value={i.toString()} class="space-y-6 divide-y *:pt-6">
               {#if metricsCount === i}
                 {#each Array(i) as _, j}
-                  <div class="grid grid-cols-8 gap-x-4 gap-y-2">
-                    <Form.Field {form} name="metrics[{j}].objectiveId" class="col-span-4">
+                  <div class="grid grid-cols-6 gap-x-4 gap-y-2">
+                    <Form.Field {form} name="metrics[{j}].metricType" class="col-span-2">
                       <Form.Control>
                         {#snippet children({ props })}
-                          <Form.Label>Objective*</Form.Label>
+                          <Form.Label>Source*</Form.Label>
                           <Select.Root
                             type="single"
-                            bind:value={$formData.metrics[j].objectiveId}
+                            bind:value={$formData.metrics[j].metricType}
                             name={props.name}
                           >
-                            <Select.Trigger {...props}>
-                              {$formData.metrics[j].objectiveId
-                                ? data.objectives.find(
-                                    (o) => o.id === $formData.metrics[j].objectiveId
-                                  )?.name
-                                : 'Select an objective'}
+                            <Select.Trigger {...props} class="capitalize">
+                              {$formData.metrics[j].metricType}
                             </Select.Trigger>
                             <Select.Content>
-                              {#each data.objectives as objective}
-                                <Select.Item value={objective.id} label={objective.name} />
-                              {/each}
+                              {#if data.objectives.length > 0}
+                                <Select.Item value="objective" label="Objective" />
+                              {/if}
+                              <Select.Item value="github" label="GitHub" />
                             </Select.Content>
                           </Select.Root>
                         {/snippet}
                       </Form.Control>
-                      <Form.Description>Choose the objective for this metric.</Form.Description>
+                      <Form.Description>Choose the source for this metric.</Form.Description>
                       <Form.FieldErrors />
                     </Form.Field>
 
-                    <Form.Field {form} name="metrics[{j}].name" class="col-span-4">
+                    {#if $formData.metrics[j].metricType === 'objective'}
+                      <Form.Field {form} name="metrics[{j}].objectiveId" class="col-span-4">
+                        <Form.Control>
+                          {#snippet children({ props })}
+                            <Form.Label>Objective*</Form.Label>
+                            <Select.Root
+                              type="single"
+                              onValueChange={(value) => {
+                                $formData.metrics[j].objectiveId = value ?? null;
+                              }}
+                              value={$formData.metrics[j].objectiveId ?? undefined}
+                              name={props.name}
+                            >
+                              <Select.Trigger {...props}>
+                                {$formData.metrics[j].objectiveId
+                                  ? data.objectives.find(
+                                      (o) => o.id === $formData.metrics[j].objectiveId
+                                    )?.name
+                                  : 'Select an objective'}
+                              </Select.Trigger>
+                              <Select.Content>
+                                {#each data.objectives as objective}
+                                  <Select.Item value={objective.id} label={objective.name} />
+                                {/each}
+                              </Select.Content>
+                            </Select.Root>
+                          {/snippet}
+                        </Form.Control>
+                        <Form.Description>Choose the objective for this metric.</Form.Description>
+                        <Form.FieldErrors />
+                      </Form.Field>
+                    {:else}
+                      <Form.Field {form} name="metrics[{j}].githubUsername" class="col-span-2">
+                        <Form.Control>
+                          {#snippet children({ props })}
+                            <Form.Label>GitHub Username*</Form.Label>
+                            <Input {...props} bind:value={$formData.metrics[j].githubUsername} />
+                          {/snippet}
+                        </Form.Control>
+                        <Form.Description>
+                          Enter the GitHub username for this metric.
+                        </Form.Description>
+                        <Form.FieldErrors />
+                      </Form.Field>
+
+                      <Form.Field {form} name="metrics[{j}].githubStatType" class="col-span-2">
+                        <Form.Control>
+                          {#snippet children({ props })}
+                            <Form.Label>Stat Type*</Form.Label>
+                            <Select.Root
+                              type="single"
+                              value={$formData.metrics[j].githubStatType ?? undefined}
+                              onValueChange={(value) => {
+                                $formData.metrics[j].githubStatType = (value ?? null) as any;
+                              }}
+                              name={props.name}
+                            >
+                              <Select.Trigger {...props} class="capitalize">
+                                {$formData.metrics[j].githubStatType || 'commits'}
+                              </Select.Trigger>
+                              <Select.Content>
+                                {#each GITHUB_STAT_TYPES as statType}
+                                  <Select.Item
+                                    value={statType}
+                                    label={statType}
+                                    class="capitalize"
+                                  />
+                                {/each}
+                              </Select.Content>
+                            </Select.Root>
+                          {/snippet}
+                        </Form.Control>
+                        <Form.Description>
+                          Select the type of GitHub statistics to display.
+                        </Form.Description>
+                        <Form.FieldErrors />
+                      </Form.Field>
+                    {/if}
+
+                    <Form.Field {form} name="metrics[{j}].name" class="col-span-2">
                       <Form.Control>
                         {#snippet children({ props })}
                           <Form.Label>Name</Form.Label>
@@ -327,12 +405,13 @@
                       <Form.FieldErrors />
                     </Form.Field>
 
-                    <Form.Field {form} name="metrics[{j}].calculationType" class="col-span-4">
+                    <Form.Field {form} name="metrics[{j}].calculationType" class="col-span-2">
                       <Form.Control>
                         {#snippet children({ props })}
                           <Form.Label>Duration</Form.Label>
                           <Select.Root
                             type="single"
+                            disabled={$formData.metrics[j].githubStatType !== 'commits'}
                             bind:value={$formData.metrics[j].calculationType}
                             name={props.name}
                           >
@@ -340,9 +419,23 @@
                               {$formData.metrics[j].calculationType}
                             </Select.Trigger>
                             <Select.Content>
-                              {#each getCalculationTypesForObjective($formData.metrics[j].objectiveId) as calcType}
-                                <Select.Item value={calcType} label={calcType} class="capitalize" />
-                              {/each}
+                              {#if $formData.metrics[j].metricType === 'objective'}
+                                {#each getCalculationTypesForObjective($formData.metrics[j].objectiveId) as calcType}
+                                  <Select.Item
+                                    value={calcType}
+                                    label={calcType}
+                                    class="capitalize"
+                                  />
+                                {/each}
+                              {:else}
+                                {#each WIDGET_METRIC_CALCULATION_TYPES as calcType}
+                                  <Select.Item
+                                    value={calcType}
+                                    label={calcType}
+                                    class="capitalize"
+                                  />
+                                {/each}
+                              {/if}
                             </Select.Content>
                           </Select.Root>
                         {/snippet}
@@ -350,36 +443,42 @@
                       <Form.FieldErrors />
                     </Form.Field>
 
-                    <Form.Field {form} name="metrics[{j}].valueDecimalPrecision" class="col-span-4">
-                      <Form.Control>
-                        {#snippet children({ props })}
-                          <Form.Label>Decimal Precision</Form.Label>
-                          <Select.Root
-                            type="single"
-                            value={$formData.metrics[j].valueDecimalPrecision.toString()}
-                            onValueChange={(value) => {
-                              $formData.metrics[j].valueDecimalPrecision = parseInt(value);
-                            }}
-                            name={props.name}
-                          >
-                            <Select.Trigger {...props}>
-                              {$formData.metrics[j].valueDecimalPrecision +
-                                ' digit' +
-                                ($formData.metrics[j].valueDecimalPrecision === 1 ? '' : 's')}
-                            </Select.Trigger>
-                            <Select.Content>
-                              {#each Array(WIDGET_METRIC_VALUE_DECIMAL_PRECISION_MAX + 1) as _, i}
-                                <Select.Item
-                                  value={i.toString()}
-                                  label={i + ' digit' + (i === 1 ? '' : 's')}
-                                />
-                              {/each}
-                            </Select.Content>
-                          </Select.Root>
-                        {/snippet}
-                      </Form.Control>
-                      <Form.FieldErrors />
-                    </Form.Field>
+                    {#if $formData.metrics[j].metricType !== 'github'}
+                      <Form.Field
+                        {form}
+                        name="metrics[{j}].valueDecimalPrecision"
+                        class="col-span-2"
+                      >
+                        <Form.Control>
+                          {#snippet children({ props })}
+                            <Form.Label>Decimal Precision</Form.Label>
+                            <Select.Root
+                              type="single"
+                              value={$formData.metrics[j].valueDecimalPrecision.toString()}
+                              onValueChange={(value) => {
+                                $formData.metrics[j].valueDecimalPrecision = parseInt(value);
+                              }}
+                              name={props.name}
+                            >
+                              <Select.Trigger {...props}>
+                                {$formData.metrics[j].valueDecimalPrecision +
+                                  ' digit' +
+                                  ($formData.metrics[j].valueDecimalPrecision === 1 ? '' : 's')}
+                              </Select.Trigger>
+                              <Select.Content>
+                                {#each Array(WIDGET_METRIC_VALUE_DECIMAL_PRECISION_MAX + 1) as _, i}
+                                  <Select.Item
+                                    value={i.toString()}
+                                    label={i + ' digit' + (i === 1 ? '' : 's')}
+                                  />
+                                {/each}
+                              </Select.Content>
+                            </Select.Root>
+                          {/snippet}
+                        </Form.Control>
+                        <Form.FieldErrors />
+                      </Form.Field>
+                    {/if}
                   </div>
                 {/each}
               {/if}

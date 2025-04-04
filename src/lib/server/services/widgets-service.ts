@@ -118,20 +118,37 @@ export class WidgetsService {
       for (let i = 0; i < widgetData.metrics.length; i++) {
         const metric = widgetData.metrics[i];
 
-        // Verify the user has access to the objective
-        const objectiveResult = await this.getObjectivesService().getUserObjective(
-          metric.objectiveId,
-          userId
-        );
+        if (metric.metricType === 'objective') {
+          // Handle objective metrics
+          // Verify the user has access to the objective
+          const objectiveResult = await this.getObjectivesService().getUserObjective(
+            metric.objectiveId,
+            userId
+          );
 
-        if (objectiveResult.isErr()) {
-          throw objectiveResult.error;
+          if (objectiveResult.isErr()) {
+            throw objectiveResult.error;
+          }
         }
 
+        // Create a correctly typed metric object for the service call
+        const metricPayload = {
+          metricType: metric.metricType,
+          objectiveId: metric.objectiveId ?? null,
+          calculationType: metric.calculationType,
+          valueDecimalPrecision: metric.valueDecimalPrecision,
+          githubUsername: metric.githubUsername ?? null,
+          githubStatType: metric.githubStatType ?? 'commits',
+        };
+
+        // Compute metric value using the MetricsService
         const metricValueResult = await this.metricsService.computeMetricValue(
-          metric.objectiveId,
-          metric.calculationType,
-          metric.valueDecimalPrecision
+          metricPayload.metricType,
+          metricPayload.objectiveId,
+          metricPayload.calculationType,
+          metricPayload.valueDecimalPrecision,
+          metricPayload.githubUsername,
+          metricPayload.githubStatType
         );
 
         if (metricValueResult.isErr()) {
@@ -144,8 +161,12 @@ export class WidgetsService {
           name: metric.name,
           calculationType: metric.calculationType,
           valueDecimalPrecision: metric.valueDecimalPrecision,
+          metricType: metric.metricType,
           order: i,
-          objectiveId: metric.objectiveId,
+          objectiveId: metric.metricType === 'objective' ? metric.objectiveId : null,
+          githubUsername: metric.metricType === 'github' ? metric.githubUsername : null,
+          githubStatType:
+            metric.metricType === 'github' ? metric.githubStatType || 'commits' : null,
           widgetId,
           userId,
         });
@@ -162,12 +183,12 @@ export class WidgetsService {
 
         padding: widgetData.padding,
         border: widgetData.border,
-        borderWidth: 1,
+        borderWidth: widgetData.borderWidth,
         borderRadius: widgetData.borderRadius,
         color: widgetData.color,
         accentColor: widgetData.accentColor,
         backgroundColor: widgetData.backgroundColor,
-        watermark: true, // TODO: Default to true, update when user has pro plan
+        watermark: widgetData.watermark,
 
         userId,
       };
@@ -178,7 +199,7 @@ export class WidgetsService {
           this.db.insert(table.widgetMetric).values(metricInserts),
         ]);
       } else {
-        await this.db.batch([this.db.insert(table.widget).values(widgetInsert)]);
+        await this.db.insert(table.widget).values(widgetInsert);
       }
 
       return widgetId;
@@ -201,20 +222,37 @@ export class WidgetsService {
         for (let i = 0; i < widgetData.metrics.length; i++) {
           const metric = widgetData.metrics[i];
 
-          // Verify the user has access to the objective
-          const objectiveResult = await this.getObjectivesService().getUserObjective(
-            metric.objectiveId,
-            userId
-          );
+          if (metric.metricType === 'objective') {
+            // Handle objective metrics
+            // Verify the user has access to the objective
+            const objectiveResult = await this.getObjectivesService().getUserObjective(
+              metric.objectiveId,
+              userId
+            );
 
-          if (objectiveResult.isErr()) {
-            throw objectiveResult.error;
+            if (objectiveResult.isErr()) {
+              throw objectiveResult.error;
+            }
           }
 
+          // Create a correctly typed metric object for the service call
+          const metricPayload = {
+            metricType: metric.metricType,
+            objectiveId: metric.objectiveId ?? null,
+            calculationType: metric.calculationType,
+            valueDecimalPrecision: metric.valueDecimalPrecision,
+            githubUsername: metric.githubUsername ?? null,
+            githubStatType: metric.githubStatType ?? 'commits',
+          };
+
+          // Compute metric value using the MetricsService
           const metricValueResult = await this.metricsService.computeMetricValue(
-            metric.objectiveId,
-            metric.calculationType,
-            metric.valueDecimalPrecision
+            metricPayload.metricType,
+            metricPayload.objectiveId,
+            metricPayload.calculationType,
+            metricPayload.valueDecimalPrecision,
+            metricPayload.githubUsername,
+            metricPayload.githubStatType
           );
 
           if (metricValueResult.isErr()) {
@@ -227,44 +265,51 @@ export class WidgetsService {
             name: metric.name,
             calculationType: metric.calculationType,
             valueDecimalPrecision: metric.valueDecimalPrecision,
+            metricType: metric.metricType,
             order: i,
-            objectiveId: metric.objectiveId,
+            objectiveId: metric.metricType === 'objective' ? metric.objectiveId : null,
+            githubUsername: metric.metricType === 'github' ? metric.githubUsername : null,
+            githubStatType:
+              metric.metricType === 'github' ? metric.githubStatType || 'commits' : null,
             widgetId,
             userId,
           });
         }
 
-        // Update the widget
-        await this.db
-          .update(table.widget)
-          .set({
-            title: widgetData.title,
-            subtitle: widgetData.subtitle,
-            imageUrl: widgetData.imageUrl,
-            imagePlacement: widgetData.imagePlacement,
-            textIcon: widgetData.textIcon,
-            visibility: widgetData.visibility,
+        const widgetUpdate = {
+          id: widgetId,
+          title: widgetData.title,
+          subtitle: widgetData.subtitle,
+          imageUrl: widgetData.imageUrl,
+          imagePlacement: widgetData.imagePlacement,
+          textIcon: widgetData.textIcon,
+          visibility: widgetData.visibility,
 
-            padding: widgetData.padding,
-            border: widgetData.border,
-            borderRadius: widgetData.borderRadius,
-            color: widgetData.color,
-            accentColor: widgetData.accentColor,
-            backgroundColor: widgetData.backgroundColor,
-            watermark: widgetData.watermark,
-          })
-          .where(eq(table.widget.id, widgetId));
+          padding: widgetData.padding,
+          border: widgetData.border,
+          borderWidth: widgetData.borderWidth,
+          borderRadius: widgetData.borderRadius,
+          color: widgetData.color,
+          accentColor: widgetData.accentColor,
+          backgroundColor: widgetData.backgroundColor,
+          watermark: widgetData.watermark,
 
-        // Add new metrics if there are any
+          userId,
+        };
+
+        // Clear cache
+        await cache.delete(`widget:${widgetId}:html`);
+        await cache.delete(`widget:${widgetId}:svg`);
+
+        // Update in DB (batch so we handle the case where there are no metrics)
         if (metricInserts.length > 0) {
-          await this.db.insert(table.widgetMetric).values(metricInserts);
+          await this.db.batch([
+            this.db.update(table.widget).set(widgetUpdate).where(eq(table.widget.id, widgetId)),
+            this.db.insert(table.widgetMetric).values(metricInserts),
+          ]);
+        } else {
+          await this.db.update(table.widget).set(widgetUpdate).where(eq(table.widget.id, widgetId));
         }
-
-        // Clear the widget cache
-        await Promise.all([
-          cache.delete(`widget:${widgetId}:html`),
-          cache.delete(`widget:${widgetId}:svg`),
-        ]);
 
         return widgetId;
       })

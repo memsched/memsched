@@ -9,8 +9,10 @@ export const WIDGET_METRIC_CALCULATION_TYPES = [
   'percentage',
 ] as const;
 export const WIDGET_METRIC_VALUE_DECIMAL_PRECISION_MAX = 2;
+export const WIDGET_METRIC_TYPES = ['objective', 'github'] as const;
+export const GITHUB_STAT_TYPES = ['commits', 'repositories', 'followers'] as const;
 
-const widgetMetricSchema = z.object({
+const widgetMetricBaseSchema = z.object({
   name: z
     .string()
     .max(25, { message: 'Name must be less than 25 characters.' })
@@ -28,8 +30,31 @@ const widgetMetricSchema = z.object({
     .max(WIDGET_METRIC_VALUE_DECIMAL_PRECISION_MAX, {
       message: 'Value decimal precision must be less than or equal to 2.',
     }),
-  objectiveId: z.string().min(1, { message: 'Objective is required.' }),
+  metricType: z
+    .enum(WIDGET_METRIC_TYPES, {
+      message: 'Please select a valid metric type.',
+    })
+    .default('objective'),
 });
+
+const objectiveWidgetMetricSchema = widgetMetricBaseSchema.extend({
+  metricType: z.literal('objective'),
+  objectiveId: z.string().min(1, { message: 'Objective is required.' }),
+  githubUsername: z.string().optional().nullable(),
+  githubStatType: z.enum(GITHUB_STAT_TYPES).optional().nullable(),
+});
+
+const githubWidgetMetricSchema = widgetMetricBaseSchema.extend({
+  metricType: z.literal('github'),
+  githubUsername: z.string().min(1, { message: 'GitHub username is required.' }),
+  githubStatType: z.enum(GITHUB_STAT_TYPES).default('commits'),
+  objectiveId: z.string().optional().nullable(),
+});
+
+export const widgetMetricSchema = z.discriminatedUnion('metricType', [
+  objectiveWidgetMetricSchema,
+  githubWidgetMetricSchema,
+]);
 
 export const formSchema = z.object({
   title: z

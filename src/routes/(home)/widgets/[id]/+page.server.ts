@@ -40,12 +40,18 @@ export const load: PageServerLoad = async (event) => {
     backgroundColor: widget.backgroundColor,
     watermark: widget.watermark,
 
-    metrics: widget.metrics.map((metric) => ({
-      name: metric.name,
-      calculationType: metric.calculationType,
-      valueDecimalPrecision: metric.valueDecimalPrecision,
-      objectiveId: metric.objectiveId,
-    })),
+    metrics: widget.metrics.map(
+      (metric) =>
+        ({
+          name: metric.name,
+          calculationType: metric.calculationType,
+          valueDecimalPrecision: metric.valueDecimalPrecision,
+          objectiveId: metric.objectiveId,
+          metricType: metric.metricType,
+          githubUsername: metric.githubUsername,
+          githubStatType: metric.githubStatType,
+        }) as any
+    ),
   };
 
   return {

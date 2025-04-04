@@ -29,7 +29,7 @@ export const mockWidgets: WidgetJoinMetricsPreview[] = [
   },
 
   {
-    title: 'Hours Learning Janapese',
+    title: 'Hours Learning Japanese',
     subtitle: 'Journey to fluency',
     textIcon: null,
     imageUrl: CIRCLE_FLAG_ICONS.Japan,
@@ -163,7 +163,7 @@ export const mockWidgets: WidgetJoinMetricsPreview[] = [
   },
 
   {
-    title: 'Hours Learning Janapese',
+    title: 'Hours Learning Japanese',
     subtitle: 'Journey to fluency',
     textIcon: null,
     imageUrl: CIRCLE_FLAG_ICONS.Japan,
@@ -297,7 +297,7 @@ export const mockWidgets: WidgetJoinMetricsPreview[] = [
   },
 
   {
-    title: 'Hours Learning Janapese',
+    title: 'Hours Learning Japanese',
     subtitle: 'Journey to fluency',
     textIcon: null,
     imageUrl: CIRCLE_FLAG_ICONS.Japan,

@@ -49,7 +49,7 @@ You may delete your account at any time through your account settings. When you 
 
 1. Your subscription will be cancelled immediately
 2. Your personal information will be anonymized
-3. Your objjectives and widgets will be deleted
+3. Your objectives and widgets will be deleted
 4. Minimal data will be retained for 30 days for legal purposes
 5. After 30 days, all remaining data will be permanently deleted
 6. Payment records will be retained as required by law

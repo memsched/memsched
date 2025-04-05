@@ -47,13 +47,21 @@
       {#if data.publicUser.widgets.length > 0}
         <div class="flex flex-wrap gap-3">
           {#each data.publicUser.widgets as widget}
-            <a href="/widgets/{widget}">
+            {#if data.isOwner}
+              <a href="/widgets/{widget}">
+                <img
+                  src="/api/widgets/{widget}?svg&v={uuid4()}"
+                  alt="MEMsched Widget"
+                  class="h-[85px]"
+                />
+              </a>
+            {:else}
               <img
                 src="/api/widgets/{widget}?svg&v={uuid4()}"
                 alt="MEMsched Widget"
                 class="h-[85px]"
               />
-            </a>
+            {/if}
           {/each}
         </div>
       {:else}

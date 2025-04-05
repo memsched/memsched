@@ -3,17 +3,7 @@ import * as table from '../db/schema';
 import { eq, and, gt } from 'drizzle-orm';
 import { v4 as uuidv4 } from 'uuid';
 import { wrapResultAsyncFn } from '../db/types';
-import {
-  format,
-  startOfDay,
-  startOfWeek,
-  startOfMonth,
-  startOfYear,
-  subDays,
-  subWeeks,
-  subMonths,
-  subYears,
-} from 'date-fns';
+import { format } from 'date-fns';
 
 // Valid GitHub stat types
 export type GithubStatType = 'commits' | 'repositories' | 'followers';
@@ -273,12 +263,12 @@ export class GithubMetricsService {
   public fetchGitHubTimeSeries(
     username: string,
     statType: GithubStatType,
-    timeRange: GithubTimeRange,
+    _timeRange: GithubTimeRange,
     formatString: string
   ) {
     return wrapResultAsyncFn(async () => {
       const now = new Date();
-      const dataPoints: GithubDataPoint[] = [];
+      // const dataPoints: GithubDataPoint[] = [];
 
       // For repositories and followers, we just get the current count
       if (statType === 'repositories' || statType === 'followers') {

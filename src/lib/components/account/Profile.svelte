@@ -1,7 +1,6 @@
 <script lang="ts">
   import { FiMapPin, FiGlobe } from 'svelte-icons-pack/fi';
   import UserAvatar from './UserAvatar.svelte';
-  import { HEADER_HEIGHT } from '$lib/constants';
   import { Icon } from 'svelte-icons-pack';
 
   interface Props {
@@ -16,7 +15,7 @@
   const { name, username, avatarUrl, bio, location, website }: Props = $props();
 </script>
 
-<div class="sticky h-fit w-[250px] flex-shrink-0" style="top: calc({HEADER_HEIGHT}px + 6.5rem)">
+<div class="sticky top-0 h-fit w-[250px] flex-shrink-0">
   <div class="relative">
     <UserAvatar {username} {avatarUrl} large />
     <!-- {#if edit} -->

@@ -136,6 +136,8 @@ export const widgetMetric = sqliteTable('widget_metric', {
   }).notNull(),
   valueDecimalPrecision: integer('value_decimal_precision').notNull(),
 
+  style: text('style', { enum: ['default', 'plot'] }).notNull(),
+
   // New field to determine if this is a GitHub or Objective metric
   metricType: text('metric_type', { enum: ['objective', 'github'] })
     .notNull()
@@ -214,13 +216,11 @@ export type WidgetMetricPreview = Omit<
   | 'metricType'
   | 'githubUsername'
   | 'githubStatType'
->;
+> & { plotData: Omit<PlotData, 'timeRange'> };
+
 export type WidgetPreview = Omit<Widget, 'id' | 'userId' | 'createdAt' | 'visibility'>;
 export type WidgetJoinMetricsPreview = WidgetPreview & {
   metrics: WidgetMetricPreview[];
-};
-export type WidgetJoinMetricsPreviewPlotData = WidgetJoinMetricsPreview & {
-  metrics: (WidgetMetricPreview & { plotData: PlotData })[];
 };
 export type GithubStatsCache = typeof githubStatsCache.$inferSelect;
 export type GithubStatsCacheInsert = typeof githubStatsCache.$inferInsert;

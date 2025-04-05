@@ -4,662 +4,291 @@
   import { zodClient } from 'sveltekit-superforms/adapters';
   import toast from 'svelte-french-toast';
   import * as Form from '$lib/components/ui/form';
-  import * as Select from '$lib/components/ui/select';
-  import * as Tabs from '$lib/components/ui/tabs';
-  import { Input } from '$lib/components/ui/input';
-  import { cn } from '$lib/utils';
   import { type Objective } from '$lib/server/db/schema';
-  import { Label } from '$lib/components/ui/label';
-  import ColorPickerInput from '$lib/components/inputs/ColorPickerInput.svelte';
-  import { Switch } from '$lib/components/ui/switch';
-  import {
-    formSchema,
-    type FormSchema,
-    WIDGET_METRIC_CALCULATION_TYPES,
-    WIDGET_METRIC_VALUE_DECIMAL_PRECISION_MAX,
-    GITHUB_STAT_TYPES,
-  } from './schema';
-  import { HEADER_HEIGHT } from '$lib/constants';
+  import { formSchema, type FormSchema } from './schema';
   import type { LocalUser } from '$lib/types';
-  import { page } from '$app/state';
-  import { v4 as uuid4 } from 'uuid';
-  import * as RadioGroup from '$lib/components/ui/radio-group';
   import { Icon } from 'svelte-icons-pack';
-  import { IoGlobeOutline, IoDocumentLockOutline } from 'svelte-icons-pack/io';
+  import { IoInformationCircle, IoChevronForward } from 'svelte-icons-pack/io';
+  import Widget from '$lib/components/widgets/Widget.svelte';
+  import { SUB_NAV_HEIGHT } from '$lib/constants';
+  import { FiPlus, FiX } from 'svelte-icons-pack/fi';
+  import DashHeader from '$lib/components/headers/DashHeader.svelte';
+  import { Button } from '$lib/components/ui/button';
+  import TabNavLink from '$lib/components/headers/TabNavLink.svelte';
+  import IconButton from '$lib/components/ui/IconButton.svelte';
+  import GeneralTab from './tabs/GeneralTab.svelte';
+  import ImageTab from './tabs/ImageTab.svelte';
+  import WidgetTab from './tabs/WidgetTab.svelte';
+  import { roundToDecimal } from '$lib/utils';
 
   interface Props {
     data: { form: SuperValidated<Infer<FormSchema>>; objectives: Objective[]; user: LocalUser };
     edit?: boolean;
   }
 
-  // TODO: Add dark mode to widget with url param
-
   const { data, edit = false }: Props = $props();
-  // This counter is used to force the real widget to re-render when the form
-  // is updated in edit mode
-  let updateCounter = $state(0);
+
+  type MetricTab = 'metric.1' | 'metric.2' | 'metric.3';
+  let focusedTab = $state<'general.title' | 'general.subtitle' | 'image' | MetricTab>(
+    'general.title'
+  );
 
   const form = superForm(data.form, {
     validators: zodClient(formSchema),
     resetForm: !edit,
     dataType: 'json',
+    onResult({ result }) {
+      if (result.type === 'failure') {
+        if (result.data?.form?.errors?.title) {
+          focusedTab = 'general.title';
+        } else if (result.data?.form?.errors?.subtitle) {
+          focusedTab = 'general.subtitle';
+        } else if (result.data?.form?.errors?.imageUrl || result.data?.form?.errors?.textIcon) {
+          focusedTab = 'image';
+        }
+      }
+    },
     onUpdated({ form }) {
       if (form.message) {
-        ++updateCounter;
         toast.success(form.message);
       }
     },
   });
   const { form: formData, enhance } = form;
 
-  // Used to get calculation types for a specific objective
-  function getCalculationTypesForObjective(objectiveId: string) {
-    if (!objectiveId) return WIDGET_METRIC_CALCULATION_TYPES;
-
-    const objective = data.objectives.find((o) => o.id === objectiveId);
-    if (objective?.goalType === 'ongoing') {
-      return WIDGET_METRIC_CALCULATION_TYPES.filter((ct) => ct !== 'percentage');
-    }
-    return WIDGET_METRIC_CALCULATION_TYPES;
-  }
-
-  let previewLoaded = $state(false);
+  let titleInput = $state<HTMLInputElement | null>(null);
+  let subtitleInput = $state<HTMLInputElement | null>(null);
+  let textIconInput = $state<HTMLInputElement | null>(null);
+  let hasImage = $state<boolean>(false);
+  let metricCount = $state<number>(0);
+  const formDataImageUrl = $derived($formData.imageUrl);
+  const widgetMetrics = $derived(
+    $formData.metrics.map((m, i) => ({
+      name: m.name,
+      style: m.style,
+      calculationType: m.calculationType,
+      valueDecimalPrecision: m.valueDecimalPrecision,
+      value: roundToDecimal(435.390453, m.valueDecimalPrecision),
+      order: i,
+      plotData: {
+        points: [
+          { date: '2023-01-01', value: 100 },
+          { date: '2023-01-02', value: 150 },
+          { date: '2023-01-03', value: 120 },
+          { date: '2023-01-04', value: 200 },
+          { date: '2023-01-05', value: 180 },
+          { date: '2023-01-06', value: 250 },
+          { date: '2023-01-07', value: 300 },
+          { date: '2023-01-08', value: 350 },
+          { date: '2023-01-09', value: 280 },
+          { date: '2023-01-10', value: 320 },
+          { date: '2023-01-16', value: 486 },
+          { date: '2023-01-17', value: 505 },
+          { date: '2023-01-18', value: 523 },
+          { date: '2023-01-19', value: 493 },
+          { date: '2023-01-20', value: 463 },
+          { date: '2023-01-21', value: 433 },
+          { date: '2023-01-22', value: 500 },
+          { date: '2023-01-23', value: 550 },
+          { date: '2023-01-24', value: 600 },
+          { date: '2023-01-25', value: 650 },
+        ],
+      },
+    }))
+  );
 
   $effect(() => {
-    if (!$formData.title) {
-      previewLoaded = false;
+    if (focusedTab === 'general.title') {
+      titleInput?.focus();
+    } else if (focusedTab === 'general.subtitle') {
+      subtitleInput?.focus();
+    } else if (focusedTab === 'image') {
+      if (formDataImageUrl === null) {
+        textIconInput?.focus();
+      }
     }
   });
 
-  const metricsCount = $derived($formData.metrics.length);
+  function onAddImage() {
+    focusedTab = 'image';
+    hasImage = true;
+  }
 
-  function updateDefaultMetrics(count: number) {
+  function onRemoveImage(e: MouseEvent) {
+    e?.stopPropagation();
+    hasImage = false;
+    $formData.imageUrl = null;
+    $formData.textIcon = null;
+    if (focusedTab === 'image') {
+      focusedTab = 'general.title';
+    }
+  }
+
+  function onAddMetric() {
+    metricCount++;
+    focusedTab = `metric.${metricCount}` as MetricTab;
+    updateDefaultMetrics(metricCount, metricCount - 1);
+  }
+
+  function onRemoveMetric(e: MouseEvent, index: number) {
+    e.stopPropagation();
+    const n = index + 1;
+    metricCount--;
+    if (focusedTab === `metric.${n}`) {
+      focusedTab = 'general.title';
+    } else if (focusedTab === `metric.${n + 1}`) {
+      focusedTab = `metric.${n}` as MetricTab;
+    } else if (focusedTab === `metric.${n + 2}`) {
+      focusedTab = `metric.${n + 1}` as MetricTab;
+    }
+    updateDefaultMetrics(metricCount, index);
+  }
+
+  function updateDefaultMetrics(count: number, index: number) {
     const currentCount = $formData.metrics.length;
     const metricsCopy = [...$formData.metrics];
+
     if (currentCount < count) {
       for (let i = currentCount; i < count; i++) {
         metricsCopy.push({
-          name: '',
+          name: null,
+          style: 'default',
           metricType: 'objective',
           objectiveId: '',
           calculationType: 'day',
           valueDecimalPrecision: 0,
+          githubUsername: null,
+          githubStatType: null,
         });
       }
     } else if (currentCount > count) {
-      metricsCopy.splice(count);
+      metricsCopy.splice(index, 1);
     }
     $formData.metrics = metricsCopy;
   }
 </script>
 
-<form method="POST" use:enhance class="relative grid w-full grid-cols-8 gap-x-16">
-  <div class="col-span-5 space-y-16 last:space-y-6">
-    <section class="space-y-6 first:space-y-3">
-      <h2 class="h3">General</h2>
-      <div class="grid grid-cols-2 gap-x-16 gap-y-6">
-        <Form.Field {form} name="title" class="col-start-1">
-          <Form.Control>
-            {#snippet children({ props })}
-              <Form.Label>Title*</Form.Label>
-              <Input {...props} bind:value={$formData.title} />
-            {/snippet}
-          </Form.Control>
-          <Form.Description>Set the title for your widget.</Form.Description>
-          <Form.FieldErrors />
-        </Form.Field>
-        <Form.Field {form} name="subtitle">
-          <Form.Control>
-            {#snippet children({ props })}
-              <Form.Label>Subtitle</Form.Label>
-              <Input {...props} bind:value={$formData.subtitle} />
-            {/snippet}
-          </Form.Control>
-          <Form.Description>Set the subtitle for your widget.</Form.Description>
-          <Form.FieldErrors />
-        </Form.Field>
+<DashHeader>
+  <Button variant="breadcrumb" size="xs" class="gap-3 pe-0" href="/widgets">
+    Widgets
+    <Icon src={IoChevronForward} className="!text-muted-foreground" />
+  </Button>
+  <div class="px-3 text-sm font-medium">New</div>
+  <TabNavLink
+    name="General"
+    onclick={() => (focusedTab = 'general.title')}
+    active={focusedTab === 'general.title' || focusedTab === 'general.subtitle'}
+  />
+  {#if hasImage}
+    <TabNavLink name="Image" onclick={() => (focusedTab = 'image')} active={focusedTab === 'image'}>
+      <button onclick={onRemoveImage} class="!text-zinc-400 hover:!text-foreground">
+        <Icon src={FiX} />
+      </button>
+    </TabNavLink>
+  {/if}
+  {#each Array(metricCount) as _, i}
+    <TabNavLink
+      name={`Metric ${i + 1}`}
+      onclick={() => (focusedTab = `metric.${i + 1}` as MetricTab)}
+      active={focusedTab === `metric.${i + 1}`}
+    >
+      <button
+        onclick={(e) => onRemoveMetric(e, i + 1)}
+        class="!text-zinc-400 hover:!text-foreground"
+      >
+        <Icon src={FiX} />
+      </button>
+    </TabNavLink>
+  {/each}
+  {#if !hasImage}
+    <IconButton
+      onclick={onAddImage}
+      size="xs"
+      icon={FiPlus}
+      variant="translucent"
+      class="rounded-none">Image</IconButton
+    >
+  {/if}
+  {#if metricCount < 3}
+    <IconButton
+      onclick={onAddMetric}
+      size="xs"
+      icon={FiPlus}
+      variant="translucent"
+      class="rounded-none">Metric</IconButton
+    >
+  {/if}
+</DashHeader>
 
-        <Form.Fieldset {form} name="visibility" class="col-span-2 space-y-4">
-          <Form.Legend>Visibility</Form.Legend>
-          <RadioGroup.Root
-            bind:value={$formData.visibility}
-            class="flex flex-col space-y-3 *:flex *:items-center *:space-x-4"
-            name="visibility"
-          >
-            <div>
-              <Form.Control>
-                {#snippet children({ props })}
-                  <RadioGroup.Item value="public" {...props} />
-                  <Form.Label class="flex gap-1.5">
-                    <Icon src={IoGlobeOutline} className="size-8 *:!stroke-[16px]" />
-                    <div class="flex flex-col gap-1.5">
-                      <div class="font-medium">Public</div>
-                      <div class="font-normal text-muted-foreground">
-                        Share your progress with everyone
-                      </div>
-                    </div>
-                  </Form.Label>
-                {/snippet}
-              </Form.Control>
-            </div>
-            <div>
-              <Form.Control>
-                {#snippet children({ props })}
-                  <RadioGroup.Item value="private" {...props} />
-                  <Form.Label class="flex gap-1.5">
-                    <Icon src={IoDocumentLockOutline} className="size-8 *:!stroke-[16px]" />
-                    <div class="flex flex-col gap-1.5">
-                      <div class="font-medium">Private</div>
-                      <div class="font-normal text-muted-foreground">
-                        Keep your progress to yourself. Widgets will be visible to you only.
-                      </div>
-                    </div>
-                  </Form.Label>
-                {/snippet}
-              </Form.Control>
-            </div>
-          </RadioGroup.Root>
-          <Form.FieldErrors />
-        </Form.Fieldset>
-
-        <div class="col-span-2">
-          <Label>Image</Label>
-          <Tabs.Root
-            value={data.form.data.textIcon
-              ? 'text-icon'
-              : data.form.data.imageUrl
-                ? 'icon'
-                : 'none'}
-            class="mt-1 space-y-6"
-          >
-            <Tabs.List class="w-full *:w-full">
-              <Tabs.Trigger
-                value="none"
-                onclick={() => {
-                  $formData.imageUrl = null;
-                  $formData.textIcon = null;
-                }}
-              >
-                None
-              </Tabs.Trigger>
-              <Tabs.Trigger
-                value="text-icon"
-                onclick={() => {
-                  $formData.imageUrl = null;
-                }}
-              >
-                Text
-              </Tabs.Trigger>
-              <Tabs.Trigger
-                value="icon"
-                onclick={() => {
-                  $formData.textIcon = null;
-                }}
-              >
-                Icon
-              </Tabs.Trigger>
-              <!-- <Tabs.Trigger value="upload">Upload</Tabs.Trigger> -->
-            </Tabs.List>
-            <Form.Fieldset {form} name="imagePlacement" class="col-span-2">
-              <input type="hidden" name="imagePlacement" bind:value={$formData.imagePlacement} />
-              <Tabs.Content value="text-icon" class="space-y-6">
-                <Form.Field {form} name="textIcon">
-                  <Form.Control>
-                    {#snippet children({ props })}
-                      <Form.Label>Text Icon (1-2 Capital Letters)</Form.Label>
-                      <Input
-                        {...props}
-                        value={$formData.textIcon}
-                        maxlength={2}
-                        placeholder="AB"
-                        oninput={(e) => {
-                          if (e.currentTarget.value === '') {
-                            $formData.textIcon = null;
-                          } else {
-                            $formData.textIcon = e.currentTarget.value.toUpperCase();
-                          }
-                        }}
-                      />
-                    {/snippet}
-                  </Form.Control>
-                  <Form.Description
-                    >Enter 1 or 2 capital letters to use as a text icon.</Form.Description
-                  >
-                  <Form.FieldErrors />
-                </Form.Field>
-                <div class="space-y-2">
-                  <Form.Legend>Placement</Form.Legend>
-                  <Tabs.Root bind:value={$formData.imagePlacement}>
-                    <Tabs.List class="w-full *:w-full">
-                      <Tabs.Trigger value="left">Left</Tabs.Trigger>
-                      <Tabs.Trigger value="right">Right</Tabs.Trigger>
-                    </Tabs.List>
-                    <Form.FieldErrors />
-                  </Tabs.Root>
-                </div>
-              </Tabs.Content>
-              <Tabs.Content value="icon" class="space-y-6">
-                {#if browser}
-                  {#await import('$lib/components/inputs/IconPickerInput.svelte') then { default: IconPickerInput }}
-                    <IconPickerInput bind:value={$formData.imageUrl} />
-                  {/await}
-                {/if}
-                <div class="space-y-2">
-                  <Form.Legend>Placement</Form.Legend>
-                  <Tabs.Root bind:value={$formData.imagePlacement}>
-                    <Tabs.List class="w-full *:w-full">
-                      <Tabs.Trigger value="left">Left</Tabs.Trigger>
-                      <Tabs.Trigger value="right">Right</Tabs.Trigger>
-                    </Tabs.List>
-                    <Form.FieldErrors />
-                  </Tabs.Root>
-                </div>
-              </Tabs.Content>
-              <!-- <Tabs.Content value="upload" class="space-y-6"> -->
-              <!--   <div class="space-y-2"> -->
-              <!--     <Form.Legend>Placement</Form.Legend> -->
-              <!--     <Tabs.Root bind:value={$formData.imagePlacement}> -->
-              <!--       <Tabs.List class="w-full *:w-full"> -->
-              <!--         <Tabs.Trigger value="left">Left</Tabs.Trigger> -->
-              <!--         <Tabs.Trigger value="right">Right</Tabs.Trigger> -->
-              <!--       </Tabs.List> -->
-              <!--       <Form.FieldErrors /> -->
-              <!--     </Tabs.Root> -->
-              <!--   </div> -->
-              <!-- </Tabs.Content> -->
-            </Form.Fieldset>
-          </Tabs.Root>
-        </div>
-      </div>
-    </section>
-
-    <section class="space-y-6 first:space-y-3">
-      <h2 class="h3">Metrics</h2>
-      <div class="col-span-2">
-        <Label>Number of Metrics</Label>
-        <Tabs.Root value={metricsCount === 0 ? 'none' : metricsCount.toString()} class="mt-1">
-          <Tabs.List class="w-full *:w-full">
-            <Tabs.Trigger value="none" onmousedown={() => updateDefaultMetrics(0)}
-              >None</Tabs.Trigger
-            >
-            <Tabs.Trigger value="1" onmousedown={() => updateDefaultMetrics(1)}>1</Tabs.Trigger>
-            <Tabs.Trigger value="2" onmousedown={() => updateDefaultMetrics(2)}>2</Tabs.Trigger>
-            <Tabs.Trigger value="3" onmousedown={() => updateDefaultMetrics(3)}>3</Tabs.Trigger>
-          </Tabs.List>
-          {#each [1, 2, 3] as i}
-            <Tabs.Content value={i.toString()} class="space-y-6 divide-y *:pt-6">
-              {#if metricsCount === i}
-                {#each Array(i) as _, j}
-                  <div class="grid grid-cols-6 gap-x-4 gap-y-2">
-                    <Form.Field {form} name="metrics[{j}].metricType" class="col-span-2">
-                      <Form.Control>
-                        {#snippet children({ props })}
-                          <Form.Label>Source*</Form.Label>
-                          <Select.Root
-                            type="single"
-                            bind:value={$formData.metrics[j].metricType}
-                            name={props.name}
-                          >
-                            <Select.Trigger {...props} class="capitalize">
-                              {$formData.metrics[j].metricType}
-                            </Select.Trigger>
-                            <Select.Content>
-                              {#if data.objectives.length > 0}
-                                <Select.Item value="objective" label="Objective" />
-                              {/if}
-                              <Select.Item value="github" label="GitHub" />
-                            </Select.Content>
-                          </Select.Root>
-                        {/snippet}
-                      </Form.Control>
-                      <Form.Description>Choose the source for this metric.</Form.Description>
-                      <Form.FieldErrors />
-                    </Form.Field>
-
-                    {#if $formData.metrics[j].metricType === 'objective'}
-                      <Form.Field {form} name="metrics[{j}].objectiveId" class="col-span-4">
-                        <Form.Control>
-                          {#snippet children({ props })}
-                            <Form.Label>Objective*</Form.Label>
-                            <Select.Root
-                              type="single"
-                              onValueChange={(value) => {
-                                $formData.metrics[j].objectiveId = value ?? null;
-                              }}
-                              value={$formData.metrics[j].objectiveId ?? undefined}
-                              name={props.name}
-                            >
-                              <Select.Trigger {...props}>
-                                {$formData.metrics[j].objectiveId
-                                  ? data.objectives.find(
-                                      (o) => o.id === $formData.metrics[j].objectiveId
-                                    )?.name
-                                  : 'Select an objective'}
-                              </Select.Trigger>
-                              <Select.Content>
-                                {#each data.objectives as objective}
-                                  <Select.Item value={objective.id} label={objective.name} />
-                                {/each}
-                              </Select.Content>
-                            </Select.Root>
-                          {/snippet}
-                        </Form.Control>
-                        <Form.Description>Choose the objective for this metric.</Form.Description>
-                        <Form.FieldErrors />
-                      </Form.Field>
-                    {:else}
-                      <Form.Field {form} name="metrics[{j}].githubUsername" class="col-span-2">
-                        <Form.Control>
-                          {#snippet children({ props })}
-                            <Form.Label>GitHub Username*</Form.Label>
-                            <Input {...props} bind:value={$formData.metrics[j].githubUsername} />
-                          {/snippet}
-                        </Form.Control>
-                        <Form.Description>
-                          Enter the GitHub username for this metric.
-                        </Form.Description>
-                        <Form.FieldErrors />
-                      </Form.Field>
-
-                      <Form.Field {form} name="metrics[{j}].githubStatType" class="col-span-2">
-                        <Form.Control>
-                          {#snippet children({ props })}
-                            <Form.Label>Stat Type*</Form.Label>
-                            <Select.Root
-                              type="single"
-                              value={$formData.metrics[j].githubStatType ?? undefined}
-                              onValueChange={(value) => {
-                                $formData.metrics[j].githubStatType = (value ?? null) as any;
-                              }}
-                              name={props.name}
-                            >
-                              <Select.Trigger {...props} class="capitalize">
-                                {$formData.metrics[j].githubStatType || 'commits'}
-                              </Select.Trigger>
-                              <Select.Content>
-                                {#each GITHUB_STAT_TYPES as statType}
-                                  <Select.Item
-                                    value={statType}
-                                    label={statType}
-                                    class="capitalize"
-                                  />
-                                {/each}
-                              </Select.Content>
-                            </Select.Root>
-                          {/snippet}
-                        </Form.Control>
-                        <Form.Description>
-                          Select the type of GitHub statistics to display.
-                        </Form.Description>
-                        <Form.FieldErrors />
-                      </Form.Field>
-                    {/if}
-
-                    <Form.Field {form} name="metrics[{j}].name" class="col-span-2">
-                      <Form.Control>
-                        {#snippet children({ props })}
-                          <Form.Label>Name</Form.Label>
-                          <Input {...props} bind:value={$formData.metrics[j].name} />
-                        {/snippet}
-                      </Form.Control>
-                      <Form.FieldErrors />
-                    </Form.Field>
-
-                    <Form.Field {form} name="metrics[{j}].calculationType" class="col-span-2">
-                      <Form.Control>
-                        {#snippet children({ props })}
-                          <Form.Label>Duration</Form.Label>
-                          <Select.Root
-                            type="single"
-                            disabled={$formData.metrics[j].githubStatType !== 'commits'}
-                            bind:value={$formData.metrics[j].calculationType}
-                            name={props.name}
-                          >
-                            <Select.Trigger {...props} class="capitalize">
-                              {$formData.metrics[j].calculationType}
-                            </Select.Trigger>
-                            <Select.Content>
-                              {#if $formData.metrics[j].metricType === 'objective'}
-                                {#each getCalculationTypesForObjective($formData.metrics[j].objectiveId) as calcType}
-                                  <Select.Item
-                                    value={calcType}
-                                    label={calcType}
-                                    class="capitalize"
-                                  />
-                                {/each}
-                              {:else}
-                                {#each WIDGET_METRIC_CALCULATION_TYPES.filter((ct) => ct !== 'percentage') as calcType}
-                                  <Select.Item
-                                    value={calcType}
-                                    label={calcType}
-                                    class="capitalize"
-                                  />
-                                {/each}
-                              {/if}
-                            </Select.Content>
-                          </Select.Root>
-                        {/snippet}
-                      </Form.Control>
-                      <Form.FieldErrors />
-                    </Form.Field>
-
-                    {#if $formData.metrics[j].metricType !== 'github'}
-                      <Form.Field
-                        {form}
-                        name="metrics[{j}].valueDecimalPrecision"
-                        class="col-span-2"
-                      >
-                        <Form.Control>
-                          {#snippet children({ props })}
-                            <Form.Label>Decimal Precision</Form.Label>
-                            <Select.Root
-                              type="single"
-                              value={$formData.metrics[j].valueDecimalPrecision.toString()}
-                              onValueChange={(value) => {
-                                $formData.metrics[j].valueDecimalPrecision = parseInt(value);
-                              }}
-                              name={props.name}
-                            >
-                              <Select.Trigger {...props}>
-                                {$formData.metrics[j].valueDecimalPrecision +
-                                  ' digit' +
-                                  ($formData.metrics[j].valueDecimalPrecision === 1 ? '' : 's')}
-                              </Select.Trigger>
-                              <Select.Content>
-                                {#each Array(WIDGET_METRIC_VALUE_DECIMAL_PRECISION_MAX + 1) as _, i}
-                                  <Select.Item
-                                    value={i.toString()}
-                                    label={i + ' digit' + (i === 1 ? '' : 's')}
-                                  />
-                                {/each}
-                              </Select.Content>
-                            </Select.Root>
-                          {/snippet}
-                        </Form.Control>
-                        <Form.FieldErrors />
-                      </Form.Field>
-                    {/if}
-                  </div>
-                {/each}
-              {/if}
-            </Tabs.Content>
-          {/each}
-        </Tabs.Root>
-      </div>
-    </section>
-    <section class="space-y-6 first:space-y-3">
-      <h2 class="h3">Customization</h2>
-      <div class="grid grid-cols-3 gap-x-10 gap-y-6">
-        <Form.Field {form} name="color">
-          <Form.Control>
-            {#snippet children({ props })}
-              <Form.Label>Foreground Color</Form.Label>
-              <ColorPickerInput
-                {...props}
-                bind:value={$formData.color}
-                solids={[
-                  '#000000',
-                  '#333333',
-                  '#666666',
-                  '#999999',
-                  '#cccccc',
-                  '#f2f2f2',
-                  '#ffffff',
-                ]}
-              />
-            {/snippet}
-          </Form.Control>
-          <Form.FieldErrors />
-        </Form.Field>
-
-        <Form.Field {form} name="backgroundColor">
-          <Form.Control>
-            {#snippet children({ props })}
-              <Form.Label>Background Color</Form.Label>
-              <ColorPickerInput
-                {...props}
-                bind:value={$formData.backgroundColor}
-                solids={[
-                  '#000000',
-                  '#333333',
-                  '#666666',
-                  '#999999',
-                  '#cccccc',
-                  '#f2f2f2',
-                  '#ffffff',
-                  '#ffffff00',
-                ]}
-                alpha
-              />
-            {/snippet}
-          </Form.Control>
-          <Form.FieldErrors />
-        </Form.Field>
-
-        <Form.Field {form} name="accentColor">
-          <Form.Control>
-            {#snippet children({ props })}
-              <Form.Label>Accent Color</Form.Label>
-              <ColorPickerInput {...props} bind:value={$formData.accentColor} />
-            {/snippet}
-          </Form.Control>
-          <Form.FieldErrors />
-        </Form.Field>
-      </div>
-      <div class="grid grid-cols-2 gap-x-10 gap-y-6">
-        <Form.Field {form} name="borderRadius">
-          <Form.Control>
-            {#snippet children({ props })}
-              <Form.Label>Border Radius</Form.Label>
-              <Input
-                {...props}
-                type="number"
-                value={$formData.borderRadius}
-                oninput={(e) => {
-                  if (e.currentTarget.value === '') {
-                    $formData.borderRadius = 0;
-                  } else {
-                    $formData.borderRadius = parseInt(e.currentTarget.value);
-                  }
-                }}
-                min="0"
-                max="50"
-              />
-            {/snippet}
-          </Form.Control>
-          <Form.Description>Set the roundness of the border in pixels.</Form.Description>
-          <Form.FieldErrors />
-        </Form.Field>
-
-        <Form.Field {form} name="padding">
-          <Form.Control>
-            {#snippet children({ props })}
-              <Form.Label>Padding</Form.Label>
-              <Input
-                {...props}
-                value={$formData.padding}
-                oninput={(e) => {
-                  if (e.currentTarget.value === '') {
-                    $formData.padding = 0;
-                  } else {
-                    $formData.padding = parseInt(e.currentTarget.value);
-                  }
-                }}
-                type="number"
-                min="0"
-                max="30"
-              />
-            {/snippet}
-          </Form.Control>
-          <Form.Description>Set the roundness of the border in pixels.</Form.Description>
-          <Form.FieldErrors />
-        </Form.Field>
-
-        <Form.Field {form} name="border" class="flex items-center gap-3 space-y-0 py-2">
-          <Form.Control>
-            {#snippet children({ props })}
-              <Switch {...props} bind:checked={$formData.border} />
-              <Form.Label>Enable Border</Form.Label>
-            {/snippet}
-          </Form.Control>
-        </Form.Field>
-      </div>
-      <!-- <Form.Field {form} name="watermark" class="flex items-center space-x-3 space-y-0 py-2">
-        <Form.Control>
-          {#snippet children({ props })}
-            <Checkbox
-              {...props}
-              checked={!$formData.watermark}
-              onCheckedChange={() => ($formData.watermark = !$formData.watermark)}
-            />
-            <Form.Label>Remove MEMsched Brand</Form.Label>
-            <Badge>Pro</Badge>
-          {/snippet}
-        </Form.Control>
-      </Form.Field> -->
-    </section>
-    {#if browser && import.meta.env.VITE_DEBUG_FORMS === '1' && import.meta.env.DEV}
-      <SuperDebug data={$formData} />
-    {/if}
-  </div>
-
-  <div class="sticky col-span-3 h-fit space-y-4" style="top: calc({HEADER_HEIGHT}px + 2rem)">
-    <h2 class="h5">Preview</h2>
-    <div class="space-y-2">
-      {#if edit}
-        <div>
-          <small class="ms-1 inline-block text-sm text-muted-foreground">Current</small>
-          <img
-            src="/api/widgets/{page.params.id}?svg&v={uuid4()}{updateCounter}"
-            alt="Current preview"
-            class="max-h-[125px] object-contain object-left"
-          />
-        </div>
-      {/if}
-      <div>
-        {#if formSchema.safeParse($formData).success}
-          {#if edit}
-            <small class="ms-1 inline-block text-sm text-muted-foreground">Updated</small>
-          {/if}
-          <img
-            src="/api/widgets/preview/{data.user.id}?config={btoa(JSON.stringify($formData))}"
-            alt="Edit preview"
-            class={cn('object-contain object-left', previewLoaded ? 'max-h-[125px]' : 'h-[125px]')}
-            onload={() => (previewLoaded = true)}
-          />
-        {:else}
-          <div
-            class="grid h-[125px] place-items-center rounded-lg border bg-zinc-100 p-5 text-sm text-muted-foreground"
-          >
-            The widget will be visible as you complete the form
-          </div>
-        {/if}
+<form
+  method="POST"
+  use:enhance
+  class="flex flex-grow"
+  style="height: calc(100vh - {SUB_NAV_HEIGHT}px);"
+>
+  <div class="bg-dotted relative flex max-w-[60%] flex-grow items-center justify-center p-2">
+    <div
+      class="absolute left-2 right-2 top-2 flex items-center gap-3 rounded-lg border bg-muted p-3 text-sm"
+    >
+      <Icon
+        src={IoInformationCircle}
+        className="mt-0.5 size-5 flex-shrink-0 text-muted-foreground"
+      />
+      <div class="space-y-1">
+        <p>Click on the gray areas to edit the individual components.</p>
       </div>
     </div>
+
+    <div class="overflow-auto">
+      <Widget
+        {...$formData}
+        metrics={widgetMetrics}
+        watermark
+        onTitleClick={() => {
+          focusedTab = 'general.title';
+        }}
+        onSubtitleClick={() => {
+          focusedTab = 'general.subtitle';
+        }}
+        onImageClick={hasImage
+          ? () => {
+              focusedTab = 'image';
+            }
+          : undefined}
+        onImageClose={onRemoveImage}
+        onMetricClick={(i) => {
+          focusedTab = `metric.${i + 1}` as MetricTab;
+        }}
+        onMetricClose={onRemoveMetric}
+      />
+    </div>
+
     {#if edit}
-      <Form.Button>Update Widget</Form.Button>
+      <Form.Button class="absolute bottom-4 left-1/2 -translate-x-1/2" type="submit">
+        Update Widget
+      </Form.Button>
     {:else}
-      <Form.Button>Create Widget</Form.Button>
+      <Form.Button class="absolute bottom-4 left-1/2 -translate-x-1/2" type="submit">
+        Create Widget
+        <Icon src={FiPlus} className="size-4" />
+      </Form.Button>
+    {/if}
+  </div>
+  <div class="main-container w-1/2 space-y-16 overflow-y-auto border-s bg-background py-8">
+    {#if focusedTab === 'general.title' || focusedTab === 'general.subtitle'}
+      <GeneralTab {form} {formData} bind:titleInput bind:subtitleInput />
+    {:else if focusedTab === 'image'}
+      <ImageTab {form} {formData} bind:textIconInput />
+    {:else if focusedTab.startsWith('metric')}
+      <WidgetTab
+        metricIndex={parseInt(focusedTab.split('.')[1]) - 1}
+        {form}
+        {formData}
+        objectives={data.objectives}
+      />
+    {/if}
+    {#if browser && import.meta.env.VITE_DEBUG_FORMS === '1' && import.meta.env.DEV}
+      <SuperDebug data={$formData} />
     {/if}
   </div>
 </form>

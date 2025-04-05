@@ -7,6 +7,7 @@ import { ResultAsync } from 'neverthrow';
 import type { FormSchema } from '$lib/components/forms/widget-form/schema';
 import type { z } from 'zod';
 import type { GithubMetricsService, GithubStatType } from './github-metrics-service';
+import { roundToDecimal } from '$lib/utils';
 
 export class MetricsService {
   constructor(
@@ -95,7 +96,7 @@ export class MetricsService {
 
           // Calculate percentage of completion
           const percentage = (objective[0].value / objective[0].endValue) * 100;
-          return Math.round(percentage * 10 ** valueDecimalPrecision) / 10 ** valueDecimalPrecision;
+          return roundToDecimal(percentage, valueDecimalPrecision);
         }
 
         if (calculationType === 'all time') {
@@ -108,7 +109,7 @@ export class MetricsService {
             .where(eq(table.objectiveLog.objectiveId, objectiveId));
 
           const value = result[0]?.total || 0;
-          return Math.round(value * 10 ** valueDecimalPrecision) / 10 ** valueDecimalPrecision;
+          return roundToDecimal(value, valueDecimalPrecision);
         } else {
           // Define time filter based on calculation type
           const timeAgo = new Date();
@@ -138,7 +139,7 @@ export class MetricsService {
             );
 
           const value = result[0]?.total || 0;
-          return Math.round(value * 10 ** valueDecimalPrecision) / 10 ** valueDecimalPrecision;
+          return roundToDecimal(value, valueDecimalPrecision);
         }
       }
 

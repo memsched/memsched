@@ -15,6 +15,7 @@
         link: 'text-primary underline-offset-4 hover:underline',
         translucent:
           'bg-primary/10 text-primary hover:bg-primary/20 hover:text-primary dark:border dark:border-primary',
+        breadcrumb: 'bg-transparent text-muted-foreground hover:text-foreground rounded-none',
       },
       size: {
         default: 'h-10 px-4 py-2',

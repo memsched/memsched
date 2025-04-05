@@ -1,5 +1,6 @@
 import { z } from 'zod';
 
+export const WIDGET_METRIC_STYLES = ['default', 'plot'] as const;
 export const WIDGET_METRIC_CALCULATION_TYPES = [
   'day',
   'week',
@@ -18,9 +19,16 @@ const widgetMetricBaseSchema = z.object({
     .max(25, { message: 'Name must be less than 25 characters.' })
     .nullable()
     .transform((v) => (v === '' ? null : v)),
-  calculationType: z.enum(WIDGET_METRIC_CALCULATION_TYPES, {
-    message: 'Please select a valid calculation type.',
-  }),
+  style: z
+    .enum(WIDGET_METRIC_STYLES, {
+      message: 'Please select a valid style.',
+    })
+    .default('default'),
+  calculationType: z
+    .enum(WIDGET_METRIC_CALCULATION_TYPES, {
+      message: 'Please select a valid calculation type.',
+    })
+    .default('day'),
   valueDecimalPrecision: z
     .number({ message: 'Please enter a valid value decimal precision: 0, 1, or 2.' })
     .int({
@@ -30,25 +38,20 @@ const widgetMetricBaseSchema = z.object({
     .max(WIDGET_METRIC_VALUE_DECIMAL_PRECISION_MAX, {
       message: 'Value decimal precision must be less than or equal to 2.',
     }),
-  metricType: z
-    .enum(WIDGET_METRIC_TYPES, {
-      message: 'Please select a valid metric type.',
-    })
-    .default('objective'),
 });
 
 const objectiveWidgetMetricSchema = widgetMetricBaseSchema.extend({
   metricType: z.literal('objective'),
   objectiveId: z.string().min(1, { message: 'Objective is required.' }),
-  githubUsername: z.string().optional().nullable(),
-  githubStatType: z.enum(GITHUB_STAT_TYPES).optional().nullable(),
+  githubUsername: z.string().nullable(),
+  githubStatType: z.enum(GITHUB_STAT_TYPES).nullable(),
 });
 
 const githubWidgetMetricSchema = widgetMetricBaseSchema.extend({
   metricType: z.literal('github'),
+  objectiveId: z.string().nullable(),
   githubUsername: z.string().min(1, { message: 'GitHub username is required.' }),
   githubStatType: z.enum(GITHUB_STAT_TYPES).default('commits'),
-  objectiveId: z.string().optional().nullable(),
 });
 
 export const widgetMetricSchema = z.discriminatedUnion('metricType', [
@@ -63,9 +66,8 @@ export const formSchema = z.object({
     .max(50, { message: 'Title must be less than 50 characters.' }),
   subtitle: z
     .string()
-    .max(100, { message: 'Subtitle must be less than 100 characters.' })
-    .nullable()
-    .transform((v) => (v === '' ? null : v)),
+    .min(1, { message: 'Subtitle is required.' })
+    .max(100, { message: 'Subtitle must be less than 100 characters.' }),
   imageUrl: z
     .string()
     .url({ message: 'Please enter a valid image URL.' })

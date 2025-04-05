@@ -182,15 +182,22 @@
           </div>
         {/each}
 
-        <!-- Return Home Link -->
+        <!-- Back Link -->
         <div class="mt-8 border-t pt-6">
-          <a
-            href="/"
-            class="block rounded-md px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+          <button
+            onclick={() => {
+              if (window.history.length > 1) {
+                window.history.back();
+              } else {
+                window.location.href = '/';
+              }
+            }}
+            class="block w-full rounded-md px-3 py-1.5 text-start text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+            aria-label="Back"
             data-sveltekit-reload
           >
-            ← Return Home
-          </a>
+            ← Back
+          </button>
         </div>
       </nav>
     </div>

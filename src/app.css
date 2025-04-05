@@ -98,7 +98,7 @@
   p a {
     @apply underline underline-offset-2;
   }
-  svg * {
+  svg:not(.widget-metric) * {
     stroke: inherit !important;
   }
 
@@ -144,5 +144,9 @@
 @layer components {
   .main-container {
     @apply mx-auto w-full max-w-screen-xl px-6 lg:px-10;
+  }
+  .bg-dotted {
+    background-image: radial-gradient(circle, rgba(0, 0, 0, 0.1) 1px, transparent 1px);
+    background-size: 15px 15px;
   }
 }

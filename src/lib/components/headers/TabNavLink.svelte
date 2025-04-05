@@ -1,30 +1,32 @@
 <script lang="ts">
+  import type { Snippet } from 'svelte';
   import { page } from '$app/state';
   import { cn } from '$lib/utils';
   import { Button } from '../ui/button';
-  import type { Page } from '@sveltejs/kit';
 
   interface Props {
     name: string;
-    href: string;
-    isActive?: (page: Page) => boolean;
+    href?: string;
+    onclick?: () => void;
+    active?: boolean;
+    children?: Snippet;
   }
 
-  const { name, href, isActive }: Props = $props();
+  const { name, href, active, onclick, children }: Props = $props();
 
-  // Determine if the tab is active using the custom callback or default pathname matching
-  function isTabActive() {
-    return isActive ? isActive(page) : page.url.pathname === href;
-  }
+  const isActive = $derived(active !== undefined ? active : page.url.pathname === href);
 </script>
 
 <Button
   {href}
-  variant="secondary"
+  {onclick}
+  variant="ghost"
+  size="xs"
   class={cn(
-    'h-auto bg-transparent px-3 py-1.5  hover:bg-secondary',
-    isTabActive() && 'bg-zinc-200/50 dark:bg-zinc-700'
+    'rounded-none bg-background text-zinc-400 hover:bg-background hover:text-foreground',
+    isActive && 'bg-zinc-100 text-foreground hover:bg-zinc-100'
   )}
 >
   {name}
+  {@render children?.()}
 </Button>

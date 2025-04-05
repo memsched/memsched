@@ -1,8 +1,7 @@
 <script lang="ts">
   import type { PageProps } from './$types';
-  import WidgetForm from '$lib/components/forms/widget-form/WidgetForm.svelte';
-  import HomeLayout from '$lib/components/layouts/HomeLayout.svelte';
   import SvelteSeo from 'svelte-seo';
+  import WidgetForm from '$lib/components/forms/widget-form/WidgetForm.svelte';
 
   const { data }: PageProps = $props();
 </script>
@@ -14,7 +13,4 @@
   nofollow={true}
 />
 
-<HomeLayout class="gap-7">
-  <h2>Create Widget</h2>
-  <WidgetForm {data} />
-</HomeLayout>
+<WidgetForm {data} />

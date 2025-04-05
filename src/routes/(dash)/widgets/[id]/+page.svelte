@@ -2,7 +2,6 @@
   import type { PageProps } from './$types';
   import { page } from '$app/state';
   import { FiTrash2 } from 'svelte-icons-pack/fi';
-  import HomeLayout from '$lib/components/layouts/HomeLayout.svelte';
   import IconButton from '$lib/components/ui/IconButton.svelte';
   import ConfirmDeleteDialog from '$lib/components/dialogs/ConfirmDeleteDialog.svelte';
   import * as Dialog from '$lib/components/ui/dialog';
@@ -20,7 +19,7 @@
   nofollow={true}
 />
 
-<HomeLayout class="gap-7">
+<div class="main-container space-y-7 py-16">
   <div class="flex w-full items-center justify-between">
     <h1 class="h2">Edit Widget</h1>
     <ConfirmDeleteDialog action="/widgets/delete" name="widgetId" value={page.params.id}>
@@ -42,4 +41,4 @@
     </div>
   {/if}
   <WidgetForm {data} edit />
-</HomeLayout>
+</div>

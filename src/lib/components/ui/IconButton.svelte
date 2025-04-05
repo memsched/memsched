@@ -7,7 +7,7 @@
 
   interface Props extends ButtonProps {
     icon: IconType;
-    children: Snippet;
+    children?: Snippet;
     childrenClass?: HTMLAttributes<HTMLSpanElement>['class'];
     iconPosition?: 'left' | 'right';
   }
@@ -28,13 +28,17 @@
   <span class="flex h-full items-center justify-center gap-2">
     {#if iconPosition === 'left'}
       <Icon src={icon} />
-      <span class={childrenClass}>
-        {@render children()}
-      </span>
+      {#if children}
+        <span class={childrenClass}>
+          {@render children()}
+        </span>
+      {/if}
     {:else}
-      <span class={childrenClass}>
-        {@render children()}
-      </span>
+      {#if children}
+        <span class={childrenClass}>
+          {@render children()}
+        </span>
+      {/if}
       <Icon src={icon} />
     {/if}
   </span>

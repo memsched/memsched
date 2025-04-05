@@ -7,19 +7,31 @@
   import UserAvatar from './UserAvatar.svelte';
   import DropdownMenuSeparator from '../ui/dropdown-menu/dropdown-menu-separator.svelte';
   import DropdownMenuLabel from '../ui/dropdown-menu/dropdown-menu-label.svelte';
+
+  interface Props {
+    compact?: boolean;
+  }
+
+  const { compact = false }: Props = $props();
 </script>
 
 <DropdownMenu.Root>
   <DropdownMenu.Trigger
     class="flex flex-row items-center justify-center gap-3 border border-transparent"
   >
-    <div class="flex flex-col text-end *:leading-tight">
-      <small>{page.data.user.name}</small>
-      <small class="font-light text-muted-foreground">{page.data.user.username}</small>
-    </div>
+    {#if !compact}
+      <div class="flex flex-col text-end *:leading-tight">
+        <small>{page.data.user.name}</small>
+        <small class="font-light text-muted-foreground">{page.data.user.username}</small>
+      </div>
+    {/if}
     <UserAvatar username={page.data.user.username} avatarUrl={page.data.user.avatarUrl} />
   </DropdownMenu.Trigger>
-  <DropdownMenu.Content class="min-w-40" align="end">
+  <DropdownMenu.Content
+    class="min-w-40"
+    align={compact ? 'start' : 'end'}
+    side={compact ? 'right' : 'bottom'}
+  >
     <DropdownMenu.Group>
       <DropdownMenuLabel>
         <div class="leading-3">{page.data.user.username}</div>

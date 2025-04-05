@@ -2,13 +2,12 @@ import type { PageServerLoad } from './$types';
 import { ResultAsync } from 'neverthrow';
 import { okAsync } from 'neverthrow';
 import { handleDbError } from '$lib/server/utils';
+import { redirect } from '@sveltejs/kit';
 
 export const load: PageServerLoad = async (event) => {
   const session = event.locals.session;
   if (!session) {
-    return {
-      widgets: [],
-    };
+    return redirect(302, '/auth/signin');
   }
 
   const res = await event.locals.widgetsService

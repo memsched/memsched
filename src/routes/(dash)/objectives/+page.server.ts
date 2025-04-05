@@ -4,17 +4,10 @@ import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { logSchema } from '$lib/components/forms/objective-log-form/schema';
 import { handleDbError, handleFormDbError } from '$lib/server/utils';
-import { FREE_PLAN_LIMITS } from '$lib/constants';
 
 export const load: PageServerLoad = async (event) => {
   if (!event.locals.session) {
-    return {
-      objectives: [],
-      widgetsLimitReached: false,
-      maxWidgets: FREE_PLAN_LIMITS.maxWidgets,
-      objectivesLimitReached: false,
-      maxObjectives: FREE_PLAN_LIMITS.maxObjectives,
-    };
+    return redirect(302, '/auth/signin');
   }
 
   const isArchived = event.url.searchParams.get('archived') !== null;

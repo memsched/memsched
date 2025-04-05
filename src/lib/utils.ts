@@ -23,28 +23,45 @@ export function assert(condition: boolean, message: string) {
   }
 }
 
-export const getRandomHexColor = () => {
+export function getRandomHexColor() {
   const letters = '0123456789abcdef';
   let color = '#';
   for (let i = 0; i < 6; i++) {
     color += letters[Math.floor(Math.random() * 16)];
   }
   return color;
-};
+}
 
-export const debounce = <F extends (...args: any[]) => any>(func: F, waitFor: number) => {
+export function debounce<F extends (...args: any[]) => any>(func: F, waitFor: number) {
   let timeout: NodeJS.Timeout;
   return (...args: Parameters<F>): Promise<ReturnType<F>> =>
     new Promise((resolve) => {
       clearTimeout(timeout);
       timeout = setTimeout(() => resolve(func(...args)), waitFor);
     });
-};
+}
 
-export const formatCurrency = (amount: number, currency: string) => {
+export function formatCurrency(amount: number, currency: string) {
   return new Intl.NumberFormat(navigator.language || 'en-US', {
     style: 'currency',
     currency,
     minimumFractionDigits: 0,
   }).format(amount);
-};
+}
+
+export function roundToDecimal(value: number, decimalPlaces: number) {
+  return Math.round(value * 10 ** decimalPlaces) / 10 ** decimalPlaces;
+}
+
+export function addOpacityRgba(hexColor: string, opacity: number): string {
+  // Remove # if present
+  const hex = hexColor.replace('#', '');
+
+  // Convert hex to RGB
+  const r = parseInt(hex.substring(0, 2), 16);
+  const g = parseInt(hex.substring(2, 4), 16);
+  const b = parseInt(hex.substring(4, 6), 16);
+
+  // Return rgba string
+  return `rgba(${r}, ${g}, ${b}, ${opacity})`;
+}

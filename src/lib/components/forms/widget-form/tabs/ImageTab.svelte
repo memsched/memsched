@@ -17,7 +17,7 @@
   let { form, formData, textIconInput = $bindable() }: Props = $props();
 </script>
 
-<section class="space-y-6 first:space-y-3">
+<section class="space-y-6">
   <h2 class="h3">Image</h2>
   <div class="col-span-2">
     <Label>Type</Label>

@@ -13,7 +13,9 @@
   import type { Infer } from 'sveltekit-superforms/adapters';
   import DefaultMetric from '$lib/components/widgets/metrics/DefaultMetric.svelte';
   import PlotMetric from '$lib/components/widgets/metrics/PlotMetric.svelte';
-  import { cn } from '$lib/utils';
+  import HeatmapMetric from '$lib/components/widgets/metrics/HeatmapMetric.svelte';
+  import WidgetTabStyleButton from './WidgetTabStyleButton.svelte';
+  import { PLOT_DATA, HEATMAP_DATA } from '$lib/constants';
 
   interface Props {
     metricIndex: number;
@@ -36,34 +38,28 @@
   }
 </script>
 
-<section class="space-y-6 first:space-y-3">
+<section class="space-y-6">
   <h2 class="h3">Metric {metricIndex + 1}</h2>
 
-  <input
-    type="hidden"
-    name="metrics[{metricIndex}].style"
-    bind:value={$formData.metrics[metricIndex].style}
-  />
   <Form.Field {form} name="metrics[{metricIndex}].style">
     <Form.Control>
+      <input
+        type="hidden"
+        name="metrics[{metricIndex}].style"
+        bind:value={$formData.metrics[metricIndex].style}
+      />
       <Form.Label>Style</Form.Label>
-      <div
-        class="grid grid-cols-2 gap-x-4 gap-y-2 *:flex *:flex-col *:items-center *:justify-between *:gap-4 *:rounded-lg *:border *:p-4"
-      >
-        <button
-          class={cn($formData.metrics[metricIndex].style === 'default' && 'border-primary')}
-          onclick={(e) => {
-            e.preventDefault();
-            $formData.metrics[metricIndex].style = 'default';
-          }}
+      <div class="grid grid-cols-2 gap-x-4 gap-y-2">
+        <WidgetTabStyleButton
+          {metricIndex}
+          {formData}
+          style="default-base"
+          title="Default"
+          description="Use the default style for this metric."
         >
-          <div>
-            <h3 class="h4">Default</h3>
-            <p class="text-sm text-muted-foreground">Use the default style for this metric.</p>
-          </div>
           <DefaultMetric
             metric={{
-              style: 'default',
+              style: 'default-base',
               value: 100,
               calculationType: 'all time',
               valueDecimalPrecision: 0,
@@ -75,54 +71,110 @@
             }}
             accentColor="#32ad86"
           />
-        </button>
-        <button
-          class={cn($formData.metrics[metricIndex].style === 'plot' && 'border-primary')}
-          onclick={(e) => {
-            e.preventDefault();
-            $formData.metrics[metricIndex].style = 'plot';
-          }}
+        </WidgetTabStyleButton>
+        <WidgetTabStyleButton
+          {metricIndex}
+          {formData}
+          style="default-trend"
+          title="Default Trend"
+          description="Use the default trend style for this metric."
         >
-          <div>
-            <h3 class="h4">Plot</h3>
-            <p class="text-sm text-muted-foreground">Use the plot style for this metric.</p>
-          </div>
-          <PlotMetric
+          <DefaultMetric
             metric={{
-              style: 'plot',
+              style: 'default-trend',
               value: 100,
               calculationType: 'all time',
               valueDecimalPrecision: 0,
               name: 'metric name',
               order: 1,
               plotData: {
-                points: [
-                  { date: '2023-01-01', value: 100 },
-                  { date: '2023-01-02', value: 150 },
-                  { date: '2023-01-03', value: 120 },
-                  { date: '2023-01-04', value: 200 },
-                  { date: '2023-01-05', value: 180 },
-                  { date: '2023-01-06', value: 250 },
-                  { date: '2023-01-07', value: 300 },
-                  { date: '2023-01-08', value: 350 },
-                  { date: '2023-01-09', value: 280 },
-                  { date: '2023-01-10', value: 320 },
-                  { date: '2023-01-16', value: 486 },
-                  { date: '2023-01-17', value: 505 },
-                  { date: '2023-01-18', value: 523 },
-                  { date: '2023-01-19', value: 493 },
-                  { date: '2023-01-20', value: 463 },
-                  { date: '2023-01-21', value: 433 },
-                  { date: '2023-01-22', value: 500 },
-                  { date: '2023-01-23', value: 550 },
-                  { date: '2023-01-24', value: 600 },
-                  { date: '2023-01-25', value: 650 },
-                ],
+                points: [],
               },
             }}
             accentColor="#32ad86"
           />
-        </button>
+        </WidgetTabStyleButton>
+
+        <WidgetTabStyleButton
+          {metricIndex}
+          {formData}
+          style="plot-base"
+          title="Simple Plot"
+          description="Use the plot style for this metric."
+        >
+          <PlotMetric
+            metric={{
+              style: 'plot-base',
+              value: 100,
+              calculationType: 'all time',
+              valueDecimalPrecision: 0,
+              name: 'metric name',
+              order: 1,
+              plotData: PLOT_DATA,
+            }}
+            accentColor="#32ad86"
+          />
+        </WidgetTabStyleButton>
+        <WidgetTabStyleButton
+          {metricIndex}
+          {formData}
+          style="plot-metric"
+          title="Metric Plot"
+          description="Use the plot style for this metric."
+        >
+          <PlotMetric
+            metric={{
+              style: 'plot-metric',
+              value: 100,
+              calculationType: 'all time',
+              valueDecimalPrecision: 0,
+              name: 'metric name',
+              order: 1,
+              plotData: PLOT_DATA,
+            }}
+            accentColor="#32ad86"
+          />
+        </WidgetTabStyleButton>
+        <WidgetTabStyleButton
+          {metricIndex}
+          {formData}
+          style="heatmap-base"
+          title="Simple Heatmap"
+          description="Use the heatmap style for this metric."
+        >
+          <HeatmapMetric
+            metric={{
+              style: 'heatmap-base',
+              value: 100,
+              calculationType: 'all time',
+              valueDecimalPrecision: 1,
+              name: 'metric name',
+              order: 1,
+              plotData: HEATMAP_DATA,
+            }}
+            accentColor="#32ad86"
+          />
+        </WidgetTabStyleButton>
+        <WidgetTabStyleButton
+          {metricIndex}
+          {formData}
+          style="heatmap-metric"
+          title="Metric Heatmap"
+          description="Use the heatmap style for this metric."
+        >
+          <HeatmapMetric
+            metric={{
+              style: 'heatmap-metric',
+              value: 100,
+              calculationType: 'all time',
+              valueDecimalPrecision: 1,
+              name: 'metric name',
+              order: 1,
+              plotData: HEATMAP_DATA,
+            }}
+            accentColor="#32ad86"
+          />
+        </WidgetTabStyleButton>
       </div>
     </Form.Control>
   </Form.Field>

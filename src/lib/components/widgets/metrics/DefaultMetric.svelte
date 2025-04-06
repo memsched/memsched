@@ -26,10 +26,12 @@
       </span>
     {:else}
       {metric.value}
-      <TrendingUpArrow style="stroke: {accentColor}; color: {accentColor}" />
+      {#if metric.style === 'default-trend'}
+        <TrendingUpArrow style="stroke: {accentColor}; color: {accentColor}" />
+      {/if}
     {/if}
   </div>
-  <div style:font-size="0.8rem">
+  <div style:font-size="0.8rem" style:color="#666">
     {metric.name}
   </div>
 </div>

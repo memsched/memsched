@@ -136,7 +136,16 @@ export const widgetMetric = sqliteTable('widget_metric', {
   }).notNull(),
   valueDecimalPrecision: integer('value_decimal_precision').notNull(),
 
-  style: text('style', { enum: ['default', 'plot'] }).notNull(),
+  style: text('style', {
+    enum: [
+      'default-base',
+      'default-trend',
+      'plot-base',
+      'plot-metric',
+      'heatmap-base',
+      'heatmap-metric',
+    ],
+  }).notNull(),
 
   // New field to determine if this is a GitHub or Objective metric
   metricType: text('metric_type', { enum: ['objective', 'github'] })

@@ -20,7 +20,7 @@
   let { form, formData, titleInput = $bindable(), subtitleInput = $bindable() }: Props = $props();
 </script>
 
-<section class="space-y-6 first:space-y-3">
+<section class="space-y-6">
   <h2 class="h3">General</h2>
   <div class="grid grid-cols-2 gap-x-16 gap-y-6">
     <Form.Field {form} name="title" class="col-start-1">

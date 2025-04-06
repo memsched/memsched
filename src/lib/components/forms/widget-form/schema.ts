@@ -1,6 +1,13 @@
 import { z } from 'zod';
 
-export const WIDGET_METRIC_STYLES = ['default', 'plot'] as const;
+export const WIDGET_METRIC_STYLES = [
+  'default-base',
+  'default-trend',
+  'plot-base',
+  'plot-metric',
+  'heatmap-base',
+  'heatmap-metric',
+] as const;
 export const WIDGET_METRIC_CALCULATION_TYPES = [
   'day',
   'week',
@@ -23,7 +30,7 @@ const widgetMetricBaseSchema = z.object({
     .enum(WIDGET_METRIC_STYLES, {
       message: 'Please select a valid style.',
     })
-    .default('default'),
+    .default('default-base'),
   calculationType: z
     .enum(WIDGET_METRIC_CALCULATION_TYPES, {
       message: 'Please select a valid calculation type.',

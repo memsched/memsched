@@ -86,19 +86,21 @@
       />
     </svg>
   </div>
-  <div style:display="flex" style:flex-direction="column">
-    <div
-      style:font-size="1.5rem"
-      style:font-weight="800"
-      style:line-height="1"
-      style:display="flex"
-      style:align-items="flex-end"
-      style:gap={metric.calculationType === 'percentage' ? '0.1rem' : '0.3rem'}
-    >
-      {metric.value}
+  {#if metric.style === 'plot-metric'}
+    <div style:display="flex" style:flex-direction="column">
+      <div
+        style:font-size="1.5rem"
+        style:font-weight="800"
+        style:line-height="1"
+        style:display="flex"
+        style:align-items="flex-end"
+        style:gap={metric.calculationType === 'percentage' ? '0.1rem' : '0.3rem'}
+      >
+        {metric.value}
+      </div>
+      <div style:font-size="0.8rem" style:color="#666">
+        {metric.name}
+      </div>
     </div>
-    <div style:font-size="0.8rem">
-      {metric.name}
-    </div>
-  </div>
+  {/if}
 </div>

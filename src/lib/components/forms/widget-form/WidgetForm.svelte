@@ -10,7 +10,7 @@
   import { Icon } from 'svelte-icons-pack';
   import { IoInformationCircle, IoChevronForward } from 'svelte-icons-pack/io';
   import Widget from '$lib/components/widgets/Widget.svelte';
-  import { SUB_NAV_HEIGHT } from '$lib/constants';
+  import { SUB_NAV_HEIGHT, PLOT_DATA, HEATMAP_DATA } from '$lib/constants';
   import { FiPlus, FiX } from 'svelte-icons-pack/fi';
   import DashHeader from '$lib/components/headers/DashHeader.svelte';
   import { Button } from '$lib/components/ui/button';
@@ -70,30 +70,7 @@
       valueDecimalPrecision: m.valueDecimalPrecision,
       value: roundToDecimal(435.390453, m.valueDecimalPrecision),
       order: i,
-      plotData: {
-        points: [
-          { date: '2023-01-01', value: 100 },
-          { date: '2023-01-02', value: 150 },
-          { date: '2023-01-03', value: 120 },
-          { date: '2023-01-04', value: 200 },
-          { date: '2023-01-05', value: 180 },
-          { date: '2023-01-06', value: 250 },
-          { date: '2023-01-07', value: 300 },
-          { date: '2023-01-08', value: 350 },
-          { date: '2023-01-09', value: 280 },
-          { date: '2023-01-10', value: 320 },
-          { date: '2023-01-16', value: 486 },
-          { date: '2023-01-17', value: 505 },
-          { date: '2023-01-18', value: 523 },
-          { date: '2023-01-19', value: 493 },
-          { date: '2023-01-20', value: 463 },
-          { date: '2023-01-21', value: 433 },
-          { date: '2023-01-22', value: 500 },
-          { date: '2023-01-23', value: 550 },
-          { date: '2023-01-24', value: 600 },
-          { date: '2023-01-25', value: 650 },
-        ],
-      },
+      plotData: m.style.startsWith('plot') ? PLOT_DATA : HEATMAP_DATA,
     }))
   );
 
@@ -152,7 +129,7 @@
       for (let i = currentCount; i < count; i++) {
         metricsCopy.push({
           name: null,
-          style: 'default',
+          style: 'default-base',
           metricType: 'objective',
           objectiveId: '',
           calculationType: 'day',

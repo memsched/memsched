@@ -4,6 +4,7 @@
   import WidgetEditComponent from '$lib/components/widgets/utils/WidgetEditComponent.svelte';
   import DefaultMetric from '$lib/components/widgets/metrics/DefaultMetric.svelte';
   import PlotMetric from '$lib/components/widgets/metrics/PlotMetric.svelte';
+  import HeatmapMetric from '$lib/components/widgets/metrics/HeatmapMetric.svelte';
   import { addOpacityRgba } from '$lib/utils';
 
   interface Props {
@@ -190,10 +191,12 @@
             label={`Metric ${i + 1}`}
             value={metric.style}
           >
-            {#if metric.style === 'default'}
+            {#if metric.style.startsWith('default')}
               <DefaultMetric {metric} {accentColor} />
-            {:else if metric.style === 'plot'}
+            {:else if metric.style.startsWith('plot')}
               <PlotMetric {metric} {accentColor} />
+            {:else if metric.style.startsWith('heatmap')}
+              <HeatmapMetric {metric} {accentColor} />
             {/if}
           </WidgetEditComponent>
         {/each}

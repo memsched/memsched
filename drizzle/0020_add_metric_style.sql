@@ -1,0 +1,1 @@
+ALTER TABLE `widget_metric` ADD `style` text NOT NULL DEFAULT 'metric-base';

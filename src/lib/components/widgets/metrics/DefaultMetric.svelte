@@ -31,7 +31,9 @@
       {/if}
     {/if}
   </div>
-  <div style:font-size="0.8rem" style:color="#666">
-    {metric.name}
-  </div>
+  {#if metric.name}
+    <div style:font-size="0.8rem" style:color="#666">
+      {metric.name}
+    </div>
+  {/if}
 </div>

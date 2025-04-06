@@ -180,7 +180,7 @@
         </WidgetEditComponent>
       {/if}
     </div>
-    <div style:display="flex" style:gap="1.25rem">
+    <div style:display="flex" style:gap="1.25rem" style:align-items="center">
       {#if metrics && metrics.length > 0}
         {#each metrics as metric, i}
           <WidgetEditComponent

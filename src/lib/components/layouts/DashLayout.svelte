@@ -11,7 +11,7 @@
 
 <div class="flex h-screen w-screen">
   <DashNav />
-  <main class="flex flex-grow flex-col overflow-y-auto">
+  <main class="flex flex-grow flex-col overflow-hidden">
     {@render children()}
   </main>
 </div>

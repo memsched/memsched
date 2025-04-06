@@ -45,6 +45,8 @@
           focusedTab = 'general.subtitle';
         } else if (result.data?.form?.errors?.imageUrl || result.data?.form?.errors?.textIcon) {
           focusedTab = 'image';
+        } else {
+          console.log(result.data?.form?.errors);
         }
       }
     },
@@ -129,7 +131,7 @@
       for (let i = currentCount; i < count; i++) {
         metricsCopy.push({
           name: null,
-          style: 'default-base',
+          style: 'metric-base',
           metricType: 'objective',
           objectiveId: '',
           calculationType: 'day',
@@ -251,7 +253,7 @@
       </Form.Button>
     {/if}
   </div>
-  <div class="main-container w-1/2 space-y-16 overflow-y-auto border-s bg-background py-8">
+  <div class="main-container w-1/2 space-y-16 overflow-y-scroll border-s bg-background py-8">
     {#if focusedTab === 'general.title' || focusedTab === 'general.subtitle'}
       <GeneralTab {form} {formData} bind:titleInput bind:subtitleInput />
     {:else if focusedTab === 'image'}

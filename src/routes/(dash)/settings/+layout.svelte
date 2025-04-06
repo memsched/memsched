@@ -18,6 +18,6 @@
     <TabNavLink {...tab} />
   {/each}
 </DashHeader>
-<div class="main-container py-10">
+<div class="main-container overflow-y-auto py-10">
   {@render children()}
 </div>

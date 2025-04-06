@@ -154,6 +154,7 @@
           metrics={[
             {
               name: 'this month',
+              style: 'metric-trend',
               value: 85 + liveIncrement,
               calculationType: 'month',
               valueDecimalPrecision: 0,
@@ -161,6 +162,7 @@
             },
             {
               name: 'total hours',
+              style: 'metric-trend',
               value: 450 + liveIncrement,
               calculationType: 'all time',
               valueDecimalPrecision: 0,

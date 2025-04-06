@@ -225,7 +225,17 @@ export type WidgetMetricPreview = Omit<
   | 'metricType'
   | 'githubUsername'
   | 'githubStatType'
-> & { plotData: Omit<PlotData, 'timeRange'> };
+> &
+  (
+    | {
+        style: 'metric-base' | 'metric-trend';
+        plotData?: Omit<PlotData, 'timeRange'>;
+      }
+    | {
+        style: 'plot-base' | 'plot-metric' | 'heatmap-base' | 'heatmap-metric';
+        plotData: Omit<PlotData, 'timeRange'>;
+      }
+  );
 
 export type WidgetPreview = Omit<Widget, 'id' | 'userId' | 'createdAt' | 'visibility'>;
 export type WidgetJoinMetricsPreview = WidgetPreview & {

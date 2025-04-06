@@ -6,3 +6,9 @@
 <DashLayout>
   {@render children()}
 </DashLayout>
+
+<style>
+  :global(body) {
+    @apply h-full overflow-hidden;
+  }
+</style>

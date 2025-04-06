@@ -11,9 +11,9 @@
   } from '../schema';
   import type { SuperForm, SuperFormData } from 'sveltekit-superforms/client';
   import type { Infer } from 'sveltekit-superforms/adapters';
-  import DefaultMetric from '$lib/components/widgets/metrics/DefaultMetric.svelte';
-  import PlotMetric from '$lib/components/widgets/metrics/PlotMetric.svelte';
-  import HeatmapMetric from '$lib/components/widgets/metrics/HeatmapMetric.svelte';
+  import Metric from '$lib/components/widgets/components/Metric.svelte';
+  import PlotMetric from '$lib/components/widgets/components/PlotMetric.svelte';
+  import HeatmapMetric from '$lib/components/widgets/components/HeatmapMetric.svelte';
   import WidgetTabStyleButton from './WidgetTabStyleButton.svelte';
   import { PLOT_DATA, HEATMAP_DATA } from '$lib/constants';
 
@@ -53,13 +53,13 @@
         <WidgetTabStyleButton
           {metricIndex}
           {formData}
-          style="default-base"
-          title="Default"
-          description="Use the default style for this metric."
+          style="metric-base"
+          title="Metric"
+          description="Use the metric style for this metric."
         >
-          <DefaultMetric
+          <Metric
             metric={{
-              style: 'default-base',
+              style: 'metric-base',
               value: 100,
               calculationType: 'all time',
               valueDecimalPrecision: 0,
@@ -75,13 +75,13 @@
         <WidgetTabStyleButton
           {metricIndex}
           {formData}
-          style="default-trend"
-          title="Default Trend"
-          description="Use the default trend style for this metric."
+          style="metric-trend"
+          title="Metric Trend"
+          description="Use the metric trend style for this metric."
         >
-          <DefaultMetric
+          <Metric
             metric={{
-              style: 'default-trend',
+              style: 'metric-trend',
               value: 100,
               calculationType: 'all time',
               valueDecimalPrecision: 0,
@@ -99,7 +99,7 @@
           {metricIndex}
           {formData}
           style="plot-base"
-          title="Simple Plot"
+          title="Minimal Plot"
           description="Use the plot style for this metric."
         >
           <PlotMetric
@@ -139,7 +139,7 @@
           {metricIndex}
           {formData}
           style="heatmap-base"
-          title="Simple Heatmap"
+          title="Minimal Heatmap"
           description="Use the heatmap style for this metric."
         >
           <HeatmapMetric
@@ -280,76 +280,78 @@
   </div>
 
   <div class="grid grid-cols-6 gap-x-4 gap-y-2">
-    <Form.Field {form} name="metrics[{metricIndex}].name" class="col-span-2">
-      <Form.Control>
-        {#snippet children({ props })}
-          <Form.Label>Name</Form.Label>
-          <Input {...props} bind:value={$formData.metrics[metricIndex].name} />
-        {/snippet}
-      </Form.Control>
-      <Form.FieldErrors />
-    </Form.Field>
-
-    <Form.Field {form} name="metrics[{metricIndex}].calculationType" class="col-span-2">
-      <Form.Control>
-        {#snippet children({ props })}
-          <Form.Label>Duration</Form.Label>
-          <Select.Root
-            type="single"
-            disabled={['repositories', 'followers'].includes(
-              $formData.metrics[metricIndex].githubStatType ?? ''
-            )}
-            bind:value={$formData.metrics[metricIndex].calculationType}
-            name={props.name}
-          >
-            <Select.Trigger {...props} class="capitalize">
-              {$formData.metrics[metricIndex].calculationType}
-            </Select.Trigger>
-            <Select.Content>
-              {#if $formData.metrics[metricIndex].metricType === 'objective'}
-                {#each getCalculationTypesForObjective($formData.metrics[metricIndex].objectiveId as unknown as string) as calcType}
-                  <Select.Item value={calcType} label={calcType} class="capitalize" />
-                {/each}
-              {:else}
-                {#each WIDGET_METRIC_CALCULATION_TYPES.filter((ct) => ct !== 'percentage') as calcType}
-                  <Select.Item value={calcType} label={calcType} class="capitalize" />
-                {/each}
-              {/if}
-            </Select.Content>
-          </Select.Root>
-        {/snippet}
-      </Form.Control>
-      <Form.FieldErrors />
-    </Form.Field>
-
-    {#if $formData.metrics[metricIndex].metricType !== 'github'}
-      <Form.Field {form} name="metrics[{metricIndex}].valueDecimalPrecision" class="col-span-2">
+    {#if !['plot-base', 'heatmap-base'].includes($formData.metrics[metricIndex].style)}
+      <Form.Field {form} name="metrics[{metricIndex}].name" class="col-span-2">
         <Form.Control>
           {#snippet children({ props })}
-            <Form.Label>Decimal Precision</Form.Label>
+            <Form.Label>Name</Form.Label>
+            <Input {...props} bind:value={$formData.metrics[metricIndex].name} />
+          {/snippet}
+        </Form.Control>
+        <Form.FieldErrors />
+      </Form.Field>
+
+      <Form.Field {form} name="metrics[{metricIndex}].calculationType" class="col-span-2">
+        <Form.Control>
+          {#snippet children({ props })}
+            <Form.Label>Duration</Form.Label>
             <Select.Root
               type="single"
-              value={$formData.metrics[metricIndex].valueDecimalPrecision.toString()}
-              onValueChange={(value) => {
-                $formData.metrics[metricIndex].valueDecimalPrecision = parseInt(value);
-              }}
+              disabled={['repositories', 'followers'].includes(
+                $formData.metrics[metricIndex].githubStatType ?? ''
+              )}
+              bind:value={$formData.metrics[metricIndex].calculationType}
               name={props.name}
             >
-              <Select.Trigger {...props}>
-                {$formData.metrics[metricIndex].valueDecimalPrecision +
-                  ' digit' +
-                  ($formData.metrics[metricIndex].valueDecimalPrecision === 1 ? '' : 's')}
+              <Select.Trigger {...props} class="capitalize">
+                {$formData.metrics[metricIndex].calculationType}
               </Select.Trigger>
               <Select.Content>
-                {#each Array(WIDGET_METRIC_VALUE_DECIMAL_PRECISION_MAX + 1) as _, i}
-                  <Select.Item value={i.toString()} label={i + ' digit' + (i === 1 ? '' : 's')} />
-                {/each}
+                {#if $formData.metrics[metricIndex].metricType === 'objective'}
+                  {#each getCalculationTypesForObjective($formData.metrics[metricIndex].objectiveId as unknown as string) as calcType}
+                    <Select.Item value={calcType} label={calcType} class="capitalize" />
+                  {/each}
+                {:else}
+                  {#each WIDGET_METRIC_CALCULATION_TYPES.filter((ct) => ct !== 'percentage') as calcType}
+                    <Select.Item value={calcType} label={calcType} class="capitalize" />
+                  {/each}
+                {/if}
               </Select.Content>
             </Select.Root>
           {/snippet}
         </Form.Control>
         <Form.FieldErrors />
       </Form.Field>
+
+      {#if $formData.metrics[metricIndex].metricType === 'objective'}
+        <Form.Field {form} name="metrics[{metricIndex}].valueDecimalPrecision" class="col-span-2">
+          <Form.Control>
+            {#snippet children({ props })}
+              <Form.Label>Decimal Precision</Form.Label>
+              <Select.Root
+                type="single"
+                value={$formData.metrics[metricIndex].valueDecimalPrecision.toString()}
+                onValueChange={(value) => {
+                  $formData.metrics[metricIndex].valueDecimalPrecision = parseInt(value);
+                }}
+                name={props.name}
+              >
+                <Select.Trigger {...props}>
+                  {$formData.metrics[metricIndex].valueDecimalPrecision +
+                    ' digit' +
+                    ($formData.metrics[metricIndex].valueDecimalPrecision === 1 ? '' : 's')}
+                </Select.Trigger>
+                <Select.Content>
+                  {#each Array(WIDGET_METRIC_VALUE_DECIMAL_PRECISION_MAX + 1) as _, i}
+                    <Select.Item value={i.toString()} label={i + ' digit' + (i === 1 ? '' : 's')} />
+                  {/each}
+                </Select.Content>
+              </Select.Root>
+            {/snippet}
+          </Form.Control>
+          <Form.FieldErrors />
+        </Form.Field>
+      {/if}
     {/if}
   </div>
 </section>

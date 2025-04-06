@@ -2,9 +2,9 @@
   import type { WidgetJoinMetricsPreview } from '$lib/server/db/schema';
   import Watermark from '$lib/components/svgs/Watermark.svelte';
   import WidgetEditComponent from '$lib/components/widgets/utils/WidgetEditComponent.svelte';
-  import DefaultMetric from '$lib/components/widgets/metrics/DefaultMetric.svelte';
-  import PlotMetric from '$lib/components/widgets/metrics/PlotMetric.svelte';
-  import HeatmapMetric from '$lib/components/widgets/metrics/HeatmapMetric.svelte';
+  import Metric from '$lib/components/widgets/components/Metric.svelte';
+  import PlotMetric from '$lib/components/widgets/components/PlotMetric.svelte';
+  import HeatmapMetric from '$lib/components/widgets/components/HeatmapMetric.svelte';
   import { addOpacityRgba } from '$lib/utils';
 
   interface Props {
@@ -191,8 +191,8 @@
             label={`Metric ${i + 1}`}
             value={metric.style}
           >
-            {#if metric.style.startsWith('default')}
-              <DefaultMetric {metric} {accentColor} />
+            {#if metric.style.startsWith('metric')}
+              <Metric {metric} {accentColor} />
             {:else if metric.style.startsWith('plot')}
               <PlotMetric {metric} {accentColor} />
             {:else if metric.style.startsWith('heatmap')}

@@ -138,8 +138,8 @@ export const widgetMetric = sqliteTable('widget_metric', {
 
   style: text('style', {
     enum: [
-      'default-base',
-      'default-trend',
+      'metric-base',
+      'metric-trend',
       'plot-base',
       'plot-metric',
       'heatmap-base',

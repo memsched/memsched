@@ -7,7 +7,7 @@ import type { DataValue, DataPlot, DataHeatmap } from '../data/types';
 export class GithubMetricProvider implements BaseMetricProvider {
   constructor(private readonly db: DBType) {}
 
-  public getValue(metric: WidgetMetric): ResultAsync<DataValue, DrizzleError> {
+  public getValueData(metric: WidgetMetric): ResultAsync<DataValue, DrizzleError> {
     throw new Error('Not implemented');
   }
 

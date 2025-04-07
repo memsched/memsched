@@ -3,24 +3,34 @@ import type { DBType } from '../../../db';
 import type { DrizzleError, WidgetMetric } from '../../../db/schema';
 import { MetricProviderFactory } from '../providers/metric-provider-factory';
 import type { WidgetMetricData } from '../types';
+import type { ObjectivesService } from '../../objectives-service';
+import type { ObjectiveLogsService } from '../../objective-logs-service';
 
 export class MetricDataService {
   private metricProviderFactory: MetricProviderFactory;
 
-  constructor(private readonly db: DBType) {
-    this.metricProviderFactory = new MetricProviderFactory(this.db);
+  constructor(
+    private readonly db: DBType,
+    private readonly objectivesService: ObjectivesService,
+    private readonly objectiveLogsService: ObjectiveLogsService
+  ) {
+    this.metricProviderFactory = new MetricProviderFactory(
+      this.db,
+      this.objectivesService,
+      this.objectiveLogsService
+    );
   }
 
   public getData(metric: WidgetMetric): ResultAsync<WidgetMetricData['data'], DrizzleError> {
     switch (metric.style) {
       case 'metric-base':
       case 'metric-trend':
-        return this.metricProviderFactory.getProvider(metric.provider).getValue(metric);
+        return this.metricProviderFactory.getProvider(metric.provider).getValueData(metric);
       case 'plot-base':
         return this.metricProviderFactory.getProvider(metric.provider).getPlotData(metric);
       case 'plot-metric':
         return ResultAsync.combine([
-          this.metricProviderFactory.getProvider(metric.provider).getValue(metric),
+          this.metricProviderFactory.getProvider(metric.provider).getValueData(metric),
           this.metricProviderFactory.getProvider(metric.provider).getPlotData(metric),
         ]).andThen(([value, points]) => {
           return okAsync({
@@ -32,7 +42,7 @@ export class MetricDataService {
         return this.metricProviderFactory.getProvider(metric.provider).getHeatmapData(metric);
       case 'heatmap-metric':
         return ResultAsync.combine([
-          this.metricProviderFactory.getProvider(metric.provider).getValue(metric),
+          this.metricProviderFactory.getProvider(metric.provider).getValueData(metric),
           this.metricProviderFactory.getProvider(metric.provider).getHeatmapData(metric),
         ]).andThen(([value, points]) => {
           return okAsync({

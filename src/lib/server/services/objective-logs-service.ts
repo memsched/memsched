@@ -1,6 +1,6 @@
 import type { DBType } from '../db';
 import * as table from '../db/schema';
-import { eq, and, desc } from 'drizzle-orm';
+import { eq, and, desc, sql, gte, lte } from 'drizzle-orm';
 import {
   createDrizzleError,
   DrizzleRecordNotFoundErrorCause,
@@ -33,6 +33,30 @@ export class ObjectiveLogsService {
         )
         .orderBy(desc(table.objectiveLog.loggedAt))
     );
+  }
+
+  public getObjectiveLogsCount(
+    objectiveId: string,
+    userId: string,
+    options: {
+      startDate?: Date;
+      endDate?: Date;
+    } = {}
+  ) {
+    return wrapResultAsyncFn(async () => {
+      const result = await this.db
+        .select({ count: sql<number>`COUNT(*)` })
+        .from(table.objectiveLog)
+        .where(
+          and(
+            eq(table.objectiveLog.objectiveId, objectiveId),
+            eq(table.objectiveLog.userId, userId),
+            ...(options.startDate ? [gte(table.objectiveLog.loggedAt, options.startDate)] : []),
+            ...(options.endDate ? [lte(table.objectiveLog.loggedAt, options.endDate)] : [])
+          )
+        );
+      return result[0]?.count || 0;
+    });
   }
 
   public getMostRecentObjectiveLog(objectiveId: string, userId: string) {

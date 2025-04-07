@@ -6,9 +6,7 @@ export const load: LayoutServerLoad = async (event) => {
     return redirect(302, '/auth/signin');
   }
 
-  const objectives = await event.locals.objectivesService.getUserObjectives(
-    event.locals.session.userId
-  );
+  const objectives = await event.locals.objectivesService.getAll(event.locals.session.userId);
   if (objectives.isErr()) {
     return {
       objectives: [],

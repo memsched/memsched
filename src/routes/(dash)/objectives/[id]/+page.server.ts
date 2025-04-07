@@ -12,7 +12,7 @@ export const load: PageServerLoad = async (event) => {
   }
 
   const objectiveId = event.params.id;
-  const objectiveResult = await event.locals.objectivesService.getUserObjective(
+  const objectiveResult = await event.locals.objectivesService.get(
     objectiveId,
     event.locals.session.userId
   );
@@ -52,7 +52,7 @@ export const actions: Actions = {
     }
 
     const objectiveId = event.params.id;
-    const updateResult = await event.locals.objectivesService.updateUserObjective(
+    const updateResult = await event.locals.objectivesService.update(
       objectiveId,
       form.data,
       event.locals.session.userId

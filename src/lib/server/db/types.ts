@@ -89,24 +89,6 @@ export type Session = typeof table.session.$inferSelect;
 export type Objective = typeof table.objective.$inferSelect;
 export type Widget = typeof table.widget.$inferSelect;
 
-export const WIDGET_METRIC_PROVIDER = ['objective', 'github'] as const;
-export const WIDGET_METRIC_STYLE = [
-  'metric-base',
-  'metric-trend',
-  'plot-base',
-  'plot-metric',
-  'heatmap-base',
-  'heatmap-metric',
-] as const;
-export const WIDGET_METRIC_VALUE_AGGREGATION_TYPE = [
-  'day',
-  'week',
-  'month',
-  'year',
-  'all time',
-  'percentage',
-] as const;
-export const WIDGET_METRIC_GITHUB_STAT_TYPE = ['commits', 'repositories', 'followers'] as const;
 export type WidgetMetric = typeof table.widgetMetric.$inferSelect;
 export type WidgetJoinMetrics = Widget & {
   metrics: WidgetMetric[];

@@ -4,7 +4,7 @@ import type { PageServerLoad } from './$types';
 import * as table from '$lib/server/db/schema';
 
 export const load: PageServerLoad = async (event) => {
-  const userResult = await event.locals.usersService.getUserByUsername(event.params.username);
+  const userResult = await event.locals.usersService.getByUsername(event.params.username);
   if (userResult.isErr()) {
     return handleDbError(userResult);
   }
@@ -15,12 +15,9 @@ export const load: PageServerLoad = async (event) => {
   let widgetIds: string[] = [];
   if (isOwner) {
     const res = await event.locals.objectivesService
-      .getUserObjectives(user.id)
+      .getAll(user.id)
       .andThen((objectives) =>
-        ResultAsync.combine([
-          okAsync(objectives),
-          event.locals.widgetsService.getUserWidgets(user.id),
-        ])
+        ResultAsync.combine([okAsync(objectives), event.locals.widgetsService.getAll(user.id)])
       );
     if (res.isErr()) {
       return handleDbError(res);
@@ -28,11 +25,11 @@ export const load: PageServerLoad = async (event) => {
     objectives = res.value[0];
     widgetIds = res.value[1].map((widget) => widget.id);
   } else {
-    const publicWidgetsResult = await event.locals.widgetsService.getUserPublicWidgetIds(user.id);
+    const publicWidgetsResult = await event.locals.widgetsService.getAllPublic(user.id);
     if (publicWidgetsResult.isErr()) {
       return handleDbError(publicWidgetsResult);
     }
-    widgetIds = publicWidgetsResult.value;
+    widgetIds = publicWidgetsResult.value.map((widget) => widget.id);
   }
 
   return {

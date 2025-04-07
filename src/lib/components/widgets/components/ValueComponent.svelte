@@ -1,9 +1,9 @@
 <script lang="ts">
-  import type { WidgetMetricComponentValue } from '$lib/server/db/schema';
+  import type { WidgetMetricDataValue } from '$lib/server/services/metrics/types';
   import TrendingUpArrow from '$lib/components/svgs/TrendingUpArrow.svelte';
 
   interface Props {
-    metric: WidgetMetricComponentValue;
+    metric: WidgetMetricDataValue;
     accentColor: string;
   }
 

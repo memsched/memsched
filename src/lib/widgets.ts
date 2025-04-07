@@ -1,8 +1,8 @@
-import type { WidgetJoinMetricsComponent } from './server/db/schema';
+import type { WidgetJoinMetricsData } from './server/services/metrics/types';
 import { CIRCLE_FLAG_ICONS, FLAT_COLOR_ICONS, VSCODE_ICONS } from './icons';
 
 // Collection of mock widgets for demonstration purposes
-export const mockWidgets: WidgetJoinMetricsComponent[] = [
+export const mockWidgets: WidgetJoinMetricsData[] = [
   {
     title: 'Projects Completed',
     subtitle: 'React Web Development',
@@ -21,7 +21,9 @@ export const mockWidgets: WidgetJoinMetricsComponent[] = [
       {
         name: 'completed',
         style: 'metric-trend',
-        value: 13,
+        data: {
+          value: 13,
+        },
         valueAggregationType: 'day',
         valueDisplayPrecision: 0,
         order: 1,
@@ -47,7 +49,9 @@ export const mockWidgets: WidgetJoinMetricsComponent[] = [
       {
         name: 'this week',
         style: 'metric-trend',
-        value: 34,
+        data: {
+          value: 34,
+        },
         valueAggregationType: 'day',
         valueDisplayPrecision: 0,
         order: 1,
@@ -55,7 +59,9 @@ export const mockWidgets: WidgetJoinMetricsComponent[] = [
       {
         name: 'all time',
         style: 'metric-trend',
-        value: 953,
+        data: {
+          value: 953,
+        },
         valueAggregationType: 'day',
         valueDisplayPrecision: 0,
         order: 2,
@@ -81,7 +87,9 @@ export const mockWidgets: WidgetJoinMetricsComponent[] = [
       {
         name: 'articles',
         style: 'metric-trend',
-        value: 32,
+        data: {
+          value: 32,
+        },
         valueAggregationType: 'day',
         valueDisplayPrecision: 0,
         order: 1,
@@ -107,7 +115,9 @@ export const mockWidgets: WidgetJoinMetricsComponent[] = [
       {
         name: 'contributions',
         style: 'metric-trend',
-        value: 347,
+        data: {
+          value: 347,
+        },
         valueAggregationType: 'day',
         valueDisplayPrecision: 0,
         order: 1,
@@ -133,7 +143,9 @@ export const mockWidgets: WidgetJoinMetricsComponent[] = [
       {
         name: 'Design System',
         style: 'metric-trend',
-        value: 7,
+        data: {
+          value: 7,
+        },
         valueAggregationType: 'day',
         valueDisplayPrecision: 0,
         order: 1,
@@ -161,7 +173,9 @@ export const mockWidgets: WidgetJoinMetricsComponent[] = [
       {
         name: 'completed',
         style: 'metric-trend',
-        value: 13,
+        data: {
+          value: 13,
+        },
         valueAggregationType: 'day',
         valueDisplayPrecision: 0,
         order: 1,
@@ -187,7 +201,9 @@ export const mockWidgets: WidgetJoinMetricsComponent[] = [
       {
         name: 'this week',
         style: 'metric-trend',
-        value: 34,
+        data: {
+          value: 34,
+        },
         valueAggregationType: 'day',
         valueDisplayPrecision: 0,
         order: 1,
@@ -195,7 +211,9 @@ export const mockWidgets: WidgetJoinMetricsComponent[] = [
       {
         name: 'all time',
         style: 'metric-trend',
-        value: 953,
+        data: {
+          value: 953,
+        },
         valueAggregationType: 'day',
         valueDisplayPrecision: 0,
         order: 2,
@@ -221,7 +239,9 @@ export const mockWidgets: WidgetJoinMetricsComponent[] = [
       {
         name: 'articles',
         style: 'metric-trend',
-        value: 32,
+        data: {
+          value: 32,
+        },
         valueAggregationType: 'day',
         valueDisplayPrecision: 0,
         order: 1,
@@ -247,7 +267,9 @@ export const mockWidgets: WidgetJoinMetricsComponent[] = [
       {
         name: 'contributions',
         style: 'metric-trend',
-        value: 347,
+        data: {
+          value: 347,
+        },
         valueAggregationType: 'day',
         valueDisplayPrecision: 0,
         order: 1,
@@ -273,7 +295,9 @@ export const mockWidgets: WidgetJoinMetricsComponent[] = [
       {
         name: 'Design System',
         style: 'metric-trend',
-        value: 7,
+        data: {
+          value: 7,
+        },
         valueAggregationType: 'day',
         valueDisplayPrecision: 0,
         order: 1,
@@ -301,7 +325,9 @@ export const mockWidgets: WidgetJoinMetricsComponent[] = [
       {
         name: 'completed',
         style: 'metric-trend',
-        value: 13,
+        data: {
+          value: 13,
+        },
         valueAggregationType: 'day',
         valueDisplayPrecision: 0,
         order: 1,
@@ -327,7 +353,9 @@ export const mockWidgets: WidgetJoinMetricsComponent[] = [
       {
         name: 'this week',
         style: 'metric-trend',
-        value: 34,
+        data: {
+          value: 34,
+        },
         valueAggregationType: 'day',
         valueDisplayPrecision: 0,
         order: 1,
@@ -335,7 +363,9 @@ export const mockWidgets: WidgetJoinMetricsComponent[] = [
       {
         name: 'all time',
         style: 'metric-trend',
-        value: 953,
+        data: {
+          value: 953,
+        },
         valueAggregationType: 'day',
         valueDisplayPrecision: 0,
         order: 2,
@@ -361,7 +391,9 @@ export const mockWidgets: WidgetJoinMetricsComponent[] = [
       {
         name: 'articles',
         style: 'metric-trend',
-        value: 32,
+        data: {
+          value: 32,
+        },
         valueAggregationType: 'day',
         valueDisplayPrecision: 0,
         order: 1,
@@ -387,7 +419,9 @@ export const mockWidgets: WidgetJoinMetricsComponent[] = [
       {
         name: 'contributions',
         style: 'metric-trend',
-        value: 347,
+        data: {
+          value: 347,
+        },
         valueAggregationType: 'day',
         valueDisplayPrecision: 0,
         order: 1,
@@ -413,7 +447,9 @@ export const mockWidgets: WidgetJoinMetricsComponent[] = [
       {
         name: 'Design System',
         style: 'metric-trend',
-        value: 7,
+        data: {
+          value: 7,
+        },
         valueAggregationType: 'day',
         valueDisplayPrecision: 0,
         order: 1,

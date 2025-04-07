@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { goto } from '$app/navigation';
   import type { Snippet } from 'svelte';
   import { page } from '$app/state';
   import { cn } from '$lib/utils';
@@ -189,7 +190,7 @@
               if (window.history.length > 1) {
                 window.history.back();
               } else {
-                window.location.href = '/';
+                goto('/', { invalidateAll: true });
               }
             }}
             class="block w-full rounded-md px-3 py-1.5 text-start text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"

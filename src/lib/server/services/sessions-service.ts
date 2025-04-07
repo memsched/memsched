@@ -119,9 +119,7 @@ export class SessionsService {
     usersService = event.locals.usersService
   ): Promise<Response> {
     // Check for existing user
-    const existingUserResult = await usersService.getUserFromProviderUserId(
-      userData.providerUserId
-    );
+    const existingUserResult = await usersService.getByProviderUserId(userData.providerUserId);
     if (existingUserResult.isErr()) {
       return handleDbError(existingUserResult);
     }
@@ -134,7 +132,7 @@ export class SessionsService {
     }
 
     // Create new user
-    const userResult = await usersService.createUser(userData.providerId, userData.providerUserId, {
+    const userResult = await usersService.create(userData.providerId, userData.providerUserId, {
       email: userData.email,
       username: userData.username,
       name: userData.name,

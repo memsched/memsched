@@ -5,7 +5,7 @@ import {
   WIDGET_METRIC_STYLE,
   WIDGET_METRIC_VALUE_AGGREGATION_TYPE,
   WIDGET_METRIC_GITHUB_STAT_TYPE,
-} from './types';
+} from '$lib/components/forms/widget-form/schema';
 
 export const user = sqliteTable('user', {
   id: text('id').primaryKey(),
@@ -107,7 +107,7 @@ export const objectiveLog = sqliteTable(
 export const widget = sqliteTable('widget', {
   id: text('id').primaryKey(),
   title: text('title').notNull(),
-  subtitle: text('subtitle'),
+  subtitle: text('subtitle').notNull(),
   imageUrl: text('image_url'),
   imagePlacement: text('image_placement', { enum: ['left', 'right'] }).notNull(),
   textIcon: text('text_icon'),
@@ -149,7 +149,9 @@ export const widgetMetric = sqliteTable('widget_metric', {
   /// Style Configuration
   style: text('style', {
     enum: WIDGET_METRIC_STYLE,
-  }),
+  })
+    .notNull()
+    .default('metric-base'),
   // Metric Configuration (metric-base, metric-trend, plot-metric, heatmap-metric)
   name: text('name'),
   valueAggregationType: text('value_aggregation_type', {

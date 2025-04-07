@@ -13,7 +13,7 @@ export const actions: Actions = {
       return error(400, 'Objective ID is required');
     }
 
-    const result = await event.locals.objectivesService.deleteUserObjective(
+    const result = await event.locals.objectivesService.delete(
       objectiveId,
       event.locals.session.userId
     );

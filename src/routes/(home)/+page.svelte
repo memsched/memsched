@@ -153,20 +153,24 @@
           textIcon={null}
           metrics={[
             {
-              name: 'this month',
+              order: 1,
               style: 'metric-trend',
-              value: 85 + liveIncrement,
+              data: {
+                value: 85 + liveIncrement,
+              },
+              name: 'this month',
               valueAggregationType: 'month',
               valueDisplayPrecision: 0,
-              order: 1,
             },
             {
-              name: 'total hours',
+              order: 2,
               style: 'metric-trend',
-              value: 450 + liveIncrement,
+              data: {
+                value: 450 + liveIncrement,
+              },
+              name: 'total hours',
               valueAggregationType: 'all time',
               valueDisplayPrecision: 0,
-              order: 2,
             },
           ]}
           padding={13}
@@ -176,7 +180,7 @@
           color="#000000"
           accentColor="#4f8bce"
           backgroundColor="#ffffff"
-          watermark={false}
+          watermark={true}
         />
       </div>
 

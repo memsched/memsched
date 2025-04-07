@@ -20,6 +20,7 @@
   import ImageTab from './tabs/ImageTab.svelte';
   import WidgetTab from './tabs/WidgetTab.svelte';
   import { roundToDecimal } from '$lib/utils';
+  import type { WidgetMetricData } from '$lib/server/services/metrics/types';
 
   interface Props {
     data: { form: SuperValidated<Infer<FormSchema>>; objectives: Objective[]; user: LocalUser };
@@ -70,14 +71,18 @@
   const formDataImageUrl = $derived($formData.imageUrl);
   const widgetMetrics = $derived(
     $formData.metrics.map((m, i) => ({
-      name: m.name,
+      order: i,
       style: m.style,
+      name: m.name,
       valueAggregationType: m.valueAggregationType,
       valueDisplayPrecision: m.valueDisplayPrecision,
-      value: roundToDecimal(435.390453, m.valueDisplayPrecision),
-      order: i,
-      plotData: m.style.startsWith('plot') ? PLOT_DATA : HEATMAP_DATA,
-    }))
+      data: {
+        ...(m.style.startsWith('plot') ? PLOT_DATA : HEATMAP_DATA),
+        ...(m.style.includes('metric')
+          ? { value: roundToDecimal(435.390453, m.valueDisplayPrecision) }
+          : {}),
+      },
+    })) as WidgetMetricData[]
   );
 
   $effect(() => {

@@ -8,7 +8,7 @@ export const load: PageServerLoad = async (event) => {
     return redirect(302, '/auth/signin');
   }
 
-  const widget = await event.locals.widgetsService.getUserWidget(
+  const widget = await event.locals.widgetsService.get(
     event.params.id,
     event.locals.session.userId
   );

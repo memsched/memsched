@@ -10,18 +10,16 @@ export const load: PageServerLoad = async (event) => {
     return redirect(302, '/auth/signin');
   }
 
-  const res = await event.locals.widgetsService
-    .getUserWidgets(session.userId)
-    .andThen((widgetsIds) => {
-      return ResultAsync.combine([
-        okAsync(widgetsIds),
-        event.locals.widgetsService.getUserWidgetCount(session.userId),
-      ]);
-    });
+  const res = await event.locals.widgetsService.getAll(session.userId).andThen((widgets) => {
+    return ResultAsync.combine([
+      okAsync(widgets),
+      event.locals.widgetsService.getUserWidgetCount(session.userId),
+    ]);
+  });
   if (res.isErr()) {
     return handleDbError(res);
   }
-  const [widgetIds, widgetCount] = res.value;
+  const [widgets, widgetCount] = res.value;
 
   const planLimits = await event.locals.paymentService.getPlanLimits(event.locals.user);
   if (planLimits.isErr()) {
@@ -29,7 +27,7 @@ export const load: PageServerLoad = async (event) => {
   }
 
   return {
-    widgets: widgetIds.map((w) => w.id),
+    widgets: widgets.map((widget) => widget.id),
     widgetsLimitReached: widgetCount >= planLimits.value.maxWidgets,
     maxWidgets: planLimits.value.maxWidgets,
   };

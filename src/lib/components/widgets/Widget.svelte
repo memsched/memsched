@@ -1,10 +1,15 @@
 <script lang="ts">
-  import type { WidgetJoinMetricsComponent } from '$lib/server/db/schema';
+  import type {
+    WidgetJoinMetricsData,
+    WidgetMetricDataValue,
+    WidgetMetricDataPlot,
+    WidgetMetricDataHeatmap,
+  } from '$lib/server/services/metrics/types';
   import Watermark from '$lib/components/svgs/Watermark.svelte';
   import WidgetEditComponent from '$lib/components/widgets/utils/WidgetEditComponent.svelte';
-  import ValueMetric from '$lib/components/widgets/components/ValueMetric.svelte';
-  import PlotMetric from '$lib/components/widgets/components/PlotMetric.svelte';
-  import HeatmapMetric from '$lib/components/widgets/components/HeatmapMetric.svelte';
+  import ValueComponent from '$lib/components/widgets/components/ValueComponent.svelte';
+  import PlotComponent from '$lib/components/widgets/components/PlotComponent.svelte';
+  import HeatmapComponent from '$lib/components/widgets/components/HeatmapComponent.svelte';
   import { addOpacityRgba } from '$lib/utils';
 
   interface Props {
@@ -36,7 +41,7 @@
     onImageClose,
     onMetricClick,
     onMetricClose,
-  }: Partial<WidgetJoinMetricsComponent> & Props = $props();
+  }: Partial<WidgetJoinMetricsData> & Props = $props();
 </script>
 
 <div
@@ -192,11 +197,11 @@
             value={metric.style}
           >
             {#if metric.style.startsWith('metric')}
-              <ValueMetric {metric} {accentColor} />
+              <ValueComponent metric={metric as WidgetMetricDataValue} {accentColor} />
             {:else if metric.style.startsWith('plot')}
-              <PlotMetric {metric} {accentColor} />
+              <PlotComponent metric={metric as WidgetMetricDataPlot} {accentColor} />
             {:else if metric.style.startsWith('heatmap')}
-              <HeatmapMetric {metric} {accentColor} />
+              <HeatmapComponent metric={metric as WidgetMetricDataHeatmap} {accentColor} />
             {/if}
           </WidgetEditComponent>
         {/each}

@@ -5,15 +5,15 @@
   import { type Objective } from '$lib/server/db/schema';
   import {
     type FormSchema,
-    WIDGET_METRIC_CALCULATION_TYPES,
-    WIDGET_METRIC_VALUE_DECIMAL_PRECISION_MAX,
-    GITHUB_STAT_TYPES,
+    WIDGET_METRIC_DISPLAY_PRECISION_MAX,
+    WIDGET_METRIC_GITHUB_STAT_TYPE,
+    WIDGET_METRIC_VALUE_AGGREGATION_TYPE,
   } from '../schema';
   import type { SuperForm, SuperFormData } from 'sveltekit-superforms/client';
   import type { Infer } from 'sveltekit-superforms/adapters';
-  import Metric from '$lib/components/widgets/components/ValueMetric.svelte';
-  import PlotMetric from '$lib/components/widgets/components/PlotMetric.svelte';
-  import HeatmapMetric from '$lib/components/widgets/components/HeatmapMetric.svelte';
+  import ValueComponent from '$lib/components/widgets/components/ValueComponent.svelte';
+  import PlotComponent from '$lib/components/widgets/components/PlotComponent.svelte';
+  import HeatmapComponent from '$lib/components/widgets/components/HeatmapComponent.svelte';
   import WidgetTabStyleButton from './WidgetTabStyleButton.svelte';
   import { PLOT_DATA, HEATMAP_DATA } from '$lib/constants';
 
@@ -28,13 +28,13 @@
 
   // Used to get calculation types for a specific objective
   function getCalculationTypesForObjective(objectiveId: string) {
-    if (!objectiveId) return WIDGET_METRIC_CALCULATION_TYPES;
+    if (!objectiveId) return WIDGET_METRIC_VALUE_AGGREGATION_TYPE;
 
     const objective = objectives.find((o) => o.id === objectiveId);
     if (objective?.goalType === 'ongoing') {
-      return WIDGET_METRIC_CALCULATION_TYPES.filter((ct) => ct !== 'percentage');
+      return WIDGET_METRIC_VALUE_AGGREGATION_TYPE.filter((ct) => ct !== 'percentage');
     }
-    return WIDGET_METRIC_CALCULATION_TYPES;
+    return WIDGET_METRIC_VALUE_AGGREGATION_TYPE;
   }
 </script>
 
@@ -57,17 +57,16 @@
           title="Metric"
           description="Use the metric style for this metric."
         >
-          <Metric
+          <ValueComponent
             metric={{
               style: 'metric-base',
-              value: 100,
+              data: {
+                value: 100,
+              },
               valueAggregationType: 'all time',
               valueDisplayPrecision: 0,
               name: 'metric name',
               order: 1,
-              plotData: {
-                points: [],
-              },
             }}
             accentColor="#32ad86"
           />
@@ -79,17 +78,16 @@
           title="Metric Trend"
           description="Use the metric trend style for this metric."
         >
-          <Metric
+          <ValueComponent
             metric={{
               style: 'metric-trend',
-              value: 100,
+              data: {
+                value: 100,
+              },
               valueAggregationType: 'all time',
               valueDisplayPrecision: 0,
               name: 'metric name',
               order: 1,
-              plotData: {
-                points: [],
-              },
             }}
             accentColor="#32ad86"
           />
@@ -102,15 +100,14 @@
           title="Minimal Plot"
           description="Use the plot style for this metric."
         >
-          <PlotMetric
+          <PlotComponent
             metric={{
               style: 'plot-base',
-              value: 100,
               valueAggregationType: 'all time',
               valueDisplayPrecision: 0,
               name: 'metric name',
               order: 1,
-              plotData: PLOT_DATA,
+              data: PLOT_DATA,
             }}
             accentColor="#32ad86"
           />
@@ -122,15 +119,17 @@
           title="Metric Plot"
           description="Use the plot style for this metric."
         >
-          <PlotMetric
+          <PlotComponent
             metric={{
               style: 'plot-metric',
-              value: 100,
+              data: {
+                value: 100,
+                ...PLOT_DATA,
+              },
               valueAggregationType: 'all time',
               valueDisplayPrecision: 0,
               name: 'metric name',
               order: 1,
-              plotData: PLOT_DATA,
             }}
             accentColor="#32ad86"
           />
@@ -142,15 +141,16 @@
           title="Minimal Heatmap"
           description="Use the heatmap style for this metric."
         >
-          <HeatmapMetric
+          <HeatmapComponent
             metric={{
               style: 'heatmap-base',
-              value: 100,
               valueAggregationType: 'all time',
               valueDisplayPrecision: 1,
               name: 'metric name',
               order: 1,
-              plotData: HEATMAP_DATA,
+              data: {
+                ...HEATMAP_DATA,
+              },
             }}
             accentColor="#32ad86"
           />
@@ -162,15 +162,17 @@
           title="Metric Heatmap"
           description="Use the heatmap style for this metric."
         >
-          <HeatmapMetric
+          <HeatmapComponent
             metric={{
               style: 'heatmap-metric',
-              value: 100,
+              data: {
+                value: 100,
+                ...HEATMAP_DATA,
+              },
               valueAggregationType: 'all time',
               valueDisplayPrecision: 1,
               name: 'metric name',
               order: 1,
-              plotData: HEATMAP_DATA,
             }}
             accentColor="#32ad86"
           />
@@ -266,7 +268,7 @@
                 {$formData.metrics[metricIndex].githubStatType ?? 'Select a stat type'}
               </Select.Trigger>
               <Select.Content>
-                {#each GITHUB_STAT_TYPES as statType}
+                {#each WIDGET_METRIC_GITHUB_STAT_TYPE as statType}
                   <Select.Item value={statType} label={statType} class="capitalize" />
                 {/each}
               </Select.Content>
@@ -312,7 +314,7 @@
                     <Select.Item value={calcType} label={calcType} class="capitalize" />
                   {/each}
                 {:else}
-                  {#each WIDGET_METRIC_CALCULATION_TYPES.filter((ct) => ct !== 'percentage') as calcType}
+                  {#each WIDGET_METRIC_VALUE_AGGREGATION_TYPE.filter((ct) => ct !== 'percentage') as calcType}
                     <Select.Item value={calcType} label={calcType} class="capitalize" />
                   {/each}
                 {/if}
@@ -342,7 +344,7 @@
                     ($formData.metrics[metricIndex].valueDisplayPrecision === 1 ? '' : 's')}
                 </Select.Trigger>
                 <Select.Content>
-                  {#each Array(WIDGET_METRIC_VALUE_DECIMAL_PRECISION_MAX + 1) as _, i}
+                  {#each Array(WIDGET_METRIC_DISPLAY_PRECISION_MAX + 1) as _, i}
                     <Select.Item value={i.toString()} label={i + ' digit' + (i === 1 ? '' : 's')} />
                   {/each}
                 </Select.Content>

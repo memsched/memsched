@@ -1,9 +1,9 @@
 <script lang="ts">
   import Widget from '$lib/components/widgets/Widget.svelte';
-  import type { WidgetJoinMetricsComponent } from '$lib/server/db/schema';
+  import type { WidgetJoinMetricsData } from '$lib/server/services/metrics/types';
 
   interface Props {
-    widgets: WidgetJoinMetricsComponent[];
+    widgets: WidgetJoinMetricsData[];
     columns?: number;
   }
 

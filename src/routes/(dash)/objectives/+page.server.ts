@@ -16,15 +16,15 @@ export const load: PageServerLoad = async (event) => {
   let objectivesResult;
 
   if (isCompleted) {
-    objectivesResult = await event.locals.objectivesService.getUserCompletedObjectives(
+    objectivesResult = await event.locals.objectivesService.getAllCompleted(
       event.locals.session.userId
     );
   } else if (isArchived) {
-    objectivesResult = await event.locals.objectivesService.getUserArchivedObjectives(
+    objectivesResult = await event.locals.objectivesService.getAllArchived(
       event.locals.session.userId
     );
   } else {
-    objectivesResult = await event.locals.objectivesService.getUserActiveObjectives(
+    objectivesResult = await event.locals.objectivesService.getAllActive(
       event.locals.session.userId
     );
   }
@@ -80,7 +80,7 @@ export const actions: Actions = {
       return fail(400, { form });
     }
 
-    const result = await event.locals.objectiveLogsService.logObjectiveProgress(
+    const result = await event.locals.objectiveLogsService.log(
       form.data,
       userId,
       event.locals.cache
@@ -112,7 +112,7 @@ export const actions: Actions = {
       return fail(400, { error: 'Objective ID is required' });
     }
 
-    const result = await event.locals.objectiveLogsService.undoObjectiveLog(
+    const result = await event.locals.objectiveLogsService.undoLog(
       objectiveId,
       userId,
       event.locals.cache
@@ -143,7 +143,7 @@ export const actions: Actions = {
       return fail(400, { error: 'Objective ID is required' });
     }
 
-    const result = await event.locals.objectivesService.toggleArchivedObjective(
+    const result = await event.locals.objectivesService.toggleArchived(
       objectiveId,
       event.locals.session.userId
     );

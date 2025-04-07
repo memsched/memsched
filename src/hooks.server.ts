@@ -11,8 +11,6 @@ import {
   MetricsService,
   SessionsService,
   PaymentService,
-  GithubMetricsService,
-  PlotDataService,
   SESSION_COOKIE_NAME,
 } from '$lib/server/services';
 
@@ -30,25 +28,12 @@ function isPrerenderedRoute(url: URL) {
 function initializeServices(db: DBType) {
   // Create independent services first
   const usersService = new UsersService(db);
-  const githubMetricsService = new GithubMetricsService(db);
-  const metricsService = new MetricsService(db, githubMetricsService);
+  const objectivesService = new ObjectivesService(db);
+  const objectiveLogsService = new ObjectiveLogsService(db, objectivesService);
+  const widgetsService = new WidgetsService(db, objectivesService, objectiveLogsService);
+  const metricsService = new MetricsService(db);
   const sessionsService = new SessionsService(db);
   const paymentService = new PaymentService(db);
-
-  // Create interdependent services with temporary null for circular dependencies
-  const widgetsService = new WidgetsService(db, null, metricsService);
-
-  // Now create services that depend on the ones above
-  const objectivesService = new ObjectivesService(db, widgetsService, metricsService);
-
-  // Resolve circular dependencies
-  widgetsService.setObjectivesService(objectivesService);
-
-  // Create services that depend on objectivesService
-  const objectiveLogsService = new ObjectiveLogsService(db, objectivesService);
-  const plotDataService = new PlotDataService(objectiveLogsService, githubMetricsService);
-
-  metricsService.setPlotDataService(plotDataService);
 
   return {
     usersService,
@@ -56,7 +41,6 @@ function initializeServices(db: DBType) {
     objectiveLogsService,
     widgetsService,
     metricsService,
-    githubMetricsService,
     sessionsService,
     paymentService,
   };

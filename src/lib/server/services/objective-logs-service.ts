@@ -20,7 +20,7 @@ export class ObjectiveLogsService {
     private readonly objectivesService: ObjectivesService
   ) {}
 
-  public getObjectiveLogs(objectiveId: string, userId: string) {
+  public getAll(objectiveId: string, userId: string) {
     return wrapResultAsync(
       this.db
         .select()
@@ -35,7 +35,7 @@ export class ObjectiveLogsService {
     );
   }
 
-  public getObjectiveLogsCount(
+  public getCount(
     objectiveId: string,
     userId: string,
     options: {
@@ -59,7 +59,80 @@ export class ObjectiveLogsService {
     });
   }
 
-  public getMostRecentObjectiveLog(objectiveId: string, userId: string) {
+  public getSum(
+    objectiveId: string,
+    userId: string,
+    options: {
+      startDate?: Date;
+      endDate?: Date;
+    } = {}
+  ) {
+    return wrapResultAsyncFn(async () => {
+      const result = await this.db
+        .select({ sum: sql<number>`SUM(value)` })
+        .from(table.objectiveLog)
+        .where(
+          and(
+            eq(table.objectiveLog.objectiveId, objectiveId),
+            eq(table.objectiveLog.userId, userId),
+            ...(options.startDate ? [gte(table.objectiveLog.loggedAt, options.startDate)] : []),
+            ...(options.endDate ? [lte(table.objectiveLog.loggedAt, options.endDate)] : [])
+          )
+        );
+      return result[0]?.sum || 0;
+    });
+  }
+
+  public log(logData: z.infer<LogSchema>, userId: string, cache: CacheService) {
+    return this.objectivesService
+      .get(logData.objectiveId, userId)
+      .andThen((objective) => {
+        const newValue = objective.value + logData.value;
+
+        return ResultAsync.combine([
+          this.objectivesService.updateObjectiveValue(logData.objectiveId, newValue),
+          this.create(logData, userId),
+        ]);
+      })
+      .andThen(([objective, log]) =>
+        ResultAsync.combine([
+          okAsync(objective),
+          okAsync(log),
+          // TODO(METRICS): Compute metric and cache it
+        ])
+      );
+  }
+
+  public undoLog(objectiveId: string, userId: string, cache: CacheService) {
+    return this.objectivesService
+      .get(objectiveId, userId)
+      .andThen((objective) =>
+        ResultAsync.combine([okAsync(objective), this.getMostRecent(objectiveId, userId)])
+      )
+      .andThen(([objective, lastLog]) => {
+        if (!lastLog) {
+          return errAsync(
+            createDrizzleError(new DrizzleRecordNotFoundErrorCause('No logs found to undo'))
+          );
+        }
+        const newValue = Math.max(0, objective.value - lastLog.value);
+        return ResultAsync.combine([
+          okAsync(objective),
+          okAsync(lastLog),
+          this.delete(lastLog.id),
+          this.objectivesService.updateObjectiveValue(objectiveId, newValue),
+        ]);
+      })
+      .andThen(([objective, lastLog]) =>
+        ResultAsync.combine([
+          okAsync(objective),
+          okAsync(lastLog),
+          // TODO(METRICS): Compute metric and cache it
+        ])
+      );
+  }
+
+  private getMostRecent(objectiveId: string, userId: string) {
     return wrapResultAsyncFn(async () => {
       const logs = await this.db
         .select()
@@ -77,59 +150,7 @@ export class ObjectiveLogsService {
     });
   }
 
-  public logObjectiveProgress(logData: z.infer<LogSchema>, userId: string, cache: CacheService) {
-    return this.objectivesService
-      .getUserObjective(logData.objectiveId, userId)
-      .andThen((objective) => {
-        const newValue = objective.value + logData.value;
-
-        return ResultAsync.combine([
-          this.objectivesService.updateObjectiveValue(logData.objectiveId, newValue),
-          this.createObjectiveLog(logData, userId),
-        ]);
-      })
-      .andThen(([objective, log]) =>
-        ResultAsync.combine([
-          okAsync(objective),
-          okAsync(log),
-          this.objectivesService.updateObjectiveWidgetMetrics(logData.objectiveId, cache),
-        ])
-      );
-  }
-
-  public undoObjectiveLog(objectiveId: string, userId: string, cache: CacheService) {
-    return this.objectivesService
-      .getUserObjective(objectiveId, userId)
-      .andThen((objective) =>
-        ResultAsync.combine([
-          okAsync(objective),
-          this.getMostRecentObjectiveLog(objectiveId, userId),
-        ])
-      )
-      .andThen(([objective, lastLog]) => {
-        if (!lastLog) {
-          return errAsync(
-            createDrizzleError(new DrizzleRecordNotFoundErrorCause('No logs found to undo'))
-          );
-        }
-        const newValue = Math.max(0, objective.value - lastLog.value);
-        return ResultAsync.combine([
-          okAsync(objective),
-          okAsync(lastLog),
-          this.deleteObjectiveLog(lastLog.id),
-          this.objectivesService.updateObjectiveValue(objectiveId, newValue),
-        ]);
-      })
-      .andThen(([objective, lastLog]) =>
-        ResultAsync.combine([
-          okAsync(objective),
-          okAsync(lastLog),
-          this.objectivesService.updateObjectiveWidgetMetrics(objectiveId, cache),
-        ])
-      );
-  }
-
-  private createObjectiveLog(logData: z.infer<LogSchema>, userId: string) {
+  private create(logData: z.infer<LogSchema>, userId: string) {
     return wrapResultAsync(
       this.db.insert(table.objectiveLog).values({
         id: uuidv4(),
@@ -142,7 +163,7 @@ export class ObjectiveLogsService {
     );
   }
 
-  private deleteObjectiveLog(logId: string) {
+  private delete(logId: string) {
     return wrapResultAsync(
       this.db.delete(table.objectiveLog).where(eq(table.objectiveLog.id, logId))
     );

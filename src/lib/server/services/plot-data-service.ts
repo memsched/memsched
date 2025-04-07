@@ -41,7 +41,7 @@ export class PlotDataService {
     userId: string,
     timeRange: TimeRange
   ): ResultAsync<PlotData, DrizzleError> {
-    return this.objectiveLogsService.getObjectiveLogs(objectiveId, userId).andThen((logs) => {
+    return this.objectiveLogsService.getAll(objectiveId, userId).andThen((logs) => {
       if (logs.length === 0) {
         return okAsync({
           points: [],

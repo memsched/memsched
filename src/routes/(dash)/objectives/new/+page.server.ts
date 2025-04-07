@@ -11,7 +11,7 @@ export const load: PageServerLoad = async (event) => {
   }
 
   // Check if user has reached the objective limit
-  const objectivesResult = await event.locals.objectivesService.getUserActiveObjectives(
+  const objectivesResult = await event.locals.objectivesService.getAllActive(
     event.locals.session.userId
   );
   if (objectivesResult.isErr()) {
@@ -48,7 +48,7 @@ export const actions: Actions = {
     }
 
     // Check if user has reached the objective limit
-    const objectivesResult = await event.locals.objectivesService.getUserActiveObjectives(
+    const objectivesResult = await event.locals.objectivesService.getAllActive(
       event.locals.session.userId
     );
     if (objectivesResult.isErr()) {
@@ -75,7 +75,7 @@ export const actions: Actions = {
       });
     }
 
-    const result = await event.locals.objectivesService.createUserObjective(
+    const result = await event.locals.objectivesService.create(
       form.data,
       event.locals.session.userId
     );

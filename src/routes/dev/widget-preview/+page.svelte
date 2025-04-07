@@ -11,14 +11,16 @@
   import { Button } from '$lib/components/ui/button';
   import { Switch } from '$lib/components/ui/switch';
   import ColorPickerInput from '$lib/components/inputs/ColorPickerInput.svelte';
-  import type { WidgetJoinMetricsComponent } from '$lib/server/db/schema';
+  import type { WidgetJoinMetricsData } from '$lib/server/services/metrics/types';
   import {
-    WIDGET_METRIC_CALCULATION_TYPES,
-    WIDGET_METRIC_VALUE_DECIMAL_PRECISION_MAX,
+    WIDGET_METRIC_DISPLAY_PRECISION_MAX,
+    WIDGET_METRIC_VALUE_AGGREGATION_TYPE,
   } from '$lib/components/forms/widget-form/schema';
+  import type { WidgetMetric } from '$lib/server/db/types';
+  import type { DataPlot } from '$lib/server/services/metrics/data/types';
 
   // Create a default widget config
-  let config = $state<WidgetJoinMetricsComponent>({
+  let config = $state<WidgetJoinMetricsData>({
     title: 'GitHub Commits',
     subtitle: 'Last 10 days',
     textIcon: null,
@@ -35,25 +37,23 @@
     metrics: [
       {
         name: 'commits',
-        value: 1235,
+        data: {
+          value: 1235,
+        },
         valueAggregationType: 'day',
         valueDisplayPrecision: 0,
-        style: 'default',
+        style: 'metric-base',
         order: 1,
-        plotData: {
-          points: [],
-        },
       },
       {
         name: 'PRs',
-        value: 431,
+        data: {
+          value: 431,
+        },
         valueAggregationType: 'day',
         valueDisplayPrecision: 0,
-        style: 'default',
+        style: 'metric-base',
         order: 2,
-        plotData: {
-          points: [],
-        },
       },
     ],
   });
@@ -92,27 +92,26 @@
     updatePreview();
   });
 
-  function getPlotDataForStyle(
-    style: 'default' | 'plot',
-    valueAggregationType: 'day' | 'week' | 'month' | 'year' | 'all time' | 'percentage'
-  ): { points: { date: string; value: number }[] } {
-    if (style === 'plot') {
-      return generateRandomPlotData(valueAggregationType as 'day' | 'week' | 'month' | 'year');
+  function getPlotDataForStyle(style: WidgetMetric['style']): DataPlot | undefined {
+    if (style === 'plot-metric') {
+      return generateRandomPlotData();
     }
-    return { points: [] };
+    return undefined;
   }
 
   function addMetric() {
-    const style = 'default' as const;
+    const style = 'metric-base' as const;
     const valueAggregationType = 'day' as const;
     const newMetric = {
       name: `Metric ${config.metrics.length + 1}`,
-      value: Math.floor(Math.random() * 1000),
+      data: {
+        value: Math.floor(Math.random() * 1000),
+        ...getPlotDataForStyle(style),
+      },
       valueAggregationType,
       valueDisplayPrecision: 0,
       style,
       order: config.metrics.length + 1,
-      plotData: getPlotDataForStyle(style, valueAggregationType),
     };
     config.metrics = [...config.metrics, newMetric];
   }
@@ -126,71 +125,19 @@
     }));
   }
 
-  function generateRandomPlotData(timeRange: 'day' | 'week' | 'month' | 'year'): {
-    points: { date: string; value: number }[];
-  } {
+  function generateRandomPlotData(): DataPlot {
     const points = [];
     const now = new Date();
 
-    let numPoints = 10;
-
-    switch (timeRange) {
-      case 'day':
-        numPoints = 24;
-        for (let i = 0; i < numPoints; i++) {
-          const date = new Date(now);
-          date.setHours(date.getHours() - (numPoints - i));
-          // Create an upward trend with some noise
-          const value = 100 + i * 10 + Math.random() * 20 - 10;
-          points.push({
-            date: `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`,
-            value,
-          });
-        }
-        break;
-
-      case 'week':
-        numPoints = 7;
-        for (let i = 0; i < numPoints; i++) {
-          const date = new Date(now);
-          date.setDate(date.getDate() - (numPoints - i - 1));
-          // Create a curve with some randomness
-          const value = 300 + Math.sin((i / numPoints) * Math.PI) * 200 + Math.random() * 50 - 25;
-          points.push({
-            date: `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`,
-            value,
-          });
-        }
-        break;
-
-      case 'month':
-        numPoints = 30;
-        for (let i = 0; i < numPoints; i++) {
-          const date = new Date(now);
-          date.setDate(date.getDate() - (numPoints - i - 1));
-          // Create a zigzag pattern
-          const value = 500 + (i % 2 === 0 ? 100 : -100) + Math.random() * 50;
-          points.push({
-            date: `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`,
-            value,
-          });
-        }
-        break;
-
-      case 'year':
-        numPoints = 12;
-        for (let i = 0; i < numPoints; i++) {
-          const date = new Date(now);
-          date.setMonth(date.getMonth() - (numPoints - i - 1));
-          // Upward trend with a dip in the middle
-          const progress = i / (numPoints - 1);
-          const value = 200 + progress * 800 - Math.sin(progress * Math.PI) * 300;
-          points.push({
-            date: `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}`,
-            value,
-          });
-        }
-        break;
+    const numPoints = 24;
+    for (let i = 0; i < numPoints; i++) {
+      const date = new Date(now);
+      date.setHours(date.getHours() - (numPoints - i));
+      // Create an upward trend with some noise
+      const y = 100 + i * 10 + Math.random() * 20 - 10;
+      points.push({
+        y,
+      });
     }
 
     return {
@@ -470,7 +417,7 @@
                         {metric.valueAggregationType}
                       </Select.Trigger>
                       <Select.Content>
-                        {#each WIDGET_METRIC_CALCULATION_TYPES as calcType}
+                        {#each WIDGET_METRIC_VALUE_AGGREGATION_TYPE as calcType}
                           <Select.Item value={calcType} class="capitalize">
                             {calcType}
                           </Select.Item>
@@ -483,7 +430,7 @@
                     <Label for={`metric-${index}-precision`}>Decimal Precision</Label>
                     <Select.Root
                       type="single"
-                      value={metric.valueDisplayPrecision.toString()}
+                      value={metric.valueDisplayPrecision?.toString() ?? ''}
                       onValueChange={(value) => {
                         metric.valueDisplayPrecision = parseInt(value);
                       }}
@@ -494,7 +441,7 @@
                           : ''}
                       </Select.Trigger>
                       <Select.Content>
-                        {#each Array(WIDGET_METRIC_VALUE_DECIMAL_PRECISION_MAX + 1) as _, i}
+                        {#each Array(WIDGET_METRIC_DISPLAY_PRECISION_MAX + 1) as _, i}
                           <Select.Item value={i.toString()}>
                             {i} digit{i !== 1 ? 's' : ''}
                           </Select.Item>
@@ -509,11 +456,8 @@
                       type="single"
                       value={metric.style}
                       onValueChange={(value) => {
-                        metric.style = value as 'default' | 'plot';
-                        metric.plotData = getPlotDataForStyle(
-                          value as 'default' | 'plot',
-                          metric.valueAggregationType
-                        );
+                        metric.style = value as WidgetMetric['style'];
+                        metric.data = getPlotDataForStyle(value as WidgetMetric['style']);
                       }}
                     >
                       <Select.Trigger id={`metric-${index}-style`} class="w-full">

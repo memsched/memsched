@@ -92,60 +92,53 @@ export class ObjectiveMetricProvider implements BaseMetricProvider {
     valueDisplayPrecision: NonNullable<WidgetMetric['valueDisplayPrecision']>,
     userId: string
   ) {
-    return ResultAsync.fromPromise(
-      (async () => {
-        if (valueAggregationType === 'percentage') {
-          const objectiveResult = await this.objectiveService.getUserObjective(objectiveId, userId);
-          if (objectiveResult.isErr()) {
-            throw objectiveResult.error;
-          }
-          const objective = objectiveResult.value;
+    return wrapResultAsyncFn(async () => {
+      if (valueAggregationType === 'percentage') {
+        const objectiveResult = await this.objectiveService.get(objectiveId, userId);
+        if (objectiveResult.isErr()) {
+          throw objectiveResult.error;
+        }
+        const objective = objectiveResult.value;
 
-          if (objective.goalType !== 'fixed' || !objective.endValue) {
-            return 0;
-          }
-
-          // Calculate percentage of completion
-          const percentage = (objective.value / objective.endValue) * 100;
-          return roundToDecimal(percentage, valueDisplayPrecision);
+        if (objective.goalType !== 'fixed' || !objective.endValue) {
+          return 0;
         }
 
-        if (valueAggregationType === 'all time') {
-          const result = await this.objectiveLogsService.getObjectiveLogsCount(objectiveId, userId);
-          if (result.isErr()) {
-            throw result.error;
-          }
-          return roundToDecimal(result.value, valueDisplayPrecision);
+        // Calculate percentage of completion
+        const percentage = (objective.value / objective.endValue) * 100;
+        return roundToDecimal(percentage, valueDisplayPrecision);
+      }
+
+      if (valueAggregationType === 'all time') {
+        const result = await this.objectiveLogsService.getSum(objectiveId, userId);
+        if (result.isErr()) {
+          throw result.error;
+        }
+        return roundToDecimal(result.value, valueDisplayPrecision);
+      } else {
+        // Define time filter based on calculation type
+        const timeAgo = new Date();
+        if (valueAggregationType === 'day') {
+          timeAgo.setDate(timeAgo.getDate() - 1);
+        } else if (valueAggregationType === 'week') {
+          timeAgo.setDate(timeAgo.getDate() - 7); // TODO: Use ISO week number
+        } else if (valueAggregationType === 'month') {
+          timeAgo.setMonth(timeAgo.getMonth() - 1);
+        } else if (valueAggregationType === 'year') {
+          timeAgo.setFullYear(timeAgo.getFullYear() - 1);
         } else {
-          // Define time filter based on calculation type
-          const timeAgo = new Date();
-          if (valueAggregationType === 'day') {
-            timeAgo.setDate(timeAgo.getDate() - 1);
-          } else if (valueAggregationType === 'week') {
-            timeAgo.setDate(timeAgo.getDate() - 7);
-          } else if (valueAggregationType === 'month') {
-            timeAgo.setMonth(timeAgo.getMonth() - 1);
-          } else if (valueAggregationType === 'year') {
-            timeAgo.setFullYear(timeAgo.getFullYear() - 1);
-          } else {
-            return 0; // Unknown calculation type
-          }
-
-          // Use SQL to filter by date and calculate sum in one operation
-          const result = await this.objectiveLogsService.getObjectiveLogsCount(
-            objectiveId,
-            userId,
-            {
-              startDate: timeAgo,
-            }
-          );
-          if (result.isErr()) {
-            throw result.error;
-          }
-          return roundToDecimal(result.value, valueDisplayPrecision);
+          return 0; // Unknown calculation type
         }
-      })(),
-      (error) => error as Error
-    );
+
+        // Use SQL to filter by date and calculate sum in one operation
+        const result = await this.objectiveLogsService.getSum(objectiveId, userId, {
+          startDate: timeAgo,
+        });
+        if (result.isErr()) {
+          throw result.error;
+        }
+        return roundToDecimal(result.value, valueDisplayPrecision);
+      }
+    });
   }
 }

@@ -55,7 +55,7 @@ export const actions: Actions = {
     }
 
     const res = await event.locals.widgetsService
-      .createUserWidget(form.data, event.locals.session.userId)
+      .create(form.data, event.locals.session.userId)
       .andThen((widgetId) => okAsync(widgetId));
 
     if (res.isErr()) {

@@ -1,9 +1,9 @@
 <script lang="ts">
-  import type { WidgetMetricComponentPlot } from '$lib/server/db/schema';
+  import type { WidgetMetricDataPlot } from '$lib/server/services/metrics/types';
   import { addOpacityRgba } from '$lib/utils';
 
   interface Props {
-    metric: WidgetMetricComponentPlot;
+    metric: WidgetMetricDataPlot;
     accentColor: string;
   }
 
@@ -17,7 +17,7 @@
 
   // Function to create SVG path for line plot
   function createLinePath(
-    points: WidgetMetricComponentPlot['data']['points'],
+    points: WidgetMetricDataPlot['data']['points'],
     width: number,
     height: number
   ): string {

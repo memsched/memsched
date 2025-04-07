@@ -60,7 +60,7 @@ export const actions: Actions = {
       }
     }
 
-    const res = await event.locals.usersService.updateUser(currentUser.id, form.data);
+    const res = await event.locals.usersService.update(currentUser.id, form.data);
     if (res.isErr()) {
       return handleFormDbError(res, form);
     }

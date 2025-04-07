@@ -6,71 +6,73 @@ import type { z } from 'zod';
 import { type FormSchema } from '$lib/components/forms/widget-form/schema';
 import type { DBType } from '../db';
 import type { CacheService } from '../cache';
-import { DrizzleRecordNotFoundErrorCause, wrapResultAsyncFn } from '../db/types';
+import {
+  DrizzleRecordNotFoundErrorCause,
+  wrapResultAsync,
+  wrapResultAsyncFn,
+  type DrizzleError,
+} from '../db/types';
 import type { ObjectivesService } from './objectives-service';
-import type { MetricsService } from './metrics-service';
+import { MetricDataService } from './metrics/data/metric-data-service';
+import type { ObjectiveLogsService } from './objective-logs-service';
+import { okAsync, ResultAsync } from 'neverthrow';
+import type { WidgetJoinMetricsData } from './metrics/types';
+import { stringToEtag } from '../utils';
 
 export class WidgetsService {
+  private metricDataService: MetricDataService;
+
   constructor(
     private readonly db: DBType,
-    private objectivesService: ObjectivesService | null = null,
-    private readonly metricsService: MetricsService
-  ) {}
-
-  public setObjectivesService(service: ObjectivesService) {
-    this.objectivesService = service;
+    private readonly objectivesService: ObjectivesService,
+    objectiveLogsService: ObjectiveLogsService
+  ) {
+    this.metricDataService = new MetricDataService(
+      this.db,
+      this.objectivesService,
+      objectiveLogsService
+    );
   }
 
-  private getObjectivesService() {
-    if (!this.objectivesService) {
-      throw new Error('ObjectivesService not initialized');
-    }
-    return this.objectivesService;
-  }
-
-  public getUserWidgets(userId: string) {
+  public get(widgetId: string, userId?: string) {
     return wrapResultAsyncFn(async () => {
-      // Get all user widgets
       const widgets = await this.db
         .select()
         .from(table.widget)
-        .where(eq(table.widget.userId, userId))
-        .orderBy(desc(table.widget.createdAt));
+        .where(and(eq(table.widget.id, widgetId)));
 
-      // No need to filter by objective completion status anymore
-      // Each widget can have metrics from multiple objectives
-      return widgets.map((widget) => ({ id: widget.id }));
+      if (widgets.length === 0) {
+        throw new DrizzleRecordNotFoundErrorCause('Widget not found');
+      }
+      const widget = widgets[0];
+      if (widget.visibility !== 'public' && (!userId || widget.userId !== userId)) {
+        throw new DrizzleRecordNotFoundErrorCause('Widget not found');
+      }
+      return widget;
     });
   }
 
-  public getUserPublicWidgetIds(userId: string) {
-    return wrapResultAsyncFn(async () => {
-      // Get widgets that are public
-      const widgets = await this.db
+  public getAll(userId: string) {
+    return wrapResultAsync(
+      this.db
+        .select()
+        .from(table.widget)
+        .where(eq(table.widget.userId, userId))
+        .orderBy(desc(table.widget.createdAt))
+    );
+  }
+
+  public getAllPublic(userId: string) {
+    return wrapResultAsync(
+      this.db
         .select({ id: table.widget.id })
         .from(table.widget)
         .where(and(eq(table.widget.userId, userId), eq(table.widget.visibility, 'public')))
-        .orderBy(desc(table.widget.createdAt));
-
-      return widgets.map(({ id }) => id);
-    });
+        .orderBy(desc(table.widget.createdAt))
+    );
   }
 
-  public getWidgetsFromObjectiveId(objectiveId: string) {
-    return wrapResultAsyncFn(async () => {
-      // Find widgets that have metrics referencing this objective
-      const widgets = await this.db
-        .select({ widget: table.widget })
-        .from(table.widgetMetric)
-        .innerJoin(table.widget, eq(table.widgetMetric.widgetId, table.widget.id))
-        .where(eq(table.widgetMetric.objectiveId, objectiveId))
-        .groupBy(table.widget.id);
-
-      return widgets.map(({ widget }) => widget);
-    });
-  }
-
-  public getWidgetWithMetrics(widgetId: string, userId?: string) {
+  public getWithMetrics(widgetId: string, userId?: string) {
     return wrapResultAsyncFn(async () => {
       const widgetWithMetrics = await this.db
         .select({
@@ -88,28 +90,41 @@ export class WidgetsService {
         throw new DrizzleRecordNotFoundErrorCause('Widget not found');
       }
 
-      const widgetData = widgetWithMetrics[0].widget;
-      const metrics = widgetWithMetrics.map(({ widgetMetric }) => widgetMetric).filter(Boolean);
+      const widget = widgetWithMetrics[0].widget;
+      const metrics = widgetWithMetrics
+        .map((row) => row.widgetMetric)
+        .filter((metric) => metric !== null);
 
-      return { ...widgetData, metrics } as WidgetJoinMetrics;
+      return { ...widget, metrics } as WidgetJoinMetrics;
     });
   }
 
-  public getUserWidget(widgetId: string, userId: string) {
-    return wrapResultAsyncFn(async () => {
-      const widgets = await this.db
-        .select()
-        .from(table.widget)
-        .where(and(eq(table.widget.id, widgetId), eq(table.widget.userId, userId)));
-
-      if (widgets.length === 0) {
-        throw new DrizzleRecordNotFoundErrorCause('Widget not found');
-      }
-      return widgets[0];
-    });
+  public getWithMetricsData(widgetId: string, userId?: string) {
+    return this.getWithMetrics(widgetId, userId).andThen((widget) =>
+      ResultAsync.combine([
+        okAsync(widget),
+        ...widget.metrics.map((metric) => this.metricDataService.getData(metric)),
+      ]).andThen(([widget, ...metricDatas]) =>
+        okAsync({
+          ...widget,
+          metrics: widget.metrics.map((metric, i) => ({
+            ...metric,
+            data: metricDatas[i],
+          })),
+        } as WidgetJoinMetricsData)
+      )
+    ) as ResultAsync<WidgetJoinMetricsData, DrizzleError>;
   }
 
-  public createUserWidget(widgetData: z.infer<FormSchema>, userId: string) {
+  public generateEtag(widget: WidgetJoinMetricsData) {
+    const widgetData = JSON.stringify({
+      ...widget,
+      metrics: widget.metrics.sort((a, b) => a.order - b.order),
+    });
+    return stringToEtag(widgetData);
+  }
+
+  public create(widgetData: z.infer<FormSchema>, userId: string) {
     return wrapResultAsyncFn(async () => {
       const widgetId = uuidv4();
 
@@ -121,52 +136,29 @@ export class WidgetsService {
         if (metric.provider === 'objective') {
           // Handle objective metrics
           // Verify the user has access to the objective
-          const objectiveResult = await this.getObjectivesService().getUserObjective(
-            metric.objectiveId,
-            userId
-          );
+          const objectiveResult = await this.objectivesService.get(metric.objectiveId, userId);
 
           if (objectiveResult.isErr()) {
             throw objectiveResult.error;
           }
         }
 
-        // Create a correctly typed metric object for the service call
-        const metricPayload = {
-          provider: metric.provider,
-          objectiveId: metric.objectiveId ?? null,
-          valueAggregationType: metric.valueAggregationType,
-          valueDisplayPrecision: metric.valueDisplayPrecision,
-          githubUsername: metric.githubUsername ?? null,
-          githubStatType: metric.githubStatType ?? 'commits',
-        };
-
-        // Compute metric value using the MetricsService
-        const metricValueResult = await this.metricsService.computeMetricValue(
-          metricPayload.provider,
-          metricPayload.objectiveId,
-          metricPayload.valueAggregationType,
-          metricPayload.valueDisplayPrecision,
-          metricPayload.githubUsername,
-          metricPayload.githubStatType
-        );
-
-        if (metricValueResult.isErr()) {
-          throw metricValueResult.error;
-        }
+        // TODO(METRICS): Compute metric and cache it
 
         metricInserts.push({
           id: uuidv4(),
-          value: metricValueResult.value,
+          order: i,
+
+          style: metric.style,
           name: metric.name,
           valueAggregationType: metric.valueAggregationType,
-          style: metric.style,
           valueDisplayPrecision: metric.valueDisplayPrecision,
+
           provider: metric.provider,
-          order: i,
           objectiveId: metric.provider === 'objective' ? metric.objectiveId : null,
           githubUsername: metric.provider === 'github' ? metric.githubUsername : null,
           githubStatType: metric.provider === 'github' ? metric.githubStatType || 'commits' : null,
+
           widgetId,
           userId,
         });
@@ -206,13 +198,13 @@ export class WidgetsService {
     });
   }
 
-  public updateUserWidget(
+  public update(
     widgetId: string,
     widgetData: z.infer<FormSchema>,
     userId: string,
     cache: CacheService
   ) {
-    return this.getUserWidget(widgetId, userId).andThen(() =>
+    return this.get(widgetId, userId).andThen(() =>
       wrapResultAsyncFn(async () => {
         // Delete all current metrics - we'll re-create them
         await this.db.delete(table.widgetMetric).where(eq(table.widgetMetric.widgetId, widgetId));
@@ -225,53 +217,29 @@ export class WidgetsService {
           if (metric.provider === 'objective') {
             // Handle objective metrics
             // Verify the user has access to the objective
-            const objectiveResult = await this.getObjectivesService().getUserObjective(
-              metric.objectiveId,
-              userId
-            );
+            const objectiveResult = await this.objectivesService.get(metric.objectiveId, userId);
 
             if (objectiveResult.isErr()) {
               throw objectiveResult.error;
             }
           }
-
-          // Create a correctly typed metric object for the service call
-          const metricPayload = {
-            provider: metric.provider,
-            objectiveId: metric.objectiveId ?? null,
-            valueAggregationType: metric.valueAggregationType,
-            valueDisplayPrecision: metric.valueDisplayPrecision,
-            githubUsername: metric.githubUsername ?? null,
-            githubStatType: metric.githubStatType ?? 'commits',
-          };
-
-          // Compute metric value using the MetricsService
-          const metricValueResult = await this.metricsService.computeMetricValue(
-            metricPayload.provider,
-            metricPayload.objectiveId,
-            metricPayload.valueAggregationType,
-            metricPayload.valueDisplayPrecision,
-            metricPayload.githubUsername,
-            metricPayload.githubStatType
-          );
-
-          if (metricValueResult.isErr()) {
-            throw metricValueResult.error;
-          }
+          // TODO(METRICS): Compute metric and cache it
 
           metricInserts.push({
             id: uuidv4(),
-            value: metricValueResult.value,
+            order: i,
+
+            style: metric.style,
             name: metric.name,
             valueAggregationType: metric.valueAggregationType,
             valueDisplayPrecision: metric.valueDisplayPrecision,
-            style: metric.style,
+
             provider: metric.provider,
-            order: i,
             objectiveId: metric.provider === 'objective' ? metric.objectiveId : null,
             githubUsername: metric.provider === 'github' ? metric.githubUsername : null,
             githubStatType:
               metric.provider === 'github' ? metric.githubStatType || 'commits' : null,
+
             widgetId,
             userId,
           });
@@ -318,7 +286,7 @@ export class WidgetsService {
   }
 
   public deleteUserWidget(widgetId: string, userId: string, cache: CacheService) {
-    return this.getUserWidget(widgetId, userId).andThen(() =>
+    return this.get(widgetId, userId).andThen(() =>
       wrapResultAsyncFn(async () => {
         await this.db
           .delete(table.widget)

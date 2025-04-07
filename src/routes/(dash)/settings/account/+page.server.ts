@@ -43,7 +43,7 @@ export const actions: Actions = {
       return error(403, 'Forbidden');
     }
 
-    const result = await event.locals.usersService.deleteUser(userId, reason);
+    const result = await event.locals.usersService.delete(userId, reason);
     if (result.isErr()) {
       return handleDbError(result);
     }

@@ -1,9 +1,9 @@
 <script lang="ts">
+  import type { WidgetMetricDataHeatmap } from '$lib/server/services/metrics/types';
   import { addOpacityRgba } from '$lib/utils';
-  import type { WidgetMetricComponentHeatmap } from '$lib/server/db/schema';
 
   interface Props {
-    metric: WidgetMetricComponentHeatmap;
+    metric: WidgetMetricDataHeatmap;
     accentColor: string;
   }
 
@@ -11,19 +11,15 @@
 
   const HEATMAP_POINT_SIZE = 6;
   const HEATMAP_POINT_SPACING = 1;
-  const ROWS = 7;
-  const HEATMAP_HEIGHT = HEATMAP_POINT_SIZE * ROWS + HEATMAP_POINT_SPACING * (ROWS - 1);
-  const columns = $derived(Math.ceil(metric.data.points?.length / ROWS));
+  const rows = $derived(metric.data.rows);
+  const HEATMAP_HEIGHT = $derived(HEATMAP_POINT_SIZE * rows + HEATMAP_POINT_SPACING * (rows - 1));
+  const columns = $derived(Math.ceil(metric.data.points?.length / rows));
   const heatmapWidth = $derived(
     columns * HEATMAP_POINT_SIZE + HEATMAP_POINT_SPACING * (columns - 1)
   );
 
-  const maxValue = $derived(Math.max(...metric.data.points.map((point) => point.y)));
-
-  // Calculate color intensity based on value
   function getColorIntensity(value: number) {
-    const normalized = maxValue > 0 ? value / maxValue : 0;
-    return addOpacityRgba(accentColor, 0.1 + normalized * 0.9);
+    return addOpacityRgba(accentColor, 0.1 + value * 0.9);
   }
 </script>
 
@@ -40,7 +36,7 @@
       <div
         style:width="{HEATMAP_POINT_SIZE}px"
         style:height="{HEATMAP_POINT_SIZE}px"
-        style:background-color={getColorIntensity(dataPoint.y)}
+        style:background-color={getColorIntensity(dataPoint.z)}
         style:border-radius="2px"
       ></div>
     {/each}

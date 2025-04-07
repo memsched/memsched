@@ -12,7 +12,7 @@ export const load: PageServerLoad = async (event) => {
   }
 
   const widgetId = event.params.id;
-  const widgetResult = await event.locals.widgetsService.getWidgetWithMetrics(
+  const widgetResult = await event.locals.widgetsService.getWithMetrics(
     widgetId,
     event.locals.session.userId
   );
@@ -21,38 +21,12 @@ export const load: PageServerLoad = async (event) => {
   }
   const widget = widgetResult.value;
 
+  if (widget.imageUrl && !widget.imageUrl.startsWith(event.url.origin)) {
+    widget.imageUrl = null;
+  }
+
   const form = await superValidate(zod(formSchema));
-  form.data = {
-    title: widget.title,
-    subtitle: widget.subtitle,
-    visibility: widget.visibility,
-    // TODO: Sanitize imageUrl
-    imageUrl: widget.imageUrl,
-    textIcon: widget.textIcon,
-    imagePlacement: widget.imagePlacement,
-
-    padding: widget.padding,
-    border: widget.border,
-    borderWidth: widget.borderWidth,
-    borderRadius: widget.borderRadius,
-    color: widget.color,
-    accentColor: widget.accentColor,
-    backgroundColor: widget.backgroundColor,
-    watermark: widget.watermark,
-
-    metrics: widget.metrics.map(
-      (metric) =>
-        ({
-          name: metric.name,
-          valueAggregationType: metric.valueAggregationType,
-          valueDisplayPrecision: metric.valueDisplayPrecision,
-          objectiveId: metric.objectiveId,
-          provider: metric.provider,
-          githubUsername: metric.githubUsername,
-          githubStatType: metric.githubStatType,
-        }) as any
-    ),
-  };
+  form.data = widget as any;
 
   return {
     form,
@@ -76,7 +50,7 @@ export const actions: Actions = {
     const widgetId = event.params.id;
     const userId = event.locals.session.userId;
 
-    const result = await event.locals.widgetsService.updateUserWidget(
+    const result = await event.locals.widgetsService.update(
       widgetId,
       form.data,
       userId,

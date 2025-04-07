@@ -1,11 +1,23 @@
-import * as tables from '$lib/server/db/schema';
-import {
-  WIDGET_METRIC_STYLE,
-  WIDGET_METRIC_AGGREGATION_TYPE,
-  WIDGET_METRIC_GITHUB_STAT_TYPE,
-} from '$lib/server/db/schema';
 import { z } from 'zod';
 
+export const WIDGET_METRIC_PROVIDER = ['objective', 'github'] as const;
+export const WIDGET_METRIC_STYLE = [
+  'metric-base',
+  'metric-trend',
+  'plot-base',
+  'plot-metric',
+  'heatmap-base',
+  'heatmap-metric',
+] as const;
+export const WIDGET_METRIC_VALUE_AGGREGATION_TYPE = [
+  'day',
+  'week',
+  'month',
+  'year',
+  'all time',
+  'percentage',
+] as const;
+export const WIDGET_METRIC_GITHUB_STAT_TYPE = ['commits', 'repositories', 'followers'] as const;
 export const WIDGET_METRIC_DISPLAY_PRECISION_MAX = 2;
 
 const widgetMetricBaseSchema = z.object({
@@ -21,7 +33,7 @@ const widgetMetricBaseSchema = z.object({
     .nullable()
     .transform((v) => (v === '' ? null : v)),
   valueAggregationType: z
-    .enum(WIDGET_METRIC_AGGREGATION_TYPE, {
+    .enum(WIDGET_METRIC_VALUE_AGGREGATION_TYPE, {
       message: 'Please select a valid aggregation type.',
     })
     .default('day'),

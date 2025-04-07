@@ -42,8 +42,15 @@ export class ObjectiveMetricProvider implements BaseMetricProvider {
   public getPlotData(metric: WidgetMetric): ResultAsync<DataPlot, DrizzleError> {
     return wrapResultAsyncFn(async () => {
       assert(metric.objectiveId !== null, 'Objective ID is required');
+      assert(metric.period !== null, 'Period is required');
 
-      const logs = await this.objectiveLogsService.getLogPoints(metric.objectiveId!, metric.userId);
+      const timeAgo = this.getTimeAgoForPeriod(metric.period!);
+      const logs = await this.objectiveLogsService.getLogPoints(
+        metric.objectiveId!,
+        metric.userId,
+        timeAgo ? { startDate: timeAgo } : undefined
+      );
+
       if (logs.isErr()) {
         throw logs.error;
       }
@@ -59,24 +66,7 @@ export class ObjectiveMetricProvider implements BaseMetricProvider {
   public getHeatmapData(metric: WidgetMetric): ResultAsync<DataHeatmap, DrizzleError> {
     return wrapResultAsyncFn(async () => {
       return {
-        points: [
-          {
-            y: 1,
-            z: 0.25,
-          },
-          {
-            y: 2,
-            z: 0.5,
-          },
-          {
-            y: 3,
-            z: 0.75,
-          },
-          {
-            y: 4,
-            z: 1,
-          },
-        ],
+        points: [],
         rows: 1,
       };
     });
@@ -112,30 +102,46 @@ export class ObjectiveMetricProvider implements BaseMetricProvider {
           throw result.error;
         }
         return roundToDecimal(result.value, valueDisplayPrecision);
-      } else {
-        // Define time filter based on calculation type
-        const timeAgo = new Date();
-        if (period === 'day') {
-          timeAgo.setDate(timeAgo.getDate() - 1);
-        } else if (period === 'week') {
-          timeAgo.setDate(timeAgo.getDate() - 7); // TODO: Use ISO week number
-        } else if (period === 'month') {
-          timeAgo.setMonth(timeAgo.getMonth() - 1);
-        } else if (period === 'year') {
-          timeAgo.setFullYear(timeAgo.getFullYear() - 1);
-        } else {
-          return 0; // Unknown calculation type
-        }
-
-        // Use SQL to filter by date and calculate sum in one operation
-        const result = await this.objectiveLogsService.getSum(objectiveId, userId, {
-          startDate: timeAgo,
-        });
-        if (result.isErr()) {
-          throw result.error;
-        }
-        return roundToDecimal(result.value, valueDisplayPrecision);
       }
+
+      const timeAgo = this.getTimeAgoForPeriod(period);
+      if (!timeAgo) {
+        return 0;
+      }
+
+      // Use SQL to filter by date and calculate sum in one operation
+      const result = await this.objectiveLogsService.getSum(objectiveId, userId, {
+        startDate: timeAgo,
+      });
+      if (result.isErr()) {
+        throw result.error;
+      }
+      return roundToDecimal(result.value, valueDisplayPrecision);
     });
+  }
+
+  private getTimeAgoForPeriod(period: NonNullable<WidgetMetric['period']>): Date | null {
+    if (period === 'all time') {
+      return null;
+    }
+
+    const timeAgo = new Date();
+    switch (period) {
+      case 'day':
+        timeAgo.setDate(timeAgo.getDate() - 1);
+        break;
+      case 'week':
+        timeAgo.setDate(timeAgo.getDate() - 7); // TODO: Use ISO week number
+        break;
+      case 'month':
+        timeAgo.setMonth(timeAgo.getMonth() - 1);
+        break;
+      case 'year':
+        timeAgo.setFullYear(timeAgo.getFullYear() - 1);
+        break;
+      default:
+        return null;
+    }
+    return timeAgo;
   }
 }

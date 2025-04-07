@@ -287,64 +287,73 @@
             <Input {...props} bind:value={$formData.metrics[metricIndex].name} />
           {/snippet}
         </Form.Control>
+        <Form.Description>An optional label for the metric.</Form.Description>
         <Form.FieldErrors />
       </Form.Field>
+    {/if}
 
-      <Form.Field {form} name="metrics[{metricIndex}].period" class="col-span-2">
+    <Form.Field {form} name="metrics[{metricIndex}].period" class="col-span-2">
+      <Form.Control>
+        {#snippet children({ props })}
+          <Form.Label>Period</Form.Label>
+          <Select.Root
+            type="single"
+            disabled={['repositories', 'followers'].includes(
+              $formData.metrics[metricIndex].githubStatType ?? ''
+            )}
+            bind:value={$formData.metrics[metricIndex].period}
+            name={props.name}
+          >
+            <Select.Trigger {...props} class="capitalize">
+              {$formData.metrics[metricIndex].period === 'all time'
+                ? 'All Time'
+                : 'Last ' + $formData.metrics[metricIndex].period}
+            </Select.Trigger>
+            <Select.Content>
+              {#each WIDGET_METRIC_PERIOD as period}
+                <Select.Item
+                  value={period}
+                  label={period !== 'all time' ? 'Last ' + period : 'All Time'}
+                  class="capitalize"
+                />
+              {/each}
+            </Select.Content>
+          </Select.Root>
+        {/snippet}
+      </Form.Control>
+      <Form.Description>How much to look back from now.</Form.Description>
+      <Form.FieldErrors />
+    </Form.Field>
+
+    {#if !['plot-base', 'heatmap-base'].includes($formData.metrics[metricIndex].style) && $formData.metrics[metricIndex].provider === 'objective'}
+      <Form.Field {form} name="metrics[{metricIndex}].valueDisplayPrecision" class="col-span-2">
         <Form.Control>
           {#snippet children({ props })}
-            <Form.Label>Duration</Form.Label>
+            <Form.Label>Decimal Precision</Form.Label>
             <Select.Root
               type="single"
-              disabled={['repositories', 'followers'].includes(
-                $formData.metrics[metricIndex].githubStatType ?? ''
-              )}
-              bind:value={$formData.metrics[metricIndex].period}
+              value={$formData.metrics[metricIndex].valueDisplayPrecision.toString()}
+              onValueChange={(value) => {
+                $formData.metrics[metricIndex].valueDisplayPrecision = parseInt(value);
+              }}
               name={props.name}
             >
-              <Select.Trigger {...props} class="capitalize">
-                {$formData.metrics[metricIndex].period}
+              <Select.Trigger {...props}>
+                {$formData.metrics[metricIndex].valueDisplayPrecision +
+                  ' digit' +
+                  ($formData.metrics[metricIndex].valueDisplayPrecision === 1 ? '' : 's')}
               </Select.Trigger>
               <Select.Content>
-                {#each WIDGET_METRIC_PERIOD as period}
-                  <Select.Item value={period} label={period} class="capitalize" />
+                {#each Array(WIDGET_METRIC_DISPLAY_PRECISION_MAX + 1) as _, i}
+                  <Select.Item value={i.toString()} label={i + ' digit' + (i === 1 ? '' : 's')} />
                 {/each}
               </Select.Content>
             </Select.Root>
           {/snippet}
         </Form.Control>
+        <Form.Description>The number of digits after the decimal point.</Form.Description>
         <Form.FieldErrors />
       </Form.Field>
-
-      {#if $formData.metrics[metricIndex].provider === 'objective'}
-        <Form.Field {form} name="metrics[{metricIndex}].valueDisplayPrecision" class="col-span-2">
-          <Form.Control>
-            {#snippet children({ props })}
-              <Form.Label>Decimal Precision</Form.Label>
-              <Select.Root
-                type="single"
-                value={$formData.metrics[metricIndex].valueDisplayPrecision.toString()}
-                onValueChange={(value) => {
-                  $formData.metrics[metricIndex].valueDisplayPrecision = parseInt(value);
-                }}
-                name={props.name}
-              >
-                <Select.Trigger {...props}>
-                  {$formData.metrics[metricIndex].valueDisplayPrecision +
-                    ' digit' +
-                    ($formData.metrics[metricIndex].valueDisplayPrecision === 1 ? '' : 's')}
-                </Select.Trigger>
-                <Select.Content>
-                  {#each Array(WIDGET_METRIC_DISPLAY_PRECISION_MAX + 1) as _, i}
-                    <Select.Item value={i.toString()} label={i + ' digit' + (i === 1 ? '' : 's')} />
-                  {/each}
-                </Select.Content>
-              </Select.Root>
-            {/snippet}
-          </Form.Control>
-          <Form.FieldErrors />
-        </Form.Field>
-      {/if}
     {/if}
   </div>
 </section>

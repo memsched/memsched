@@ -1,8 +1,10 @@
 <script lang="ts">
-  import type { PageProps } from './$types';
+  import SvelteSeo from 'svelte-seo';
+
   import ObjectiveForm from '$lib/components/forms/objective-form/ObjectiveForm.svelte';
   import HomeLayout from '$lib/components/layouts/HomeLayout.svelte';
-  import SvelteSeo from 'svelte-seo';
+
+  import type { PageProps } from './$types';
 
   const { data }: PageProps = $props();
 </script>

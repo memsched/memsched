@@ -1,7 +1,9 @@
-import type { LocalUser } from '$lib/types';
-import type { PageServerLoad } from './$types';
 import { redirect } from '@sveltejs/kit';
+
 import { handleDbError } from '$lib/server/utils';
+import type { LocalUser } from '$lib/types';
+
+import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async (event) => {
   if (!event.locals.session) {

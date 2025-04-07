@@ -1,8 +1,10 @@
 <script lang="ts">
-  import { goto } from '$app/navigation';
   import type { Snippet } from 'svelte';
   import { Icon } from 'svelte-icons-pack';
   import { IoChevronBack } from 'svelte-icons-pack/io';
+
+  import { goto } from '$app/navigation';
+
   import Logo from '../svgs/Logo.svelte';
 
   interface Props {

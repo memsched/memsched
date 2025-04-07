@@ -1,6 +1,7 @@
 import type { Widget, WidgetMetric } from '$lib/server/db/schema';
 import type { NonNullableFieldsPick } from '$lib/server/types';
-import type { DataValue, DataPlot, DataHeatmap } from './data/types';
+
+import type { DataHeatmap, DataPlot, DataValue } from './data/types';
 
 type WidgetMetricDataBase = Omit<
   WidgetMetric,

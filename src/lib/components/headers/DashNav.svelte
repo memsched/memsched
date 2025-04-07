@@ -1,9 +1,11 @@
 <script lang="ts">
+  import { IoCube, IoFlash, IoFolderOpen } from 'svelte-icons-pack/io';
+
   import { page } from '$app/state';
-  import LogoShort from '../svgs/LogoShort.svelte';
-  import { IoFlash, IoFolderOpen, IoCube } from 'svelte-icons-pack/io';
-  import HeaderProfile from '../account/HeaderProfile.svelte';
   import { getUserOverviewUrl } from '$lib/api';
+
+  import HeaderProfile from '../account/HeaderProfile.svelte';
+  import LogoShort from '../svgs/LogoShort.svelte';
   import DashNavLink from './DashNavLink.svelte';
 
   const NAV_ITEMS = [

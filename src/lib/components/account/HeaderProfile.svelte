@@ -1,12 +1,14 @@
 <script lang="ts">
-  import { page } from '$app/state';
-  import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
   import { Icon } from 'svelte-icons-pack';
   import { FiBookOpen, FiLifeBuoy, FiLogOut, FiSettings } from 'svelte-icons-pack/fi';
+
   import { enhance } from '$app/forms';
-  import UserAvatar from './UserAvatar.svelte';
-  import DropdownMenuSeparator from '../ui/dropdown-menu/dropdown-menu-separator.svelte';
+  import { page } from '$app/state';
+  import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
+
   import DropdownMenuLabel from '../ui/dropdown-menu/dropdown-menu-label.svelte';
+  import DropdownMenuSeparator from '../ui/dropdown-menu/dropdown-menu-separator.svelte';
+  import UserAvatar from './UserAvatar.svelte';
 
   interface Props {
     compact?: boolean;

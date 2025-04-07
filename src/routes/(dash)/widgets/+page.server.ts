@@ -1,8 +1,10 @@
-import type { PageServerLoad } from './$types';
+import { redirect } from '@sveltejs/kit';
 import { ResultAsync } from 'neverthrow';
 import { okAsync } from 'neverthrow';
+
 import { handleDbError } from '$lib/server/utils';
-import { redirect } from '@sveltejs/kit';
+
+import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async (event) => {
   const session = event.locals.session;

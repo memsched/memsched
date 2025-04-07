@@ -1,6 +1,7 @@
+import * as child_process from 'node:child_process';
+
 import adapter from '@sveltejs/adapter-cloudflare';
 import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
-import * as child_process from 'node:child_process';
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {

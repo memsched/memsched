@@ -1,6 +1,7 @@
-import { generateState, generateCodeVerifier } from 'arctic';
-import { google } from '$lib/server/oauth';
 import { error } from '@sveltejs/kit';
+import { generateCodeVerifier, generateState } from 'arctic';
+
+import { google } from '$lib/server/oauth';
 import { authLimiter } from '$lib/server/rate-limiter';
 
 import type { RequestEvent } from './$types';

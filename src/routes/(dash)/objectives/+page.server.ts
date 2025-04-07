@@ -1,9 +1,11 @@
-import type { PageServerLoad, Actions } from './$types';
 import { fail, redirect } from '@sveltejs/kit';
 import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
+
 import { logSchema } from '$lib/components/forms/objective-log-form/schema';
 import { handleDbError, handleFormDbError } from '$lib/server/utils';
+
+import type { Actions, PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async (event) => {
   if (!event.locals.session) {

@@ -1,21 +1,23 @@
 <script lang="ts">
+  import type { Infer } from 'sveltekit-superforms/adapters';
+  import type { SuperForm, SuperFormData } from 'sveltekit-superforms/client';
+
   import * as Form from '$lib/components/ui/form';
-  import * as Select from '$lib/components/ui/select';
   import { Input } from '$lib/components/ui/input';
+  import * as Select from '$lib/components/ui/select';
+  import HeatmapComponent from '$lib/components/widgets/components/HeatmapComponent.svelte';
+  import PlotComponent from '$lib/components/widgets/components/PlotComponent.svelte';
+  import ValueComponent from '$lib/components/widgets/components/ValueComponent.svelte';
+  import { HEATMAP_DATA, PLOT_DATA } from '$lib/constants';
   import { type Objective } from '$lib/server/db/schema';
+
   import {
     type FormSchema,
     WIDGET_METRIC_DISPLAY_PRECISION_MAX,
     WIDGET_METRIC_GITHUB_STAT_TYPE,
     WIDGET_METRIC_VALUE_AGGREGATION_TYPE,
   } from '../schema';
-  import type { SuperForm, SuperFormData } from 'sveltekit-superforms/client';
-  import type { Infer } from 'sveltekit-superforms/adapters';
-  import ValueComponent from '$lib/components/widgets/components/ValueComponent.svelte';
-  import PlotComponent from '$lib/components/widgets/components/PlotComponent.svelte';
-  import HeatmapComponent from '$lib/components/widgets/components/HeatmapComponent.svelte';
   import WidgetTabStyleButton from './WidgetTabStyleButton.svelte';
-  import { PLOT_DATA, HEATMAP_DATA } from '$lib/constants';
 
   interface Props {
     metricIndex: number;

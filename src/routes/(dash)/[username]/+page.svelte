@@ -1,12 +1,14 @@
 <script lang="ts">
-  import type { PageProps } from './$types';
-  import Profile from '$lib/components/account/Profile.svelte';
-  import IconButton from '$lib/components/ui/IconButton.svelte';
   import { FiPlus } from 'svelte-icons-pack/fi';
-  import { v4 as uuid4 } from 'uuid';
   import SvelteSeo from 'svelte-seo';
-  import { DOMAIN } from '$lib/constants';
+  import { v4 as uuid4 } from 'uuid';
+
+  import Profile from '$lib/components/account/Profile.svelte';
   import DashHeader from '$lib/components/headers/DashHeader.svelte';
+  import IconButton from '$lib/components/ui/IconButton.svelte';
+  import { DOMAIN } from '$lib/constants';
+
+  import type { PageProps } from './$types';
 
   const { data }: PageProps = $props();
 

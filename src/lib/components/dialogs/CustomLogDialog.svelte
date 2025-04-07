@@ -1,12 +1,13 @@
 <script lang="ts">
-  import * as Dialog from '$lib/components/ui/dialog/index';
-  import { type SuperValidated } from 'sveltekit-superforms';
-  import { type LogFormSchema } from '$lib/components/forms/objective-log-form/schema';
-  import ObjectiveLogForm from '$lib/components/forms/objective-log-form/ObjectiveLogForm.svelte';
-  import type { Objective } from '$lib/server/db/schema';
-  import { Button } from '$lib/components/ui/button/index';
   import { Icon } from 'svelte-icons-pack';
   import { FiPlusCircle } from 'svelte-icons-pack/fi';
+  import { type SuperValidated } from 'sveltekit-superforms';
+
+  import ObjectiveLogForm from '$lib/components/forms/objective-log-form/ObjectiveLogForm.svelte';
+  import { type LogFormSchema } from '$lib/components/forms/objective-log-form/schema';
+  import { Button } from '$lib/components/ui/button/index';
+  import * as Dialog from '$lib/components/ui/dialog/index';
+  import type { Objective } from '$lib/server/db/schema';
 
   interface Props {
     form: SuperValidated<LogFormSchema>;

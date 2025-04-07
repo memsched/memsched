@@ -1,7 +1,8 @@
 import type { ResultAsync } from 'neverthrow';
-import type { DrizzleError } from '../../../db/types';
+
 import type { WidgetMetric } from '../../../db/schema';
-import type { DataPlot, DataHeatmap, DataValue } from '../data/types';
+import type { DrizzleError } from '../../../db/types';
+import type { DataHeatmap, DataPlot, DataValue } from '../data/types';
 
 export interface BaseMetricProvider {
   getValueData(metric: WidgetMetric): ResultAsync<DataValue, DrizzleError>;

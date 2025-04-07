@@ -1,9 +1,11 @@
-import type { PageServerLoad, Actions } from './$types';
-import { redirect, error, fail } from '@sveltejs/kit';
-import type { LocalUser } from '$lib/types';
-import { handleDbError } from '$lib/server/utils';
-import { getPlanLimits } from '$lib/server/subscription';
+import { error, fail, redirect } from '@sveltejs/kit';
+
 import { PUBLIC_STRIPE_MONTHLY_PRO_PRICE_ID } from '$env/static/public';
+import { getPlanLimits } from '$lib/server/subscription';
+import { handleDbError } from '$lib/server/utils';
+import type { LocalUser } from '$lib/types';
+
+import type { Actions, PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async (event) => {
   if (!event.locals.session) {

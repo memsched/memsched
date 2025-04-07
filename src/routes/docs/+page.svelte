@@ -1,6 +1,6 @@
 <script lang="ts">
   import { Icon } from 'svelte-icons-pack';
-  import { IoRocket, IoCode } from 'svelte-icons-pack/io';
+  import { IoCode, IoRocket } from 'svelte-icons-pack/io';
 </script>
 
 <div class="space-y-12">

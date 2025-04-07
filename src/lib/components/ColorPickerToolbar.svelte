@@ -1,7 +1,8 @@
 <script lang="ts">
-  import { browser } from '$app/environment';
-  import { onMount } from 'svelte';
   import { setMode, userPrefersMode } from 'mode-watcher';
+  import { onMount } from 'svelte';
+
+  import { browser } from '$app/environment';
 
   // Types
   type ColorPair = {

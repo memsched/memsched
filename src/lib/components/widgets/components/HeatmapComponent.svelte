@@ -18,8 +18,12 @@
     columns * HEATMAP_POINT_SIZE + HEATMAP_POINT_SPACING * (columns - 1)
   );
 
+  const minValue = $derived(Math.min(...metric.data.points.map((p) => p.z)));
+  const maxValue = $derived(Math.max(...metric.data.points.map((p) => p.z)));
+
   function getColorIntensity(value: number) {
-    return addOpacityRgba(accentColor, 0.1 + value * 0.9);
+    const normalizedValue = (value - minValue) / (maxValue - minValue);
+    return addOpacityRgba(accentColor, 0.1 + normalizedValue * 0.9);
   }
 </script>
 

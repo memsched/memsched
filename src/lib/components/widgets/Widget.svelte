@@ -1,15 +1,15 @@
 <script lang="ts">
+  import Watermark from '$lib/components/svgs/Watermark.svelte';
+  import HeatmapComponent from '$lib/components/widgets/components/HeatmapComponent.svelte';
+  import PlotComponent from '$lib/components/widgets/components/PlotComponent.svelte';
+  import ValueComponent from '$lib/components/widgets/components/ValueComponent.svelte';
+  import WidgetEditComponent from '$lib/components/widgets/utils/WidgetEditComponent.svelte';
   import type {
     WidgetJoinMetricsData,
-    WidgetMetricDataValue,
-    WidgetMetricDataPlot,
     WidgetMetricDataHeatmap,
+    WidgetMetricDataPlot,
+    WidgetMetricDataValue,
   } from '$lib/server/services/metrics/types';
-  import Watermark from '$lib/components/svgs/Watermark.svelte';
-  import WidgetEditComponent from '$lib/components/widgets/utils/WidgetEditComponent.svelte';
-  import ValueComponent from '$lib/components/widgets/components/ValueComponent.svelte';
-  import PlotComponent from '$lib/components/widgets/components/PlotComponent.svelte';
-  import HeatmapComponent from '$lib/components/widgets/components/HeatmapComponent.svelte';
   import { addOpacityRgba } from '$lib/utils';
 
   interface Props {

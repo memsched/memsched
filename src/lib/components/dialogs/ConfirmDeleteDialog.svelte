@@ -1,7 +1,9 @@
 <script lang="ts">
+  import type { Snippet } from 'svelte';
+
   import { enhance } from '$app/forms';
   import * as Dialog from '$lib/components/ui/dialog';
-  import type { Snippet } from 'svelte';
+
   import { Button } from '../ui/button';
 
   interface Props {

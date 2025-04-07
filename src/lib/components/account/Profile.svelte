@@ -1,7 +1,8 @@
 <script lang="ts">
-  import { FiMapPin, FiGlobe } from 'svelte-icons-pack/fi';
-  import UserAvatar from './UserAvatar.svelte';
   import { Icon } from 'svelte-icons-pack';
+  import { FiGlobe, FiMapPin } from 'svelte-icons-pack/fi';
+
+  import UserAvatar from './UserAvatar.svelte';
 
   interface Props {
     username: string;

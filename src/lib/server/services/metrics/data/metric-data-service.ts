@@ -1,10 +1,11 @@
 import { okAsync, ResultAsync } from 'neverthrow';
+
 import type { DBType } from '../../../db';
 import type { DrizzleError, WidgetMetric } from '../../../db/schema';
+import type { ObjectiveLogsService } from '../../objective-logs-service';
+import type { ObjectivesService } from '../../objectives-service';
 import { MetricProviderFactory } from '../providers/metric-provider-factory';
 import type { WidgetMetricData } from '../types';
-import type { ObjectivesService } from '../../objectives-service';
-import type { ObjectiveLogsService } from '../../objective-logs-service';
 
 export class MetricDataService {
   private metricProviderFactory: MetricProviderFactory;

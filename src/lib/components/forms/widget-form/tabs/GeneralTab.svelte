@@ -1,13 +1,15 @@
 <script lang="ts">
+  import { Icon } from 'svelte-icons-pack';
+  import { IoDocumentLockOutline, IoGlobeOutline } from 'svelte-icons-pack/io';
+  import type { Infer } from 'sveltekit-superforms/adapters';
+  import type { SuperForm, SuperFormData } from 'sveltekit-superforms/client';
+
+  import ColorPickerInput from '$lib/components/inputs/ColorPickerInput.svelte';
   import * as Form from '$lib/components/ui/form';
   import { Input } from '$lib/components/ui/input';
-  import ColorPickerInput from '$lib/components/inputs/ColorPickerInput.svelte';
-  import { Switch } from '$lib/components/ui/switch';
   import * as RadioGroup from '$lib/components/ui/radio-group';
-  import { Icon } from 'svelte-icons-pack';
-  import { IoGlobeOutline, IoDocumentLockOutline } from 'svelte-icons-pack/io';
-  import type { SuperForm, SuperFormData } from 'sveltekit-superforms/client';
-  import type { Infer } from 'sveltekit-superforms/adapters';
+  import { Switch } from '$lib/components/ui/switch';
+
   import type { FormSchema } from '../schema';
 
   interface Props {

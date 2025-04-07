@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { Snippet } from 'svelte';
+
   import DashNav from '../headers/DashNav.svelte';
 
   interface Props {

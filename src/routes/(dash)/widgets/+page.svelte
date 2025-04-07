@@ -1,15 +1,17 @@
 <script lang="ts">
-  import { type PageProps } from './$types';
-  import { v4 as uuid4 } from 'uuid';
-  import CreateNew from '$lib/components/CreateNew.svelte';
-  import { IoCubeOutline, IoArrowForward } from 'svelte-icons-pack/io';
-  import IconButton from '$lib/components/ui/IconButton.svelte';
-  import { browser } from '$app/environment';
-  import * as Tooltip from '$lib/components/ui/tooltip';
-  import SvelteSeo from 'svelte-seo';
-  import { DOMAIN } from '$lib/constants';
   import { FiPlus } from 'svelte-icons-pack/fi';
+  import { IoArrowForward, IoCubeOutline } from 'svelte-icons-pack/io';
+  import SvelteSeo from 'svelte-seo';
+  import { v4 as uuid4 } from 'uuid';
+
+  import { browser } from '$app/environment';
+  import CreateNew from '$lib/components/CreateNew.svelte';
   import DashHeader from '$lib/components/headers/DashHeader.svelte';
+  import IconButton from '$lib/components/ui/IconButton.svelte';
+  import * as Tooltip from '$lib/components/ui/tooltip';
+  import { DOMAIN } from '$lib/constants';
+
+  import { type PageProps } from './$types';
 
   const { data }: PageProps = $props();
 

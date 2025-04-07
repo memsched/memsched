@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { Snippet } from 'svelte';
+
   import { SUB_NAV_HEIGHT } from '$lib/constants';
 
   interface Props {

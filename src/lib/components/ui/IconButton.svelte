@@ -1,9 +1,11 @@
 <script lang="ts">
   import type { Snippet } from 'svelte';
-  import { Icon, type IconType } from 'svelte-icons-pack';
   import type { HTMLAttributes } from 'svelte/elements';
-  import { Button, type ButtonProps } from './button';
+  import { Icon, type IconType } from 'svelte-icons-pack';
+
   import { cn } from '$lib/utils';
+
+  import { Button, type ButtonProps } from './button';
 
   interface Props extends ButtonProps {
     icon: IconType;

@@ -1,17 +1,18 @@
 import type { Handle } from '@sveltejs/kit';
 import { sequence } from '@sveltejs/kit/hooks';
+
 import { building } from '$app/environment';
-import { getDB, type DBType } from '$lib/server/db';
 import { getCache } from '$lib/server/cache';
+import { type DBType, getDB } from '$lib/server/db';
 import {
-  UsersService,
-  ObjectivesService,
-  ObjectiveLogsService,
-  WidgetsService,
   MetricsService,
-  SessionsService,
+  ObjectiveLogsService,
+  ObjectivesService,
   PaymentService,
   SESSION_COOKIE_NAME,
+  SessionsService,
+  UsersService,
+  WidgetsService,
 } from '$lib/server/services';
 
 const PRERENDERED_ROUTES = ['/docs', '/privacy', '/tos'];

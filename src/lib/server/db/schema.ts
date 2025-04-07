@@ -1,10 +1,11 @@
-import { sqliteTable, integer, text, primaryKey, real, index } from 'drizzle-orm/sqlite-core';
 import { sql } from 'drizzle-orm';
+import { index, integer, primaryKey, real, sqliteTable, text } from 'drizzle-orm/sqlite-core';
+
 import {
+  WIDGET_METRIC_GITHUB_STAT_TYPE,
   WIDGET_METRIC_PROVIDER,
   WIDGET_METRIC_STYLE,
   WIDGET_METRIC_VALUE_AGGREGATION_TYPE,
-  WIDGET_METRIC_GITHUB_STAT_TYPE,
 } from '$lib/components/forms/widget-form/schema';
 
 export const user = sqliteTable('user', {

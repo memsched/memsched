@@ -1,8 +1,9 @@
 <script lang="ts">
-  import { cn } from '$lib/utils';
   import toast from 'svelte-french-toast';
   import { Icon } from 'svelte-icons-pack';
   import { IoCheckmarkCircleOutline, IoCopyOutline } from 'svelte-icons-pack/io';
+
+  import { cn } from '$lib/utils';
 
   interface Props {
     code: string;

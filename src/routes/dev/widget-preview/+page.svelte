@@ -1,23 +1,24 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
+
   import { dev } from '$app/environment';
   import { browser } from '$app/environment';
-  import { onMount } from 'svelte';
   import CodeBlock from '$lib/components/CodeBlock.svelte';
-  import * as Card from '$lib/components/ui/card';
-  import * as Select from '$lib/components/ui/select';
-  import * as Tabs from '$lib/components/ui/tabs';
-  import { Input } from '$lib/components/ui/input';
-  import { Label } from '$lib/components/ui/label';
-  import { Button } from '$lib/components/ui/button';
-  import { Switch } from '$lib/components/ui/switch';
-  import ColorPickerInput from '$lib/components/inputs/ColorPickerInput.svelte';
-  import type { WidgetJoinMetricsData } from '$lib/server/services/metrics/types';
   import {
     WIDGET_METRIC_DISPLAY_PRECISION_MAX,
     WIDGET_METRIC_VALUE_AGGREGATION_TYPE,
   } from '$lib/components/forms/widget-form/schema';
+  import ColorPickerInput from '$lib/components/inputs/ColorPickerInput.svelte';
+  import { Button } from '$lib/components/ui/button';
+  import * as Card from '$lib/components/ui/card';
+  import { Input } from '$lib/components/ui/input';
+  import { Label } from '$lib/components/ui/label';
+  import * as Select from '$lib/components/ui/select';
+  import { Switch } from '$lib/components/ui/switch';
+  import * as Tabs from '$lib/components/ui/tabs';
   import type { WidgetMetric } from '$lib/server/db/types';
   import type { DataPlot } from '$lib/server/services/metrics/data/types';
+  import type { WidgetJoinMetricsData } from '$lib/server/services/metrics/types';
 
   // Create a default widget config
   let config = $state<WidgetJoinMetricsData>({

@@ -1,13 +1,14 @@
-import type { RequestEvent } from '@sveltejs/kit';
-import { eq } from 'drizzle-orm';
 import { sha256 } from '@oslojs/crypto/sha2';
 import { encodeBase32, encodeHexLowerCase } from '@oslojs/encoding';
-import * as table from '$lib/server/db/schema';
-import type { DBType } from '$lib/server/db';
-import { wrapResultAsync, wrapResultAsyncFn } from '$lib/server/db/types';
+import type { RequestEvent } from '@sveltejs/kit';
+import { eq } from 'drizzle-orm';
+
 import { getUserOverviewUrl } from '$lib/api';
-import { handleDbError } from '$lib/server/utils';
+import type { DBType } from '$lib/server/db';
+import * as table from '$lib/server/db/schema';
+import { wrapResultAsync, wrapResultAsyncFn } from '$lib/server/db/types';
 import type { ProviderId } from '$lib/server/oauth';
+import { handleDbError } from '$lib/server/utils';
 
 interface AuthUserData {
   providerId: ProviderId;

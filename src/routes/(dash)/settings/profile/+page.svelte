@@ -1,10 +1,12 @@
 <script lang="ts">
-  import type { PageProps } from './$types';
-  import Profile from '$lib/components/account/Profile.svelte';
-  import ProfileForm from '$lib/components/forms/profile-form/ProfileForm.svelte';
   import { IoPerson } from 'svelte-icons-pack/io';
-  import SettingsTitle from '$lib/components/account/SettingsTitle.svelte';
   import SvelteSeo from 'svelte-seo';
+
+  import Profile from '$lib/components/account/Profile.svelte';
+  import SettingsTitle from '$lib/components/account/SettingsTitle.svelte';
+  import ProfileForm from '$lib/components/forms/profile-form/ProfileForm.svelte';
+
+  import type { PageProps } from './$types';
 
   const { data }: PageProps = $props();
 </script>

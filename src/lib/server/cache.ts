@@ -1,5 +1,6 @@
-import { dev } from '$app/environment';
 import type { KVNamespace } from '@cloudflare/workers-types';
+
+import { dev } from '$app/environment';
 
 type CacheMetadata = Record<string, string | number | boolean | null>;
 

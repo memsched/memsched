@@ -1,9 +1,10 @@
 <script lang="ts">
-  import IconButton from '$lib/components/ui/IconButton.svelte';
   import { AiOutlineGithub } from 'svelte-icons-pack/ai';
-  import { FcGoogle } from '$lib/icons';
   import SvelteSeo from 'svelte-seo';
+
+  import IconButton from '$lib/components/ui/IconButton.svelte';
   import { DOMAIN } from '$lib/constants';
+  import { FcGoogle } from '$lib/icons';
 
   const pageTitle = 'Sign in to MEMsched - Track Your Learning Journey';
   const pageDescription =

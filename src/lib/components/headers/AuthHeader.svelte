@@ -1,5 +1,6 @@
 <script lang="ts">
   import { HEADER_HEIGHT } from '$lib/constants';
+
   import Logo from '../svgs/Logo.svelte';
   import { Button } from '../ui/button';
 </script>

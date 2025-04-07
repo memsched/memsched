@@ -1,11 +1,13 @@
 <script lang="ts">
-  import { page } from '$app/state';
-  import CodeBlock from './CodeBlock.svelte';
-  import * as Tabs from '$lib/components/ui/tabs';
   import { Icon } from 'svelte-icons-pack';
   import { IoInformationCircle } from 'svelte-icons-pack/io';
-  import { Switch } from '$lib/components/ui/switch';
+
+  import { page } from '$app/state';
   import { Label } from '$lib/components/ui/label';
+  import { Switch } from '$lib/components/ui/switch';
+  import * as Tabs from '$lib/components/ui/tabs';
+
+  import CodeBlock from './CodeBlock.svelte';
 
   interface Props {
     title: string;

@@ -1,6 +1,7 @@
 import { GitHub, Google } from 'arctic';
-import { PUBLIC_GITHUB_REDIRECT_URI, PUBLIC_GOOGLE_REDIRECT_URI } from '$env/static/public';
+
 import { env } from '$env/dynamic/private';
+import { PUBLIC_GITHUB_REDIRECT_URI, PUBLIC_GOOGLE_REDIRECT_URI } from '$env/static/public';
 
 export type ProviderId = 'github' | 'google';
 

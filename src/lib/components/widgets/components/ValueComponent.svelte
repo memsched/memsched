@@ -1,6 +1,6 @@
 <script lang="ts">
-  import type { WidgetMetricDataValue } from '$lib/server/services/metrics/types';
   import TrendingUpArrow from '$lib/components/svgs/TrendingUpArrow.svelte';
+  import type { WidgetMetricDataValue } from '$lib/server/services/metrics/types';
 
   interface Props {
     metric: WidgetMetricDataValue;

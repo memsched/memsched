@@ -43,6 +43,7 @@
     "drizzle-kit": "^0.30.6",
     "eslint": "^9.24.0",
     "eslint-config-prettier": "^10.1.1",
+    "eslint-plugin-simple-import-sort": "^12.1.1",
     "eslint-plugin-svelte": "^3.5.1",
     "formsnap": "^2.0.0",
     "globals": "^15.15.0",

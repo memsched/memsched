@@ -1,6 +1,7 @@
-import { generateState } from 'arctic';
-import { github } from '$lib/server/oauth';
 import { error } from '@sveltejs/kit';
+import { generateState } from 'arctic';
+
+import { github } from '$lib/server/oauth';
 import { authLimiter } from '$lib/server/rate-limiter';
 
 import type { RequestEvent } from './$types';

@@ -1,8 +1,9 @@
 <script lang="ts">
   import type { Snippet } from 'svelte';
-  import * as Tooltip from '$lib/components/ui/tooltip';
   import { Icon } from 'svelte-icons-pack';
   import { FiX } from 'svelte-icons-pack/fi';
+
+  import * as Tooltip from '$lib/components/ui/tooltip';
 
   interface Props {
     onclick: (() => void) | undefined;

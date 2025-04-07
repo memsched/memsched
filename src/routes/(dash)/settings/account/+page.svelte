@@ -1,18 +1,20 @@
 <script lang="ts">
-  import { Button } from '$lib/components/ui/button';
-  import * as Dialog from '$lib/components/ui/dialog';
-  import DeleteAccountDialog from '$lib/components/dialogs/DeleteAccountDialog.svelte';
-  import type { PageProps } from './$types';
-  import { IoKey, IoArrowForward, IoCheckmark } from 'svelte-icons-pack/io';
-  import SettingsTitle from '$lib/components/account/SettingsTitle.svelte';
+  import { Icon } from 'svelte-icons-pack';
+  import { IoArrowForward, IoCheckmark, IoKey } from 'svelte-icons-pack/io';
   import SvelteSeo from 'svelte-seo';
+
+  import SettingsTitle from '$lib/components/account/SettingsTitle.svelte';
+  import DeleteAccountDialog from '$lib/components/dialogs/DeleteAccountDialog.svelte';
   import { Badge } from '$lib/components/ui/badge';
+  import { Button } from '$lib/components/ui/button';
   import * as Card from '$lib/components/ui/card';
+  import * as Dialog from '$lib/components/ui/dialog';
+  import IconButton from '$lib/components/ui/IconButton.svelte';
   import { FREE_PLAN_LIMITS } from '$lib/constants';
   import { formatCurrency } from '$lib/utils';
-  import IconButton from '$lib/components/ui/IconButton.svelte';
-  import { Icon } from 'svelte-icons-pack';
   import { cn } from '$lib/utils';
+
+  import type { PageProps } from './$types';
 
   const { data }: PageProps = $props();
 

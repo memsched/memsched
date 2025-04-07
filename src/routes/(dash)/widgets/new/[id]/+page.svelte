@@ -1,12 +1,14 @@
 <script lang="ts">
-  import type { PageProps } from './$types';
-  import { page } from '$app/state';
   import { IoArrowForward } from 'svelte-icons-pack/io';
-  import HomeLayout from '$lib/components/layouts/HomeLayout.svelte';
-  import IconButton from '$lib/components/ui/IconButton.svelte';
-  import ShareWidget from '$lib/components/ShareWidget.svelte';
-  import { v4 as uuid4 } from 'uuid';
   import SvelteSeo from 'svelte-seo';
+  import { v4 as uuid4 } from 'uuid';
+
+  import { page } from '$app/state';
+  import HomeLayout from '$lib/components/layouts/HomeLayout.svelte';
+  import ShareWidget from '$lib/components/ShareWidget.svelte';
+  import IconButton from '$lib/components/ui/IconButton.svelte';
+
+  import type { PageProps } from './$types';
 
   const { data }: PageProps = $props();
 </script>

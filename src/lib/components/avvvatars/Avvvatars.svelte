@@ -1,6 +1,6 @@
 <script lang="ts">
+  import { BACKGROUND_COLORS, SHAPE_COLORS, TEXT_COLORS } from './lib/colors';
   import randiman from './lib/random';
-  import { BACKGROUND_COLORS, TEXT_COLORS, SHAPE_COLORS } from './lib/colors';
   import Shape from './shape/Shape.svelte';
 
   const DEFAULTS = {

@@ -1,26 +1,28 @@
 <script lang="ts">
-  import { browser } from '$app/environment';
-  import SuperDebug, { type SuperValidated, type Infer, superForm } from 'sveltekit-superforms';
-  import { zodClient } from 'sveltekit-superforms/adapters';
   import toast from 'svelte-french-toast';
-  import * as Form from '$lib/components/ui/form';
-  import { type Objective } from '$lib/server/db/schema';
-  import { formSchema, type FormSchema } from './schema';
-  import type { LocalUser } from '$lib/types';
   import { Icon } from 'svelte-icons-pack';
-  import { IoInformationCircle, IoChevronForward } from 'svelte-icons-pack/io';
-  import Widget from '$lib/components/widgets/Widget.svelte';
-  import { SUB_NAV_HEIGHT, PLOT_DATA, HEATMAP_DATA } from '$lib/constants';
   import { FiPlus, FiX } from 'svelte-icons-pack/fi';
+  import { IoChevronForward, IoInformationCircle } from 'svelte-icons-pack/io';
+  import SuperDebug, { type Infer, superForm, type SuperValidated } from 'sveltekit-superforms';
+  import { zodClient } from 'sveltekit-superforms/adapters';
+
+  import { browser } from '$app/environment';
   import DashHeader from '$lib/components/headers/DashHeader.svelte';
-  import { Button } from '$lib/components/ui/button';
   import TabNavLink from '$lib/components/headers/TabNavLink.svelte';
+  import { Button } from '$lib/components/ui/button';
+  import * as Form from '$lib/components/ui/form';
   import IconButton from '$lib/components/ui/IconButton.svelte';
+  import Widget from '$lib/components/widgets/Widget.svelte';
+  import { HEATMAP_DATA, PLOT_DATA, SUB_NAV_HEIGHT } from '$lib/constants';
+  import { type Objective } from '$lib/server/db/schema';
+  import type { WidgetMetricData } from '$lib/server/services/metrics/types';
+  import type { LocalUser } from '$lib/types';
+  import { roundToDecimal } from '$lib/utils';
+
+  import { type FormSchema, formSchema } from './schema';
   import GeneralTab from './tabs/GeneralTab.svelte';
   import ImageTab from './tabs/ImageTab.svelte';
   import WidgetTab from './tabs/WidgetTab.svelte';
-  import { roundToDecimal } from '$lib/utils';
-  import type { WidgetMetricData } from '$lib/server/services/metrics/types';
 
   interface Props {
     data: { form: SuperValidated<Infer<FormSchema>>; objectives: Objective[]; user: LocalUser };

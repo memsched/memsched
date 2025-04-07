@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
+
   import { PUBLIC_UPTIME_ROBOT_ID } from '$env/static/public';
 
   let isOnline: boolean | null = null;

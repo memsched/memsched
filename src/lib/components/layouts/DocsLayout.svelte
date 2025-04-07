@@ -1,13 +1,14 @@
 <script lang="ts">
-  import { goto } from '$app/navigation';
   import type { Snippet } from 'svelte';
-  import { page } from '$app/state';
-  import { cn } from '$lib/utils';
-  import Logo from '$lib/components/svgs/Logo.svelte';
   import { Icon } from 'svelte-icons-pack';
-  import { IoMenu, IoClose } from 'svelte-icons-pack/io';
+  import { IoClose, IoMenu } from 'svelte-icons-pack/io';
   import SvelteSeo from 'svelte-seo';
+
+  import { goto } from '$app/navigation';
+  import { page } from '$app/state';
+  import Logo from '$lib/components/svgs/Logo.svelte';
   import { DOMAIN } from '$lib/constants';
+  import { cn } from '$lib/utils';
 
   interface Props {
     class?: string;

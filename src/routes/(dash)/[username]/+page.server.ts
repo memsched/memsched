@@ -1,7 +1,9 @@
-import { handleDbError } from '$lib/server/utils';
-import { ResultAsync, okAsync } from 'neverthrow';
-import type { PageServerLoad } from './$types';
+import { okAsync, ResultAsync } from 'neverthrow';
+
 import * as table from '$lib/server/db/schema';
+import { handleDbError } from '$lib/server/utils';
+
+import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async (event) => {
   const userResult = await event.locals.usersService.getByUsername(event.params.username);

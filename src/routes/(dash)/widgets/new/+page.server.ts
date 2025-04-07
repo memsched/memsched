@@ -1,11 +1,13 @@
-import type { PageServerLoad, Actions } from './$types';
 import { error, fail, redirect } from '@sveltejs/kit';
+import { okAsync } from 'neverthrow';
 import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
+
 import { formSchema } from '$lib/components/forms/widget-form/schema';
-import type { LocalUser } from '$lib/types';
 import { handleFormDbError } from '$lib/server/utils';
-import { okAsync } from 'neverthrow';
+import type { LocalUser } from '$lib/types';
+
+import type { Actions, PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async (event) => {
   if (!event.locals.session) {

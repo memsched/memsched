@@ -1,11 +1,13 @@
-import type { LocalUser } from '$lib/types';
-import type { PageServerLoad, Actions } from './$types';
-import { redirect, fail } from '@sveltejs/kit';
-import { superValidate, message, setError } from 'sveltekit-superforms';
+import { fail, redirect } from '@sveltejs/kit';
+import { message, setError, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { z } from 'zod';
+
 import { formSchema } from '$lib/components/forms/profile-form/schema';
 import { handleFormDbError } from '$lib/server/utils';
+import type { LocalUser } from '$lib/types';
+
+import type { Actions, PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async (event) => {
   if (!event.locals.session) {

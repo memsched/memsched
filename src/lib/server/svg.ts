@@ -1,8 +1,8 @@
+import type { RequestEvent } from '@sveltejs/kit';
+import parse from 'html-react-parser';
+import satori from 'satori';
 import type { Component } from 'svelte';
 import { render } from 'svelte/server';
-import type { RequestEvent } from '@sveltejs/kit';
-import satori from 'satori';
-import parse from 'html-react-parser';
 
 export async function renderWidget<P extends Record<string, any>>(
   event: RequestEvent,

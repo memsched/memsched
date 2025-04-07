@@ -1,9 +1,11 @@
-import type { RequestHandler } from './$types';
 import { error, json } from '@sveltejs/kit';
+
 import { dev } from '$app/environment';
-import type { WidgetJoinMetricsData } from '$lib/server/services/metrics/types';
 import Widget from '$lib/components/widgets/Widget.svelte';
+import type { WidgetJoinMetricsData } from '$lib/server/services/metrics/types';
 import { renderWidget } from '$lib/server/svg';
+
+import type { RequestHandler } from './$types';
 
 export const GET: RequestHandler = async (event) => {
   // Only allow in development mode

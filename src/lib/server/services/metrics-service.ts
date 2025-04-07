@@ -1,6 +1,7 @@
+import { eq } from 'drizzle-orm';
+
 import type { DBType } from '../db';
 import * as table from '../db/schema';
-import { eq } from 'drizzle-orm';
 import { wrapResultAsync } from '../db/types';
 
 export class MetricsService {

@@ -1,28 +1,30 @@
 <script lang="ts">
-  import type { PageProps } from './$types';
-  import { page } from '$app/state';
-  import { IoFolderOpenOutline, IoArrowForward, IoEllipsisHorizontal } from 'svelte-icons-pack/io';
-  import { FiEdit3, FiTrash2, FiRotateCcw, FiArchive, FiPlus } from 'svelte-icons-pack/fi';
-  import CreateNew from '$lib/components/CreateNew.svelte';
-  import IconButton from '$lib/components/ui/IconButton.svelte';
-  import { Icon } from 'svelte-icons-pack';
   import toast from 'svelte-french-toast';
-  import { type SuperValidated } from 'sveltekit-superforms';
-  import { type LogFormSchema } from '$lib/components/forms/objective-log-form/schema';
-  import TabNavLink from '$lib/components/headers/TabNavLink.svelte';
-  import * as Tooltip from '$lib/components/ui/tooltip';
+  import { Icon } from 'svelte-icons-pack';
+  import { FiArchive, FiEdit3, FiPlus, FiRotateCcw, FiTrash2 } from 'svelte-icons-pack/fi';
+  import { IoArrowForward, IoEllipsisHorizontal, IoFolderOpenOutline } from 'svelte-icons-pack/io';
   import SvelteSeo from 'svelte-seo';
-  import { DOMAIN } from '$lib/constants';
-  import { Badge } from '$lib/components/ui/badge/index';
-  import { Progress } from '$lib/components/ui/progress/index';
-  import { Button } from '$lib/components/ui/button/index';
+  import { type SuperValidated } from 'sveltekit-superforms';
+
   import { enhance } from '$app/forms';
-  import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index';
-  import * as Dialog from '$lib/components/ui/dialog';
+  import { page } from '$app/state';
+  import CreateNew from '$lib/components/CreateNew.svelte';
   import ConfirmDeleteDialog from '$lib/components/dialogs/ConfirmDeleteDialog.svelte';
   import CustomLogDialog from '$lib/components/dialogs/CustomLogDialog.svelte';
+  import { type LogFormSchema } from '$lib/components/forms/objective-log-form/schema';
   import DashHeader from '$lib/components/headers/DashHeader.svelte';
+  import TabNavLink from '$lib/components/headers/TabNavLink.svelte';
+  import { Badge } from '$lib/components/ui/badge/index';
+  import { Button } from '$lib/components/ui/button/index';
+  import * as Dialog from '$lib/components/ui/dialog';
+  import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index';
+  import IconButton from '$lib/components/ui/IconButton.svelte';
+  import { Progress } from '$lib/components/ui/progress/index';
+  import * as Tooltip from '$lib/components/ui/tooltip';
+  import { DOMAIN } from '$lib/constants';
   import type { Objective } from '$lib/server/db/schema';
+
+  import type { PageProps } from './$types';
 
   const { data, form }: PageProps = $props();
 

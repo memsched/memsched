@@ -1,10 +1,10 @@
 import type { DBType } from '../../../db';
 import type { WidgetMetric } from '../../../db/schema';
+import type { ObjectiveLogsService } from '../../objective-logs-service';
+import type { ObjectivesService } from '../../objectives-service';
 import type { BaseMetricProvider } from './base-metric-provider';
 import { GithubMetricProvider } from './github-metric-provider';
 import { ObjectiveMetricProvider } from './objective-metric-provider';
-import type { ObjectivesService } from '../../objectives-service';
-import type { ObjectiveLogsService } from '../../objective-logs-service';
 
 export class MetricProviderFactory {
   private objectiveProvider: ObjectiveMetricProvider;

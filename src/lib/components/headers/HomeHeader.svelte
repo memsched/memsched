@@ -1,15 +1,17 @@
 <script lang="ts">
-  import { page } from '$app/state';
+  import { FiArrowRight } from 'svelte-icons-pack/fi';
   import { IoArrowForward } from 'svelte-icons-pack/io';
+
+  import { page } from '$app/state';
+  import { getUserOverviewUrl } from '$lib/api';
   import { HEADER_HEIGHT } from '$lib/constants';
   import { scrollToTop } from '$lib/utils';
+
+  import HeaderProfile from '../account/HeaderProfile.svelte';
+  import LogoShort from '../svgs/LogoShort.svelte';
   import { Button } from '../ui/button';
   import IconButton from '../ui/IconButton.svelte';
-  import LogoShort from '../svgs/LogoShort.svelte';
   import HomeNavLink from './HomeNavLink.svelte';
-  import { getUserOverviewUrl } from '$lib/api';
-  import HeaderProfile from '../account/HeaderProfile.svelte';
-  import { FiArrowRight } from 'svelte-icons-pack/fi';
 
   const NAV_ITEMS: { href: string; text: string; icon: any }[] = [
     // {

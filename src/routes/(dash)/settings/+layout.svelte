@@ -1,8 +1,9 @@
 <script lang="ts">
-  import TabNavLink from '$lib/components/headers/TabNavLink.svelte';
-  import DashHeader from '$lib/components/headers/DashHeader.svelte';
   import { Icon } from 'svelte-icons-pack';
   import { IoChevronForward } from 'svelte-icons-pack/io';
+
+  import DashHeader from '$lib/components/headers/DashHeader.svelte';
+  import TabNavLink from '$lib/components/headers/TabNavLink.svelte';
 
   const tabs = [
     { name: 'Public Profile', href: '/settings/profile' },

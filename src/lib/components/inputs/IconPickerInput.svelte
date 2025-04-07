@@ -1,8 +1,10 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
+
   import { page } from '$app/state';
   import { ICON_URLS } from '$lib/icons';
+
   import { Input } from '../ui/input';
-  import { onMount } from 'svelte';
 
   interface Props {
     value: string | null;

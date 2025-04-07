@@ -1,4 +1,4 @@
-import type { DataPlot, DataHeatmap } from './server/services/metrics/data/types';
+import type { DataHeatmap, DataPlot } from './server/services/metrics/data/types';
 
 export const HEADER_HEIGHT = 55;
 export const SUB_NAV_HEIGHT = 33;

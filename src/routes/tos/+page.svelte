@@ -1,7 +1,8 @@
 <script lang="ts">
+  import SvelteSeo from 'svelte-seo';
+
   import ContentLayout from '$lib/components/layouts/ContentLayout.svelte';
   import TermsOfService from '$lib/components/markdown/TermsOfService.svelte';
-  import SvelteSeo from 'svelte-seo';
   import { DOMAIN } from '$lib/constants';
 
   const pageTitle = 'Terms of Service - MEMsched';

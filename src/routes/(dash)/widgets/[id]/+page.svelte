@@ -1,13 +1,15 @@
 <script lang="ts">
-  import type { PageProps } from './$types';
-  import { page } from '$app/state';
   import { FiTrash2 } from 'svelte-icons-pack/fi';
-  import IconButton from '$lib/components/ui/IconButton.svelte';
+  import SvelteSeo from 'svelte-seo';
+
+  import { page } from '$app/state';
   import ConfirmDeleteDialog from '$lib/components/dialogs/ConfirmDeleteDialog.svelte';
-  import * as Dialog from '$lib/components/ui/dialog';
   import WidgetForm from '$lib/components/forms/widget-form/WidgetForm.svelte';
   import ShareWidget from '$lib/components/ShareWidget.svelte';
-  import SvelteSeo from 'svelte-seo';
+  import * as Dialog from '$lib/components/ui/dialog';
+  import IconButton from '$lib/components/ui/IconButton.svelte';
+
+  import type { PageProps } from './$types';
 
   const { data }: PageProps = $props();
 </script>

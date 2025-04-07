@@ -1,9 +1,11 @@
-import type { RequestHandler } from './$types';
-import { type WidgetJoinMetricsData } from '$lib/server/services/metrics/types';
-import Widget from '$lib/components/widgets/Widget.svelte';
 import { error } from '@sveltejs/kit';
+
+import Widget from '$lib/components/widgets/Widget.svelte';
+import { type WidgetJoinMetricsData } from '$lib/server/services/metrics/types';
 import { renderWidget } from '$lib/server/svg';
 import { handleDbError } from '$lib/server/utils';
+
+import type { RequestHandler } from './$types';
 
 export const GET: RequestHandler = async (event) => {
   const widgetId = event.params.id;

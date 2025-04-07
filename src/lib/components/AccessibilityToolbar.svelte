@@ -1,6 +1,7 @@
 <script lang="ts">
+  import { onDestroy, onMount } from 'svelte';
+
   import { browser } from '$app/environment';
-  import { onMount, onDestroy } from 'svelte';
 
   // Configuration
   const INITIAL_POSITION = { x: 20, y: 200 };

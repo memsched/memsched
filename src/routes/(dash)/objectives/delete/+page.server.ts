@@ -1,6 +1,8 @@
-import type { Actions } from './$types';
 import { error, redirect } from '@sveltejs/kit';
+
 import { handleDbError } from '$lib/server/utils';
+
+import type { Actions } from './$types';
 
 export const actions: Actions = {
   default: async (event) => {

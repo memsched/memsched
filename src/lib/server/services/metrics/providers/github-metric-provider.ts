@@ -1,8 +1,9 @@
 import { type ResultAsync } from 'neverthrow';
-import type { DrizzleError, WidgetMetric } from '../../../db/types';
-import type { BaseMetricProvider } from './base-metric-provider';
+
 import type { DBType } from '../../../db';
-import type { DataValue, DataPlot, DataHeatmap } from '../data/types';
+import type { DrizzleError, WidgetMetric } from '../../../db/types';
+import type { DataHeatmap, DataPlot, DataValue } from '../data/types';
+import type { BaseMetricProvider } from './base-metric-provider';
 
 export class GithubMetricProvider implements BaseMetricProvider {
   constructor(private readonly db: DBType) {}

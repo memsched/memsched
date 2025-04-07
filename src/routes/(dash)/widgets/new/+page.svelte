@@ -1,7 +1,9 @@
 <script lang="ts">
-  import type { PageProps } from './$types';
   import SvelteSeo from 'svelte-seo';
+
   import WidgetForm from '$lib/components/forms/widget-form/WidgetForm.svelte';
+
+  import type { PageProps } from './$types';
 
   const { data }: PageProps = $props();
 </script>

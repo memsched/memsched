@@ -1,11 +1,13 @@
 <script lang="ts">
+  import type { Infer } from 'sveltekit-superforms/adapters';
+  import type { SuperForm, SuperFormData } from 'sveltekit-superforms/client';
+
   import { browser } from '$app/environment';
   import * as Form from '$lib/components/ui/form';
-  import * as Tabs from '$lib/components/ui/tabs';
   import { Input } from '$lib/components/ui/input';
   import { Label } from '$lib/components/ui/label';
-  import type { SuperForm, SuperFormData } from 'sveltekit-superforms/client';
-  import type { Infer } from 'sveltekit-superforms/adapters';
+  import * as Tabs from '$lib/components/ui/tabs';
+
   import type { FormSchema } from '../schema';
 
   interface Props {

@@ -1,9 +1,10 @@
+import { format } from 'date-fns';
+import { and, eq, gt } from 'drizzle-orm';
+import { v4 as uuidv4 } from 'uuid';
+
 import type { DBType } from '../db';
 import * as table from '../db/schema';
-import { eq, and, gt } from 'drizzle-orm';
-import { v4 as uuidv4 } from 'uuid';
 import { wrapResultAsyncFn } from '../db/types';
-import { format } from 'date-fns';
 
 // Valid GitHub stat types
 export type GithubStatType = 'commits' | 'repositories' | 'followers';

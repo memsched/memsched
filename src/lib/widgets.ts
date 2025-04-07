@@ -1,5 +1,5 @@
-import type { WidgetJoinMetricsData } from './server/services/metrics/types';
 import { CIRCLE_FLAG_ICONS, FLAT_COLOR_ICONS, VSCODE_ICONS } from './icons';
+import type { WidgetJoinMetricsData } from './server/services/metrics/types';
 
 // Collection of mock widgets for demonstration purposes
 export const mockWidgets: WidgetJoinMetricsData[] = [

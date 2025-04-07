@@ -1,5 +1,5 @@
 <script lang="ts" module>
-  import { type VariantProps, tv } from 'tailwind-variants';
+  import { tv, type VariantProps } from 'tailwind-variants';
 
   export const alertVariants = tv({
     base: '[&>svg]:text-foreground relative w-full rounded-lg border p-4 [&>svg]:absolute [&>svg]:left-4 [&>svg]:top-4 [&>svg~*]:pl-7',
@@ -19,8 +19,9 @@
 </script>
 
 <script lang="ts">
-  import type { HTMLAttributes } from 'svelte/elements';
   import type { WithElementRef } from 'bits-ui';
+  import type { HTMLAttributes } from 'svelte/elements';
+
   import { cn } from '$lib/utils.js';
 
   let {

@@ -1,11 +1,12 @@
 <script>
-  import { page } from '$app/state';
-  import { Badge } from '$lib/components/ui/badge';
-  import ContactSupportButton from '$lib/components/ContactSupportButton.svelte';
   import { IoArrowBack } from 'svelte-icons-pack/io';
-  import AuthLayout from '$lib/components/layouts/AuthLayout.svelte';
-  import IconButton from '$lib/components/ui/IconButton.svelte';
   import SvelteSeo from 'svelte-seo';
+
+  import { page } from '$app/state';
+  import ContactSupportButton from '$lib/components/ContactSupportButton.svelte';
+  import AuthLayout from '$lib/components/layouts/AuthLayout.svelte';
+  import { Badge } from '$lib/components/ui/badge';
+  import IconButton from '$lib/components/ui/IconButton.svelte';
   import { DOMAIN } from '$lib/constants';
 
   const pageTitle = page.status === 404 ? 'Page Not Found - MEMsched' : 'Error - MEMsched';

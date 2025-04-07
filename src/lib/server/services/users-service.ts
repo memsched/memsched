@@ -1,15 +1,17 @@
-import { eq, and, not } from 'drizzle-orm';
+import { and, eq, not } from 'drizzle-orm';
 import { v4 as uuidv4 } from 'uuid';
-import * as table from '$lib/server/db/schema';
-import type { ProviderId } from '../oauth';
-import type { DBType } from '$lib/server/db';
-import type { FormSchema } from '$lib/components/forms/profile-form/schema';
 import type { z } from 'zod';
+
+import type { FormSchema } from '$lib/components/forms/profile-form/schema';
+import type { DBType } from '$lib/server/db';
+import * as table from '$lib/server/db/schema';
 import {
+  DrizzleRecordNotFoundErrorCause,
   wrapResultAsync,
   wrapResultAsyncFn,
-  DrizzleRecordNotFoundErrorCause,
 } from '$lib/server/db/types';
+
+import type { ProviderId } from '../oauth';
 import { PaymentService } from './payment-service';
 
 // List of reserved usernames that cannot be used (route paths)

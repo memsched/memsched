@@ -1,19 +1,20 @@
 <script lang="ts">
   import { onMount } from 'svelte';
+  import { Icon } from 'svelte-icons-pack';
+  import { IoArrowForward, IoCube, IoGlobe, IoPersonCircle } from 'svelte-icons-pack/io';
+
+  import HomeLayout from '$lib/components/layouts/HomeLayout.svelte';
   import Arrow from '$lib/components/svgs/Arrow.svelte';
+  import Path from '$lib/components/svgs/Path.svelte';
+  import * as Accordion from '$lib/components/ui/accordion';
   import { Badge } from '$lib/components/ui/badge';
   import { Button } from '$lib/components/ui/button';
-  import { Icon } from 'svelte-icons-pack';
-  import HomeLayout from '$lib/components/layouts/HomeLayout.svelte';
-  import { IoArrowForward, IoCube, IoGlobe, IoPersonCircle } from 'svelte-icons-pack/io';
   import IconButton from '$lib/components/ui/IconButton.svelte';
   import WidgetCarousel from '$lib/components/WidgetCarousel.svelte';
-  import { mockWidgets } from '$lib/widgets';
-  import { HEADER_HEIGHT } from '$lib/constants';
-  import Path from '$lib/components/svgs/Path.svelte';
   import Widget from '$lib/components/widgets/Widget.svelte';
+  import { HEADER_HEIGHT } from '$lib/constants';
   import { FLAT_COLOR_ICONS } from '$lib/icons';
-  import * as Accordion from '$lib/components/ui/accordion';
+  import { mockWidgets } from '$lib/widgets';
 
   const codeSnippet = `
 <img src="https://memsched.com/api/widgets/example?svg" />`;

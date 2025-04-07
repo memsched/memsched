@@ -1,5 +1,7 @@
-import { dev } from '$app/environment';
 import { redirect } from '@sveltejs/kit';
+
+import { dev } from '$app/environment';
+
 import type { PageLoad } from './$types';
 
 export const load: PageLoad = async () => {

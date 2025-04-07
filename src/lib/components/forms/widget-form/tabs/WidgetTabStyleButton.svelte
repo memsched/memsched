@@ -1,10 +1,11 @@
 <script lang="ts">
   import type { Snippet } from 'svelte';
-  import { type WidgetMetric } from '$lib/server/db/schema';
-  import type { FormSchema } from '$lib/components/forms/widget-form/schema';
-  import type { SuperFormData } from 'sveltekit-superforms/client';
   import type { Infer } from 'sveltekit-superforms/adapters';
+  import type { SuperFormData } from 'sveltekit-superforms/client';
+
+  import type { FormSchema } from '$lib/components/forms/widget-form/schema';
   import * as Tooltip from '$lib/components/ui/tooltip';
+  import { type WidgetMetric } from '$lib/server/db/schema';
   import { cn } from '$lib/utils';
 
   interface Props {

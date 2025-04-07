@@ -1,9 +1,11 @@
-import { google } from '$lib/server/oauth';
-import { decodeIdToken, type OAuth2Tokens } from 'arctic';
-import type { RequestEvent } from './$types';
-import { sanitizeUsername } from '$lib/server/utils';
 import { error } from '@sveltejs/kit';
+import { decodeIdToken, type OAuth2Tokens } from 'arctic';
+
+import { google } from '$lib/server/oauth';
 import { oauthLimiter } from '$lib/server/rate-limiter';
+import { sanitizeUsername } from '$lib/server/utils';
+
+import type { RequestEvent } from './$types';
 
 interface IClaims {
   sub: string;

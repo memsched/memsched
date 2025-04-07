@@ -169,6 +169,13 @@
       "when": 1744027702655,
       "tag": "0023_update_metric_style_default",
       "breakpoints": true
+    },
+    {
+      "idx": 24,
+      "version": "6",
+      "when": 1744044561779,
+      "tag": "0024_update_metric_aggregration_type_to_period",
+      "breakpoints": true
     }
   ]
 }

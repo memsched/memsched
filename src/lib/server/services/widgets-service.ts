@@ -153,8 +153,9 @@ export class WidgetsService {
 
           style: metric.style,
           name: metric.name,
-          valueAggregationType: metric.valueAggregationType,
+          period: metric.period,
           valueDisplayPrecision: metric.valueDisplayPrecision,
+          valuePercent: false,
 
           provider: metric.provider,
           objectiveId: metric.provider === 'objective' ? metric.objectiveId : null,
@@ -233,9 +234,9 @@ export class WidgetsService {
 
             style: metric.style,
             name: metric.name,
-            valueAggregationType: metric.valueAggregationType,
+            period: metric.period,
             valueDisplayPrecision: metric.valueDisplayPrecision,
-
+            valuePercent: false,
             provider: metric.provider,
             objectiveId: metric.provider === 'objective' ? metric.objectiveId : null,
             githubUsername: metric.provider === 'github' ? metric.githubUsername : null,

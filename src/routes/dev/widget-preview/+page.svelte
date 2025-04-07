@@ -6,7 +6,7 @@
   import CodeBlock from '$lib/components/CodeBlock.svelte';
   import {
     WIDGET_METRIC_DISPLAY_PRECISION_MAX,
-    WIDGET_METRIC_VALUE_AGGREGATION_TYPE,
+    WIDGET_METRIC_PERIOD,
   } from '$lib/components/forms/widget-form/schema';
   import ColorPickerInput from '$lib/components/inputs/ColorPickerInput.svelte';
   import { Button } from '$lib/components/ui/button';
@@ -41,7 +41,7 @@
         data: {
           value: 1235,
         },
-        valueAggregationType: 'day',
+        period: 'day',
         valueDisplayPrecision: 0,
         style: 'metric-base',
         order: 1,
@@ -51,7 +51,7 @@
         data: {
           value: 431,
         },
-        valueAggregationType: 'day',
+        period: 'day',
         valueDisplayPrecision: 0,
         style: 'metric-base',
         order: 2,
@@ -102,14 +102,14 @@
 
   function addMetric() {
     const style = 'metric-base' as const;
-    const valueAggregationType = 'day' as const;
+    const period = 'day' as const;
     const newMetric = {
       name: `Metric ${config.metrics.length + 1}`,
       data: {
         value: Math.floor(Math.random() * 1000),
         ...getPlotDataForStyle(style),
       },
-      valueAggregationType,
+      period,
       valueDisplayPrecision: 0,
       style,
       order: config.metrics.length + 1,
@@ -412,13 +412,13 @@
                   </div>
 
                   <div class="space-y-1">
-                    <Label for={`metric-${index}-valueAggregationType`}>Calculation Type</Label>
-                    <Select.Root type="single" bind:value={metric.valueAggregationType}>
-                      <Select.Trigger id={`metric-${index}-valueAggregationType`} class="w-full">
-                        {metric.valueAggregationType}
+                    <Label for={`metric-${index}-period`}>Calculation Type</Label>
+                    <Select.Root type="single" bind:value={metric.period}>
+                      <Select.Trigger id={`metric-${index}-period`} class="w-full">
+                        {metric.period}
                       </Select.Trigger>
                       <Select.Content>
-                        {#each WIDGET_METRIC_VALUE_AGGREGATION_TYPE as calcType}
+                        {#each WIDGET_METRIC_PERIOD as calcType}
                           <Select.Item value={calcType} class="capitalize">
                             {calcType}
                           </Select.Item>

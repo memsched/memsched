@@ -17,7 +17,7 @@ type WidgetMetricDataBase = Omit<
 
 type WidgetMetricDataValueFields = NonNullableFieldsPick<
   WidgetMetric,
-  'name' | 'valueAggregationType' | 'valueDisplayPrecision'
+  'name' | 'period' | 'valueDisplayPrecision'
 >;
 
 export type WidgetMetricDataValue = WidgetMetricDataBase & {
@@ -30,7 +30,7 @@ type WidgetMetricDataPlotBase = WidgetMetricDataBase & {
   data: DataPlot;
 };
 
-type WidgetMetricDataPlotMetric = WidgetMetricDataBase & {
+export type WidgetMetricDataPlotMetric = WidgetMetricDataBase & {
   style: 'plot-metric';
   data: DataValue & DataPlot;
 } & WidgetMetricDataValueFields;
@@ -42,7 +42,7 @@ type WidgetMetricDataHeatmapBase = WidgetMetricDataBase & {
   data: DataHeatmap;
 };
 
-type WidgetMetricDataHeatmapMetric = WidgetMetricDataBase & {
+export type WidgetMetricDataHeatmapMetric = WidgetMetricDataBase & {
   style: 'heatmap-metric';
   data: DataValue & DataHeatmap;
 } & WidgetMetricDataValueFields;

@@ -18,14 +18,15 @@ export class ObjectiveMetricProvider implements BaseMetricProvider {
   public getValueData(metric: WidgetMetric): ResultAsync<DataValue, DrizzleError> {
     return wrapResultAsyncFn(async () => {
       assert(metric.objectiveId !== null, 'Objective ID is required');
-      assert(metric.valueAggregationType !== null, 'Value aggregation type is required');
+      assert(metric.period !== null, 'Period is required');
       assert(metric.valueDisplayPrecision !== null, 'Value display precision is required');
 
       const value = await this.getObjectiveValue(
         metric.objectiveId!,
-        metric.valueAggregationType!,
+        metric.period!,
         metric.valueDisplayPrecision!,
-        metric.userId
+        metric.valuePercent ?? false,
+        metric.userId!
       );
 
       if (value.isErr()) {
@@ -47,13 +48,10 @@ export class ObjectiveMetricProvider implements BaseMetricProvider {
         throw logs.error;
       }
 
-      // Transform log points into plot points, ignoring the daily_date field
-      const points = logs.value.map(({ value }) => ({
-        y: value,
-      }));
-
       return {
-        points,
+        points: logs.value.map(({ value }) => ({
+          y: value,
+        })),
       };
     });
   }
@@ -86,12 +84,13 @@ export class ObjectiveMetricProvider implements BaseMetricProvider {
 
   private getObjectiveValue(
     objectiveId: string,
-    valueAggregationType: NonNullable<WidgetMetric['valueAggregationType']>,
+    period: NonNullable<WidgetMetric['period']>,
     valueDisplayPrecision: NonNullable<WidgetMetric['valueDisplayPrecision']>,
+    valuePercent: boolean,
     userId: string
   ) {
     return wrapResultAsyncFn(async () => {
-      if (valueAggregationType === 'percentage') {
+      if (valuePercent) {
         const objectiveResult = await this.objectiveService.get(objectiveId, userId);
         if (objectiveResult.isErr()) {
           throw objectiveResult.error;
@@ -107,7 +106,7 @@ export class ObjectiveMetricProvider implements BaseMetricProvider {
         return roundToDecimal(percentage, valueDisplayPrecision);
       }
 
-      if (valueAggregationType === 'all time') {
+      if (period === 'all time') {
         const result = await this.objectiveLogsService.getSum(objectiveId, userId);
         if (result.isErr()) {
           throw result.error;
@@ -116,13 +115,13 @@ export class ObjectiveMetricProvider implements BaseMetricProvider {
       } else {
         // Define time filter based on calculation type
         const timeAgo = new Date();
-        if (valueAggregationType === 'day') {
+        if (period === 'day') {
           timeAgo.setDate(timeAgo.getDate() - 1);
-        } else if (valueAggregationType === 'week') {
+        } else if (period === 'week') {
           timeAgo.setDate(timeAgo.getDate() - 7); // TODO: Use ISO week number
-        } else if (valueAggregationType === 'month') {
+        } else if (period === 'month') {
           timeAgo.setMonth(timeAgo.getMonth() - 1);
-        } else if (valueAggregationType === 'year') {
+        } else if (period === 'year') {
           timeAgo.setFullYear(timeAgo.getFullYear() - 1);
         } else {
           return 0; // Unknown calculation type

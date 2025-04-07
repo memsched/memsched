@@ -160,7 +160,7 @@
                 value: 85 + liveIncrement,
               },
               name: 'this month',
-              valueAggregationType: 'month',
+              period: 'month',
               valueDisplayPrecision: 0,
             },
             {
@@ -170,7 +170,7 @@
                 value: 450 + liveIncrement,
               },
               name: 'total hours',
-              valueAggregationType: 'all time',
+              period: 'all time',
               valueDisplayPrecision: 0,
             },
           ]}

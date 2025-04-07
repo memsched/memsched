@@ -3,10 +3,10 @@ import { index, integer, primaryKey, real, sqliteTable, text } from 'drizzle-orm
 
 import {
   WIDGET_METRIC_GITHUB_STAT_TYPE,
+  WIDGET_METRIC_PERIOD,
   WIDGET_METRIC_PROVIDER,
   WIDGET_METRIC_STYLE,
-  WIDGET_METRIC_VALUE_AGGREGATION_TYPE,
-} from '$lib/components/forms/widget-form/schema';
+} from '../../components/forms/widget-form/schema';
 
 export const user = sqliteTable('user', {
   id: text('id').primaryKey(),
@@ -153,12 +153,12 @@ export const widgetMetric = sqliteTable('widget_metric', {
   })
     .notNull()
     .default('metric-base'),
-  // Metric Configuration (metric-base, metric-trend, plot-metric, heatmap-metric)
+  // (metric-base, metric-trend, plot-base, plot-metric, heatmap-base, heatmap-metric)
+  period: text('period', { enum: WIDGET_METRIC_PERIOD }).notNull(),
+  // (metric-base, metric-trend, plot-metric, heatmap-metric)
   name: text('name'),
-  valueAggregationType: text('value_aggregation_type', {
-    enum: WIDGET_METRIC_VALUE_AGGREGATION_TYPE,
-  }),
   valueDisplayPrecision: integer('value_display_precision'),
+  valuePercent: integer('value_percent', { mode: 'boolean' }),
 
   widgetId: text('widget_id')
     .notNull()

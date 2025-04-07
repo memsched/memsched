@@ -1,7 +1,7 @@
 <script lang="ts">
+  import ValueComponent from '$lib/components/widgets/components/ValueComponent.svelte';
   import type { WidgetMetricDataHeatmap } from '$lib/server/services/metrics/types';
   import { addOpacityRgba } from '$lib/utils';
-
   interface Props {
     metric: WidgetMetricDataHeatmap;
     accentColor: string;
@@ -46,22 +46,6 @@
     {/each}
   </div>
   {#if metric.style === 'heatmap-metric'}
-    <div style:display="flex" style:flex-direction="column">
-      <div
-        style:font-size="1.5rem"
-        style:font-weight="800"
-        style:line-height="1"
-        style:display="flex"
-        style:align-items="flex-end"
-        style:gap={metric.valueAggregationType === 'percentage' ? '0.1rem' : '0.3rem'}
-      >
-        {metric.data.value}
-      </div>
-      {#if metric.name}
-        <div style:font-size="0.8rem" style:color="#666">
-          {metric.name}
-        </div>
-      {/if}
-    </div>
+    <ValueComponent {metric} {accentColor} valueFontSize="1.5rem" valuePercentFontSize="1rem" />
   {/if}
 </div>

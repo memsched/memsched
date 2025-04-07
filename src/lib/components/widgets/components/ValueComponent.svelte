@@ -1,29 +1,38 @@
 <script lang="ts">
   import TrendingUpArrow from '$lib/components/svgs/TrendingUpArrow.svelte';
-  import type { WidgetMetricDataValue } from '$lib/server/services/metrics/types';
+  import type {
+    WidgetMetricDataHeatmapMetric,
+    WidgetMetricDataPlotMetric,
+    WidgetMetricDataValue,
+  } from '$lib/server/services/metrics/types';
 
   interface Props {
-    metric: WidgetMetricDataValue;
+    metric: WidgetMetricDataValue | WidgetMetricDataPlotMetric | WidgetMetricDataHeatmapMetric;
     accentColor: string;
+    valueFontSize?: string;
+    valuePercentFontSize?: string;
   }
 
-  const { metric, accentColor }: Props = $props();
+  const {
+    metric,
+    accentColor,
+    valueFontSize = '2rem',
+    valuePercentFontSize = '1.25rem',
+  }: Props = $props();
 </script>
 
-<div style:display="flex" style:flex-direction="column">
+<div style:display="flex" style:flex-direction="column" style:align-items="flex-start">
   <div
-    style:font-size="2rem"
+    style:font-size={valueFontSize}
     style:font-weight="800"
     style:line-height="1"
     style:display="flex"
     style:align-items="flex-end"
-    style:gap={metric.valueAggregationType === 'percentage' ? '0.1rem' : '0.3rem'}
+    style:gap={metric.valuePercent ? '0.1rem' : '0.3rem'}
   >
-    {#if metric.valueAggregationType === 'percentage'}
+    {#if metric.valuePercent}
       {metric.data.value}
-      <span style:font-size="1.25rem" style:margin-bottom="0.1rem">
-        {metric.valueAggregationType === 'percentage' ? '%' : ''}
-      </span>
+      <span style:font-size={valuePercentFontSize} style:margin-bottom="0.1rem">%</span>
     {:else}
       {metric.data.value}
       {#if metric.style === 'metric-trend'}

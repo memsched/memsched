@@ -15,7 +15,7 @@
     type FormSchema,
     WIDGET_METRIC_DISPLAY_PRECISION_MAX,
     WIDGET_METRIC_GITHUB_STAT_TYPE,
-    WIDGET_METRIC_VALUE_AGGREGATION_TYPE,
+    WIDGET_METRIC_PERIOD,
   } from '../schema';
   import WidgetTabStyleButton from './WidgetTabStyleButton.svelte';
 
@@ -27,17 +27,6 @@
   }
 
   const { form, formData, metricIndex, objectives }: Props = $props();
-
-  // Used to get calculation types for a specific objective
-  function getCalculationTypesForObjective(objectiveId: string) {
-    if (!objectiveId) return WIDGET_METRIC_VALUE_AGGREGATION_TYPE;
-
-    const objective = objectives.find((o) => o.id === objectiveId);
-    if (objective?.goalType === 'ongoing') {
-      return WIDGET_METRIC_VALUE_AGGREGATION_TYPE.filter((ct) => ct !== 'percentage');
-    }
-    return WIDGET_METRIC_VALUE_AGGREGATION_TYPE;
-  }
 </script>
 
 <section class="space-y-6">
@@ -65,7 +54,8 @@
               data: {
                 value: 100,
               },
-              valueAggregationType: 'all time',
+              period: 'all time',
+              valuePercent: false,
               valueDisplayPrecision: 0,
               name: 'metric name',
               order: 1,
@@ -86,8 +76,9 @@
               data: {
                 value: 100,
               },
-              valueAggregationType: 'all time',
+              period: 'all time',
               valueDisplayPrecision: 0,
+              valuePercent: false,
               name: 'metric name',
               order: 1,
             }}
@@ -105,7 +96,8 @@
           <PlotComponent
             metric={{
               style: 'plot-base',
-              valueAggregationType: 'all time',
+              period: 'all time',
+              valuePercent: false,
               valueDisplayPrecision: 0,
               name: 'metric name',
               order: 1,
@@ -128,7 +120,8 @@
                 value: 100,
                 ...PLOT_DATA,
               },
-              valueAggregationType: 'all time',
+              period: 'all time',
+              valuePercent: false,
               valueDisplayPrecision: 0,
               name: 'metric name',
               order: 1,
@@ -146,7 +139,8 @@
           <HeatmapComponent
             metric={{
               style: 'heatmap-base',
-              valueAggregationType: 'all time',
+              period: 'all time',
+              valuePercent: false,
               valueDisplayPrecision: 1,
               name: 'metric name',
               order: 1,
@@ -171,7 +165,8 @@
                 value: 100,
                 ...HEATMAP_DATA,
               },
-              valueAggregationType: 'all time',
+              period: 'all time',
+              valuePercent: false,
               valueDisplayPrecision: 1,
               name: 'metric name',
               order: 1,
@@ -295,7 +290,7 @@
         <Form.FieldErrors />
       </Form.Field>
 
-      <Form.Field {form} name="metrics[{metricIndex}].valueAggregationType" class="col-span-2">
+      <Form.Field {form} name="metrics[{metricIndex}].period" class="col-span-2">
         <Form.Control>
           {#snippet children({ props })}
             <Form.Label>Duration</Form.Label>
@@ -304,22 +299,16 @@
               disabled={['repositories', 'followers'].includes(
                 $formData.metrics[metricIndex].githubStatType ?? ''
               )}
-              bind:value={$formData.metrics[metricIndex].valueAggregationType}
+              bind:value={$formData.metrics[metricIndex].period}
               name={props.name}
             >
               <Select.Trigger {...props} class="capitalize">
-                {$formData.metrics[metricIndex].valueAggregationType}
+                {$formData.metrics[metricIndex].period}
               </Select.Trigger>
               <Select.Content>
-                {#if $formData.metrics[metricIndex].provider === 'objective'}
-                  {#each getCalculationTypesForObjective($formData.metrics[metricIndex].objectiveId as unknown as string) as calcType}
-                    <Select.Item value={calcType} label={calcType} class="capitalize" />
-                  {/each}
-                {:else}
-                  {#each WIDGET_METRIC_VALUE_AGGREGATION_TYPE.filter((ct) => ct !== 'percentage') as calcType}
-                    <Select.Item value={calcType} label={calcType} class="capitalize" />
-                  {/each}
-                {/if}
+                {#each WIDGET_METRIC_PERIOD as period}
+                  <Select.Item value={period} label={period} class="capitalize" />
+                {/each}
               </Select.Content>
             </Select.Root>
           {/snippet}

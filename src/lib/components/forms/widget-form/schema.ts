@@ -9,14 +9,7 @@ export const WIDGET_METRIC_STYLE = [
   'heatmap-base',
   'heatmap-metric',
 ] as const;
-export const WIDGET_METRIC_VALUE_AGGREGATION_TYPE = [
-  'day',
-  'week',
-  'month',
-  'year',
-  'all time',
-  'percentage',
-] as const;
+export const WIDGET_METRIC_PERIOD = ['day', 'week', 'month', 'year', 'all time'] as const;
 export const WIDGET_METRIC_GITHUB_STAT_TYPE = ['commits', 'repositories', 'followers'] as const;
 export const WIDGET_METRIC_DISPLAY_PRECISION_MAX = 2;
 
@@ -32,8 +25,8 @@ const widgetMetricBaseSchema = z.object({
     .max(25, { message: 'Name must be less than 25 characters.' })
     .nullable()
     .transform((v) => (v === '' ? null : v)),
-  valueAggregationType: z
-    .enum(WIDGET_METRIC_VALUE_AGGREGATION_TYPE, {
+  period: z
+    .enum(WIDGET_METRIC_PERIOD, {
       message: 'Please select a valid aggregation type.',
     })
     .default('day'),

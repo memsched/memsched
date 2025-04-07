@@ -24,8 +24,9 @@ export const mockWidgets: WidgetJoinMetricsData[] = [
         data: {
           value: 13,
         },
-        valueAggregationType: 'day',
+        period: 'day',
         valueDisplayPrecision: 0,
+        valuePercent: false,
         order: 1,
       },
     ],
@@ -52,8 +53,9 @@ export const mockWidgets: WidgetJoinMetricsData[] = [
         data: {
           value: 34,
         },
-        valueAggregationType: 'day',
+        period: 'day',
         valueDisplayPrecision: 0,
+        valuePercent: false,
         order: 1,
       },
       {
@@ -62,8 +64,9 @@ export const mockWidgets: WidgetJoinMetricsData[] = [
         data: {
           value: 953,
         },
-        valueAggregationType: 'day',
+        period: 'day',
         valueDisplayPrecision: 0,
+        valuePercent: false,
         order: 2,
       },
     ],
@@ -90,8 +93,9 @@ export const mockWidgets: WidgetJoinMetricsData[] = [
         data: {
           value: 32,
         },
-        valueAggregationType: 'day',
+        period: 'day',
         valueDisplayPrecision: 0,
+        valuePercent: false,
         order: 1,
       },
     ],
@@ -118,8 +122,9 @@ export const mockWidgets: WidgetJoinMetricsData[] = [
         data: {
           value: 347,
         },
-        valueAggregationType: 'day',
+        period: 'day',
         valueDisplayPrecision: 0,
+        valuePercent: false,
         order: 1,
       },
     ],
@@ -146,8 +151,9 @@ export const mockWidgets: WidgetJoinMetricsData[] = [
         data: {
           value: 7,
         },
-        valueAggregationType: 'day',
+        period: 'day',
         valueDisplayPrecision: 0,
+        valuePercent: false,
         order: 1,
       },
     ],
@@ -176,8 +182,9 @@ export const mockWidgets: WidgetJoinMetricsData[] = [
         data: {
           value: 13,
         },
-        valueAggregationType: 'day',
+        period: 'day',
         valueDisplayPrecision: 0,
+        valuePercent: false,
         order: 1,
       },
     ],
@@ -204,8 +211,9 @@ export const mockWidgets: WidgetJoinMetricsData[] = [
         data: {
           value: 34,
         },
-        valueAggregationType: 'day',
+        period: 'day',
         valueDisplayPrecision: 0,
+        valuePercent: false,
         order: 1,
       },
       {
@@ -214,8 +222,9 @@ export const mockWidgets: WidgetJoinMetricsData[] = [
         data: {
           value: 953,
         },
-        valueAggregationType: 'day',
+        period: 'day',
         valueDisplayPrecision: 0,
+        valuePercent: false,
         order: 2,
       },
     ],
@@ -242,8 +251,9 @@ export const mockWidgets: WidgetJoinMetricsData[] = [
         data: {
           value: 32,
         },
-        valueAggregationType: 'day',
+        period: 'day',
         valueDisplayPrecision: 0,
+        valuePercent: false,
         order: 1,
       },
     ],
@@ -270,8 +280,9 @@ export const mockWidgets: WidgetJoinMetricsData[] = [
         data: {
           value: 347,
         },
-        valueAggregationType: 'day',
+        period: 'day',
         valueDisplayPrecision: 0,
+        valuePercent: false,
         order: 1,
       },
     ],
@@ -298,8 +309,9 @@ export const mockWidgets: WidgetJoinMetricsData[] = [
         data: {
           value: 7,
         },
-        valueAggregationType: 'day',
+        period: 'day',
         valueDisplayPrecision: 0,
+        valuePercent: false,
         order: 1,
       },
     ],
@@ -328,8 +340,9 @@ export const mockWidgets: WidgetJoinMetricsData[] = [
         data: {
           value: 13,
         },
-        valueAggregationType: 'day',
+        period: 'day',
         valueDisplayPrecision: 0,
+        valuePercent: false,
         order: 1,
       },
     ],
@@ -356,8 +369,9 @@ export const mockWidgets: WidgetJoinMetricsData[] = [
         data: {
           value: 34,
         },
-        valueAggregationType: 'day',
+        period: 'day',
         valueDisplayPrecision: 0,
+        valuePercent: false,
         order: 1,
       },
       {
@@ -366,8 +380,9 @@ export const mockWidgets: WidgetJoinMetricsData[] = [
         data: {
           value: 953,
         },
-        valueAggregationType: 'day',
+        period: 'day',
         valueDisplayPrecision: 0,
+        valuePercent: false,
         order: 2,
       },
     ],
@@ -394,8 +409,9 @@ export const mockWidgets: WidgetJoinMetricsData[] = [
         data: {
           value: 32,
         },
-        valueAggregationType: 'day',
+        period: 'day',
         valueDisplayPrecision: 0,
+        valuePercent: false,
         order: 1,
       },
     ],
@@ -422,8 +438,9 @@ export const mockWidgets: WidgetJoinMetricsData[] = [
         data: {
           value: 347,
         },
-        valueAggregationType: 'day',
+        period: 'day',
         valueDisplayPrecision: 0,
+        valuePercent: false,
         order: 1,
       },
     ],
@@ -450,8 +467,9 @@ export const mockWidgets: WidgetJoinMetricsData[] = [
         data: {
           value: 7,
         },
-        valueAggregationType: 'day',
+        period: 'day',
         valueDisplayPrecision: 0,
+        valuePercent: false,
         order: 1,
       },
     ],

@@ -76,7 +76,7 @@
       order: i,
       style: m.style,
       name: m.name,
-      valueAggregationType: m.valueAggregationType,
+      period: m.period,
       valueDisplayPrecision: m.valueDisplayPrecision,
       data: {
         ...(m.style.startsWith('plot') ? PLOT_DATA : HEATMAP_DATA),
@@ -145,7 +145,7 @@
           style: 'metric-base',
           provider: 'objective',
           objectiveId: '',
-          valueAggregationType: 'day',
+          period: 'day',
           valueDisplayPrecision: 0,
           githubUsername: null,
           githubStatType: null,

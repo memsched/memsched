@@ -6,7 +6,7 @@ import { assert, roundToDecimal } from '$lib/utils';
 import { type DrizzleError, wrapResultAsyncFn } from '../../../db/types';
 import type { ObjectiveLogsService } from '../../objective-logs-service';
 import type { ObjectivesService } from '../../objectives-service';
-import type { DataHeatmap,DataPlot, DataValue } from '../data/types';
+import type { DataHeatmap, DataPlot, DataValue } from '../data/types';
 import type { BaseMetricProvider } from './base-metric-provider';
 
 export class ObjectiveMetricProvider implements BaseMetricProvider {
@@ -40,24 +40,20 @@ export class ObjectiveMetricProvider implements BaseMetricProvider {
 
   public getPlotData(metric: WidgetMetric): ResultAsync<DataPlot, DrizzleError> {
     return wrapResultAsyncFn(async () => {
+      assert(metric.objectiveId !== null, 'Objective ID is required');
+
+      const logs = await this.objectiveLogsService.getLogPoints(metric.objectiveId!, metric.userId);
+      if (logs.isErr()) {
+        throw logs.error;
+      }
+
+      // Transform log points into plot points, ignoring the daily_date field
+      const points = logs.value.map(({ value }) => ({
+        y: value,
+      }));
+
       return {
-        points: [
-          {
-            y: 1,
-          },
-          {
-            y: 2,
-          },
-          {
-            y: 3,
-          },
-          {
-            y: 4,
-          },
-          {
-            y: 5,
-          },
-        ],
+        points,
       };
     });
   }

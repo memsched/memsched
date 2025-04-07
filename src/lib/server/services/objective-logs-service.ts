@@ -1,4 +1,4 @@
-import { and, desc, eq, gte, lte,sql } from 'drizzle-orm';
+import { and, desc, eq, gte, lte, sql } from 'drizzle-orm';
 import { errAsync, okAsync, ResultAsync } from 'neverthrow';
 import { v4 as uuidv4 } from 'uuid';
 import { z } from 'zod';
@@ -168,6 +168,35 @@ export class ObjectiveLogsService {
   private delete(logId: string) {
     return wrapResultAsync(
       this.db.delete(table.objectiveLog).where(eq(table.objectiveLog.id, logId))
+    );
+  }
+
+  public getLogPoints(
+    objectiveId: string,
+    userId: string,
+    options: {
+      startDate?: Date;
+      endDate?: Date;
+    } = {}
+  ) {
+    const dateExpr = sql`date(datetime(${table.objectiveLog.loggedAt}, 'unixepoch'))`;
+
+    return wrapResultAsync(
+      this.db
+        .select({
+          value: sql<number>`SUM(SUM(${table.objectiveLog.value})) OVER (ORDER BY ${dateExpr})`,
+        })
+        .from(table.objectiveLog)
+        .where(
+          and(
+            eq(table.objectiveLog.objectiveId, objectiveId),
+            eq(table.objectiveLog.userId, userId),
+            ...(options.startDate ? [gte(table.objectiveLog.loggedAt, options.startDate)] : []),
+            ...(options.endDate ? [lte(table.objectiveLog.loggedAt, options.endDate)] : [])
+          )
+        )
+        .groupBy(dateExpr)
+        .orderBy(dateExpr)
     );
   }
 }

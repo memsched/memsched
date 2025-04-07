@@ -148,6 +148,13 @@
       "when": 1743963771488,
       "tag": "0020_add_metric_style",
       "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "6",
+      "when": 1744012451629,
+      "tag": "0021_update_metric_fields",
+      "breakpoints": true
     }
   ]
 }

@@ -1,3 +1,4 @@
+import { addDays, endOfMonth, format, getDaysInMonth, startOfDay, startOfMonth } from 'date-fns';
 import { ResultAsync } from 'neverthrow';
 
 import type { WidgetMetric } from '$lib/server/db/schema';
@@ -42,10 +43,9 @@ export class ObjectiveMetricProvider implements BaseMetricProvider {
   public getPlotData(metric: WidgetMetric): ResultAsync<DataPlot, DrizzleError> {
     return wrapResultAsyncFn(async () => {
       assert(metric.objectiveId !== null, 'Objective ID is required');
-      assert(metric.period !== null, 'Period is required');
 
       const timeAgo = this.getTimeAgoForPeriod(metric.period!);
-      const logs = await this.objectiveLogsService.getLogPoints(
+      const logs = await this.objectiveLogsService.getRunningLogPoints(
         metric.objectiveId!,
         metric.userId,
         timeAgo ? { startDate: timeAgo } : undefined
@@ -65,9 +65,49 @@ export class ObjectiveMetricProvider implements BaseMetricProvider {
 
   public getHeatmapData(metric: WidgetMetric): ResultAsync<DataHeatmap, DrizzleError> {
     return wrapResultAsyncFn(async () => {
+      assert(metric.objectiveId !== null, 'Objective ID is required');
+
+      const now = new Date();
+      const monthStart = startOfMonth(now);
+      const monthEnd = endOfMonth(now);
+      const daysInMonth = getDaysInMonth(now);
+
+      // Get logs for the current month
+      const logs = await this.objectiveLogsService.getDailyLogPoints(
+        metric.objectiveId!,
+        metric.userId,
+        { startDate: monthStart, endDate: monthEnd }
+      );
+
+      if (logs.isErr()) {
+        throw logs.error;
+      }
+
+      // Create a map of existing dates and their values
+      const dateValueMap = new Map(logs.value.map((r) => [r.date, r.value]));
+
+      // Create array for all dates in the month
+      const allDates: { date: string; value: number }[] = [];
+      let currentDate = startOfDay(monthStart);
+
+      // Fill in all days of the month
+      for (let day = 0; day < daysInMonth; day++) {
+        const dateStr = format(currentDate, 'yyyy-MM-dd');
+        allDates.push({
+          date: dateStr,
+          value: dateValueMap.get(dateStr) || 0,
+        });
+        currentDate = addDays(currentDate, 1);
+      }
+
+      // Create the points array
+      const points = allDates.map(({ value }) => ({
+        z: value,
+      }));
+
       return {
-        points: [],
-        rows: 1,
+        points,
+        cols: 7,
       };
     });
   }

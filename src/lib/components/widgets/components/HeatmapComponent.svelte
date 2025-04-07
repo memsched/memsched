@@ -11,12 +11,10 @@
 
   const HEATMAP_POINT_SIZE = 6;
   const HEATMAP_POINT_SPACING = 1;
-  const rows = $derived(metric.data.rows);
-  const HEATMAP_HEIGHT = $derived(HEATMAP_POINT_SIZE * rows + HEATMAP_POINT_SPACING * (rows - 1));
-  const columns = $derived(Math.ceil(metric.data.points?.length / rows));
-  const heatmapWidth = $derived(
-    columns * HEATMAP_POINT_SIZE + HEATMAP_POINT_SPACING * (columns - 1)
-  );
+  const cols = $derived(metric.data.cols);
+  const heatmapWidth = $derived(HEATMAP_POINT_SIZE * cols + HEATMAP_POINT_SPACING * (cols - 1));
+  const rows = $derived(Math.ceil(metric.data.points?.length / cols));
+  const heatmapHeight = $derived(rows * HEATMAP_POINT_SIZE + HEATMAP_POINT_SPACING * (rows - 1));
 
   const minValue = $derived(Math.min(...metric.data.points.map((p) => p.z)));
   const maxValue = $derived(Math.max(...metric.data.points.map((p) => p.z)));
@@ -30,10 +28,9 @@
 <div style:display="flex" style:align-items="center" style:gap="0.5rem">
   <div
     style:display="flex"
-    style:flex-direction="column"
     style:gap="{HEATMAP_POINT_SPACING}px"
     style:flex-wrap="wrap"
-    style:height="{HEATMAP_HEIGHT}px"
+    style:height="{heatmapHeight}px"
     style:width="{heatmapWidth}px"
   >
     {#each metric.data.points as dataPoint}

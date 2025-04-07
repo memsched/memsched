@@ -171,7 +171,7 @@ export class ObjectiveLogsService {
     );
   }
 
-  public getLogPoints(
+  public getRunningLogPoints(
     objectiveId: string,
     userId: string,
     options: {
@@ -184,7 +184,38 @@ export class ObjectiveLogsService {
     return wrapResultAsync(
       this.db
         .select({
+          date: dateExpr,
           value: sql<number>`SUM(SUM(${table.objectiveLog.value})) OVER (ORDER BY ${dateExpr})`,
+        })
+        .from(table.objectiveLog)
+        .where(
+          and(
+            eq(table.objectiveLog.objectiveId, objectiveId),
+            eq(table.objectiveLog.userId, userId),
+            ...(options.startDate ? [gte(table.objectiveLog.loggedAt, options.startDate)] : []),
+            ...(options.endDate ? [lte(table.objectiveLog.loggedAt, options.endDate)] : [])
+          )
+        )
+        .groupBy(dateExpr)
+        .orderBy(dateExpr)
+    );
+  }
+
+  public getDailyLogPoints(
+    objectiveId: string,
+    userId: string,
+    options: {
+      startDate?: Date;
+      endDate?: Date;
+    } = {}
+  ) {
+    const dateExpr = sql`date(datetime(${table.objectiveLog.loggedAt}, 'unixepoch'))`;
+
+    return wrapResultAsync(
+      this.db
+        .select({
+          date: dateExpr,
+          value: sql<number>`${table.objectiveLog.value}`,
         })
         .from(table.objectiveLog)
         .where(

@@ -292,38 +292,40 @@
       </Form.Field>
     {/if}
 
-    <Form.Field {form} name="metrics[{metricIndex}].period" class="col-span-2">
-      <Form.Control>
-        {#snippet children({ props })}
-          <Form.Label>Period</Form.Label>
-          <Select.Root
-            type="single"
-            disabled={['repositories', 'followers'].includes(
-              $formData.metrics[metricIndex].githubStatType ?? ''
-            )}
-            bind:value={$formData.metrics[metricIndex].period}
-            name={props.name}
-          >
-            <Select.Trigger {...props} class="capitalize">
-              {$formData.metrics[metricIndex].period === 'all time'
-                ? 'All Time'
-                : 'Last ' + $formData.metrics[metricIndex].period}
-            </Select.Trigger>
-            <Select.Content>
-              {#each WIDGET_METRIC_PERIOD as period}
-                <Select.Item
-                  value={period}
-                  label={period !== 'all time' ? 'Last ' + period : 'All Time'}
-                  class="capitalize"
-                />
-              {/each}
-            </Select.Content>
-          </Select.Root>
-        {/snippet}
-      </Form.Control>
-      <Form.Description>How much to look back from now.</Form.Description>
-      <Form.FieldErrors />
-    </Form.Field>
+    {#if !['heatmap-base'].includes($formData.metrics[metricIndex].style) && $formData.metrics[metricIndex].provider === 'objective'}
+      <Form.Field {form} name="metrics[{metricIndex}].period" class="col-span-2">
+        <Form.Control>
+          {#snippet children({ props })}
+            <Form.Label>Period</Form.Label>
+            <Select.Root
+              type="single"
+              disabled={['repositories', 'followers'].includes(
+                $formData.metrics[metricIndex].githubStatType ?? ''
+              )}
+              bind:value={$formData.metrics[metricIndex].period}
+              name={props.name}
+            >
+              <Select.Trigger {...props} class="capitalize">
+                {$formData.metrics[metricIndex].period === 'all time'
+                  ? 'All Time'
+                  : 'Last ' + $formData.metrics[metricIndex].period}
+              </Select.Trigger>
+              <Select.Content>
+                {#each WIDGET_METRIC_PERIOD as period}
+                  <Select.Item
+                    value={period}
+                    label={period !== 'all time' ? 'Last ' + period : 'All Time'}
+                    class="capitalize"
+                  />
+                {/each}
+              </Select.Content>
+            </Select.Root>
+          {/snippet}
+        </Form.Control>
+        <Form.Description>How much to look back from now.</Form.Description>
+        <Form.FieldErrors />
+      </Form.Field>
+    {/if}
 
     {#if !['plot-base', 'heatmap-base'].includes($formData.metrics[metricIndex].style) && $formData.metrics[metricIndex].provider === 'objective'}
       <Form.Field {form} name="metrics[{metricIndex}].valueDisplayPrecision" class="col-span-2">

@@ -37,7 +37,7 @@ export const PLOT_DATA: DataPlot = {
 };
 
 export const HEATMAP_DATA: DataHeatmap = {
-  rows: 7,
+  cols: 7,
   points: [
     { z: 1 },
     { z: 2 },

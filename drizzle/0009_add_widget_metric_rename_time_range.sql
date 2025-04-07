@@ -1,1 +1,0 @@
-ALTER TABLE `widget_metric` RENAME COLUMN "time_range" TO "calculation_type";

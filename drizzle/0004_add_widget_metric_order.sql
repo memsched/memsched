@@ -1,1 +1,0 @@
-ALTER TABLE `widget_metric` ADD `order` integer NOT NULL;

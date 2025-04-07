@@ -1,1 +1,0 @@
-ALTER TABLE `widget_metric` RENAME COLUMN "description" TO "name";

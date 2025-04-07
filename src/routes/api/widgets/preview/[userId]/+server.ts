@@ -1,6 +1,6 @@
 import type { RequestHandler } from './$types';
 import { error } from '@sveltejs/kit';
-import { type WidgetJoinMetricsPreview } from '$lib/server/db/schema';
+import { type WidgetJoinMetricsComponent } from '$lib/server/db/schema';
 import { formSchema } from '$lib/components/forms/widget-form/schema';
 import Widget from '$lib/components/widgets/Widget.svelte';
 import { renderWidget } from '$lib/server/svg';
@@ -67,5 +67,5 @@ export const GET: RequestHandler = async (event) => {
     metrics: metricsValues,
   };
 
-  return renderWidget<WidgetJoinMetricsPreview>(event, Widget, props, true);
+  return renderWidget<WidgetJoinMetricsComponent>(event, Widget, props, true);
 };

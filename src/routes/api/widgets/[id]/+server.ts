@@ -5,6 +5,7 @@ import { error } from '@sveltejs/kit';
 import { renderWidget } from '$lib/server/svg';
 import { generateWidgetEtag } from '$lib/server/utils';
 import { handleDbError } from '$lib/server/utils';
+import { okAsync } from 'neverthrow';
 
 export const GET: RequestHandler = async (event) => {
   const widgetId = event.params.id;

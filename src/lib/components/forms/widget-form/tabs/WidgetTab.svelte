@@ -11,7 +11,7 @@
   } from '../schema';
   import type { SuperForm, SuperFormData } from 'sveltekit-superforms/client';
   import type { Infer } from 'sveltekit-superforms/adapters';
-  import Metric from '$lib/components/widgets/components/Metric.svelte';
+  import Metric from '$lib/components/widgets/components/ValueMetric.svelte';
   import PlotMetric from '$lib/components/widgets/components/PlotMetric.svelte';
   import HeatmapMetric from '$lib/components/widgets/components/HeatmapMetric.svelte';
   import WidgetTabStyleButton from './WidgetTabStyleButton.svelte';
@@ -61,8 +61,8 @@
             metric={{
               style: 'metric-base',
               value: 100,
-              calculationType: 'all time',
-              valueDecimalPrecision: 0,
+              valueAggregationType: 'all time',
+              valueDisplayPrecision: 0,
               name: 'metric name',
               order: 1,
               plotData: {
@@ -83,8 +83,8 @@
             metric={{
               style: 'metric-trend',
               value: 100,
-              calculationType: 'all time',
-              valueDecimalPrecision: 0,
+              valueAggregationType: 'all time',
+              valueDisplayPrecision: 0,
               name: 'metric name',
               order: 1,
               plotData: {
@@ -106,8 +106,8 @@
             metric={{
               style: 'plot-base',
               value: 100,
-              calculationType: 'all time',
-              valueDecimalPrecision: 0,
+              valueAggregationType: 'all time',
+              valueDisplayPrecision: 0,
               name: 'metric name',
               order: 1,
               plotData: PLOT_DATA,
@@ -126,8 +126,8 @@
             metric={{
               style: 'plot-metric',
               value: 100,
-              calculationType: 'all time',
-              valueDecimalPrecision: 0,
+              valueAggregationType: 'all time',
+              valueDisplayPrecision: 0,
               name: 'metric name',
               order: 1,
               plotData: PLOT_DATA,
@@ -146,8 +146,8 @@
             metric={{
               style: 'heatmap-base',
               value: 100,
-              calculationType: 'all time',
-              valueDecimalPrecision: 1,
+              valueAggregationType: 'all time',
+              valueDisplayPrecision: 1,
               name: 'metric name',
               order: 1,
               plotData: HEATMAP_DATA,
@@ -166,8 +166,8 @@
             metric={{
               style: 'heatmap-metric',
               value: 100,
-              calculationType: 'all time',
-              valueDecimalPrecision: 1,
+              valueAggregationType: 'all time',
+              valueDisplayPrecision: 1,
               name: 'metric name',
               order: 1,
               plotData: HEATMAP_DATA,
@@ -180,20 +180,20 @@
   </Form.Field>
 
   <div class="grid grid-cols-6 gap-x-4 gap-y-2">
-    <Form.Field {form} name="metrics[{metricIndex}].metricType" class="col-span-2">
+    <Form.Field {form} name="metrics[{metricIndex}].provider" class="col-span-2">
       <Form.Control>
         {#snippet children({ props })}
           <Form.Label>Source</Form.Label>
           <Select.Root
             type="single"
-            value={$formData.metrics[metricIndex].metricType ?? undefined}
+            value={$formData.metrics[metricIndex].provider ?? undefined}
             onValueChange={(value) => {
-              $formData.metrics[metricIndex].metricType = (value ?? null) as any;
+              $formData.metrics[metricIndex].provider = (value ?? null) as any;
             }}
             name={props.name}
           >
             <Select.Trigger {...props} class="capitalize">
-              {$formData.metrics[metricIndex].metricType ?? 'Select a source'}
+              {$formData.metrics[metricIndex].provider ?? 'Select a source'}
             </Select.Trigger>
             <Select.Content>
               {#if objectives.length > 0}
@@ -208,7 +208,7 @@
       <Form.FieldErrors />
     </Form.Field>
 
-    {#if $formData.metrics[metricIndex].metricType === 'objective'}
+    {#if $formData.metrics[metricIndex].provider === 'objective'}
       <Form.Field {form} name="metrics[{metricIndex}].objectiveId" class="col-span-4">
         <Form.Control>
           {#snippet children({ props })}
@@ -238,7 +238,7 @@
         <Form.Description>Choose the objective for this metric.</Form.Description>
         <Form.FieldErrors />
       </Form.Field>
-    {:else if $formData.metrics[metricIndex].metricType === 'github'}
+    {:else if $formData.metrics[metricIndex].provider === 'github'}
       <Form.Field {form} name="metrics[{metricIndex}].githubUsername" class="col-span-2">
         <Form.Control>
           {#snippet children({ props })}
@@ -291,7 +291,7 @@
         <Form.FieldErrors />
       </Form.Field>
 
-      <Form.Field {form} name="metrics[{metricIndex}].calculationType" class="col-span-2">
+      <Form.Field {form} name="metrics[{metricIndex}].valueAggregationType" class="col-span-2">
         <Form.Control>
           {#snippet children({ props })}
             <Form.Label>Duration</Form.Label>
@@ -300,14 +300,14 @@
               disabled={['repositories', 'followers'].includes(
                 $formData.metrics[metricIndex].githubStatType ?? ''
               )}
-              bind:value={$formData.metrics[metricIndex].calculationType}
+              bind:value={$formData.metrics[metricIndex].valueAggregationType}
               name={props.name}
             >
               <Select.Trigger {...props} class="capitalize">
-                {$formData.metrics[metricIndex].calculationType}
+                {$formData.metrics[metricIndex].valueAggregationType}
               </Select.Trigger>
               <Select.Content>
-                {#if $formData.metrics[metricIndex].metricType === 'objective'}
+                {#if $formData.metrics[metricIndex].provider === 'objective'}
                   {#each getCalculationTypesForObjective($formData.metrics[metricIndex].objectiveId as unknown as string) as calcType}
                     <Select.Item value={calcType} label={calcType} class="capitalize" />
                   {/each}
@@ -323,23 +323,23 @@
         <Form.FieldErrors />
       </Form.Field>
 
-      {#if $formData.metrics[metricIndex].metricType === 'objective'}
-        <Form.Field {form} name="metrics[{metricIndex}].valueDecimalPrecision" class="col-span-2">
+      {#if $formData.metrics[metricIndex].provider === 'objective'}
+        <Form.Field {form} name="metrics[{metricIndex}].valueDisplayPrecision" class="col-span-2">
           <Form.Control>
             {#snippet children({ props })}
               <Form.Label>Decimal Precision</Form.Label>
               <Select.Root
                 type="single"
-                value={$formData.metrics[metricIndex].valueDecimalPrecision.toString()}
+                value={$formData.metrics[metricIndex].valueDisplayPrecision.toString()}
                 onValueChange={(value) => {
-                  $formData.metrics[metricIndex].valueDecimalPrecision = parseInt(value);
+                  $formData.metrics[metricIndex].valueDisplayPrecision = parseInt(value);
                 }}
                 name={props.name}
               >
                 <Select.Trigger {...props}>
-                  {$formData.metrics[metricIndex].valueDecimalPrecision +
+                  {$formData.metrics[metricIndex].valueDisplayPrecision +
                     ' digit' +
-                    ($formData.metrics[metricIndex].valueDecimalPrecision === 1 ? '' : 's')}
+                    ($formData.metrics[metricIndex].valueDisplayPrecision === 1 ? '' : 's')}
                 </Select.Trigger>
                 <Select.Content>
                   {#each Array(WIDGET_METRIC_VALUE_DECIMAL_PRECISION_MAX + 1) as _, i}

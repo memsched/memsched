@@ -1,67 +1,57 @@
+import * as tables from '$lib/server/db/schema';
+import {
+  WIDGET_METRIC_STYLE,
+  WIDGET_METRIC_AGGREGATION_TYPE,
+  WIDGET_METRIC_GITHUB_STAT_TYPE,
+} from '$lib/server/db/schema';
 import { z } from 'zod';
 
-export const WIDGET_METRIC_STYLES = [
-  'metric-base',
-  'metric-trend',
-  'plot-base',
-  'plot-metric',
-  'heatmap-base',
-  'heatmap-metric',
-] as const;
-export const WIDGET_METRIC_CALCULATION_TYPES = [
-  'day',
-  'week',
-  'month',
-  'year',
-  'all time',
-  'percentage',
-] as const;
-export const WIDGET_METRIC_VALUE_DECIMAL_PRECISION_MAX = 2;
-export const WIDGET_METRIC_TYPES = ['objective', 'github'] as const;
-export const GITHUB_STAT_TYPES = ['commits', 'repositories', 'followers'] as const;
+export const WIDGET_METRIC_DISPLAY_PRECISION_MAX = 2;
 
 const widgetMetricBaseSchema = z.object({
+  style: z
+    .enum(WIDGET_METRIC_STYLE, {
+      message: 'Please select a valid style.',
+    })
+    .default('metric-base'),
+  // Metric Configuration (metric-base, metric-trend, plot-metric, heatmap-metric)
   name: z
     .string()
     .max(25, { message: 'Name must be less than 25 characters.' })
     .nullable()
     .transform((v) => (v === '' ? null : v)),
-  style: z
-    .enum(WIDGET_METRIC_STYLES, {
-      message: 'Please select a valid style.',
-    })
-    .default('metric-base'),
-  calculationType: z
-    .enum(WIDGET_METRIC_CALCULATION_TYPES, {
-      message: 'Please select a valid calculation type.',
+  valueAggregationType: z
+    .enum(WIDGET_METRIC_AGGREGATION_TYPE, {
+      message: 'Please select a valid aggregation type.',
     })
     .default('day'),
-  valueDecimalPrecision: z
+  valueDisplayPrecision: z
     .number({ message: 'Please enter a valid value decimal precision: 0, 1, or 2.' })
     .int({
       message: 'Please select a valid value decimal precision: 0, 1, or 2.',
     })
     .min(0, { message: 'Value decimal precision must be greater than or equal to 0.' })
-    .max(WIDGET_METRIC_VALUE_DECIMAL_PRECISION_MAX, {
+    .max(WIDGET_METRIC_DISPLAY_PRECISION_MAX, {
       message: 'Value decimal precision must be less than or equal to 2.',
-    }),
+    })
+    .default(0),
 });
 
 const objectiveWidgetMetricSchema = widgetMetricBaseSchema.extend({
-  metricType: z.literal('objective'),
+  provider: z.literal('objective'),
   objectiveId: z.string().min(1, { message: 'Objective is required.' }),
   githubUsername: z.string().nullable(),
-  githubStatType: z.enum(GITHUB_STAT_TYPES).nullable(),
+  githubStatType: z.enum(WIDGET_METRIC_GITHUB_STAT_TYPE).nullable(),
 });
 
 const githubWidgetMetricSchema = widgetMetricBaseSchema.extend({
-  metricType: z.literal('github'),
+  provider: z.literal('github'),
   objectiveId: z.string().nullable(),
   githubUsername: z.string().min(1, { message: 'GitHub username is required.' }),
-  githubStatType: z.enum(GITHUB_STAT_TYPES).default('commits'),
+  githubStatType: z.enum(WIDGET_METRIC_GITHUB_STAT_TYPE).default('commits'),
 });
 
-export const widgetMetricSchema = z.discriminatedUnion('metricType', [
+export const widgetMetricSchema = z.discriminatedUnion('provider', [
   objectiveWidgetMetricSchema,
   githubWidgetMetricSchema,
 ]);

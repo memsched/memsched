@@ -1,8 +1,8 @@
 <script lang="ts">
-  import type { WidgetJoinMetricsPreview } from '$lib/server/db/schema';
+  import type { WidgetJoinMetricsComponent } from '$lib/server/db/schema';
   import Watermark from '$lib/components/svgs/Watermark.svelte';
   import WidgetEditComponent from '$lib/components/widgets/utils/WidgetEditComponent.svelte';
-  import Metric from '$lib/components/widgets/components/Metric.svelte';
+  import ValueMetric from '$lib/components/widgets/components/ValueMetric.svelte';
   import PlotMetric from '$lib/components/widgets/components/PlotMetric.svelte';
   import HeatmapMetric from '$lib/components/widgets/components/HeatmapMetric.svelte';
   import { addOpacityRgba } from '$lib/utils';
@@ -36,7 +36,7 @@
     onImageClose,
     onMetricClick,
     onMetricClose,
-  }: Partial<WidgetJoinMetricsPreview> & Props = $props();
+  }: Partial<WidgetJoinMetricsComponent> & Props = $props();
 </script>
 
 <div
@@ -192,7 +192,7 @@
             value={metric.style}
           >
             {#if metric.style.startsWith('metric')}
-              <Metric {metric} {accentColor} />
+              <ValueMetric {metric} {accentColor} />
             {:else if metric.style.startsWith('plot')}
               <PlotMetric {metric} {accentColor} />
             {:else if metric.style.startsWith('heatmap')}

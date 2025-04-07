@@ -27,9 +27,9 @@ export class PlotDataService {
     metric: WidgetMetric,
     timeRange: TimeRange
   ): ResultAsync<PlotData, Error | DrizzleError> {
-    if (metric.metricType === 'objective' && metric.objectiveId) {
+    if (metric.provider === 'objective' && metric.objectiveId) {
       return this.getObjectivePlotData(metric.objectiveId, metric.userId, timeRange);
-    } else if (metric.metricType === 'github' && metric.githubUsername && metric.githubStatType) {
+    } else if (metric.provider === 'github' && metric.githubUsername && metric.githubStatType) {
       return this.getGithubPlotData(metric.githubUsername, metric.githubStatType, timeRange);
     }
 

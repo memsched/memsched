@@ -44,10 +44,10 @@ export const load: PageServerLoad = async (event) => {
       (metric) =>
         ({
           name: metric.name,
-          calculationType: metric.calculationType,
-          valueDecimalPrecision: metric.valueDecimalPrecision,
+          valueAggregationType: metric.valueAggregationType,
+          valueDisplayPrecision: metric.valueDisplayPrecision,
           objectiveId: metric.objectiveId,
-          metricType: metric.metricType,
+          provider: metric.provider,
           githubUsername: metric.githubUsername,
           githubStatType: metric.githubStatType,
         }) as any

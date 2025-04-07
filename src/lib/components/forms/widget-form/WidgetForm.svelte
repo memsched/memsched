@@ -45,8 +45,12 @@
           focusedTab = 'general.subtitle';
         } else if (result.data?.form?.errors?.imageUrl || result.data?.form?.errors?.textIcon) {
           focusedTab = 'image';
-        } else {
-          console.log(result.data?.form?.errors);
+        } else if (result.data?.form?.errors?.metrics?.[0]) {
+          focusedTab = 'metric.1';
+        } else if (result.data?.form?.errors?.metrics?.[1]) {
+          focusedTab = 'metric.2';
+        } else if (result.data?.form?.errors?.metrics?.[2]) {
+          focusedTab = 'metric.3';
         }
       }
     },
@@ -68,9 +72,9 @@
     $formData.metrics.map((m, i) => ({
       name: m.name,
       style: m.style,
-      calculationType: m.calculationType,
-      valueDecimalPrecision: m.valueDecimalPrecision,
-      value: roundToDecimal(435.390453, m.valueDecimalPrecision),
+      valueAggregationType: m.valueAggregationType,
+      valueDisplayPrecision: m.valueDisplayPrecision,
+      value: roundToDecimal(435.390453, m.valueDisplayPrecision),
       order: i,
       plotData: m.style.startsWith('plot') ? PLOT_DATA : HEATMAP_DATA,
     }))
@@ -132,10 +136,10 @@
         metricsCopy.push({
           name: null,
           style: 'metric-base',
-          metricType: 'objective',
+          provider: 'objective',
           objectiveId: '',
-          calculationType: 'day',
-          valueDecimalPrecision: 0,
+          valueAggregationType: 'day',
+          valueDisplayPrecision: 0,
           githubUsername: null,
           githubStatType: null,
         });
@@ -171,10 +175,7 @@
       onclick={() => (focusedTab = `metric.${i + 1}` as MetricTab)}
       active={focusedTab === `metric.${i + 1}`}
     >
-      <button
-        onclick={(e) => onRemoveMetric(e, i + 1)}
-        class="!text-zinc-400 hover:!text-foreground"
-      >
+      <button onclick={(e) => onRemoveMetric(e, i)} class="!text-zinc-400 hover:!text-foreground">
         <Icon src={FiX} />
       </button>
     </TabNavLink>

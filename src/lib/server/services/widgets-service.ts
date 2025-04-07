@@ -118,7 +118,7 @@ export class WidgetsService {
       for (let i = 0; i < widgetData.metrics.length; i++) {
         const metric = widgetData.metrics[i];
 
-        if (metric.metricType === 'objective') {
+        if (metric.provider === 'objective') {
           // Handle objective metrics
           // Verify the user has access to the objective
           const objectiveResult = await this.getObjectivesService().getUserObjective(
@@ -133,20 +133,20 @@ export class WidgetsService {
 
         // Create a correctly typed metric object for the service call
         const metricPayload = {
-          metricType: metric.metricType,
+          provider: metric.provider,
           objectiveId: metric.objectiveId ?? null,
-          calculationType: metric.calculationType,
-          valueDecimalPrecision: metric.valueDecimalPrecision,
+          valueAggregationType: metric.valueAggregationType,
+          valueDisplayPrecision: metric.valueDisplayPrecision,
           githubUsername: metric.githubUsername ?? null,
           githubStatType: metric.githubStatType ?? 'commits',
         };
 
         // Compute metric value using the MetricsService
         const metricValueResult = await this.metricsService.computeMetricValue(
-          metricPayload.metricType,
+          metricPayload.provider,
           metricPayload.objectiveId,
-          metricPayload.calculationType,
-          metricPayload.valueDecimalPrecision,
+          metricPayload.valueAggregationType,
+          metricPayload.valueDisplayPrecision,
           metricPayload.githubUsername,
           metricPayload.githubStatType
         );
@@ -159,14 +159,14 @@ export class WidgetsService {
           id: uuidv4(),
           value: metricValueResult.value,
           name: metric.name,
-          calculationType: metric.calculationType,
-          valueDecimalPrecision: metric.valueDecimalPrecision,
-          metricType: metric.metricType,
+          valueAggregationType: metric.valueAggregationType,
+          style: metric.style,
+          valueDisplayPrecision: metric.valueDisplayPrecision,
+          provider: metric.provider,
           order: i,
-          objectiveId: metric.metricType === 'objective' ? metric.objectiveId : null,
-          githubUsername: metric.metricType === 'github' ? metric.githubUsername : null,
-          githubStatType:
-            metric.metricType === 'github' ? metric.githubStatType || 'commits' : null,
+          objectiveId: metric.provider === 'objective' ? metric.objectiveId : null,
+          githubUsername: metric.provider === 'github' ? metric.githubUsername : null,
+          githubStatType: metric.provider === 'github' ? metric.githubStatType || 'commits' : null,
           widgetId,
           userId,
         });
@@ -222,7 +222,7 @@ export class WidgetsService {
         for (let i = 0; i < widgetData.metrics.length; i++) {
           const metric = widgetData.metrics[i];
 
-          if (metric.metricType === 'objective') {
+          if (metric.provider === 'objective') {
             // Handle objective metrics
             // Verify the user has access to the objective
             const objectiveResult = await this.getObjectivesService().getUserObjective(
@@ -237,20 +237,20 @@ export class WidgetsService {
 
           // Create a correctly typed metric object for the service call
           const metricPayload = {
-            metricType: metric.metricType,
+            provider: metric.provider,
             objectiveId: metric.objectiveId ?? null,
-            calculationType: metric.calculationType,
-            valueDecimalPrecision: metric.valueDecimalPrecision,
+            valueAggregationType: metric.valueAggregationType,
+            valueDisplayPrecision: metric.valueDisplayPrecision,
             githubUsername: metric.githubUsername ?? null,
             githubStatType: metric.githubStatType ?? 'commits',
           };
 
           // Compute metric value using the MetricsService
           const metricValueResult = await this.metricsService.computeMetricValue(
-            metricPayload.metricType,
+            metricPayload.provider,
             metricPayload.objectiveId,
-            metricPayload.calculationType,
-            metricPayload.valueDecimalPrecision,
+            metricPayload.valueAggregationType,
+            metricPayload.valueDisplayPrecision,
             metricPayload.githubUsername,
             metricPayload.githubStatType
           );
@@ -263,14 +263,15 @@ export class WidgetsService {
             id: uuidv4(),
             value: metricValueResult.value,
             name: metric.name,
-            calculationType: metric.calculationType,
-            valueDecimalPrecision: metric.valueDecimalPrecision,
-            metricType: metric.metricType,
+            valueAggregationType: metric.valueAggregationType,
+            valueDisplayPrecision: metric.valueDisplayPrecision,
+            style: metric.style,
+            provider: metric.provider,
             order: i,
-            objectiveId: metric.metricType === 'objective' ? metric.objectiveId : null,
-            githubUsername: metric.metricType === 'github' ? metric.githubUsername : null,
+            objectiveId: metric.provider === 'objective' ? metric.objectiveId : null,
+            githubUsername: metric.provider === 'github' ? metric.githubUsername : null,
             githubStatType:
-              metric.metricType === 'github' ? metric.githubStatType || 'commits' : null,
+              metric.provider === 'github' ? metric.githubStatType || 'commits' : null,
             widgetId,
             userId,
           });

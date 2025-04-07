@@ -1,10 +1,9 @@
 <script lang="ts">
-  import type { WidgetMetricPreview } from '$lib/server/db/schema';
-  import type { PlotDataPoint } from '$lib/server/services';
+  import type { WidgetMetricComponentPlot } from '$lib/server/db/schema';
   import { addOpacityRgba } from '$lib/utils';
 
   interface Props {
-    metric: WidgetMetricPreview;
+    metric: WidgetMetricComponentPlot;
     accentColor: string;
   }
 
@@ -17,22 +16,20 @@
   const BOTTOM_PADDING_PERCENT = 0.3; // padding below the lowest point
 
   // Function to create SVG path for line plot
-  function createLinePath(points: PlotDataPoint[], width: number, height: number): string {
+  function createLinePath(
+    points: WidgetMetricComponentPlot['data']['points'],
+    width: number,
+    height: number
+  ): string {
     if (!points || points.length === 0) {
       const defaultValue = 0;
-      points = [
-        { date: 'start', value: defaultValue },
-        { date: 'end', value: defaultValue },
-      ];
+      points = [{ y: defaultValue }, { y: defaultValue }];
     } else if (points.length === 1) {
-      points = [
-        { date: 'start', value: points[0].value },
-        { date: 'end', value: points[0].value },
-      ];
+      points = [{ y: points[0].y }, { y: points[0].y }];
     }
 
     // Get min and max values for scaling
-    const values = points.map((p) => p.value);
+    const values = points.map((p) => p.y);
     const minValue = Math.min(...values);
     const maxValue = Math.max(...values);
     const valueRange = maxValue - minValue || 1; // Avoid division by zero
@@ -43,7 +40,7 @@
     // Create points for path
     const pathPoints = points.map((point, index) => {
       const x = (index / (points.length - 1 || 1)) * width;
-      const y = effectiveHeight - ((point.value - minValue) / valueRange) * effectiveHeight;
+      const y = effectiveHeight - ((point.y - minValue) / valueRange) * effectiveHeight;
       return `${x},${y}`;
     });
 
@@ -63,7 +60,7 @@
     >
       <!-- Line plot -->
       <path
-        d={createLinePath(metric.plotData.points, PLOT_WIDTH, PLOT_HEIGHT)}
+        d={createLinePath(metric.data.points, PLOT_WIDTH, PLOT_HEIGHT)}
         fill="none"
         stroke={accentColor}
         stroke-width="2"
@@ -71,7 +68,7 @@
         stroke-linejoin="round"
       />
       <!-- <path
-    d={createLinePath(metric.plotData.points, PLOT_WIDTH, PLOT_HEIGHT)}
+    d={createLinePath(metric.data.points, PLOT_WIDTH, PLOT_HEIGHT)}
     fill="none"
     stroke={addOpacityRgba(accentColor, 0.2)}
     stroke-width="5"
@@ -80,7 +77,7 @@
   /> -->
       <!-- Subtle area under the line -->
       <path
-        d={`${createLinePath(metric.plotData.points, PLOT_WIDTH, PLOT_HEIGHT)} L${PLOT_WIDTH},${PLOT_HEIGHT} L0,${PLOT_HEIGHT} Z`}
+        d={`${createLinePath(metric.data.points, PLOT_WIDTH, PLOT_HEIGHT)} L${PLOT_WIDTH},${PLOT_HEIGHT} L0,${PLOT_HEIGHT} Z`}
         fill={addOpacityRgba(accentColor, 0.1)}
         stroke="none"
       />
@@ -94,9 +91,9 @@
         style:line-height="1"
         style:display="flex"
         style:align-items="flex-end"
-        style:gap={metric.calculationType === 'percentage' ? '0.1rem' : '0.3rem'}
+        style:gap={metric.valueAggregationType === 'percentage' ? '0.1rem' : '0.3rem'}
       >
-        {metric.value}
+        {metric.data.value}
       </div>
       {#if metric.name}
         <div style:font-size="0.8rem" style:color="#666">

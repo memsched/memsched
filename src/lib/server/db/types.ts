@@ -3,6 +3,7 @@ import {
   DrizzleError as DrizzleErrorCause,
 } from 'drizzle-orm';
 import { ResultAsync } from 'neverthrow';
+import * as table from './schema';
 
 // unknown catch-all error
 export type UnknownError = {
@@ -80,3 +81,35 @@ export function wrapResultAsync<T>(promise: Promise<T>): ResultAsync<T, DrizzleE
 export function wrapResultAsyncFn<T>(promise: () => Promise<T>): ResultAsync<T, DrizzleError> {
   return ResultAsync.fromPromise(promise(), (e) => createDrizzleError(e));
 }
+
+export type User = typeof table.user.$inferSelect;
+export type UserInsert = typeof table.user.$inferInsert;
+export type AuthProvider = typeof table.authProvider.$inferSelect;
+export type Session = typeof table.session.$inferSelect;
+export type Objective = typeof table.objective.$inferSelect;
+export type Widget = typeof table.widget.$inferSelect;
+
+export const WIDGET_METRIC_PROVIDER = ['objective', 'github'] as const;
+export const WIDGET_METRIC_STYLE = [
+  'metric-base',
+  'metric-trend',
+  'plot-base',
+  'plot-metric',
+  'heatmap-base',
+  'heatmap-metric',
+] as const;
+export const WIDGET_METRIC_VALUE_AGGREGATION_TYPE = [
+  'day',
+  'week',
+  'month',
+  'year',
+  'all time',
+  'percentage',
+] as const;
+export const WIDGET_METRIC_GITHUB_STAT_TYPE = ['commits', 'repositories', 'followers'] as const;
+export type WidgetMetric = typeof table.widgetMetric.$inferSelect;
+export type WidgetJoinMetrics = Widget & {
+  metrics: WidgetMetric[];
+};
+export type GithubStatsCache = typeof table.githubStatsCache.$inferSelect;
+export type GithubStatsCacheInsert = typeof table.githubStatsCache.$inferInsert;

@@ -1,9 +1,9 @@
 <script lang="ts">
-  import type { WidgetMetricPreview } from '$lib/server/db/schema';
+  import type { WidgetMetricComponentValue } from '$lib/server/db/schema';
   import TrendingUpArrow from '$lib/components/svgs/TrendingUpArrow.svelte';
 
   interface Props {
-    metric: WidgetMetricPreview;
+    metric: WidgetMetricComponentValue;
     accentColor: string;
   }
 
@@ -17,15 +17,15 @@
     style:line-height="1"
     style:display="flex"
     style:align-items="flex-end"
-    style:gap={metric.calculationType === 'percentage' ? '0.1rem' : '0.3rem'}
+    style:gap={metric.valueAggregationType === 'percentage' ? '0.1rem' : '0.3rem'}
   >
-    {#if metric.calculationType === 'percentage'}
-      {metric.value}
+    {#if metric.valueAggregationType === 'percentage'}
+      {metric.data.value}
       <span style:font-size="1.25rem" style:margin-bottom="0.1rem">
-        {metric.calculationType === 'percentage' ? '%' : ''}
+        {metric.valueAggregationType === 'percentage' ? '%' : ''}
       </span>
     {:else}
-      {metric.value}
+      {metric.data.value}
       {#if metric.style === 'metric-trend'}
         <TrendingUpArrow style="stroke: {accentColor}; color: {accentColor}" />
       {/if}

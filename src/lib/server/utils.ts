@@ -44,8 +44,8 @@ export function generateWidgetEtag(widget: WidgetJoinMetrics): string {
         id: metric.id,
         value: metric.value,
         name: metric.name,
-        calculationType: metric.calculationType,
-        valueDecimalPrecision: metric.valueDecimalPrecision,
+        valueAggregationType: metric.valueAggregationType,
+        valueDisplayPrecision: metric.valueDisplayPrecision,
         order: metric.order,
       })),
   } as WidgetJoinMetrics);

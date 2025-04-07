@@ -8,12 +8,18 @@ import type { FormSchema } from '$lib/components/forms/widget-form/schema';
 import type { z } from 'zod';
 import type { GithubMetricsService, GithubStatType } from './github-metrics-service';
 import { roundToDecimal } from '$lib/utils';
+import type { PlotDataService } from './plot-data-service';
 
 export class MetricsService {
   constructor(
     private readonly db: DBType,
-    private readonly githubMetricsService: GithubMetricsService
+    private readonly githubMetricsService: GithubMetricsService,
+    private plotDataService: PlotDataService | null = null
   ) {}
+
+  public setPlotDataService(service: PlotDataService) {
+    this.plotDataService = service;
+  }
 
   public getMetricsFromWidgetId(widgetId: string) {
     return wrapResultAsync(
@@ -28,10 +34,10 @@ export class MetricsService {
         const githubStatType = (metric as any).githubStatType as GithubStatType | undefined;
 
         return this.computeMetricValue(
-          metric.metricType,
+          metric.provider,
           metric.objectiveId,
-          metric.calculationType,
-          metric.valueDecimalPrecision,
+          metric.valueAggregationType,
+          metric.valueDisplayPrecision,
           metric.githubUsername,
           githubStatType || 'commits'
         ).andThen((value) => this.updateMetricValue(metric.id, value, cache));
@@ -55,19 +61,19 @@ export class MetricsService {
   }
 
   public computeMetricValue(
-    metricType: string,
+    provider: string,
     objectiveId: string | null,
-    calculationType: table.WidgetMetric['calculationType'],
-    valueDecimalPrecision: number,
+    valueAggregationType: table.WidgetMetric['valueAggregationType'],
+    valueDisplayPrecision: number,
     githubUsername?: string | null | undefined,
     githubStatType: GithubStatType = 'commits'
   ) {
     return wrapResultAsyncFn(async () => {
       // Handle GitHub metrics
-      if (metricType === 'github' && typeof githubUsername === 'string') {
+      if (provider === 'github' && typeof githubUsername === 'string') {
         const githubStatsResult = await this.githubMetricsService.fetchGitHubStats(
           githubUsername,
-          calculationType as table.GithubStatsCache['timeRange'],
+          valueAggregationType as table.GithubStatsCache['timeRange'],
           githubStatType
         );
 
@@ -79,8 +85,8 @@ export class MetricsService {
       }
 
       // Handle objective metrics
-      if (metricType === 'objective' && objectiveId) {
-        if (calculationType === 'percentage') {
+      if (provider === 'objective' && objectiveId) {
+        if (valueAggregationType === 'percentage') {
           const objective = await this.db
             .select()
             .from(table.objective)
@@ -96,10 +102,10 @@ export class MetricsService {
 
           // Calculate percentage of completion
           const percentage = (objective[0].value / objective[0].endValue) * 100;
-          return roundToDecimal(percentage, valueDecimalPrecision);
+          return roundToDecimal(percentage, valueDisplayPrecision);
         }
 
-        if (calculationType === 'all time') {
+        if (valueAggregationType === 'all time') {
           // No time filter needed for all time calculation
           const result = await this.db
             .select({
@@ -109,17 +115,17 @@ export class MetricsService {
             .where(eq(table.objectiveLog.objectiveId, objectiveId));
 
           const value = result[0]?.total || 0;
-          return roundToDecimal(value, valueDecimalPrecision);
+          return roundToDecimal(value, valueDisplayPrecision);
         } else {
           // Define time filter based on calculation type
           const timeAgo = new Date();
-          if (calculationType === 'day') {
+          if (valueAggregationType === 'day') {
             timeAgo.setDate(timeAgo.getDate() - 1);
-          } else if (calculationType === 'week') {
+          } else if (valueAggregationType === 'week') {
             timeAgo.setDate(timeAgo.getDate() - 7);
-          } else if (calculationType === 'month') {
+          } else if (valueAggregationType === 'month') {
             timeAgo.setMonth(timeAgo.getMonth() - 1);
-          } else if (calculationType === 'year') {
+          } else if (valueAggregationType === 'year') {
             timeAgo.setFullYear(timeAgo.getFullYear() - 1);
           } else {
             return 0; // Unknown calculation type
@@ -139,7 +145,7 @@ export class MetricsService {
             );
 
           const value = result[0]?.total || 0;
-          return roundToDecimal(value, valueDecimalPrecision);
+          return roundToDecimal(value, valueDisplayPrecision);
         }
       }
 
@@ -155,19 +161,19 @@ export class MetricsService {
       let value = 0;
 
       try {
-        if (metric.metricType === 'github' && typeof metric.githubUsername === 'string') {
+        if (metric.provider === 'github' && typeof metric.githubUsername === 'string') {
           // Use mock data for previews to avoid GitHub API rate limits
           const statType = (metric.githubStatType || 'commits') as GithubStatType;
           value = this.githubMetricsService.getMockGitHubData(
             statType,
-            metric.calculationType as table.GithubStatsCache['timeRange']
+            metric.valueAggregationType as table.GithubStatsCache['timeRange']
           );
-        } else if (metric.metricType === 'objective' && metric.objectiveId) {
+        } else if (metric.provider === 'objective' && metric.objectiveId) {
           const result = await this.computeMetricValue(
             'objective',
             metric.objectiveId,
-            metric.calculationType,
-            metric.valueDecimalPrecision,
+            metric.valueAggregationType,
+            metric.valueDisplayPrecision,
             null
           );
           if (result.isOk()) {

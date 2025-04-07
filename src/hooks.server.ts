@@ -48,6 +48,8 @@ function initializeServices(db: DBType) {
   const objectiveLogsService = new ObjectiveLogsService(db, objectivesService);
   const plotDataService = new PlotDataService(objectiveLogsService, githubMetricsService);
 
+  metricsService.setPlotDataService(plotDataService);
+
   return {
     usersService,
     objectivesService,
@@ -57,7 +59,6 @@ function initializeServices(db: DBType) {
     githubMetricsService,
     sessionsService,
     paymentService,
-    plotDataService,
   };
 }
 

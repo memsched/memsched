@@ -11,14 +11,14 @@
   import { Button } from '$lib/components/ui/button';
   import { Switch } from '$lib/components/ui/switch';
   import ColorPickerInput from '$lib/components/inputs/ColorPickerInput.svelte';
-  import type { WidgetJoinMetricsPreview } from '$lib/server/db/schema';
+  import type { WidgetJoinMetricsComponent } from '$lib/server/db/schema';
   import {
     WIDGET_METRIC_CALCULATION_TYPES,
     WIDGET_METRIC_VALUE_DECIMAL_PRECISION_MAX,
   } from '$lib/components/forms/widget-form/schema';
 
   // Create a default widget config
-  let config = $state<WidgetJoinMetricsPreview>({
+  let config = $state<WidgetJoinMetricsComponent>({
     title: 'GitHub Commits',
     subtitle: 'Last 10 days',
     textIcon: null,
@@ -36,8 +36,8 @@
       {
         name: 'commits',
         value: 1235,
-        calculationType: 'day',
-        valueDecimalPrecision: 0,
+        valueAggregationType: 'day',
+        valueDisplayPrecision: 0,
         style: 'default',
         order: 1,
         plotData: {
@@ -47,8 +47,8 @@
       {
         name: 'PRs',
         value: 431,
-        calculationType: 'day',
-        valueDecimalPrecision: 0,
+        valueAggregationType: 'day',
+        valueDisplayPrecision: 0,
         style: 'default',
         order: 2,
         plotData: {
@@ -94,25 +94,25 @@
 
   function getPlotDataForStyle(
     style: 'default' | 'plot',
-    calculationType: 'day' | 'week' | 'month' | 'year' | 'all time' | 'percentage'
+    valueAggregationType: 'day' | 'week' | 'month' | 'year' | 'all time' | 'percentage'
   ): { points: { date: string; value: number }[] } {
     if (style === 'plot') {
-      return generateRandomPlotData(calculationType as 'day' | 'week' | 'month' | 'year');
+      return generateRandomPlotData(valueAggregationType as 'day' | 'week' | 'month' | 'year');
     }
     return { points: [] };
   }
 
   function addMetric() {
     const style = 'default' as const;
-    const calculationType = 'day' as const;
+    const valueAggregationType = 'day' as const;
     const newMetric = {
       name: `Metric ${config.metrics.length + 1}`,
       value: Math.floor(Math.random() * 1000),
-      calculationType,
-      valueDecimalPrecision: 0,
+      valueAggregationType,
+      valueDisplayPrecision: 0,
       style,
       order: config.metrics.length + 1,
-      plotData: getPlotDataForStyle(style, calculationType),
+      plotData: getPlotDataForStyle(style, valueAggregationType),
     };
     config.metrics = [...config.metrics, newMetric];
   }
@@ -464,10 +464,10 @@
                   </div>
 
                   <div class="space-y-1">
-                    <Label for={`metric-${index}-calculationType`}>Calculation Type</Label>
-                    <Select.Root type="single" bind:value={metric.calculationType}>
-                      <Select.Trigger id={`metric-${index}-calculationType`} class="w-full">
-                        {metric.calculationType}
+                    <Label for={`metric-${index}-valueAggregationType`}>Calculation Type</Label>
+                    <Select.Root type="single" bind:value={metric.valueAggregationType}>
+                      <Select.Trigger id={`metric-${index}-valueAggregationType`} class="w-full">
+                        {metric.valueAggregationType}
                       </Select.Trigger>
                       <Select.Content>
                         {#each WIDGET_METRIC_CALCULATION_TYPES as calcType}
@@ -483,13 +483,13 @@
                     <Label for={`metric-${index}-precision`}>Decimal Precision</Label>
                     <Select.Root
                       type="single"
-                      value={metric.valueDecimalPrecision.toString()}
+                      value={metric.valueDisplayPrecision.toString()}
                       onValueChange={(value) => {
-                        metric.valueDecimalPrecision = parseInt(value);
+                        metric.valueDisplayPrecision = parseInt(value);
                       }}
                     >
                       <Select.Trigger id={`metric-${index}-precision`} class="w-full">
-                        {metric.valueDecimalPrecision} digit{metric.valueDecimalPrecision !== 1
+                        {metric.valueDisplayPrecision} digit{metric.valueDisplayPrecision !== 1
                           ? 's'
                           : ''}
                       </Select.Trigger>
@@ -512,7 +512,7 @@
                         metric.style = value as 'default' | 'plot';
                         metric.plotData = getPlotDataForStyle(
                           value as 'default' | 'plot',
-                          metric.calculationType
+                          metric.valueAggregationType
                         );
                       }}
                     >

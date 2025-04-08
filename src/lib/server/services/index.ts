@@ -3,7 +3,6 @@ export * from './metrics-service';
 export * from './objective-logs-service';
 export * from './objectives-service';
 export * from './payment-service';
-export * from './plot-data-service';
 export * from './sessions-service';
 export * from './users-service';
 export * from './widgets-service';

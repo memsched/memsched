@@ -18,16 +18,16 @@ export class ObjectiveMetricProvider implements BaseMetricProvider {
 
   public getValueData(metric: WidgetMetric): ResultAsync<DataValue, DrizzleError> {
     return wrapResultAsyncFn(async () => {
-      assert(metric.objectiveId !== null, 'Objective ID is required');
-      assert(metric.period !== null, 'Period is required');
-      assert(metric.valueDisplayPrecision !== null, 'Value display precision is required');
+      assert(metric.objectiveId, 'Objective ID is required');
+      assert(metric.period, 'Period is required');
+      assert(metric.valueDisplayPrecision, 'Value display precision is required');
 
       const value = await this.getObjectiveValue(
-        metric.objectiveId!,
-        metric.period!,
-        metric.valueDisplayPrecision!,
+        metric.objectiveId,
+        metric.period,
+        metric.valueDisplayPrecision,
         metric.valuePercent ?? false,
-        metric.userId!
+        metric.userId
       );
 
       if (value.isErr()) {
@@ -42,11 +42,11 @@ export class ObjectiveMetricProvider implements BaseMetricProvider {
 
   public getPlotData(metric: WidgetMetric): ResultAsync<DataPlot, DrizzleError> {
     return wrapResultAsyncFn(async () => {
-      assert(metric.objectiveId !== null, 'Objective ID is required');
+      assert(metric.objectiveId, 'Objective ID is required');
 
       const timeAgo = this.getTimeAgoForPeriod(metric.period!);
       const logs = await this.objectiveLogsService.getRunningLogPoints(
-        metric.objectiveId!,
+        metric.objectiveId,
         metric.userId,
         timeAgo ? { startDate: timeAgo } : undefined
       );
@@ -65,7 +65,7 @@ export class ObjectiveMetricProvider implements BaseMetricProvider {
 
   public getHeatmapData(metric: WidgetMetric): ResultAsync<DataHeatmap, DrizzleError> {
     return wrapResultAsyncFn(async () => {
-      assert(metric.objectiveId !== null, 'Objective ID is required');
+      assert(metric.objectiveId, 'Objective ID is required');
 
       const now = new Date();
       const monthStart = startOfMonth(now);
@@ -74,7 +74,7 @@ export class ObjectiveMetricProvider implements BaseMetricProvider {
 
       // Get logs for the current month
       const logs = await this.objectiveLogsService.getDailyLogPoints(
-        metric.objectiveId!,
+        metric.objectiveId,
         metric.userId,
         { startDate: monthStart, endDate: monthEnd }
       );

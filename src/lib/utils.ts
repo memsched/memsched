@@ -17,9 +17,12 @@ export function scrollToTop() {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-export function assert(condition: boolean, message: string) {
-  if (import.meta.env.DEV && !condition) {
-    throw new Error(message || 'Assertion failed');
+export function assert<T>(
+  value: T | null | undefined,
+  message: string
+): asserts value is NonNullable<T> {
+  if (value === null || value === undefined) {
+    throw new Error(message || 'Value must be defined');
   }
 }
 

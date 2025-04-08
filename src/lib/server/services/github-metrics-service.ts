@@ -6,9 +6,6 @@ import type { DBType } from '../db';
 import * as table from '../db/schema';
 import { wrapResultAsyncFn } from '../db/types';
 
-// Valid GitHub stat types
-export type GithubStatType = 'commits' | 'repositories' | 'followers';
-
 // Valid time ranges
 export type GithubTimeRange = 'day' | 'week' | 'month' | 'year' | 'all time';
 
@@ -49,7 +46,7 @@ export class GithubMetricsService {
   // Try to get GitHub stats from cache
   public async getGitHubStatsFromCache(
     username: string,
-    statType: GithubStatType,
+    statType: table.GithubStatsCache['statType'],
     timeRange: table.GithubStatsCache['timeRange']
   ) {
     const now = new Date();
@@ -76,7 +73,7 @@ export class GithubMetricsService {
   // Save GitHub stats to cache
   public async saveGitHubStatsToCache(
     username: string,
-    statType: GithubStatType,
+    statType: table.GithubStatsCache['statType'],
     timeRange: table.GithubStatsCache['timeRange'],
     value: number
   ) {
@@ -202,7 +199,7 @@ export class GithubMetricsService {
   // Method to fetch different types of GitHub data
   public async fetchGitHubData(
     username: string,
-    statType: GithubStatType,
+    statType: table.GithubStatsCache['statType'],
     fromDate?: Date
   ): Promise<number> {
     try {
@@ -263,7 +260,7 @@ export class GithubMetricsService {
   // Method to fetch time-series data for plotting
   public fetchGitHubTimeSeries(
     username: string,
-    statType: GithubStatType,
+    statType: table.GithubStatsCache['statType'],
     _timeRange: GithubTimeRange,
     formatString: string
   ) {
@@ -290,7 +287,7 @@ export class GithubMetricsService {
   public fetchGitHubStats(
     username: string,
     timeRange: table.GithubStatsCache['timeRange'],
-    statType: GithubStatType = 'commits',
+    statType: table.GithubStatsCache['statType'] = 'commits',
     useCache = true
   ) {
     return wrapResultAsyncFn(async () => {
@@ -354,7 +351,7 @@ export class GithubMetricsService {
 
   // Get mock data for previews
   public getMockGitHubData(
-    statType: GithubStatType,
+    statType: table.GithubStatsCache['statType'],
     timeRange: table.GithubStatsCache['timeRange']
   ): number {
     return MOCK_GITHUB_DATA[statType][timeRange] || 0;

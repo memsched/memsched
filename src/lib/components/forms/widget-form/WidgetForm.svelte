@@ -16,7 +16,7 @@
   import { SUB_NAV_HEIGHT } from '$lib/constants';
   import { type Objective } from '$lib/server/db/schema';
   import type { WidgetMetricData } from '$lib/server/services/metrics/types';
-  import type { LocalUser } from '$lib/types';
+  import type { LocalUser, PartialBy } from '$lib/types';
   import { debounce } from '$lib/utils';
   import { explicitEffect } from '$lib/utils.svelte';
 
@@ -74,6 +74,7 @@
   );
   let metricCount = $state<number>(data.form.data.metrics.length);
   const formDataImageUrl = $derived($formData.imageUrl);
+  let widgetMetrics = $state<PartialBy<WidgetMetricData, 'data'>[]>([]);
 
   $effect(() => {
     if (focusedTab === 'general.title') {
@@ -138,17 +139,21 @@
           githubUsername: null,
           githubStatType: null,
         });
+        widgetMetrics.push({
+          name: null,
+          style: 'metric-base',
+          period: 'day',
+          valueDisplayPrecision: 0,
+          order: i,
+          valuePercent: false,
+        });
       }
     } else if (currentCount > count) {
       metricsCopy.splice(index, 1);
+      widgetMetrics.splice(index, 1);
     }
     $formData.metrics = metricsCopy;
   }
-
-  let widgetMetrics = $state<WidgetMetricData[]>([]);
-  const metricsLength = $derived($formData.metrics.length);
-  const metricDeps = $derived($formData.metrics);
-  const formValid = $derived(formSchema.safeParse($formData).success);
 
   // Immediately update display fields for a metric
   function updateMetricDisplay(index: number, metric: Infer<FormSchema>['metrics'][number]) {
@@ -159,7 +164,6 @@
 
   // Fetch data only for a specific metric
   async function updateMetricData(formData: Infer<FormSchema>, index: number) {
-    console.log('API');
     const res = await fetch(
       `/api/widgets/preview/${data.user.id}?config=${btoa(
         JSON.stringify({
@@ -174,11 +178,7 @@
       order: index,
       valuePercent: false,
     } as WidgetMetricData;
-    if (widgetMetrics.length <= index) {
-      widgetMetrics.push(newMetric);
-    } else {
-      widgetMetrics[index] = newMetric;
-    }
+    widgetMetrics[index] = newMetric;
   }
 
   const debouncedShortUpdateMetricData = debounce((formData: Infer<FormSchema>, index: number) => {
@@ -199,6 +199,10 @@
     'githubStatType',
   ];
 
+  const metricsLength = $derived($formData.metrics.length);
+  const metricDeps = $derived($formData.metrics);
+  const formValid = $derived(formSchema.safeParse($formData).success);
+
   explicitEffect(
     () => {
       if (!formValid) {
@@ -207,7 +211,7 @@
 
       // For each metric, check what changed
       $formData.metrics.forEach((metric, index) => {
-        if (index >= widgetMetrics.length) {
+        if (index <= widgetMetrics.length || index < widgetMetrics.length - 1) {
           debouncedShortUpdateMetricData($formData, index);
           return;
         }

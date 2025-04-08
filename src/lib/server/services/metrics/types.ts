@@ -17,7 +17,7 @@ type WidgetMetricDataBase = Omit<
 
 type WidgetMetricDataValueFields = NonNullableFieldsPick<
   WidgetMetric,
-  'name' | 'period' | 'valueDisplayPrecision'
+  'period' | 'valueDisplayPrecision'
 >;
 
 export type WidgetMetricDataValue = WidgetMetricDataBase & {
@@ -54,7 +54,7 @@ export type WidgetMetricData =
   | WidgetMetricDataPlot
   | WidgetMetricDataHeatmap;
 
-type WidgetData = Omit<Widget, 'id' | 'userId' | 'createdAt' | 'visibility'>;
+export type WidgetData = Omit<Widget, 'id' | 'userId' | 'createdAt' | 'visibility'>;
 export type WidgetJoinMetricsData = WidgetData & {
   metrics: WidgetMetricData[];
 };

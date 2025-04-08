@@ -9,3 +9,5 @@ export interface LocalUser {
   location: string | null;
   website: string | null;
 }
+
+export type PartialBy<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;

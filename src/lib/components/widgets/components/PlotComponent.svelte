@@ -1,10 +1,14 @@
 <script lang="ts">
+  import type { ComponentProps } from 'svelte';
+
   import ValueComponent from '$lib/components/widgets/components/ValueComponent.svelte';
+  import MetricSkeleton from '$lib/components/widgets/utils/MetricSkeleton.svelte';
   import type { WidgetMetricDataPlot } from '$lib/server/services/metrics/types';
+  import type { PartialBy } from '$lib/types';
   import { addOpacityRgba } from '$lib/utils';
 
   interface Props {
-    metric: WidgetMetricDataPlot;
+    metric: PartialBy<WidgetMetricDataPlot, 'data'>;
     accentColor: string;
   }
 
@@ -49,34 +53,43 @@
   }
 </script>
 
-<div style:display="flex" style:align-items="center" style:gap="0.3rem">
-  <div style:display="flex" style:align-items="center">
-    <svg
-      width={PLOT_WIDTH}
-      height={PLOT_HEIGHT}
-      viewBox={PLOT_VIEW_BOX}
-      style:margin-left="0.25rem"
-      style:vertical-align="middle"
-      class="widget-metric"
-    >
-      <!-- Line plot -->
-      <path
-        d={createLinePath(metric.data.points, PLOT_WIDTH, PLOT_HEIGHT)}
-        fill="none"
-        stroke={accentColor}
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+{#if !metric.data}
+  <MetricSkeleton />
+{:else}
+  <div style:display="flex" style:align-items="center" style:gap="0.3rem">
+    <div style:display="flex" style:align-items="center">
+      <svg
+        width={PLOT_WIDTH}
+        height={PLOT_HEIGHT}
+        viewBox={PLOT_VIEW_BOX}
+        style:margin-left="0.25rem"
+        style:vertical-align="middle"
+        class="widget-metric"
+      >
+        <!-- Line plot -->
+        <path
+          d={createLinePath(metric.data.points, PLOT_WIDTH, PLOT_HEIGHT)}
+          fill="none"
+          stroke={accentColor}
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+        <!-- Subtle area under the line -->
+        <path
+          d={`${createLinePath(metric.data.points, PLOT_WIDTH, PLOT_HEIGHT)} L${PLOT_WIDTH},${PLOT_HEIGHT} L0,${PLOT_HEIGHT} Z`}
+          fill={addOpacityRgba(accentColor, 0.1)}
+          stroke="none"
+        />
+      </svg>
+    </div>
+    {#if metric.style === 'plot-metric'}
+      <ValueComponent
+        metric={metric as ComponentProps<typeof ValueComponent>['metric']}
+        {accentColor}
+        valueFontSize="1.5rem"
+        valuePercentFontSize="1rem"
       />
-      <!-- Subtle area under the line -->
-      <path
-        d={`${createLinePath(metric.data.points, PLOT_WIDTH, PLOT_HEIGHT)} L${PLOT_WIDTH},${PLOT_HEIGHT} L0,${PLOT_HEIGHT} Z`}
-        fill={addOpacityRgba(accentColor, 0.1)}
-        stroke="none"
-      />
-    </svg>
+    {/if}
   </div>
-  {#if metric.style === 'plot-metric'}
-    <ValueComponent {metric} {accentColor} valueFontSize="1.5rem" valuePercentFontSize="1rem" />
-  {/if}
-</div>
+{/if}

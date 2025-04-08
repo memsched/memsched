@@ -1,15 +1,13 @@
 <script lang="ts">
+  import type { ComponentProps } from 'svelte';
+
   import Watermark from '$lib/components/svgs/Watermark.svelte';
   import HeatmapComponent from '$lib/components/widgets/components/HeatmapComponent.svelte';
   import PlotComponent from '$lib/components/widgets/components/PlotComponent.svelte';
   import ValueComponent from '$lib/components/widgets/components/ValueComponent.svelte';
   import WidgetEditComponent from '$lib/components/widgets/utils/WidgetEditComponent.svelte';
-  import type {
-    WidgetJoinMetricsData,
-    WidgetMetricDataHeatmap,
-    WidgetMetricDataPlot,
-    WidgetMetricDataValue,
-  } from '$lib/server/services/metrics/types';
+  import type { WidgetData, WidgetMetricData } from '$lib/server/services/metrics/types';
+  import type { PartialBy } from '$lib/types';
   import { addOpacityRgba } from '$lib/utils';
 
   interface Props {
@@ -41,7 +39,12 @@
     onImageClose,
     onMetricClick,
     onMetricClose,
-  }: Partial<WidgetJoinMetricsData> & Props = $props();
+  }: Partial<
+    WidgetData & {
+      metrics: PartialBy<WidgetMetricData, 'data'>[];
+    }
+  > &
+    Props = $props();
 </script>
 
 <div
@@ -197,11 +200,20 @@
             value={metric.style}
           >
             {#if metric.style.startsWith('metric')}
-              <ValueComponent metric={metric as WidgetMetricDataValue} {accentColor} />
+              <ValueComponent
+                metric={metric as ComponentProps<typeof ValueComponent>['metric']}
+                {accentColor}
+              />
             {:else if metric.style.startsWith('plot')}
-              <PlotComponent metric={metric as WidgetMetricDataPlot} {accentColor} />
+              <PlotComponent
+                metric={metric as ComponentProps<typeof PlotComponent>['metric']}
+                {accentColor}
+              />
             {:else if metric.style.startsWith('heatmap')}
-              <HeatmapComponent metric={metric as WidgetMetricDataHeatmap} {accentColor} />
+              <HeatmapComponent
+                metric={metric as ComponentProps<typeof HeatmapComponent>['metric']}
+                {accentColor}
+              />
             {/if}
           </WidgetEditComponent>
         {/each}

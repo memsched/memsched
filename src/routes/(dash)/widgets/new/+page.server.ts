@@ -4,7 +4,7 @@ import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 
 import { formSchema } from '$lib/components/forms/widget-form/schema';
-import { handleFormDbError } from '$lib/server/utils';
+import { handleDbError, handleFormDbError } from '$lib/server/utils';
 import type { LocalUser } from '$lib/types';
 
 import type { Actions, PageServerLoad } from './$types';
@@ -13,10 +13,16 @@ export const load: PageServerLoad = async (event) => {
   if (!event.locals.session) {
     return redirect(302, '/auth/signin');
   }
+  const objectivesResult = await event.locals.objectivesService.getAll(event.locals.session.userId);
+  if (objectivesResult.isErr()) {
+    return handleDbError(objectivesResult);
+  }
+  const objectives = objectivesResult.value;
 
   const form = await superValidate(zod(formSchema));
 
   return {
+    objectives,
     form,
     // We tell typescript that the user is not null
     user: event.locals.user as LocalUser,

@@ -1,6 +1,4 @@
 import { redirect } from '@sveltejs/kit';
-import { ResultAsync } from 'neverthrow';
-import { okAsync } from 'neverthrow';
 
 import { handleDbError } from '$lib/server/utils';
 
@@ -12,16 +10,11 @@ export const load: PageServerLoad = async (event) => {
     return redirect(302, '/auth/signin');
   }
 
-  const res = await event.locals.widgetsService.getAll(session.userId).andThen((widgets) => {
-    return ResultAsync.combine([
-      okAsync(widgets),
-      event.locals.widgetsService.getUserWidgetCount(session.userId),
-    ]);
-  });
+  const res = await event.locals.widgetsService.getAll(session.userId);
   if (res.isErr()) {
     return handleDbError(res);
   }
-  const [widgets, widgetCount] = res.value;
+  const widgets = res.value;
 
   const planLimits = await event.locals.paymentService.getPlanLimits(event.locals.user);
   if (planLimits.isErr()) {
@@ -30,7 +23,7 @@ export const load: PageServerLoad = async (event) => {
 
   return {
     widgets: widgets.map((widget) => widget.id),
-    widgetsLimitReached: widgetCount >= planLimits.value.maxWidgets,
+    widgetsLimitReached: widgets.length >= planLimits.value.maxWidgets,
     maxWidgets: planLimits.value.maxWidgets,
   };
 };

@@ -1,4 +1,5 @@
 import { error, fail, redirect } from '@sveltejs/kit';
+import { okAsync, ResultAsync } from 'neverthrow';
 import { message, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 
@@ -9,24 +10,27 @@ import type { LocalUser } from '$lib/types';
 import type { Actions, PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async (event) => {
-  if (!event.locals.session) {
+  const session = event.locals.session;
+  if (!session) {
     return redirect(302, '/auth/signin');
   }
 
   const widgetId = event.params.id;
-  const widgetResult = await event.locals.widgetsService.getWithMetrics(
-    widgetId,
-    event.locals.session.userId
-  );
-  if (widgetResult.isErr()) {
-    return handleDbError(widgetResult);
+  const res = await event.locals.widgetsService
+    .getWithMetrics(widgetId, session.userId)
+    .andThen((widget) =>
+      ResultAsync.combine([okAsync(widget), event.locals.objectivesService.getAll(session.userId)])
+    );
+  if (res.isErr()) {
+    return handleDbError(res);
   }
-  const widget = widgetResult.value;
+  const [widget, objectives] = res.value;
 
   const form = await superValidate(zod(formSchema));
   form.data = widget as any;
 
   return {
+    objectives,
     form,
     // We tell typescript that the user is not null
     user: event.locals.user as LocalUser,

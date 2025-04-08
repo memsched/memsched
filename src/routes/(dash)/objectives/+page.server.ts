@@ -37,21 +37,10 @@ export const load: PageServerLoad = async (event) => {
 
   const objectives = objectivesResult.value;
 
-  // Check if user has reached the widget limit
-  const widgetCountResult = await event.locals.widgetsService.getUserWidgetCount(
-    event.locals.session.userId
-  );
-  if (widgetCountResult.isErr()) {
-    return handleDbError(widgetCountResult);
-  }
-
   const planLimits = await event.locals.paymentService.getPlanLimits(event.locals.user);
   if (planLimits.isErr()) {
     return handleDbError(planLimits);
   }
-
-  const widgetsLimitReached =
-    widgetCountResult.value >= planLimits.value.maxWidgets && !event.locals.user?.admin;
 
   // Check if user has reached the objectives limit
   const objectivesLimitReached =
@@ -62,8 +51,6 @@ export const load: PageServerLoad = async (event) => {
     form: await superValidate(zod(logSchema)),
     isArchived,
     isCompleted,
-    widgetsLimitReached,
-    maxWidgets: planLimits.value.maxWidgets,
     objectivesLimitReached,
     maxObjectives: planLimits.value.maxObjectives,
   };

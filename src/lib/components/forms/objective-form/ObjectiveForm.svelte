@@ -1,5 +1,7 @@
 <script lang="ts">
   import toast from 'svelte-french-toast';
+  import { Icon } from 'svelte-icons-pack';
+  import { FiPlus } from 'svelte-icons-pack/fi';
   import SuperDebug, { type Infer, superForm, type SuperValidated } from 'sveltekit-superforms';
   import { zodClient } from 'sveltekit-superforms/adapters';
 
@@ -134,9 +136,12 @@
     </div>
   </section>
   {#if edit}
-    <Form.Button>Update Objective</Form.Button>
+    <Form.Button type="submit">Update Objective</Form.Button>
   {:else}
-    <Form.Button>Create Objective</Form.Button>
+    <Form.Button type="submit">
+      Create Objective
+      <Icon src={FiPlus} className="size-4" />
+    </Form.Button>
   {/if}
   {#if browser && import.meta.env.VITE_DEBUG_FORMS === '1' && import.meta.env.DEV}
     <SuperDebug data={$formData} />

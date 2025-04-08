@@ -42,7 +42,12 @@ const config = {
           'https://api-gateway.umami.dev/api/send',
           'https://stats.uptimerobot.com/',
         ],
-        'script-src': ['self', 'unsafe-inline', 'https://cloud.umami.is/script.js'],
+        'script-src': [
+          'self',
+          'unsafe-inline',
+          'https://cloud.umami.is/script.js',
+          'https://static.cloudflareinsights.com/beacon.min.js',
+        ],
         'style-src': ['self', 'unsafe-inline'],
         'img-src': [
           'self',

@@ -99,8 +99,8 @@
     hasImage = true;
   }
 
-  function onRemoveImage(e: MouseEvent) {
-    e?.stopPropagation();
+  function onRemoveImage(e: UIEvent) {
+    e.stopPropagation();
     hasImage = false;
     $formData.imageUrl = null;
     $formData.textIcon = null;
@@ -115,7 +115,7 @@
     updateDefaultMetrics(metricCount, metricCount - 1);
   }
 
-  function onRemoveMetric(e: MouseEvent, index: number) {
+  function onRemoveMetric(e: UIEvent, index: number) {
     e.stopPropagation();
     const n = index + 1;
     metricCount--;
@@ -262,9 +262,19 @@
   />
   {#if hasImage}
     <TabNavLink name="Image" onclick={() => (focusedTab = 'image')} active={focusedTab === 'image'}>
-      <button onclick={onRemoveImage} class="!text-zinc-400 hover:!text-foreground">
+      <span
+        role="button"
+        tabindex="0"
+        onkeydown={(e) => {
+          if (e.key === 'Enter') {
+            onRemoveImage(e);
+          }
+        }}
+        onclick={onRemoveImage}
+        class="!text-zinc-400 hover:!text-foreground"
+      >
         <Icon src={FiX} />
-      </button>
+      </span>
     </TabNavLink>
   {/if}
   {#each Array(metricCount) as _, i}
@@ -273,9 +283,19 @@
       onclick={() => (focusedTab = `metric.${i + 1}` as MetricTab)}
       active={focusedTab === `metric.${i + 1}`}
     >
-      <button onclick={(e) => onRemoveMetric(e, i)} class="!text-zinc-400 hover:!text-foreground">
+      <span
+        role="button"
+        tabindex="0"
+        onkeydown={(e) => {
+          if (e.key === 'Enter') {
+            onRemoveMetric(e, i);
+          }
+        }}
+        onclick={(e) => onRemoveMetric(e, i)}
+        class="!text-zinc-400 hover:!text-foreground"
+      >
         <Icon src={FiX} />
-      </button>
+      </span>
     </TabNavLink>
   {/each}
   {#if !hasImage}

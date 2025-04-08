@@ -102,6 +102,7 @@ export class GithubMetricsService {
     shouldPaginate = false,
     maxPages = 10
   ): Promise<number> {
+    // TODO: Use this API: https://docs.github.com/en/rest/metrics/statistics?apiVersion=2022-11-28#get-the-last-year-of-commit-activity
     const dateQuery = fromDate ? `+author-date:>${fromDate.toISOString().split('T')[0]}` : '';
     const baseUrl = `https://api.github.com/search/commits?q=author:${username}${dateQuery}&per_page=100`;
 

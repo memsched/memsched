@@ -215,7 +215,7 @@ export class ObjectiveLogsService {
       this.db
         .select({
           date: dateExpr,
-          value: sql<number>`${table.objectiveLog.value}`,
+          value: sql<number>`SUM(${table.objectiveLog.value})`,
         })
         .from(table.objectiveLog)
         .where(

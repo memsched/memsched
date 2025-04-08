@@ -23,10 +23,6 @@ export const load: PageServerLoad = async (event) => {
   }
   const widget = widgetResult.value;
 
-  if (widget.imageUrl && !widget.imageUrl.startsWith(event.url.origin)) {
-    widget.imageUrl = null;
-  }
-
   const form = await superValidate(zod(formSchema));
   form.data = widget as any;
 
@@ -49,6 +45,14 @@ export const actions: Actions = {
         form,
       });
     }
+
+    if (form.data.imageUrl && !form.data.imageUrl.startsWith(event.url.origin)) {
+      return fail(400, {
+        form,
+        error: 'Invalid image URL',
+      });
+    }
+
     const widgetId = event.params.id;
     const userId = event.locals.session.userId;
 

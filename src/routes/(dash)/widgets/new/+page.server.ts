@@ -36,6 +36,13 @@ export const actions: Actions = {
       });
     }
 
+    if (form.data.imageUrl && !form.data.imageUrl.startsWith(event.url.origin)) {
+      return fail(400, {
+        form,
+        error: 'Invalid image URL',
+      });
+    }
+
     const widgetCount = await event.locals.widgetsService.getUserWidgetCount(
       event.locals.session.userId
     );

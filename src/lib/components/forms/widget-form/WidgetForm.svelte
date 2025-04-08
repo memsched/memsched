@@ -68,8 +68,10 @@
   let titleInput = $state<HTMLInputElement | null>(null);
   let subtitleInput = $state<HTMLInputElement | null>(null);
   let textIconInput = $state<HTMLInputElement | null>(null);
-  let hasImage = $state<boolean>(false);
-  let metricCount = $state<number>(0);
+  let hasImage = $state<boolean>(
+    data.form.data.imageUrl !== null || data.form.data.textIcon !== null
+  );
+  let metricCount = $state<number>(data.form.data.metrics.length);
   const formDataImageUrl = $derived($formData.imageUrl);
   const widgetMetrics = $derived(
     $formData.metrics.map((m, i) => ({
@@ -163,7 +165,7 @@
     Widgets
     <Icon src={IoChevronForward} className="!text-muted-foreground" />
   </Button>
-  <div class="px-3 text-sm font-medium">New</div>
+  <div class="px-3 text-sm font-medium">{edit ? 'Edit' : 'New'}</div>
   <TabNavLink
     name="General"
     onclick={() => (focusedTab = 'general.title')}

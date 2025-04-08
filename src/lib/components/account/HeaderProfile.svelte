@@ -50,7 +50,7 @@
       </DropdownMenu.Item>
       <DropdownMenu.Item class="cursor-pointer hover:text-accent-foreground">
         {#snippet child({ props })}
-          <a href="/docs" {...props}>
+          <a href="/docs" {...props} data-sveltekit-reload>
             <Icon src={FiBookOpen} className="!text-muted-foreground" />
             Docs
           </a>

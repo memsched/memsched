@@ -86,94 +86,96 @@
           />
         </WidgetTabStyleButton>
 
-        <WidgetTabStyleButton
-          {metricIndex}
-          {formData}
-          style="plot-base"
-          title="Minimal Plot"
-          description="Use the plot style for this metric."
-        >
-          <PlotComponent
-            metric={{
-              style: 'plot-base',
-              period: 'all time',
-              valuePercent: false,
-              valueDisplayPrecision: 0,
-              name: 'metric name',
-              order: 1,
-              data: PLOT_DATA,
-            }}
-            accentColor="#32ad86"
-          />
-        </WidgetTabStyleButton>
-        <WidgetTabStyleButton
-          {metricIndex}
-          {formData}
-          style="plot-metric"
-          title="Metric Plot"
-          description="Use the plot style for this metric."
-        >
-          <PlotComponent
-            metric={{
-              style: 'plot-metric',
-              data: {
-                value: 100,
-                ...PLOT_DATA,
-              },
-              period: 'all time',
-              valuePercent: false,
-              valueDisplayPrecision: 0,
-              name: 'metric name',
-              order: 1,
-            }}
-            accentColor="#32ad86"
-          />
-        </WidgetTabStyleButton>
-        <WidgetTabStyleButton
-          {metricIndex}
-          {formData}
-          style="heatmap-base"
-          title="Minimal Heatmap"
-          description="Use the heatmap style for this metric."
-        >
-          <HeatmapComponent
-            metric={{
-              style: 'heatmap-base',
-              period: 'all time',
-              valuePercent: false,
-              valueDisplayPrecision: 1,
-              name: 'metric name',
-              order: 1,
-              data: {
-                ...HEATMAP_DATA,
-              },
-            }}
-            accentColor="#32ad86"
-          />
-        </WidgetTabStyleButton>
-        <WidgetTabStyleButton
-          {metricIndex}
-          {formData}
-          style="heatmap-metric"
-          title="Metric Heatmap"
-          description="Use the heatmap style for this metric."
-        >
-          <HeatmapComponent
-            metric={{
-              style: 'heatmap-metric',
-              data: {
-                value: 100,
-                ...HEATMAP_DATA,
-              },
-              period: 'all time',
-              valuePercent: false,
-              valueDisplayPrecision: 1,
-              name: 'metric name',
-              order: 1,
-            }}
-            accentColor="#32ad86"
-          />
-        </WidgetTabStyleButton>
+        {#if $formData.metrics[metricIndex].provider !== 'github'}
+          <WidgetTabStyleButton
+            {metricIndex}
+            {formData}
+            style="plot-base"
+            title="Minimal Plot"
+            description="Use the plot style for this metric."
+          >
+            <PlotComponent
+              metric={{
+                style: 'plot-base',
+                period: 'all time',
+                valuePercent: false,
+                valueDisplayPrecision: 0,
+                name: 'metric name',
+                order: 1,
+                data: PLOT_DATA,
+              }}
+              accentColor="#32ad86"
+            />
+          </WidgetTabStyleButton>
+          <WidgetTabStyleButton
+            {metricIndex}
+            {formData}
+            style="plot-metric"
+            title="Metric Plot"
+            description="Use the plot style for this metric."
+          >
+            <PlotComponent
+              metric={{
+                style: 'plot-metric',
+                data: {
+                  value: 100,
+                  ...PLOT_DATA,
+                },
+                period: 'all time',
+                valuePercent: false,
+                valueDisplayPrecision: 0,
+                name: 'metric name',
+                order: 1,
+              }}
+              accentColor="#32ad86"
+            />
+          </WidgetTabStyleButton>
+          <WidgetTabStyleButton
+            {metricIndex}
+            {formData}
+            style="heatmap-base"
+            title="Minimal Heatmap"
+            description="Use the heatmap style for this metric."
+          >
+            <HeatmapComponent
+              metric={{
+                style: 'heatmap-base',
+                period: 'all time',
+                valuePercent: false,
+                valueDisplayPrecision: 1,
+                name: 'metric name',
+                order: 1,
+                data: {
+                  ...HEATMAP_DATA,
+                },
+              }}
+              accentColor="#32ad86"
+            />
+          </WidgetTabStyleButton>
+          <WidgetTabStyleButton
+            {metricIndex}
+            {formData}
+            style="heatmap-metric"
+            title="Metric Heatmap"
+            description="Use the heatmap style for this metric."
+          >
+            <HeatmapComponent
+              metric={{
+                style: 'heatmap-metric',
+                data: {
+                  value: 100,
+                  ...HEATMAP_DATA,
+                },
+                period: 'all time',
+                valuePercent: false,
+                valueDisplayPrecision: 1,
+                name: 'metric name',
+                order: 1,
+              }}
+              accentColor="#32ad86"
+            />
+          </WidgetTabStyleButton>
+        {/if}
       </div>
     </Form.Control>
   </Form.Field>
@@ -192,6 +194,12 @@
                 $formData.metrics[metricIndex].githubUsername = null;
                 $formData.metrics[metricIndex].githubStatType = null;
               } else {
+                if (
+                  value === 'github' &&
+                  !['metric-base', 'metric-trend'].includes($formData.metrics[metricIndex].style)
+                ) {
+                  $formData.metrics[metricIndex].style = 'metric-base';
+                }
                 $formData.metrics[metricIndex].objectiveId = null;
               }
             }}
@@ -298,7 +306,7 @@
       </Form.Field>
     {/if}
 
-    {#if !['heatmap-base'].includes($formData.metrics[metricIndex].style) && $formData.metrics[metricIndex].provider === 'objective'}
+    {#if !['heatmap-base'].includes($formData.metrics[metricIndex].style)}
       <Form.Field {form} name="metrics[{metricIndex}].period" class="col-span-2">
         <Form.Control>
           {#snippet children({ props })}
@@ -312,7 +320,10 @@
               name={props.name}
             >
               <Select.Trigger {...props} class="capitalize">
-                {$formData.metrics[metricIndex].period === 'all time'
+                {$formData.metrics[metricIndex].period === 'all time' ||
+                ['repositories', 'followers'].includes(
+                  $formData.metrics[metricIndex].githubStatType ?? ''
+                )
                   ? 'All Time'
                   : 'Last ' + $formData.metrics[metricIndex].period}
               </Select.Trigger>

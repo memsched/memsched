@@ -261,8 +261,10 @@ export class WidgetsService {
         };
 
         // Clear cache
-        await cache.delete(`widget:${widgetId}:html`);
-        await cache.delete(`widget:${widgetId}:svg`);
+        await Promise.all([
+          cache.delete(`widget:${widgetId}:html`),
+          cache.delete(`widget:${widgetId}:svg`),
+        ]);
 
         // Update in DB (batch so we handle the case where there are no metrics)
         if (metricInserts.length > 0) {

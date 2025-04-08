@@ -31,8 +31,8 @@ function initializeServices(db: DBType) {
   // Create independent services first
   const usersService = new UsersService(db);
   const objectivesService = new ObjectivesService(db);
-  const objectiveLogsService = new ObjectiveLogsService(db, objectivesService);
   const metricsService = new MetricsService(db);
+  const objectiveLogsService = new ObjectiveLogsService(db, objectivesService, metricsService);
   const metricDataService = new MetricDataService(db, objectivesService, objectiveLogsService);
   const widgetsService = new WidgetsService(db, objectivesService, metricDataService);
   const sessionsService = new SessionsService(db);

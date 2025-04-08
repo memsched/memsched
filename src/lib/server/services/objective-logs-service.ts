@@ -14,12 +14,14 @@ import {
   wrapResultAsync,
   wrapResultAsyncFn,
 } from '../db/types';
+import type { MetricsService } from './metrics-service';
 import type { ObjectivesService } from './objectives-service';
 
 export class ObjectiveLogsService {
   constructor(
     private readonly db: DBType,
-    private readonly objectivesService: ObjectivesService
+    private readonly objectivesService: ObjectivesService,
+    private readonly metricsService: MetricsService
   ) {}
 
   public getAll(objectiveId: string, userId: string) {
@@ -100,7 +102,7 @@ export class ObjectiveLogsService {
         ResultAsync.combine([
           okAsync(objective),
           okAsync(log),
-          // TODO(METRICS): Compute metric and cache it
+          this.metricsService.invalidateMetrics(objective.id, cache),
         ])
       );
   }
@@ -125,13 +127,13 @@ export class ObjectiveLogsService {
           this.objectivesService.updateObjectiveValue(objectiveId, newValue),
         ]);
       })
-      .andThen(([objective, lastLog]) =>
-        ResultAsync.combine([
+      .andThen(([objective, lastLog]) => {
+        return ResultAsync.combine([
           okAsync(objective),
           okAsync(lastLog),
-          // TODO(METRICS): Compute metric and cache it
-        ])
-      );
+          this.metricsService.invalidateMetrics(objective.id, cache),
+        ]);
+      });
   }
 
   private getMostRecent(objectiveId: string, userId: string) {

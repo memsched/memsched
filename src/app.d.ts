@@ -11,11 +11,11 @@ import type { CacheService } from '$lib/server/cache';
 import type { DBType } from '$lib/server/db';
 import type { Session } from '$lib/server/db/schema';
 import type {
+  MetricDataService,
   MetricsService,
   ObjectiveLogsService,
   ObjectivesService,
   PaymentService,
-  PlotDataService,
   SessionsService,
   UsersService,
   WidgetsService,
@@ -34,9 +34,9 @@ declare global {
       objectivesService: ObjectivesService;
       objectiveLogsService: ObjectiveLogsService;
       widgetsService: WidgetsService;
+      metricDataService: MetricDataService;
       metricsService: MetricsService;
       paymentService: PaymentService;
-      plotDataService: PlotDataService;
     }
     interface Platform {
       env: {

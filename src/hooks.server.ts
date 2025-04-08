@@ -5,6 +5,7 @@ import { building } from '$app/environment';
 import { getCache } from '$lib/server/cache';
 import { type DBType, getDB } from '$lib/server/db';
 import {
+  MetricDataService,
   MetricsService,
   ObjectiveLogsService,
   ObjectivesService,
@@ -31,8 +32,9 @@ function initializeServices(db: DBType) {
   const usersService = new UsersService(db);
   const objectivesService = new ObjectivesService(db);
   const objectiveLogsService = new ObjectiveLogsService(db, objectivesService);
-  const widgetsService = new WidgetsService(db, objectivesService, objectiveLogsService);
   const metricsService = new MetricsService(db);
+  const metricDataService = new MetricDataService(db, objectivesService, objectiveLogsService);
+  const widgetsService = new WidgetsService(db, objectivesService, metricDataService);
   const sessionsService = new SessionsService(db);
   const paymentService = new PaymentService(db);
 
@@ -42,6 +44,7 @@ function initializeServices(db: DBType) {
     objectiveLogsService,
     widgetsService,
     metricsService,
+    metricDataService,
     sessionsService,
     paymentService,
   };

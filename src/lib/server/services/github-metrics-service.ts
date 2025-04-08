@@ -15,31 +15,6 @@ export type GithubDataPoint = {
   value: number;
 };
 
-// Mock data for previews
-export const MOCK_GITHUB_DATA = {
-  commits: {
-    day: 3,
-    week: 12,
-    month: 47,
-    year: 230,
-    'all time': 580,
-  },
-  repositories: {
-    day: 0,
-    week: 1,
-    month: 3,
-    year: 8,
-    'all time': 15,
-  },
-  followers: {
-    day: 1,
-    week: 5,
-    month: 12,
-    year: 45,
-    'all time': 120,
-  },
-};
-
 export class GithubMetricsService {
   constructor(private readonly db: DBType) {}
 
@@ -347,13 +322,5 @@ export class GithubMetricsService {
 
       return value;
     });
-  }
-
-  // Get mock data for previews
-  public getMockGitHubData(
-    statType: table.GithubStatsCache['statType'],
-    timeRange: table.GithubStatsCache['timeRange']
-  ): number {
-    return MOCK_GITHUB_DATA[statType][timeRange] || 0;
   }
 }

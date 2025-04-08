@@ -13,11 +13,10 @@
   import * as Form from '$lib/components/ui/form';
   import IconButton from '$lib/components/ui/IconButton.svelte';
   import Widget from '$lib/components/widgets/Widget.svelte';
-  import { HEATMAP_DATA, PLOT_DATA, SUB_NAV_HEIGHT } from '$lib/constants';
+  import { SUB_NAV_HEIGHT } from '$lib/constants';
   import { type Objective } from '$lib/server/db/schema';
   import type { WidgetMetricData } from '$lib/server/services/metrics/types';
   import type { LocalUser } from '$lib/types';
-  import { roundToDecimal } from '$lib/utils';
 
   import { type FormSchema, formSchema } from './schema';
   import GeneralTab from './tabs/GeneralTab.svelte';
@@ -73,21 +72,6 @@
   );
   let metricCount = $state<number>(data.form.data.metrics.length);
   const formDataImageUrl = $derived($formData.imageUrl);
-  const widgetMetrics = $derived(
-    $formData.metrics.map((m, i) => ({
-      order: i,
-      style: m.style,
-      name: m.name,
-      period: m.period,
-      valueDisplayPrecision: m.valueDisplayPrecision,
-      data: {
-        ...(m.style.startsWith('plot') ? PLOT_DATA : HEATMAP_DATA),
-        ...(m.style.includes('metric')
-          ? { value: roundToDecimal(435.390453, m.valueDisplayPrecision) }
-          : {}),
-      },
-    })) as WidgetMetricData[]
-  );
 
   $effect(() => {
     if (focusedTab === 'general.title') {
@@ -158,6 +142,23 @@
     }
     $formData.metrics = metricsCopy;
   }
+
+  let widgetMetrics = $state<WidgetMetricData[]>([]);
+
+  $effect(() => {
+    // TODO: Update in the future.
+    if (!formSchema.safeParse($formData).success) {
+      return;
+    }
+    const updateMetrics = async () => {
+      const res = await fetch(
+        `/api/widgets/preview/${data.user.id}?config=${btoa(JSON.stringify($formData))}`
+      );
+      const json: { metrics: WidgetMetricData[] } = await res.json();
+      widgetMetrics = json.metrics;
+    };
+    updateMetrics();
+  });
 </script>
 
 <DashHeader>

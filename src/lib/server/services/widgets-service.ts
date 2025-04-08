@@ -18,23 +18,14 @@ import {
 import { stringToEtag } from '../utils';
 import { MetricDataService } from './metrics/data/metric-data-service';
 import type { WidgetJoinMetricsData } from './metrics/types';
-import type { ObjectiveLogsService } from './objective-logs-service';
 import type { ObjectivesService } from './objectives-service';
 
 export class WidgetsService {
-  private metricDataService: MetricDataService;
-
   constructor(
     private readonly db: DBType,
     private readonly objectivesService: ObjectivesService,
-    objectiveLogsService: ObjectiveLogsService
-  ) {
-    this.metricDataService = new MetricDataService(
-      this.db,
-      this.objectivesService,
-      objectiveLogsService
-    );
-  }
+    private readonly metricDataService: MetricDataService
+  ) {}
 
   public get(widgetId: string, userId?: string) {
     return wrapResultAsyncFn(async () => {

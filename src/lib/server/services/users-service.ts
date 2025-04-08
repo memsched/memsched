@@ -1,15 +1,17 @@
-import { eq, and, not } from 'drizzle-orm';
+import { and, eq, not } from 'drizzle-orm';
 import { v4 as uuidv4 } from 'uuid';
-import * as table from '$lib/server/db/schema';
-import type { ProviderId } from '../oauth';
-import type { DBType } from '$lib/server/db';
-import type { FormSchema } from '$lib/components/forms/profile-form/schema';
 import type { z } from 'zod';
+
+import type { FormSchema } from '$lib/components/forms/profile-form/schema';
+import type { DBType } from '$lib/server/db';
+import * as table from '$lib/server/db/schema';
 import {
+  DrizzleRecordNotFoundErrorCause,
   wrapResultAsync,
   wrapResultAsyncFn,
-  DrizzleRecordNotFoundErrorCause,
 } from '$lib/server/db/types';
+
+import type { ProviderId } from '../oauth';
 import { PaymentService } from './payment-service';
 
 // List of reserved usernames that cannot be used (route paths)
@@ -94,20 +96,20 @@ export class UsersService {
     });
   }
 
-  public getUserByEmail(email: string) {
+  public getByEmail(email: string) {
     return wrapResultAsyncFn(async () => {
       const users = await this.db.select().from(table.user).where(eq(table.user.email, email));
       return users.length > 0 ? users[0] : null;
     });
   }
 
-  public createUser(
+  public create(
     providerId: ProviderId,
     providerUserId: string,
     userData: Omit<table.UserInsert, 'id'>
   ) {
     return wrapResultAsyncFn(async () => {
-      const users = await this.getUserByEmail(userData.email);
+      const users = await this.getByEmail(userData.email);
       if (users.isErr()) {
         throw users.error;
       }
@@ -150,7 +152,7 @@ export class UsersService {
     });
   }
 
-  public getUserFromProviderUserId(providerUserId: string) {
+  public getByProviderUserId(providerUserId: string) {
     return wrapResultAsyncFn(async () => {
       const res = await this.db
         .select({ user: table.user })
@@ -163,7 +165,7 @@ export class UsersService {
     });
   }
 
-  public getUserByUsername(username: string) {
+  public getByUsername(username: string) {
     return wrapResultAsyncFn(async () => {
       const users = await this.db
         .select()
@@ -176,7 +178,7 @@ export class UsersService {
     });
   }
 
-  public updateUser(userId: string, userData: z.infer<FormSchema>) {
+  public update(userId: string, userData: z.infer<FormSchema>) {
     return wrapResultAsync(
       this.db
         .update(table.user)
@@ -200,7 +202,7 @@ export class UsersService {
     };
   }
 
-  public deleteUser(userId: string, reason?: string) {
+  public delete(userId: string, reason?: string) {
     return wrapResultAsyncFn(async () => {
       // 1. Get user data before deletion
       const users = await this.db.select().from(table.user).where(eq(table.user.id, userId));

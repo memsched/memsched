@@ -1,8 +1,10 @@
 <script lang="ts">
   import { Icon, type IconType } from 'svelte-icons-pack';
-  import IconButton from './ui/IconButton.svelte';
-  import { IoAdd } from 'svelte-icons-pack/io';
+  import { FiPlus } from 'svelte-icons-pack/fi';
+
   import { page } from '$app/state';
+
+  import IconButton from './ui/IconButton.svelte';
 
   interface Props {
     title: string;
@@ -19,7 +21,7 @@
     href,
     description,
     buttonText = 'Create Now',
-    buttonIcon = IoAdd,
+    buttonIcon = FiPlus,
   }: Props = $props();
   const finalHref = page.data.user === null ? '/auth/signin' : href;
 </script>

@@ -1,6 +1,6 @@
 <script lang="ts">
   import { Icon } from 'svelte-icons-pack';
-  import { IoRocket, IoCode } from 'svelte-icons-pack/io';
+  import { IoCode, IoRocket } from 'svelte-icons-pack/io';
 </script>
 
 <div class="space-y-12">
@@ -15,12 +15,12 @@
   <!-- Quick links grid -->
   <div class="grid gap-6 sm:grid-cols-2">
     <a
-      href="/docs/quick-start"
       class="group relative rounded-lg border bg-card p-6 transition-colors hover:bg-muted/50"
+      href="/docs/quick-start"
     >
       <div class="mb-3 flex items-center gap-3">
         <div class="rounded-md bg-primary/10 p-2 text-primary">
-          <Icon src={IoRocket} className="size-5" />
+          <Icon className="size-5" src={IoRocket} />
         </div>
         <h2 class="h3">Quick Start</h2>
       </div>
@@ -33,12 +33,12 @@
     </a>
 
     <a
-      href="/docs/embedding/html"
       class="group relative rounded-lg border bg-card p-6 transition-colors hover:bg-muted/50"
+      href="/docs/embedding/html"
     >
       <div class="mb-3 flex items-center gap-3">
         <div class="rounded-md bg-primary/10 p-2 text-primary">
-          <Icon src={IoCode} className="size-5" />
+          <Icon className="size-5" src={IoCode} />
         </div>
         <h2 class="h3">Embedding Guide</h2>
       </div>

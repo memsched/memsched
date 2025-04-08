@@ -1,13 +1,14 @@
-import type { RequestEvent } from '@sveltejs/kit';
-import { eq } from 'drizzle-orm';
 import { sha256 } from '@oslojs/crypto/sha2';
 import { encodeBase32, encodeHexLowerCase } from '@oslojs/encoding';
-import * as table from '$lib/server/db/schema';
-import type { DBType } from '$lib/server/db';
-import { wrapResultAsync, wrapResultAsyncFn } from '$lib/server/db/types';
+import type { RequestEvent } from '@sveltejs/kit';
+import { eq } from 'drizzle-orm';
+
 import { getUserOverviewUrl } from '$lib/api';
-import { handleDbError } from '$lib/server/utils';
+import type { DBType } from '$lib/server/db';
+import * as table from '$lib/server/db/schema';
+import { wrapResultAsync, wrapResultAsyncFn } from '$lib/server/db/types';
 import type { ProviderId } from '$lib/server/oauth';
+import { handleDbError } from '$lib/server/utils';
 
 interface AuthUserData {
   providerId: ProviderId;
@@ -119,9 +120,7 @@ export class SessionsService {
     usersService = event.locals.usersService
   ): Promise<Response> {
     // Check for existing user
-    const existingUserResult = await usersService.getUserFromProviderUserId(
-      userData.providerUserId
-    );
+    const existingUserResult = await usersService.getByProviderUserId(userData.providerUserId);
     if (existingUserResult.isErr()) {
       return handleDbError(existingUserResult);
     }
@@ -134,7 +133,7 @@ export class SessionsService {
     }
 
     // Create new user
-    const userResult = await usersService.createUser(userData.providerId, userData.providerUserId, {
+    const userResult = await usersService.create(userData.providerId, userData.providerUserId, {
       email: userData.email,
       username: userData.username,
       name: userData.name,

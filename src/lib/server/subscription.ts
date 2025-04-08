@@ -38,12 +38,13 @@ export function getPlanLimits(
 
   // Free plan limits
   return {
-    maxWidgets: FREE_PLAN_LIMITS.maxWidgets,
-    maxObjectives: FREE_PLAN_LIMITS.maxObjectives,
+    maxWidgets:
+      import.meta.env.VITE_DEBUG_UNLIMITED_WIDGETS === '1' && import.meta.env.DEV
+        ? UNLIMITED
+        : FREE_PLAN_LIMITS.maxWidgets,
+    maxObjectives:
+      import.meta.env.VITE_DEBUG_UNLIMITED_OBJECTIVES === '1' && import.meta.env.DEV
+        ? UNLIMITED
+        : FREE_PLAN_LIMITS.maxObjectives,
   };
-}
-
-export function isLimitReached(current: number, limit: number): boolean {
-  if (limit === UNLIMITED) return false;
-  return current >= limit;
 }

@@ -1,9 +1,9 @@
-import crypto from 'crypto';
 import { error, fail } from '@sveltejs/kit';
+import crypto from 'crypto';
 import type { Err } from 'neverthrow';
-import type { WidgetJoinMetrics } from './db/schema';
-import { DrizzleRecordNotFoundErrorCause, type DrizzleError } from './db/types';
 import type { SuperValidated } from 'sveltekit-superforms/client';
+
+import { type DrizzleError, DrizzleRecordNotFoundErrorCause } from './db/types';
 
 export function sanitizeUsername(username: string): string {
   return username
@@ -14,44 +14,8 @@ export function sanitizeUsername(username: string): string {
     .replace(/^[-_]+|[-_]+$/g, ''); // Trim dashes and underscores from start and end
 }
 
-/**
- * Generates an ETag for a widget based on its data and metrics
- */
-export function generateWidgetEtag(widget: WidgetJoinMetrics): string {
-  // Create a string that includes all the widget data that could change
-  const widgetData = JSON.stringify({
-    // Widget properties
-    id: widget.id,
-    title: widget.title,
-    subtitle: widget.subtitle,
-    imageUrl: widget.imageUrl,
-    imagePlacement: widget.imagePlacement,
-    textIcon: widget.textIcon,
-
-    padding: widget.padding,
-    border: widget.border,
-    borderWidth: widget.borderWidth,
-    borderRadius: widget.borderRadius,
-    color: widget.color,
-    accentColor: widget.accentColor,
-    backgroundColor: widget.backgroundColor,
-    watermark: widget.watermark,
-
-    // Metrics (sorted to ensure consistency)
-    metrics: widget.metrics
-      .sort((a, b) => a.order - b.order)
-      .map((metric) => ({
-        id: metric.id,
-        value: metric.value,
-        name: metric.name,
-        calculationType: metric.calculationType,
-        valueDecimalPrecision: metric.valueDecimalPrecision,
-        order: metric.order,
-      })),
-  } as WidgetJoinMetrics);
-
-  // Use crypto to create a hash
-  return crypto.createHash('sha256').update(widgetData).digest('hex');
+export function stringToEtag(str: string): string {
+  return crypto.createHash('sha256').update(str).digest('hex');
 }
 
 export function handleDbError(result: Err<any, DrizzleError>) {

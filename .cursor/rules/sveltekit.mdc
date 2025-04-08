@@ -206,4 +206,7 @@ Documentation
 - Svelte Documentation: https://svelte.dev/docs
 - SvelteKit Documentation: https://kit.svelte.dev/docs
 
+Database
+Refer to the [schema.ts](mdc:src/lib/server/db/schema.ts) file for the database schema of the project.
+
 Refer to Svelte and SvelteKit documentation for detailed information on components, internationalization, and best practices.

@@ -1,19 +1,20 @@
 <script lang="ts">
   import { onMount } from 'svelte';
+  import { Icon } from 'svelte-icons-pack';
+  import { IoArrowForward, IoCube, IoGlobe, IoPersonCircle } from 'svelte-icons-pack/io';
+
+  import HomeLayout from '$lib/components/layouts/HomeLayout.svelte';
   import Arrow from '$lib/components/svgs/Arrow.svelte';
+  import Path from '$lib/components/svgs/Path.svelte';
+  import * as Accordion from '$lib/components/ui/accordion';
   import { Badge } from '$lib/components/ui/badge';
   import { Button } from '$lib/components/ui/button';
-  import { Icon } from 'svelte-icons-pack';
-  import HomeLayout from '$lib/components/layouts/HomeLayout.svelte';
-  import { IoArrowForward, IoCube, IoGlobe, IoPersonCircle } from 'svelte-icons-pack/io';
   import IconButton from '$lib/components/ui/IconButton.svelte';
   import WidgetCarousel from '$lib/components/WidgetCarousel.svelte';
-  import { mockWidgets } from '$lib/widgets';
+  import Widget from '$lib/components/widgets/Widget.svelte';
   import { HEADER_HEIGHT } from '$lib/constants';
-  import Path from '$lib/components/svgs/Path.svelte';
-  import Widget from '$lib/components/Widget.svelte';
   import { FLAT_COLOR_ICONS } from '$lib/icons';
-  import * as Accordion from '$lib/components/ui/accordion';
+  import { mockWidgets } from '$lib/widgets';
 
   const codeSnippet = `
 <img src="https://memsched.com/api/widgets/example?svg" />`;
@@ -30,11 +31,11 @@
   });
 </script>
 
-<HomeLayout container={false} class="*:py-20">
+<HomeLayout class="*:py-20" container={false}>
   <section
     id="hero"
+    style:height="calc(100vh - {HEADER_HEIGHT}px)"
     class="flex h-full max-h-[900px] flex-col items-center justify-between !pb-0 text-center"
-    style="height: calc(100vh - {HEADER_HEIGHT}px)"
   >
     <div class="main-container flex flex-col items-center justify-center gap-8 py-20">
       <div class="space-y-3">
@@ -45,7 +46,7 @@
         </h2>
       </div>
       <div class="relative w-fit">
-        <Button size="cta" href="/auth/signin" data-umami-event="hero-get-started-button"
+        <Button data-umami-event="hero-get-started-button" href="/auth/signin" size="cta"
           >Get Started for Free</Button
         >
         <Arrow class="absolute left-[105%] top-[60%] -z-10 rotate-6" />
@@ -76,17 +77,17 @@
             1
           </div>
           <div class="space-y-1">
-            <Icon src={IoPersonCircle} className="size-10" />
+            <Icon className="size-10" src={IoPersonCircle} />
             <h3 class="text-xl font-semibold">Setup Profile & Create an Objective</h3>
             <p class="!mb-3 text-muted-foreground">
               Set up a new learning objective with your goals and metrics to track.
             </p>
             <IconButton
-              icon={IoArrowForward}
-              size="lg"
-              href="/auth/signin"
               class="animate-svg"
               data-umami-event="how-it-works-create-profile-button"
+              href="/auth/signin"
+              icon={IoArrowForward}
+              size="lg"
             >
               Create Profile for Free
             </IconButton>
@@ -100,7 +101,7 @@
             2
           </div>
           <div class="space-y-1">
-            <Icon src={IoCube} className="size-10" />
+            <Icon className="size-10" src={IoCube} />
             <h3 class="mb-2 text-xl font-semibold">Log Your Progress</h3>
             <p class="text-muted-foreground">
               Regularly update your metrics to see your growth over time.
@@ -115,7 +116,7 @@
             3
           </div>
           <div class="space-y-1">
-            <Icon src={IoGlobe} className="size-10" />
+            <Icon className="size-10" src={IoGlobe} />
             <h3 class="mb-2 text-xl font-semibold">Share Your Widgets</h3>
             <p class="text-muted-foreground">
               Generate custom widgets and embed them wherever you want to showcase your journey.
@@ -146,35 +147,41 @@
           <div class="absolute size-5 animate-ping rounded-full bg-green-500"></div>
         </div>
         <Widget
-          title="Learning Progress"
-          subtitle="Hours invested in learning"
-          imageUrl={FLAT_COLOR_ICONS.graduation_cap}
+          accentColor="#4f8bce"
+          backgroundColor="#ffffff"
+          border={true}
+          borderRadius={6}
+          borderWidth={1}
+          color="#000000"
           imagePlacement="left"
-          textIcon={null}
+          imageUrl={FLAT_COLOR_ICONS.graduation_cap}
           metrics={[
             {
-              name: 'this month',
-              value: 85 + liveIncrement,
-              calculationType: 'hour',
-              valueDecimalPrecision: 0,
               order: 1,
+              style: 'metric-trend',
+              data: {
+                value: 85 + liveIncrement,
+              },
+              name: 'this month',
+              period: 'month',
+              valueDisplayPrecision: 0,
             },
             {
-              name: 'total hours',
-              value: 450 + liveIncrement,
-              calculationType: 'hour',
-              valueDecimalPrecision: 0,
               order: 2,
+              style: 'metric-trend',
+              data: {
+                value: 450 + liveIncrement,
+              },
+              name: 'total hours',
+              period: 'all time',
+              valueDisplayPrecision: 0,
             },
           ]}
           padding={13}
-          border={true}
-          borderWidth={1}
-          borderRadius={6}
-          color="#000000"
-          accentColor="#4f8bce"
-          backgroundColor="#ffffff"
-          watermark={false}
+          subtitle="Hours invested in learning"
+          textIcon={null}
+          title="Learning Progress"
+          watermark={true}
         />
       </div>
 
@@ -263,7 +270,7 @@
       </p>
     </div>
     <div class="relative">
-      <Button size="cta" href="/auth/signin" data-umami-event="cta-get-started-button"
+      <Button data-umami-event="cta-get-started-button" href="/auth/signin" size="cta"
         >Get Started for Free</Button
       >
       <Arrow class="absolute left-[-85%] top-[-85%] -z-10 rotate-180" />

@@ -1,7 +1,7 @@
 <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" {...$$props}>
   <!-- Red background -->
-  <rect width="200" height="200" fill="red" />
+  <rect fill="red" height="200" width="200" />
   <!-- White cross -->
-  <rect x="75" y="30" width="50" height="140" fill="white" />
-  <rect x="30" y="75" width="140" height="50" fill="white" />
+  <rect fill="white" height="140" width="50" x="75" y="30" />
+  <rect fill="white" height="50" width="140" x="30" y="75" />
 </svg>

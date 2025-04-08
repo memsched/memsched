@@ -1,18 +1,19 @@
 import type { Handle } from '@sveltejs/kit';
 import { sequence } from '@sveltejs/kit/hooks';
+
 import { building } from '$app/environment';
-import { getDB, type DBType } from '$lib/server/db';
 import { getCache } from '$lib/server/cache';
+import { type DBType, getDB } from '$lib/server/db';
 import {
-  UsersService,
-  ObjectivesService,
-  ObjectiveLogsService,
-  WidgetsService,
+  MetricDataService,
   MetricsService,
-  SessionsService,
+  ObjectiveLogsService,
+  ObjectivesService,
   PaymentService,
-  GithubMetricsService,
   SESSION_COOKIE_NAME,
+  SessionsService,
+  UsersService,
+  WidgetsService,
 } from '$lib/server/services';
 
 const PRERENDERED_ROUTES = ['/docs', '/privacy', '/tos'];
@@ -29,22 +30,13 @@ function isPrerenderedRoute(url: URL) {
 function initializeServices(db: DBType) {
   // Create independent services first
   const usersService = new UsersService(db);
-  const githubMetricsService = new GithubMetricsService(db);
-  const metricsService = new MetricsService(db, githubMetricsService);
+  const objectivesService = new ObjectivesService(db);
+  const metricsService = new MetricsService(db);
+  const objectiveLogsService = new ObjectiveLogsService(db, objectivesService, metricsService);
+  const metricDataService = new MetricDataService(db, objectivesService, objectiveLogsService);
+  const widgetsService = new WidgetsService(db, objectivesService, metricDataService);
   const sessionsService = new SessionsService(db);
   const paymentService = new PaymentService(db);
-
-  // Create interdependent services with temporary null for circular dependencies
-  const widgetsService = new WidgetsService(db, null, metricsService);
-
-  // Now create services that depend on the ones above
-  const objectivesService = new ObjectivesService(db, widgetsService, metricsService);
-
-  // Resolve circular dependencies
-  widgetsService.setObjectivesService(objectivesService);
-
-  // Create services that depend on objectivesService
-  const objectiveLogsService = new ObjectiveLogsService(db, objectivesService);
 
   return {
     usersService,
@@ -52,7 +44,7 @@ function initializeServices(db: DBType) {
     objectiveLogsService,
     widgetsService,
     metricsService,
-    githubMetricsService,
+    metricDataService,
     sessionsService,
     paymentService,
   };

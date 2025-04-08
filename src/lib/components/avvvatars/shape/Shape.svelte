@@ -1,5 +1,6 @@
 <script lang="ts">
   import { Icon } from 'svelte-icons-pack';
+
   import * as shapes from './shapes';
 
   interface Props {

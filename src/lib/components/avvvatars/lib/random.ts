@@ -1,5 +1,5 @@
-import MersenneTwister from './mersenne_twister';
 import AleaGen from './alea';
+import MersenneTwister from './mersenne_twister';
 
 interface range {
   min: number;

@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { Snippet } from 'svelte';
+
   import DocsLayout from '$lib/components/layouts/DocsLayout.svelte';
 
   interface Props {

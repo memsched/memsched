@@ -1,23 +1,17 @@
-import type { DBType } from '../db';
-import * as table from '../db/schema';
-import { eq, desc, and, or, sql } from 'drizzle-orm';
-import { wrapResultAsync, wrapResultAsyncFn, DrizzleRecordNotFoundErrorCause } from '../db/types';
-import type { WidgetsService } from './widgets-service';
-import type { CacheService } from '../cache';
-import type { MetricsService } from './metrics-service';
-import type { FormSchema } from '$lib/components/forms/objective-form/schema';
+import { and, desc, eq, or, sql } from 'drizzle-orm';
 import { v4 as uuidv4 } from 'uuid';
 import type { z } from 'zod';
-import { ResultAsync } from 'neverthrow';
+
+import type { FormSchema } from '$lib/components/forms/objective-form/schema';
+
+import type { DBType } from '../db';
+import * as table from '../db/schema';
+import { DrizzleRecordNotFoundErrorCause, wrapResultAsync, wrapResultAsyncFn } from '../db/types';
 
 export class ObjectivesService {
-  constructor(
-    private readonly db: DBType,
-    private readonly widgetService: WidgetsService,
-    private readonly metricsService: MetricsService
-  ) {}
+  constructor(private readonly db: DBType) {}
 
-  public getUserObjectives(userId: string) {
+  public getAll(userId: string) {
     return wrapResultAsync(
       this.db
         .select()
@@ -27,7 +21,7 @@ export class ObjectivesService {
     );
   }
 
-  public getUserActiveObjectives(userId: string) {
+  public getAllActive(userId: string) {
     return wrapResultAsync(
       this.db
         .select()
@@ -46,7 +40,7 @@ export class ObjectivesService {
     );
   }
 
-  public getUserCompletedObjectives(userId: string) {
+  public getAllCompleted(userId: string) {
     return wrapResultAsync(
       this.db
         .select()
@@ -63,7 +57,7 @@ export class ObjectivesService {
     );
   }
 
-  public getUserArchivedObjectives(userId: string) {
+  public getAllArchived(userId: string) {
     return wrapResultAsync(
       this.db
         .select()
@@ -73,7 +67,7 @@ export class ObjectivesService {
     );
   }
 
-  public getUserObjective(objectiveId: string, userId: string) {
+  public get(objectiveId: string, userId: string) {
     return wrapResultAsyncFn(async () => {
       const objectives = await this.db
         .select()
@@ -88,21 +82,6 @@ export class ObjectivesService {
     });
   }
 
-  public updateObjectiveWidgetMetrics(objectiveId: string, cache: CacheService) {
-    return this.widgetService.getWidgetsFromObjectiveId(objectiveId).andThen((widgets) =>
-      ResultAsync.combine(
-        widgets.map((widget) =>
-          this.metricsService.getMetricsFromWidgetId(widget.id).andThen((metrics) => {
-            const objectiveMetrics = metrics.filter((metric) => metric.objectiveId === objectiveId);
-            if (objectiveMetrics.length === 0)
-              return ResultAsync.fromPromise(Promise.resolve([]), (e) => e);
-            return this.metricsService.updateMetricValues(objectiveMetrics, cache);
-          })
-        )
-      )
-    );
-  }
-
   public updateObjectiveValue(objectiveId: string, value: number) {
     return wrapResultAsyncFn(async () => {
       return (
@@ -115,8 +94,8 @@ export class ObjectivesService {
     });
   }
 
-  public toggleArchivedObjective(objectiveId: string, userId: string) {
-    return this.getUserObjective(objectiveId, userId).andThen((objective) =>
+  public toggleArchived(objectiveId: string, userId: string) {
+    return this.get(objectiveId, userId).andThen((objective) =>
       wrapResultAsync(
         this.db
           .update(table.objective)
@@ -126,7 +105,7 @@ export class ObjectivesService {
     );
   }
 
-  public createUserObjective(objectiveData: z.infer<FormSchema>, userId: string) {
+  public create(objectiveData: z.infer<FormSchema>, userId: string) {
     return wrapResultAsyncFn(async () => {
       const objectiveId = uuidv4();
       const batchRes = await this.db.batch([
@@ -158,12 +137,8 @@ export class ObjectivesService {
     });
   }
 
-  public updateUserObjective(
-    objectiveId: string,
-    objectiveData: z.infer<FormSchema>,
-    userId: string
-  ) {
-    return this.getUserObjective(objectiveId, userId).andThen(() =>
+  public update(objectiveId: string, objectiveData: z.infer<FormSchema>, userId: string) {
+    return this.get(objectiveId, userId).andThen(() =>
       wrapResultAsync(
         this.db
           .update(table.objective)
@@ -179,8 +154,8 @@ export class ObjectivesService {
     );
   }
 
-  public deleteUserObjective(objectiveId: string, userId: string) {
-    return this.getUserObjective(objectiveId, userId).andThen(() =>
+  public delete(objectiveId: string, userId: string) {
+    return this.get(objectiveId, userId).andThen(() =>
       wrapResultAsync(
         this.db
           .delete(table.objective)

@@ -1,12 +1,14 @@
 <script lang="ts">
-  import { Icon } from 'svelte-icons-pack';
-  import { Button } from '../ui/button';
-  import { IoColorFillOutline, IoRefresh } from 'svelte-icons-pack/io';
-  import { Input } from '../ui/input';
-  import { cn, getRandomHexColor } from '$lib/utils';
-  import * as Popover from '../ui/popover';
-  import type { HTMLInputAttributes, HTMLInputTypeAttribute } from 'svelte/elements';
   import type { WithElementRef } from 'bits-ui';
+  import type { HTMLInputAttributes, HTMLInputTypeAttribute } from 'svelte/elements';
+  import { Icon } from 'svelte-icons-pack';
+  import { IoColorFillOutline, IoRefresh } from 'svelte-icons-pack/io';
+
+  import { cn, getRandomHexColor } from '$lib/utils';
+
+  import { Button } from '../ui/button';
+  import { Input } from '../ui/input';
+  import * as Popover from '../ui/popover';
 
   type InputType = Exclude<HTMLInputTypeAttribute, 'file'>;
 

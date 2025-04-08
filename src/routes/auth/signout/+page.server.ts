@@ -1,7 +1,9 @@
-import type { Actions } from './$types';
-import { redirect, error } from '@sveltejs/kit';
+import { error, redirect } from '@sveltejs/kit';
+
 import { authLimiter } from '$lib/server/rate-limiter';
 import { handleDbError } from '$lib/server/utils';
+
+import type { Actions } from './$types';
 
 export const actions: Actions = {
   default: async (event) => {

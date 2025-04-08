@@ -1,11 +1,11 @@
-import type { RequestHandler } from './$types';
-import { error } from '@sveltejs/kit';
-import { type WidgetJoinMetricsPreview } from '$lib/server/db/schema';
-import { formSchema } from '$lib/components/forms/widget-form/schema';
-import Widget from '$lib/components/Widget.svelte';
-import { renderWidget } from '$lib/server/svg';
+import { error, json } from '@sveltejs/kit';
+import { okAsync, ResultAsync } from 'neverthrow';
+import { z } from 'zod';
+
+import { widgetMetricSchema } from '$lib/components/forms/widget-form/schema';
 import { handleDbError } from '$lib/server/utils';
-import { okAsync } from 'neverthrow';
+
+import type { RequestHandler } from './$types';
 
 export const GET: RequestHandler = async (event) => {
   if (!event.locals.session || event.params.userId !== event.locals.session.userId) {
@@ -18,16 +18,23 @@ export const GET: RequestHandler = async (event) => {
   if (!base64Config) {
     return error(400, 'Missing widget config');
   }
-  let config;
+
+  let metrics: z.infer<typeof widgetMetricSchema>[];
   try {
     const decodedConfig = JSON.parse(atob(base64Config));
-    config = formSchema.parse(decodedConfig);
+    metrics = z.array(widgetMetricSchema).parse(decodedConfig);
   } catch (_) {
     return error(400, 'Invalid widget config');
   }
 
+  // Get specific metric index if provided
+  const metricIndex = event.url.searchParams.get('metricIndex');
+  const selectedMetrics = metricIndex !== null ? [metrics[parseInt(metricIndex)]] : metrics;
+
   // Verify user has access to all objectives referenced in metrics
-  const objectiveIds = config.metrics.map((metric) => metric.objectiveId).filter(Boolean);
+  const objectiveIds = selectedMetrics
+    .map((metric) => metric.objectiveId)
+    .filter((id): id is string => Boolean(id));
 
   // Verify access to all objectives
   const objectiveVerifications = await Promise.all(
@@ -35,7 +42,7 @@ export const GET: RequestHandler = async (event) => {
       if (!objectiveId) {
         return okAsync();
       }
-      return event.locals.objectivesService.getUserObjective(objectiveId, userId);
+      return event.locals.objectivesService.get(objectiveId, userId);
     })
   );
 
@@ -46,26 +53,22 @@ export const GET: RequestHandler = async (event) => {
     }
   }
 
-  // Calculate metric values using proper calculation method
-  const metricValuesResult = await event.locals.metricsService.computePreviewMetricValues(
-    config.metrics
+  const metricsData = await ResultAsync.combine(
+    selectedMetrics.map((metric, i) =>
+      event.locals.metricDataService.getData({
+        ...metric,
+        userId,
+        order: metricIndex !== null ? parseInt(metricIndex) + 1 : i + 1,
+        id: '',
+        createdAt: new Date(),
+        widgetId: 'preview',
+        valuePercent: false,
+      })
+    )
   );
-
-  if (metricValuesResult.isErr()) {
-    return handleDbError(metricValuesResult);
+  if (metricsData.isErr()) {
+    return handleDbError(metricsData);
   }
 
-  const metricsValues = metricValuesResult.value.map((metric, i) => ({
-    ...config.metrics[i],
-    order: i + 1,
-    value: metric,
-  }));
-
-  // TODO: Sanitize imageUrl
-  const props = {
-    ...config,
-    metrics: metricsValues,
-  };
-
-  return renderWidget<WidgetJoinMetricsPreview>(event, Widget, props, true);
+  return json(metricsData.value);
 };

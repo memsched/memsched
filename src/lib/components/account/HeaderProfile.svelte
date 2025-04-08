@@ -1,25 +1,39 @@
 <script lang="ts">
-  import { page } from '$app/state';
-  import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
   import { Icon } from 'svelte-icons-pack';
   import { FiBookOpen, FiLifeBuoy, FiLogOut, FiSettings } from 'svelte-icons-pack/fi';
+
   import { enhance } from '$app/forms';
-  import UserAvatar from './UserAvatar.svelte';
-  import DropdownMenuSeparator from '../ui/dropdown-menu/dropdown-menu-separator.svelte';
+  import { page } from '$app/state';
+  import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
+
   import DropdownMenuLabel from '../ui/dropdown-menu/dropdown-menu-label.svelte';
+  import DropdownMenuSeparator from '../ui/dropdown-menu/dropdown-menu-separator.svelte';
+  import UserAvatar from './UserAvatar.svelte';
+
+  interface Props {
+    compact?: boolean;
+  }
+
+  const { compact = false }: Props = $props();
 </script>
 
 <DropdownMenu.Root>
   <DropdownMenu.Trigger
     class="flex flex-row items-center justify-center gap-3 border border-transparent"
   >
-    <div class="flex flex-col text-end *:leading-tight">
-      <small>{page.data.user.name}</small>
-      <small class="font-light text-muted-foreground">{page.data.user.username}</small>
-    </div>
+    {#if !compact}
+      <div class="flex flex-col text-end *:leading-tight">
+        <small>{page.data.user.name}</small>
+        <small class="font-light text-muted-foreground">{page.data.user.username}</small>
+      </div>
+    {/if}
     <UserAvatar username={page.data.user.username} avatarUrl={page.data.user.avatarUrl} />
   </DropdownMenu.Trigger>
-  <DropdownMenu.Content class="min-w-40" align="end">
+  <DropdownMenu.Content
+    class="min-w-40"
+    align={compact ? 'start' : 'end'}
+    side={compact ? 'right' : 'bottom'}
+  >
     <DropdownMenu.Group>
       <DropdownMenuLabel>
         <div class="leading-3">{page.data.user.username}</div>
@@ -36,7 +50,7 @@
       </DropdownMenu.Item>
       <DropdownMenu.Item class="cursor-pointer hover:text-accent-foreground">
         {#snippet child({ props })}
-          <a href="/docs" {...props}>
+          <a href="/docs" {...props} data-sveltekit-reload>
             <Icon src={FiBookOpen} className="!text-muted-foreground" />
             Docs
           </a>

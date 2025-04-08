@@ -1,35 +1,18 @@
+import { format } from 'date-fns';
+import { and, eq, gt } from 'drizzle-orm';
+import { v4 as uuidv4 } from 'uuid';
+
 import type { DBType } from '../db';
 import * as table from '../db/schema';
-import { eq, and, gt } from 'drizzle-orm';
-import { v4 as uuidv4 } from 'uuid';
 import { wrapResultAsyncFn } from '../db/types';
 
-// Valid GitHub stat types
-export type GithubStatType = 'commits' | 'repositories' | 'followers';
+// Valid time ranges
+export type GithubTimeRange = 'day' | 'week' | 'month' | 'year' | 'all time';
 
-// Mock data for previews
-export const MOCK_GITHUB_DATA = {
-  commits: {
-    day: 3,
-    week: 12,
-    month: 47,
-    year: 230,
-    'all time': 580,
-  },
-  repositories: {
-    day: 0,
-    week: 1,
-    month: 3,
-    year: 8,
-    'all time': 15,
-  },
-  followers: {
-    day: 1,
-    week: 5,
-    month: 12,
-    year: 45,
-    'all time': 120,
-  },
+// Time-series data point for GitHub metrics
+export type GithubDataPoint = {
+  date: string;
+  value: number;
 };
 
 export class GithubMetricsService {
@@ -38,7 +21,7 @@ export class GithubMetricsService {
   // Try to get GitHub stats from cache
   public async getGitHubStatsFromCache(
     username: string,
-    statType: GithubStatType,
+    statType: table.GithubStatsCache['statType'],
     timeRange: table.GithubStatsCache['timeRange']
   ) {
     const now = new Date();
@@ -65,7 +48,7 @@ export class GithubMetricsService {
   // Save GitHub stats to cache
   public async saveGitHubStatsToCache(
     username: string,
-    statType: GithubStatType,
+    statType: table.GithubStatsCache['statType'],
     timeRange: table.GithubStatsCache['timeRange'],
     value: number
   ) {
@@ -112,49 +95,93 @@ export class GithubMetricsService {
     return value;
   }
 
+  // Method to fetch commits data with optional pagination
+  private async fetchCommitsWithPagination(
+    username: string,
+    fromDate?: Date,
+    shouldPaginate = false,
+    maxPages = 10
+  ): Promise<number> {
+    const dateQuery = fromDate ? `+author-date:>${fromDate.toISOString().split('T')[0]}` : '';
+    const baseUrl = `https://api.github.com/search/commits?q=author:${username}${dateQuery}&per_page=100`;
+
+    try {
+      // First make a request to get the total count
+      const response = await fetch(baseUrl, {
+        headers: {
+          Accept: 'application/vnd.github.v3+json',
+          'User-Agent': 'request',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`GitHub API error: ${response.statusText}`);
+      }
+
+      const data = (await response.json()) as {
+        total_count: number;
+        items: any[];
+        incomplete_results: boolean;
+      };
+
+      // If not paginating, just return the total count from the first page
+      if (!shouldPaginate) {
+        return data.total_count || 0;
+      }
+
+      // Otherwise, paginate to get actual commits
+      let page = 2; // Start from page 2 since we already fetched page 1
+      let totalCommits = data.items.length;
+      let hasMorePages =
+        data.items.length < data.total_count &&
+        !data.incomplete_results &&
+        data.items.length === 100;
+
+      while (hasMorePages && page <= maxPages) {
+        const url = `${baseUrl}&page=${page}`;
+        const pageResponse = await fetch(url, {
+          headers: {
+            Accept: 'application/vnd.github.v3+json',
+            'User-Agent': 'request',
+          },
+        });
+
+        if (!pageResponse.ok) {
+          throw new Error(`GitHub API error: ${pageResponse.statusText}`);
+        }
+
+        const pageData = (await pageResponse.json()) as {
+          items: any[];
+          incomplete_results: boolean;
+        };
+
+        totalCommits += pageData.items.length;
+        hasMorePages = pageData.items.length === 100 && !pageData.incomplete_results;
+
+        page++;
+
+        // Rate limiting safety - pause between requests
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+      }
+
+      return totalCommits;
+    } catch (error) {
+      console.error('Error fetching commits with pagination:', error);
+      throw error;
+    }
+  }
+
   // Method to fetch different types of GitHub data
   public async fetchGitHubData(
     username: string,
-    statType: GithubStatType,
+    statType: table.GithubStatsCache['statType'],
     fromDate?: Date
   ): Promise<number> {
     try {
       switch (statType) {
         case 'commits': {
-          // If fromDate is provided, filter commits by date
-          if (fromDate) {
-            const fromDateStr = fromDate.toISOString().split('T')[0];
-            const url = `https://api.github.com/search/commits?q=author:${username}+author-date:>${fromDateStr}&per_page=1`;
-            const response = await fetch(url, {
-              headers: {
-                Accept: 'application/vnd.github.v3+json',
-                'User-Agent': 'request',
-              },
-            });
-
-            if (!response.ok) {
-              throw new Error(`GitHub API error: ${response.statusText}`);
-            }
-
-            const data = (await response.json()) as { total_count: number };
-            return data.total_count || 0;
-          } else {
-            // Get all commits if no date constraint
-            const url = `https://api.github.com/search/commits?q=author:${username}&per_page=1`;
-            const response = await fetch(url, {
-              headers: {
-                Accept: 'application/vnd.github.v3+json',
-                'User-Agent': 'request',
-              },
-            });
-
-            if (!response.ok) {
-              throw new Error(`GitHub API error: ${response.statusText}`);
-            }
-
-            const data = (await response.json()) as { total_count: number };
-            return data.total_count || 0;
-          }
+          // Use pagination=false since we just need the total count
+          return this.fetchCommitsWithPagination(username, fromDate, false);
         }
         case 'repositories': {
           // Get user's repositories count
@@ -205,11 +232,37 @@ export class GithubMetricsService {
     }
   }
 
+  // Method to fetch time-series data for plotting
+  public fetchGitHubTimeSeries(
+    username: string,
+    statType: table.GithubStatsCache['statType'],
+    _timeRange: GithubTimeRange,
+    formatString: string
+  ) {
+    return wrapResultAsyncFn(async () => {
+      const now = new Date();
+      // const dataPoints: GithubDataPoint[] = [];
+
+      // For repositories and followers, we just get the current count
+      if (statType === 'repositories' || statType === 'followers') {
+        const value = await this.fetchGitHubData(username, statType);
+        return [
+          {
+            date: format(now, formatString),
+            value,
+          },
+        ];
+      }
+      // TODO: Implement commits time series data
+      throw new Error('Commits time series data not implemented');
+    });
+  }
+
   // Method to fetch GitHub stats for a user
   public fetchGitHubStats(
     username: string,
     timeRange: table.GithubStatsCache['timeRange'],
-    statType: GithubStatType = 'commits',
+    statType: table.GithubStatsCache['statType'] = 'commits',
     useCache = true
   ) {
     return wrapResultAsyncFn(async () => {
@@ -259,6 +312,7 @@ export class GithubMetricsService {
           fromDate.setDate(now.getDate() - 7); // Default to week
       }
 
+      // Use pagination=false since we just need the total count
       const value = await this.fetchGitHubData(username, statType, fromDate);
 
       // Save to cache if caching is enabled
@@ -268,13 +322,5 @@ export class GithubMetricsService {
 
       return value;
     });
-  }
-
-  // Get mock data for previews
-  public getMockGitHubData(
-    statType: GithubStatType,
-    timeRange: table.GithubStatsCache['timeRange']
-  ): number {
-    return MOCK_GITHUB_DATA[statType][timeRange] || 0;
   }
 }

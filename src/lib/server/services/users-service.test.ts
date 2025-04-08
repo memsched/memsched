@@ -1,8 +1,10 @@
-import { describe, it, expect, beforeEach } from 'vitest';
-import { UsersService, RESERVED_USERNAMES } from './users-service';
+import { beforeEach, describe, expect, it } from 'vitest';
+
 import type { DBType } from '$lib/server/db';
 import * as table from '$lib/server/db/schema';
 import { getTestDB, getTestUsers } from '$lib/server/test-utils/test-context';
+
+import { RESERVED_USERNAMES, UsersService } from './users-service';
 
 describe('User functions', () => {
   let db: DBType;

@@ -1,8 +1,8 @@
-import type { WidgetJoinMetricsPreview } from './server/db/schema';
 import { CIRCLE_FLAG_ICONS, FLAT_COLOR_ICONS, VSCODE_ICONS } from './icons';
+import type { WidgetJoinMetricsData } from './server/services/metrics/types';
 
 // Collection of mock widgets for demonstration purposes
-export const mockWidgets: WidgetJoinMetricsPreview[] = [
+export const mockWidgets: WidgetJoinMetricsData[] = [
   {
     title: 'Projects Completed',
     subtitle: 'React Web Development',
@@ -20,9 +20,13 @@ export const mockWidgets: WidgetJoinMetricsPreview[] = [
     metrics: [
       {
         name: 'completed',
-        value: 13,
-        calculationType: 'day',
-        valueDecimalPrecision: 0,
+        style: 'metric-trend',
+        data: {
+          value: 13,
+        },
+        period: 'day',
+        valueDisplayPrecision: 0,
+        valuePercent: false,
         order: 1,
       },
     ],
@@ -45,16 +49,24 @@ export const mockWidgets: WidgetJoinMetricsPreview[] = [
     metrics: [
       {
         name: 'this week',
-        value: 34,
-        calculationType: 'day',
-        valueDecimalPrecision: 0,
+        style: 'metric-trend',
+        data: {
+          value: 34,
+        },
+        period: 'day',
+        valueDisplayPrecision: 0,
+        valuePercent: false,
         order: 1,
       },
       {
         name: 'all time',
-        value: 953,
-        calculationType: 'day',
-        valueDecimalPrecision: 0,
+        style: 'metric-trend',
+        data: {
+          value: 953,
+        },
+        period: 'day',
+        valueDisplayPrecision: 0,
+        valuePercent: false,
         order: 2,
       },
     ],
@@ -77,9 +89,13 @@ export const mockWidgets: WidgetJoinMetricsPreview[] = [
     metrics: [
       {
         name: 'articles',
-        value: 32,
-        calculationType: 'day',
-        valueDecimalPrecision: 0,
+        style: 'metric-trend',
+        data: {
+          value: 32,
+        },
+        period: 'day',
+        valueDisplayPrecision: 0,
+        valuePercent: false,
         order: 1,
       },
     ],
@@ -102,9 +118,13 @@ export const mockWidgets: WidgetJoinMetricsPreview[] = [
     metrics: [
       {
         name: 'contributions',
-        value: 347,
-        calculationType: 'day',
-        valueDecimalPrecision: 0,
+        style: 'metric-trend',
+        data: {
+          value: 347,
+        },
+        period: 'day',
+        valueDisplayPrecision: 0,
+        valuePercent: false,
         order: 1,
       },
     ],
@@ -127,9 +147,13 @@ export const mockWidgets: WidgetJoinMetricsPreview[] = [
     metrics: [
       {
         name: 'Design System',
-        value: 7,
-        calculationType: 'day',
-        valueDecimalPrecision: 0,
+        style: 'metric-trend',
+        data: {
+          value: 7,
+        },
+        period: 'day',
+        valueDisplayPrecision: 0,
+        valuePercent: false,
         order: 1,
       },
     ],
@@ -154,9 +178,13 @@ export const mockWidgets: WidgetJoinMetricsPreview[] = [
     metrics: [
       {
         name: 'completed',
-        value: 13,
-        calculationType: 'day',
-        valueDecimalPrecision: 0,
+        style: 'metric-trend',
+        data: {
+          value: 13,
+        },
+        period: 'day',
+        valueDisplayPrecision: 0,
+        valuePercent: false,
         order: 1,
       },
     ],
@@ -179,16 +207,24 @@ export const mockWidgets: WidgetJoinMetricsPreview[] = [
     metrics: [
       {
         name: 'this week',
-        value: 34,
-        calculationType: 'day',
-        valueDecimalPrecision: 0,
+        style: 'metric-trend',
+        data: {
+          value: 34,
+        },
+        period: 'day',
+        valueDisplayPrecision: 0,
+        valuePercent: false,
         order: 1,
       },
       {
         name: 'all time',
-        value: 953,
-        calculationType: 'day',
-        valueDecimalPrecision: 0,
+        style: 'metric-trend',
+        data: {
+          value: 953,
+        },
+        period: 'day',
+        valueDisplayPrecision: 0,
+        valuePercent: false,
         order: 2,
       },
     ],
@@ -211,9 +247,13 @@ export const mockWidgets: WidgetJoinMetricsPreview[] = [
     metrics: [
       {
         name: 'articles',
-        value: 32,
-        calculationType: 'day',
-        valueDecimalPrecision: 0,
+        style: 'metric-trend',
+        data: {
+          value: 32,
+        },
+        period: 'day',
+        valueDisplayPrecision: 0,
+        valuePercent: false,
         order: 1,
       },
     ],
@@ -236,9 +276,13 @@ export const mockWidgets: WidgetJoinMetricsPreview[] = [
     metrics: [
       {
         name: 'contributions',
-        value: 347,
-        calculationType: 'day',
-        valueDecimalPrecision: 0,
+        style: 'metric-trend',
+        data: {
+          value: 347,
+        },
+        period: 'day',
+        valueDisplayPrecision: 0,
+        valuePercent: false,
         order: 1,
       },
     ],
@@ -261,9 +305,13 @@ export const mockWidgets: WidgetJoinMetricsPreview[] = [
     metrics: [
       {
         name: 'Design System',
-        value: 7,
-        calculationType: 'day',
-        valueDecimalPrecision: 0,
+        style: 'metric-trend',
+        data: {
+          value: 7,
+        },
+        period: 'day',
+        valueDisplayPrecision: 0,
+        valuePercent: false,
         order: 1,
       },
     ],
@@ -288,9 +336,13 @@ export const mockWidgets: WidgetJoinMetricsPreview[] = [
     metrics: [
       {
         name: 'completed',
-        value: 13,
-        calculationType: 'day',
-        valueDecimalPrecision: 0,
+        style: 'metric-trend',
+        data: {
+          value: 13,
+        },
+        period: 'day',
+        valueDisplayPrecision: 0,
+        valuePercent: false,
         order: 1,
       },
     ],
@@ -313,16 +365,24 @@ export const mockWidgets: WidgetJoinMetricsPreview[] = [
     metrics: [
       {
         name: 'this week',
-        value: 34,
-        calculationType: 'day',
-        valueDecimalPrecision: 0,
+        style: 'metric-trend',
+        data: {
+          value: 34,
+        },
+        period: 'day',
+        valueDisplayPrecision: 0,
+        valuePercent: false,
         order: 1,
       },
       {
         name: 'all time',
-        value: 953,
-        calculationType: 'day',
-        valueDecimalPrecision: 0,
+        style: 'metric-trend',
+        data: {
+          value: 953,
+        },
+        period: 'day',
+        valueDisplayPrecision: 0,
+        valuePercent: false,
         order: 2,
       },
     ],
@@ -345,9 +405,13 @@ export const mockWidgets: WidgetJoinMetricsPreview[] = [
     metrics: [
       {
         name: 'articles',
-        value: 32,
-        calculationType: 'day',
-        valueDecimalPrecision: 0,
+        style: 'metric-trend',
+        data: {
+          value: 32,
+        },
+        period: 'day',
+        valueDisplayPrecision: 0,
+        valuePercent: false,
         order: 1,
       },
     ],
@@ -370,9 +434,13 @@ export const mockWidgets: WidgetJoinMetricsPreview[] = [
     metrics: [
       {
         name: 'contributions',
-        value: 347,
-        calculationType: 'day',
-        valueDecimalPrecision: 0,
+        style: 'metric-trend',
+        data: {
+          value: 347,
+        },
+        period: 'day',
+        valueDisplayPrecision: 0,
+        valuePercent: false,
         order: 1,
       },
     ],
@@ -395,9 +463,13 @@ export const mockWidgets: WidgetJoinMetricsPreview[] = [
     metrics: [
       {
         name: 'Design System',
-        value: 7,
-        calculationType: 'day',
-        valueDecimalPrecision: 0,
+        style: 'metric-trend',
+        data: {
+          value: 7,
+        },
+        period: 'day',
+        valueDisplayPrecision: 0,
+        valuePercent: false,
         order: 1,
       },
     ],

@@ -1,28 +1,31 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
+
   import { dev } from '$app/environment';
   import { browser } from '$app/environment';
-  import { onMount } from 'svelte';
   import CodeBlock from '$lib/components/CodeBlock.svelte';
+  import {
+    WIDGET_METRIC_DISPLAY_PRECISION_MAX,
+    WIDGET_METRIC_PERIOD,
+  } from '$lib/components/forms/widget-form/schema';
+  import ColorPickerInput from '$lib/components/inputs/ColorPickerInput.svelte';
+  import { Button } from '$lib/components/ui/button';
   import * as Card from '$lib/components/ui/card';
-  import * as Select from '$lib/components/ui/select';
-  import * as Tabs from '$lib/components/ui/tabs';
   import { Input } from '$lib/components/ui/input';
   import { Label } from '$lib/components/ui/label';
-  import { Button } from '$lib/components/ui/button';
+  import * as Select from '$lib/components/ui/select';
   import { Switch } from '$lib/components/ui/switch';
-  import ColorPickerInput from '$lib/components/inputs/ColorPickerInput.svelte';
-  import type { WidgetJoinMetricsPreview } from '$lib/server/db/schema';
-  import {
-    WIDGET_METRIC_CALCULATION_TYPES,
-    WIDGET_METRIC_VALUE_DECIMAL_PRECISION_MAX,
-  } from '$lib/components/forms/widget-form/schema';
+  import * as Tabs from '$lib/components/ui/tabs';
+  import type { WidgetMetric } from '$lib/server/db/types';
+  import type { DataPlot } from '$lib/server/services/metrics/data/types';
+  import type { WidgetJoinMetricsData } from '$lib/server/services/metrics/types';
 
   // Create a default widget config
-  let config = $state<WidgetJoinMetricsPreview>({
-    title: 'Widget Title',
-    subtitle: 'Widget Subtitle',
+  let config = $state<WidgetJoinMetricsData>({
+    title: 'GitHub Commits',
+    subtitle: 'Last 10 days',
     textIcon: null,
-    imageUrl: null,
+    imageUrl: 'http://localhost:5173/icons/vscode-icons/folder_type_github_opened.svg',
     imagePlacement: 'left',
     padding: 13,
     border: true,
@@ -34,11 +37,24 @@
     watermark: false,
     metrics: [
       {
-        name: 'Metric 1',
-        value: 100,
-        calculationType: 'day',
-        valueDecimalPrecision: 0,
+        name: 'commits',
+        data: {
+          value: 1235,
+        },
+        period: 'day',
+        valueDisplayPrecision: 0,
+        style: 'metric-base',
         order: 1,
+      },
+      {
+        name: 'PRs',
+        data: {
+          value: 431,
+        },
+        period: 'day',
+        valueDisplayPrecision: 0,
+        style: 'metric-base',
+        order: 2,
       },
     ],
   });
@@ -61,10 +77,10 @@
     try {
       // Create URL for SVG preview
       const encodedConfig = encodeURIComponent(JSON.stringify(config));
-      svgUrl = `/dev/widget-preview?config=${encodedConfig}&raw=1`;
+      svgUrl = `/dev/widget-preview/api?config=${encodedConfig}&raw=1`;
 
       // Fetch SVG as string
-      const response = await fetch(`/dev/widget-preview?config=${encodedConfig}`);
+      const response = await fetch(`/dev/widget-preview/api?config=${encodedConfig}`);
       const data = (await response.json()) as { svg: string };
       svgString = data.svg;
     } catch (error) {
@@ -77,17 +93,28 @@
     updatePreview();
   });
 
+  function getPlotDataForStyle(style: WidgetMetric['style']): DataPlot | undefined {
+    if (style === 'plot-metric') {
+      return generateRandomPlotData();
+    }
+    return undefined;
+  }
+
   function addMetric() {
-    config.metrics = [
-      ...config.metrics,
-      {
-        name: `Metric ${config.metrics.length + 1}`,
+    const style = 'metric-base' as const;
+    const period = 'day' as const;
+    const newMetric = {
+      name: `Metric ${config.metrics.length + 1}`,
+      data: {
         value: Math.floor(Math.random() * 1000),
-        calculationType: 'day',
-        valueDecimalPrecision: 0,
-        order: config.metrics.length + 1,
+        ...getPlotDataForStyle(style),
       },
-    ];
+      period,
+      valueDisplayPrecision: 0,
+      style,
+      order: config.metrics.length + 1,
+    };
+    config.metrics = [...config.metrics, newMetric];
   }
 
   function removeMetric(index: number) {
@@ -97,6 +124,26 @@
       ...metric,
       order: i + 1,
     }));
+  }
+
+  function generateRandomPlotData(): DataPlot {
+    const points = [];
+    const now = new Date();
+
+    const numPoints = 24;
+    for (let i = 0; i < numPoints; i++) {
+      const date = new Date(now);
+      date.setHours(date.getHours() - (numPoints - i));
+      // Create an upward trend with some noise
+      const y = 100 + i * 10 + Math.random() * 20 - 10;
+      points.push({
+        y,
+      });
+    }
+
+    return {
+      points,
+    };
   }
 
   function configToString(cfg: typeof config): string {
@@ -365,13 +412,13 @@
                   </div>
 
                   <div class="space-y-1">
-                    <Label for={`metric-${index}-calculationType`}>Calculation Type</Label>
-                    <Select.Root type="single" bind:value={metric.calculationType}>
-                      <Select.Trigger id={`metric-${index}-calculationType`} class="w-full">
-                        {metric.calculationType}
+                    <Label for={`metric-${index}-period`}>Calculation Type</Label>
+                    <Select.Root type="single" bind:value={metric.period}>
+                      <Select.Trigger id={`metric-${index}-period`} class="w-full">
+                        {metric.period}
                       </Select.Trigger>
                       <Select.Content>
-                        {#each WIDGET_METRIC_CALCULATION_TYPES as calcType}
+                        {#each WIDGET_METRIC_PERIOD as calcType}
                           <Select.Item value={calcType} class="capitalize">
                             {calcType}
                           </Select.Item>
@@ -384,22 +431,42 @@
                     <Label for={`metric-${index}-precision`}>Decimal Precision</Label>
                     <Select.Root
                       type="single"
-                      value={metric.valueDecimalPrecision.toString()}
+                      value={metric.valueDisplayPrecision?.toString() ?? ''}
                       onValueChange={(value) => {
-                        metric.valueDecimalPrecision = parseInt(value);
+                        metric.valueDisplayPrecision = parseInt(value);
                       }}
                     >
                       <Select.Trigger id={`metric-${index}-precision`} class="w-full">
-                        {metric.valueDecimalPrecision} digit{metric.valueDecimalPrecision !== 1
+                        {metric.valueDisplayPrecision} digit{metric.valueDisplayPrecision !== 1
                           ? 's'
                           : ''}
                       </Select.Trigger>
                       <Select.Content>
-                        {#each Array(WIDGET_METRIC_VALUE_DECIMAL_PRECISION_MAX + 1) as _, i}
+                        {#each Array(WIDGET_METRIC_DISPLAY_PRECISION_MAX + 1) as _, i}
                           <Select.Item value={i.toString()}>
                             {i} digit{i !== 1 ? 's' : ''}
                           </Select.Item>
                         {/each}
+                      </Select.Content>
+                    </Select.Root>
+                  </div>
+
+                  <div>
+                    <Label for={`metric-${index}-style`}>Style</Label>
+                    <Select.Root
+                      type="single"
+                      value={metric.style}
+                      onValueChange={(value) => {
+                        metric.style = value as WidgetMetric['style'];
+                        metric.data = getPlotDataForStyle(value as WidgetMetric['style']);
+                      }}
+                    >
+                      <Select.Trigger id={`metric-${index}-style`} class="w-full">
+                        {metric.style}
+                      </Select.Trigger>
+                      <Select.Content>
+                        <Select.Item value="default">Default</Select.Item>
+                        <Select.Item value="plot">Plot</Select.Item>
                       </Select.Content>
                     </Select.Root>
                   </div>
@@ -413,10 +480,10 @@
       <!-- Preview and code -->
       <div class="space-y-6">
         <Card.Root class="p-6">
-          <h2 class="mb-4 text-xl font-medium">Preview</h2>
+          <h2 class="mb-4 text-xl font-medium">Preview (SVG)</h2>
           <div class="flex flex-col items-center justify-center rounded-lg border bg-gray-50 p-4">
             {#if svgUrl}
-              <img src={svgUrl} alt="Widget preview" class="max-w-full" />
+              <img src={svgUrl + '&svg=1'} alt="Widget preview" class="max-w-full" />
             {:else}
               <div class="h-32 w-full animate-pulse rounded-lg bg-gray-200"></div>
             {/if}

@@ -1,15 +1,17 @@
 <script lang="ts">
-  import { browser } from '$app/environment';
-  import SuperDebug, { type SuperValidated, type Infer, superForm } from 'sveltekit-superforms';
-  import { zodClient } from 'sveltekit-superforms/adapters';
   import toast from 'svelte-french-toast';
+  import { Icon } from 'svelte-icons-pack';
+  import { IoAlertCircleOutline, IoCheckmarkCircleOutline } from 'svelte-icons-pack/io';
+  import SuperDebug, { type Infer, superForm, type SuperValidated } from 'sveltekit-superforms';
+  import { zodClient } from 'sveltekit-superforms/adapters';
+
+  import { browser } from '$app/environment';
   import * as Form from '$lib/components/ui/form';
   import { Input } from '$lib/components/ui/input';
   import { Textarea } from '$lib/components/ui/textarea';
-  import { formSchema, type FormSchema } from './schema';
   import { debounce } from '$lib/utils';
-  import { Icon } from 'svelte-icons-pack';
-  import { IoAlertCircleOutline, IoCheckmarkCircleOutline } from 'svelte-icons-pack/io';
+
+  import { type FormSchema, formSchema } from './schema';
 
   interface Props {
     data: { form: SuperValidated<Infer<FormSchema>> };

@@ -1,8 +1,10 @@
 <script lang="ts">
   import type { IconType } from 'svelte-icons-pack';
-  import IconButton from '../ui/IconButton.svelte';
+
   import { page } from '$app/state';
   import { cn } from '$lib/utils';
+
+  import IconButton from '../ui/IconButton.svelte';
 
   interface Props {
     href: string;

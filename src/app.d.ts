@@ -1,24 +1,26 @@
 // See https://svelte.dev/docs/kit/types#app.d.ts
 // for information about these interfaces
-import type { LocalUser } from '$lib/types';
-import type { Session } from '$lib/server/db/schema';
-import type { DBType } from '$lib/server/db';
-import type { CacheService } from '$lib/server/cache';
 import type {
-  D1Database,
-  KVNamespace,
   CfProperties,
+  D1Database,
   ExecutionContext,
+  KVNamespace,
 } from '@cloudflare/workers-types';
+
+import type { CacheService } from '$lib/server/cache';
+import type { DBType } from '$lib/server/db';
+import type { Session } from '$lib/server/db/schema';
 import type {
+  MetricDataService,
+  MetricsService,
+  ObjectiveLogsService,
+  ObjectivesService,
+  PaymentService,
   SessionsService,
   UsersService,
-  ObjectivesService,
-  ObjectiveLogsService,
   WidgetsService,
-  MetricsService,
-  PaymentService,
 } from '$lib/server/services';
+import type { LocalUser } from '$lib/types';
 
 declare global {
   namespace App {
@@ -32,6 +34,7 @@ declare global {
       objectivesService: ObjectivesService;
       objectiveLogsService: ObjectiveLogsService;
       widgetsService: WidgetsService;
+      metricDataService: MetricDataService;
       metricsService: MetricsService;
       paymentService: PaymentService;
     }

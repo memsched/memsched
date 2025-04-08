@@ -1,12 +1,14 @@
 <script lang="ts">
   import type { Snippet } from 'svelte';
-  import { page } from '$app/state';
-  import { cn } from '$lib/utils';
-  import Logo from '$lib/components/svgs/Logo.svelte';
   import { Icon } from 'svelte-icons-pack';
-  import { IoMenu, IoClose } from 'svelte-icons-pack/io';
+  import { IoClose, IoMenu } from 'svelte-icons-pack/io';
   import SvelteSeo from 'svelte-seo';
+
+  import { goto } from '$app/navigation';
+  import { page } from '$app/state';
+  import Logo from '$lib/components/svgs/Logo.svelte';
   import { DOMAIN } from '$lib/constants';
+  import { cn } from '$lib/utils';
 
   interface Props {
     class?: string;
@@ -182,15 +184,22 @@
           </div>
         {/each}
 
-        <!-- Return Home Link -->
+        <!-- Back Link -->
         <div class="mt-8 border-t pt-6">
-          <a
-            href="/"
-            class="block rounded-md px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+          <button
+            onclick={() => {
+              if (window.history.length > 1) {
+                window.history.back();
+              } else {
+                goto('/', { invalidateAll: true });
+              }
+            }}
+            class="block w-full rounded-md px-3 py-1.5 text-start text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+            aria-label="Back"
             data-sveltekit-reload
           >
-            ← Return Home
-          </a>
+            ← Back
+          </button>
         </div>
       </nav>
     </div>

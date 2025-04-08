@@ -1,10 +1,11 @@
-import type { RequestHandler } from './$types';
-import { type WidgetJoinMetrics } from '$lib/server/db/schema';
-import Widget from '$lib/components/Widget.svelte';
 import { error } from '@sveltejs/kit';
+
+import Widget from '$lib/components/widgets/Widget.svelte';
+import { type WidgetJoinMetricsData } from '$lib/server/services/metrics/types';
 import { renderWidget } from '$lib/server/svg';
-import { generateWidgetEtag } from '$lib/server/utils';
 import { handleDbError } from '$lib/server/utils';
+
+import type { RequestHandler } from './$types';
 
 export const GET: RequestHandler = async (event) => {
   const widgetId = event.params.id;
@@ -32,19 +33,24 @@ export const GET: RequestHandler = async (event) => {
   }
 
   // Get the widget data
-  const widgetResult = await event.locals.widgetsService.getWidgetWithMetrics(widgetId);
+  const widgetResult = await event.locals.widgetsService.get(
+    widgetId,
+    event.locals.session?.userId
+  );
   if (widgetResult.isErr()) {
     return handleDbError(widgetResult);
   }
-  const widget = widgetResult.value;
+  if (widgetResult.isErr()) {
+    return error(404, 'Widget not found');
+  }
 
-  // Check visibility permissions
-  if (widget.visibility !== 'public' && event.locals.session?.userId !== widget.userId) {
-    return error(401, 'Unauthorized');
+  const widgetDataResult = await event.locals.widgetsService.getWithMetricsData(widgetId);
+  if (widgetDataResult.isErr()) {
+    return handleDbError(widgetDataResult);
   }
 
   // Generate a new etag based on widget data
-  const newEtag = generateWidgetEtag(widget);
+  const newEtag = event.locals.widgetsService.generateEtag(widgetDataResult.value);
 
   // If we have a cached version with the same etag, use it
   if (cachedWidget && cachedWidget.etag === newEtag && isAllowedToAccessWidget) {
@@ -60,12 +66,17 @@ export const GET: RequestHandler = async (event) => {
   }
 
   // Render the widget
-  const rendered = await renderWidget<WidgetJoinMetrics>(event, Widget, widget, renderSvg);
+  const rendered = await renderWidget<WidgetJoinMetricsData>(
+    event,
+    Widget,
+    widgetDataResult.value,
+    renderSvg
+  );
   const renderedContent = await rendered.text();
 
   // Cache the result
   await event.locals.cache.set(cacheKey, renderedContent, newEtag, {
-    visibility: widget.visibility,
+    visibility: widgetResult.value.visibility,
     userId: event.locals.session?.userId ?? null,
   });
 

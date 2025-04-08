@@ -1,7 +1,7 @@
 import { RateLimiter } from 'sveltekit-rate-limiter/server';
 import {
-  CloudflareIPUARateLimiter,
   CloudflareIPRateLimiter,
+  CloudflareIPUARateLimiter,
 } from 'sveltekit-rate-limiter/server/limiters';
 
 // Rate limiter for regular auth attempts (less strict)

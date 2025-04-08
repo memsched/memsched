@@ -1,12 +1,14 @@
 <script lang="ts">
-  import { browser } from '$app/environment';
-  import SuperDebug, { type SuperValidated, superForm } from 'sveltekit-superforms';
+  import SuperDebug, { superForm, type SuperValidated } from 'sveltekit-superforms';
   import { zodClient } from 'sveltekit-superforms/adapters';
+
+  import { browser } from '$app/environment';
   import * as Form from '$lib/components/ui/form';
   import { Input } from '$lib/components/ui/input';
   import { Textarea } from '$lib/components/ui/textarea';
-  import { logSchema, type LogFormSchema } from './schema';
   import type { Objective } from '$lib/server/db/schema';
+
+  import { type LogFormSchema, logSchema } from './schema';
 
   interface Props {
     data: { form: SuperValidated<LogFormSchema> };

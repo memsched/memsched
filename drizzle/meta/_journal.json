@@ -141,6 +141,41 @@
       "when": 1743683366941,
       "tag": "0019_add_github_stat_type",
       "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "6",
+      "when": 1743963771488,
+      "tag": "0020_add_metric_style",
+      "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "6",
+      "when": 1744012451629,
+      "tag": "0021_update_metric_fields",
+      "breakpoints": true
+    },
+    {
+      "idx": 22,
+      "version": "6",
+      "when": 1744024909516,
+      "tag": "0022_update_metric_subtitle",
+      "breakpoints": true
+    },
+    {
+      "idx": 23,
+      "version": "6",
+      "when": 1744027702655,
+      "tag": "0023_update_metric_style_default",
+      "breakpoints": true
+    },
+    {
+      "idx": 24,
+      "version": "6",
+      "when": 1744044561779,
+      "tag": "0024_update_metric_aggregration_type_to_period",
+      "breakpoints": true
     }
   ]
 }

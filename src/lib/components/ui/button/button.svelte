@@ -1,7 +1,7 @@
 <script lang="ts" module>
   import type { WithElementRef } from 'bits-ui';
   import type { HTMLAnchorAttributes, HTMLButtonAttributes } from 'svelte/elements';
-  import { type VariantProps, tv } from 'tailwind-variants';
+  import { tv, type VariantProps } from 'tailwind-variants';
 
   export const buttonVariants = tv({
     base: 'ring-offset-background focus-visible:ring-ring inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0',
@@ -15,6 +15,7 @@
         link: 'text-primary underline-offset-4 hover:underline',
         translucent:
           'bg-primary/10 text-primary hover:bg-primary/20 hover:text-primary dark:border dark:border-primary',
+        breadcrumb: 'bg-transparent text-muted-foreground hover:text-foreground rounded-none',
       },
       size: {
         default: 'h-10 px-4 py-2',

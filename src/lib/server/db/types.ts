@@ -1,8 +1,10 @@
 import {
-  TransactionRollbackError as TransactionRollbackErrorCause,
   DrizzleError as DrizzleErrorCause,
+  TransactionRollbackError as TransactionRollbackErrorCause,
 } from 'drizzle-orm';
 import { ResultAsync } from 'neverthrow';
+
+import * as table from './schema';
 
 // unknown catch-all error
 export type UnknownError = {
@@ -80,3 +82,17 @@ export function wrapResultAsync<T>(promise: Promise<T>): ResultAsync<T, DrizzleE
 export function wrapResultAsyncFn<T>(promise: () => Promise<T>): ResultAsync<T, DrizzleError> {
   return ResultAsync.fromPromise(promise(), (e) => createDrizzleError(e));
 }
+
+export type User = typeof table.user.$inferSelect;
+export type UserInsert = typeof table.user.$inferInsert;
+export type AuthProvider = typeof table.authProvider.$inferSelect;
+export type Session = typeof table.session.$inferSelect;
+export type Objective = typeof table.objective.$inferSelect;
+export type Widget = typeof table.widget.$inferSelect;
+
+export type WidgetMetric = typeof table.widgetMetric.$inferSelect;
+export type WidgetJoinMetrics = Widget & {
+  metrics: WidgetMetric[];
+};
+export type GithubStatsCache = typeof table.githubStatsCache.$inferSelect;
+export type GithubStatsCacheInsert = typeof table.githubStatsCache.$inferInsert;

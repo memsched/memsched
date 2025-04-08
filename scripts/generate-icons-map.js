@@ -10,7 +10,7 @@
  */
 
 import { lstatSync, readdirSync, writeFileSync } from 'fs';
-import { join, basename, extname } from 'path';
+import { basename, extname, join } from 'path';
 
 // Get command line arguments
 const [, , iconsFolder, outputFile, basePath = '/icons'] = process.argv;

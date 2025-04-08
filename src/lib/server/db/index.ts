@@ -1,6 +1,6 @@
-import { drizzle } from 'drizzle-orm/libsql';
-import { drizzle as drizzleD1, DrizzleD1Database } from 'drizzle-orm/d1';
 import { createClient } from '@libsql/client';
+import { drizzle as drizzleD1, DrizzleD1Database } from 'drizzle-orm/d1';
+import { drizzle } from 'drizzle-orm/libsql';
 
 export type DBType = DrizzleD1Database;
 

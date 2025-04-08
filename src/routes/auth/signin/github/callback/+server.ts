@@ -1,9 +1,11 @@
-import { github } from '$lib/server/oauth';
 import { error } from '@sveltejs/kit';
-import { oauthLimiter } from '$lib/server/rate-limiter';
 import type { OAuth2Tokens } from 'arctic';
-import type { RequestEvent } from './$types';
+
+import { github } from '$lib/server/oauth';
+import { oauthLimiter } from '$lib/server/rate-limiter';
 import { sanitizeUsername } from '$lib/server/utils';
+
+import type { RequestEvent } from './$types';
 
 interface IGithubUser {
   id: number;

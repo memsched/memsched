@@ -1,5 +1,12 @@
-import { sqliteTable, integer, text, primaryKey, real, index } from 'drizzle-orm/sqlite-core';
 import { sql } from 'drizzle-orm';
+import { index, integer, primaryKey, real, sqliteTable, text } from 'drizzle-orm/sqlite-core';
+
+import {
+  WIDGET_METRIC_GITHUB_STAT_TYPE,
+  WIDGET_METRIC_PERIOD,
+  WIDGET_METRIC_PROVIDER,
+  WIDGET_METRIC_STYLE,
+} from '../../components/forms/widget-form/schema';
 
 export const user = sqliteTable('user', {
   id: text('id').primaryKey(),
@@ -101,7 +108,7 @@ export const objectiveLog = sqliteTable(
 export const widget = sqliteTable('widget', {
   id: text('id').primaryKey(),
   title: text('title').notNull(),
-  subtitle: text('subtitle'),
+  subtitle: text('subtitle').notNull(),
   imageUrl: text('image_url'),
   imagePlacement: text('image_placement', { enum: ['left', 'right'] }).notNull(),
   textIcon: text('text_icon'),
@@ -128,27 +135,31 @@ export const widget = sqliteTable('widget', {
 
 export const widgetMetric = sqliteTable('widget_metric', {
   id: text('id').primaryKey(),
-  value: real('value').notNull(),
-  name: text('name'),
-  calculationType: text('calculation_type', {
-    enum: ['day', 'week', 'month', 'year', 'all time', 'percentage'],
-  }).notNull(),
-  valueDecimalPrecision: integer('value_decimal_precision').notNull(),
-
-  // New field to determine if this is a GitHub or Objective metric
-  metricType: text('metric_type', { enum: ['objective', 'github'] })
-    .notNull()
-    .default('objective'),
-
-  // GitHub integration fields
-  githubUsername: text('github_username'),
-  githubStatType: text('github_stat_type', {
-    enum: ['commits', 'repositories', 'followers'],
-  }).default('commits'),
-
   order: integer('order').notNull(),
 
+  /// Provider Configuration
+  provider: text('provider', { enum: WIDGET_METRIC_PROVIDER }).notNull().default('objective'),
+  // Objective Provider
   objectiveId: text('objective_id').references(() => objective.id, { onDelete: 'cascade' }),
+  // Github Provider
+  githubUsername: text('github_username'),
+  githubStatType: text('github_stat_type', {
+    enum: WIDGET_METRIC_GITHUB_STAT_TYPE,
+  }),
+
+  /// Style Configuration
+  style: text('style', {
+    enum: WIDGET_METRIC_STYLE,
+  })
+    .notNull()
+    .default('metric-base'),
+  // (metric-base, metric-trend, plot-base, plot-metric, heatmap-base, heatmap-metric)
+  period: text('period', { enum: WIDGET_METRIC_PERIOD }).notNull(),
+  // (metric-base, metric-trend, plot-metric, heatmap-metric)
+  name: text('name'),
+  valueDisplayPrecision: integer('value_display_precision'),
+  valuePercent: integer('value_percent', { mode: 'boolean' }),
+
   widgetId: text('widget_id')
     .notNull()
     .references(() => widget.id, { onDelete: 'cascade' }),
@@ -193,30 +204,4 @@ export const githubStatsCache = sqliteTable('github_stats_cache', {
   }).default(sql`(unixepoch())`),
 });
 
-export type User = typeof user.$inferSelect;
-export type UserInsert = typeof user.$inferInsert;
-export type AuthProvider = typeof authProvider.$inferSelect;
-export type Session = typeof session.$inferSelect;
-export type Objective = typeof objective.$inferSelect;
-export type Widget = typeof widget.$inferSelect;
-export type WidgetMetric = typeof widgetMetric.$inferSelect;
-export type WidgetJoinMetrics = Widget & {
-  metrics: WidgetMetric[];
-};
-export type WidgetMetricPreview = Omit<
-  WidgetMetric,
-  | 'id'
-  | 'userId'
-  | 'createdAt'
-  | 'widgetId'
-  | 'objectiveId'
-  | 'metricType'
-  | 'githubUsername'
-  | 'githubStatType'
->;
-export type WidgetPreview = Omit<Widget, 'id' | 'userId' | 'createdAt' | 'visibility'>;
-export type WidgetJoinMetricsPreview = WidgetPreview & {
-  metrics: WidgetMetricPreview[];
-};
-export type GithubStatsCache = typeof githubStatsCache.$inferSelect;
-export type GithubStatsCacheInsert = typeof githubStatsCache.$inferInsert;
+export * from './types';

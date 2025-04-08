@@ -1,0 +1,93 @@
+<script lang="ts">
+  import { FiPlus } from 'svelte-icons-pack/fi';
+  import SvelteSeo from 'svelte-seo';
+  import { v4 as uuid4 } from 'uuid';
+
+  import Profile from '$lib/components/account/Profile.svelte';
+  import DashHeader from '$lib/components/headers/DashHeader.svelte';
+  import IconButton from '$lib/components/ui/IconButton.svelte';
+  import { DOMAIN } from '$lib/constants';
+
+  import type { PageProps } from './$types';
+
+  const { data }: PageProps = $props();
+
+  const pageTitle = `${data.publicUser.name || data.publicUser.username} - MEMsched Profile`;
+  const pageDescription = `View ${data.publicUser.name || data.publicUser.username}'s learning journey on MEMsched. See their learning widgets and progress.`;
+</script>
+
+<SvelteSeo
+  title={pageTitle}
+  description={pageDescription}
+  openGraph={{
+    title: pageTitle,
+    description: pageDescription,
+    url: `${DOMAIN}/${data.publicUser.username}`,
+    type: 'profile',
+    site_name: 'MEMsched',
+  }}
+  twitter={{
+    card: 'summary',
+    site: '@memsched',
+    title: pageTitle,
+    description: pageDescription,
+  }}
+/>
+
+<DashHeader>
+  <div class="px-3 text-sm font-medium">Overview</div>
+</DashHeader>
+<section class="main-container flex gap-16 py-16">
+  <Profile
+    username={data.publicUser.username}
+    name={data.publicUser.name}
+    avatarUrl={data.publicUser.avatarUrl}
+    bio={data.publicUser.bio}
+    location={data.publicUser.location}
+    website={data.publicUser.website}
+    edit={data.isOwner}
+  />
+  <div class="flex w-full flex-col gap-8">
+    <div class="w-full space-y-3">
+      <h2 class="h3">Widgets</h2>
+      {#if data.publicUser.widgets.length > 0}
+        <div class="flex flex-wrap gap-3">
+          {#each data.publicUser.widgets as widget}
+            {#if data.isOwner}
+              <a href="/widgets/{widget}">
+                <img
+                  src="/api/widgets/{widget}?svg&v={uuid4()}"
+                  alt="MEMsched Widget"
+                  class="h-[85px]"
+                />
+              </a>
+            {:else}
+              <img
+                src="/api/widgets/{widget}?svg&v={uuid4()}"
+                alt="MEMsched Widget"
+                class="h-[85px]"
+              />
+            {/if}
+          {/each}
+        </div>
+      {:else}
+        <div
+          class="flex h-48 w-full flex-col items-center justify-center gap-3 rounded-lg border bg-muted p-4 text-muted-foreground"
+        >
+          No public widgets yet
+          {#if data.isOwner}
+            {#if data.objectives.length > 0}
+              <IconButton href="/widgets/new" size="sm" icon={FiPlus}
+                >Create your first widget</IconButton
+              >
+            {:else}
+              <IconButton href="/objectives/new" size="sm" icon={FiPlus}
+                >Create your first objective</IconButton
+              >
+            {/if}
+          {/if}
+        </div>
+      {/if}
+    </div>
+  </div>
+</section>

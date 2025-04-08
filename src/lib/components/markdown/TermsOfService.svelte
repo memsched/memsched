@@ -1,6 +1,7 @@
 <script lang="ts">
-  import { page } from '$app/state';
   import SvelteMarkdown from 'svelte-markdown';
+
+  import { page } from '$app/state';
 
   const origin = page.url.origin;
   const source = `

@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { Snippet } from 'svelte';
+
   import AuthHeader from '../headers/AuthHeader.svelte';
 
   interface Props {

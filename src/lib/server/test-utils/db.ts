@@ -1,9 +1,10 @@
-import { drizzle } from 'drizzle-orm/libsql';
 import { createClient } from '@libsql/client';
+import { drizzle } from 'drizzle-orm/libsql';
 import { migrate } from 'drizzle-orm/libsql/migrator';
 import path from 'path';
-import * as schema from '$lib/server/db/schema';
+
 import type { DBType } from '$lib/server/db';
+import * as schema from '$lib/server/db/schema';
 
 // Path to the migrations directory
 const MIGRATIONS_PATH = path.resolve('./drizzle');

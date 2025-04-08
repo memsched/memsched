@@ -25,8 +25,12 @@ export const GET: RequestHandler = async (event) => {
     return error(400, 'Invalid widget config');
   }
 
+  // Get specific metric index if provided
+  const metricIndex = event.url.searchParams.get('metricIndex');
+  const metrics = metricIndex !== null ? [config.metrics[parseInt(metricIndex)]] : config.metrics;
+
   // Verify user has access to all objectives referenced in metrics
-  const objectiveIds = config.metrics.map((metric) => metric.objectiveId).filter(Boolean);
+  const objectiveIds = metrics.map((metric) => metric.objectiveId).filter(Boolean);
 
   // Verify access to all objectives
   const objectiveVerifications = await Promise.all(
@@ -45,13 +49,12 @@ export const GET: RequestHandler = async (event) => {
     }
   }
 
-  const metrics = config.metrics;
   const metricsData = await ResultAsync.combine(
     metrics.map((metric, i) =>
       event.locals.metricDataService.getData({
         ...metric,
         userId,
-        order: i + 1,
+        order: metricIndex !== null ? parseInt(metricIndex) + 1 : i + 1,
         id: '',
         createdAt: new Date(),
         widgetId: 'preview',
@@ -63,12 +66,5 @@ export const GET: RequestHandler = async (event) => {
     return handleDbError(metricsData);
   }
 
-  return json({
-    metrics: metrics.map((metric, i) => ({
-      ...metric,
-      data: metricsData.value[i],
-      valuePercent: false,
-      order: i + 1,
-    })),
-  });
+  return json(metricsData.value);
 };

@@ -17,6 +17,8 @@
   import { type Objective } from '$lib/server/db/schema';
   import type { WidgetMetricData } from '$lib/server/services/metrics/types';
   import type { LocalUser } from '$lib/types';
+  import { debounce } from '$lib/utils';
+  import { explicitEffect } from '$lib/utils.svelte';
 
   import { type FormSchema, formSchema } from './schema';
   import GeneralTab from './tabs/GeneralTab.svelte';
@@ -144,21 +146,92 @@
   }
 
   let widgetMetrics = $state<WidgetMetricData[]>([]);
+  const metricsLength = $derived($formData.metrics.length);
+  const metricDeps = $derived($formData.metrics);
+  const formValid = $derived(formSchema.safeParse($formData).success);
 
-  $effect(() => {
-    // TODO: Update in the future.
-    if (!formSchema.safeParse($formData).success) {
-      return;
+  // Immediately update display fields for a metric
+  function updateMetricDisplay(index: number, metric: Infer<FormSchema>['metrics'][number]) {
+    widgetMetrics = widgetMetrics.map((m, i) =>
+      i === index ? { ...m, ...metric, data: m.data } : m
+    ) as WidgetMetricData[];
+  }
+
+  // Fetch data only for a specific metric
+  async function updateMetricData(formData: Infer<FormSchema>, index: number) {
+    console.log('API');
+    const res = await fetch(
+      `/api/widgets/preview/${data.user.id}?config=${btoa(
+        JSON.stringify({
+          ...formData,
+        })
+      )}&metricIndex=${index}`
+    );
+    const widgetData: WidgetMetricData['data'][] = await res.json();
+    const newMetric = {
+      ...formData.metrics[index],
+      data: widgetData[0],
+      order: index,
+      valuePercent: false,
+    } as WidgetMetricData;
+    if (widgetMetrics.length <= index) {
+      widgetMetrics.push(newMetric);
+    } else {
+      widgetMetrics[index] = newMetric;
     }
-    const updateMetrics = async () => {
-      const res = await fetch(
-        `/api/widgets/preview/${data.user.id}?config=${btoa(JSON.stringify($formData))}`
-      );
-      const json: { metrics: WidgetMetricData[] } = await res.json();
-      widgetMetrics = json.metrics;
-    };
-    updateMetrics();
-  });
+  }
+
+  const debouncedShortUpdateMetricData = debounce((formData: Infer<FormSchema>, index: number) => {
+    updateMetricData(formData, index);
+  }, 50);
+
+  const debouncedLongUpdateMetricData = debounce((formData: Infer<FormSchema>, index: number) => {
+    updateMetricData(formData, index);
+  }, 500);
+
+  const METRIC_DEPENDENT_FIELDS: (keyof Infer<FormSchema>['metrics'][number])[] = [
+    'style',
+    'period',
+    'valueDisplayPrecision',
+    'provider',
+    'objectiveId',
+    'githubUsername',
+    'githubStatType',
+  ];
+
+  explicitEffect(
+    () => {
+      if (!formValid) {
+        return;
+      }
+
+      // For each metric, check what changed
+      $formData.metrics.forEach((metric, index) => {
+        if (index >= widgetMetrics.length) {
+          debouncedShortUpdateMetricData($formData, index);
+          return;
+        }
+
+        // Check if any data-dependent fields changed
+        const prevMetric = widgetMetrics[index];
+        const dataFieldsChanged = METRIC_DEPENDENT_FIELDS.some(
+          (field) =>
+            prevMetric[field as keyof WidgetMetricData] !== metric[field as keyof typeof metric]
+        );
+
+        // If data-dependent fields changed, fetch new data
+        if (dataFieldsChanged) {
+          if (metric.provider === 'github') {
+            debouncedShortUpdateMetricData($formData, index);
+          } else {
+            debouncedLongUpdateMetricData($formData, index);
+          }
+        }
+        updateMetricDisplay(index, metric);
+      });
+    },
+    () => [metricsLength, formValid, metricDeps]
+  );
 </script>
 
 <DashHeader>

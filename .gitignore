@@ -9,6 +9,7 @@ node_modules
 /.svelte-kit
 /build
 .test-db*
+.eslintcache
 
 # OS
 .DS_Store

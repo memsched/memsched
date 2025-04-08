@@ -17,40 +17,81 @@
 
   const PLOT_WIDTH = 80;
   const PLOT_HEIGHT = 45;
-  const PLOT_PADDING = 4;
-  const PLOT_VIEW_BOX = `${-PLOT_PADDING} ${-PLOT_PADDING} ${PLOT_WIDTH + 2 * PLOT_PADDING} ${PLOT_HEIGHT + 2 * PLOT_PADDING}`;
+  const PLOT_PADDING_TOP = 10;
+  const PLOT_PADDING_BOTTOM = 0;
+  const PLOT_VIEW_BOX = `${-PLOT_PADDING_TOP} ${-PLOT_PADDING_BOTTOM} ${PLOT_WIDTH + 2 * PLOT_PADDING_TOP} ${PLOT_HEIGHT + 2 * PLOT_PADDING_BOTTOM}`;
   const BOTTOM_PADDING_PERCENT = 0.3; // padding below the lowest point
+  const EFFECTIVE_HEIGHT = PLOT_HEIGHT * (1 - BOTTOM_PADDING_PERCENT);
+  const CURVE_SMOOTHNESS = 0.4; // Controls curve smoothness: 0-0.5, where higher values = smoother curves
+  const TENSION = 0.5; // Controls how much neighboring points influence the curve (0-1)
 
-  // Function to create SVG path for line plot
-  function createLinePath(
-    points: WidgetMetricDataPlot['data']['points'],
-    width: number,
-    height: number
-  ): string {
-    if (!points || points.length === 0) {
-      const defaultValue = 0;
-      points = [{ y: defaultValue }, { y: defaultValue }];
-    } else if (points.length === 1) {
-      points = [{ y: points[0].y }, { y: points[0].y }];
+  const values = $derived(metric.data?.points.map((p) => p.y) || [0, 0]);
+  const minValue = $derived(Math.min(...values));
+  const maxValue = $derived(Math.max(...values));
+  const valueRange = $derived(maxValue - minValue || 1);
+
+  // Function to create SVG path for line plot with smooth curves
+  function createLinePath(): string {
+    if (!values || values.length === 0) {
+      return '';
     }
 
-    // Get min and max values for scaling
-    const values = points.map((p) => p.y);
-    const minValue = Math.min(...values);
-    const maxValue = Math.max(...values);
-    const valueRange = maxValue - minValue || 1; // Avoid division by zero
+    if (values.length === 1) {
+      // If only one point, draw a horizontal line
+      const y = EFFECTIVE_HEIGHT - ((values[0] - minValue) / valueRange) * EFFECTIVE_HEIGHT;
+      return `M0,${y} L${PLOT_WIDTH},${y}`;
+    }
 
-    // Add bottom padding by adjusting the effective height
-    const effectiveHeight = height * (1 - BOTTOM_PADDING_PERCENT);
-
-    // Create points for path
-    const pathPoints = points.map((point, index) => {
-      const x = (index / (points.length - 1 || 1)) * width;
-      const y = effectiveHeight - ((point.y - minValue) / valueRange) * effectiveHeight;
-      return `${x},${y}`;
+    // Calculate points
+    const points = values.map((value, index) => {
+      const x = (index / (values.length - 1 || 1)) * PLOT_WIDTH;
+      const y = EFFECTIVE_HEIGHT - ((value - minValue) / valueRange) * EFFECTIVE_HEIGHT;
+      return { x, y };
     });
 
-    return `M${pathPoints.join(' L')}`;
+    // Generate a smooth curve using cubic bezier curves
+    let path = `M${points[0].x},${points[0].y}`;
+
+    // Calculate tangents for each point using neighboring points
+    const tangents = [];
+    for (let i = 0; i < points.length; i++) {
+      if (i === 0) {
+        // For first point, use the vector to the second point
+        const dx = points[1].x - points[0].x;
+        const dy = points[1].y - points[0].y;
+        tangents.push({ x: dx, y: dy });
+      } else if (i === points.length - 1) {
+        // For last point, use the vector from the second-to-last point
+        const dx = points[i].x - points[i - 1].x;
+        const dy = points[i].y - points[i - 1].y;
+        tangents.push({ x: dx, y: dy });
+      } else {
+        // For middle points, average the vectors to the adjacent points
+        const dx = points[i + 1].x - points[i - 1].x;
+        const dy = points[i + 1].y - points[i - 1].y;
+        tangents.push({ x: dx, y: dy });
+      }
+    }
+
+    // Generate the path with cardinal spline method
+    for (let i = 0; i < points.length - 1; i++) {
+      const current = points[i];
+      const next = points[i + 1];
+
+      // Scale tangent vectors by tension and distance
+      const deltaX = (next.x - current.x) * CURVE_SMOOTHNESS;
+
+      // Calculate control points using tangents
+      const controlPointX1 = current.x + deltaX;
+      const controlPointY1 = current.y + tangents[i].y * TENSION * CURVE_SMOOTHNESS;
+
+      const controlPointX2 = next.x - deltaX;
+      const controlPointY2 = next.y - tangents[i + 1].y * TENSION * CURVE_SMOOTHNESS;
+
+      path += ` C${controlPointX1},${controlPointY1} ${controlPointX2},${controlPointY2} ${next.x},${next.y}`;
+    }
+
+    return path;
   }
 </script>
 
@@ -69,7 +110,7 @@
       >
         <!-- Line plot -->
         <path
-          d={createLinePath(metric.data.points, PLOT_WIDTH, PLOT_HEIGHT)}
+          d={createLinePath()}
           fill="none"
           stroke={accentColor}
           stroke-width="2"
@@ -78,7 +119,7 @@
         />
         <!-- Subtle area under the line -->
         <path
-          d={`${createLinePath(metric.data.points, PLOT_WIDTH, PLOT_HEIGHT)} L${PLOT_WIDTH},${PLOT_HEIGHT} L0,${PLOT_HEIGHT} Z`}
+          d={`${createLinePath()} L${PLOT_WIDTH},${PLOT_HEIGHT} L0,${PLOT_HEIGHT} Z`}
           fill={addOpacityRgba(accentColor, 0.1)}
           stroke="none"
         />

@@ -20,14 +20,21 @@
 <img src="https://memsched.com/api/widgets/example?svg" />`;
 
   let liveIncrement = $state(0);
+  let livePoints = $state([{ y: 0 }]);
 
   onMount(() => {
-    setInterval(
-      () => {
-        liveIncrement++;
-      },
-      Math.floor(Math.random() * 2000) + 500
-    ); // Random interval between 1-4 seconds
+    const updateData = () => {
+      let newValue = Math.floor(Math.random() * 100) + 5;
+      liveIncrement += Math.floor(newValue / 10);
+      livePoints.push({ y: liveIncrement + newValue });
+      livePoints = livePoints.slice(-14);
+
+      // Schedule next update with a new random interval
+      setTimeout(updateData, Math.floor(Math.random() * 2000) + 500);
+    };
+
+    // Start the first update
+    updateData();
   });
 </script>
 
@@ -147,7 +154,7 @@
           <div class="absolute size-5 animate-ping rounded-full bg-green-500"></div>
         </div>
         <Widget
-          accentColor="#4f8bce"
+          accentColor="#4fc59e"
           backgroundColor="#ffffff"
           border={true}
           borderRadius={6}
@@ -158,23 +165,15 @@
           metrics={[
             {
               order: 1,
-              style: 'metric-trend',
+              style: 'plot-metric',
               data: {
-                value: 85 + liveIncrement,
+                points: livePoints,
+                value: 2542 + liveIncrement,
               },
-              name: 'this month',
+              name: 'all time',
               period: 'month',
               valueDisplayPrecision: 0,
-            },
-            {
-              order: 2,
-              style: 'metric-trend',
-              data: {
-                value: 450 + liveIncrement,
-              },
-              name: 'total hours',
-              period: 'all time',
-              valueDisplayPrecision: 0,
+              valuePercent: false,
             },
           ]}
           padding={13}

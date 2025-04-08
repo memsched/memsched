@@ -188,6 +188,12 @@
             value={$formData.metrics[metricIndex].provider ?? undefined}
             onValueChange={(value) => {
               $formData.metrics[metricIndex].provider = (value ?? null) as any;
+              if (value === 'objective') {
+                $formData.metrics[metricIndex].githubUsername = null;
+                $formData.metrics[metricIndex].githubStatType = null;
+              } else {
+                $formData.metrics[metricIndex].objectiveId = null;
+              }
             }}
             name={props.name}
           >

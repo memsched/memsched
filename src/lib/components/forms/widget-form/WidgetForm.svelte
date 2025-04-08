@@ -74,7 +74,13 @@
   );
   let metricCount = $state<number>(data.form.data.metrics.length);
   const formDataImageUrl = $derived($formData.imageUrl);
-  let widgetMetrics = $state<PartialBy<WidgetMetricData, 'data'>[]>([]);
+  let widgetMetrics = $state<PartialBy<WidgetMetricData, 'data'>[]>(
+    data.form.data.metrics.map((metric, i) => ({
+      ...metric,
+      order: i,
+      valuePercent: false,
+    }))
+  );
 
   $effect(() => {
     if (focusedTab === 'general.title') {
@@ -211,13 +217,15 @@
 
       // For each metric, check what changed
       $formData.metrics.forEach((metric, index) => {
-        if (index <= widgetMetrics.length || index < widgetMetrics.length - 1) {
+        const prevMetric = widgetMetrics[index];
+
+        if (!('data' in prevMetric) || prevMetric.data === undefined) {
+          widgetMetrics[index].data = undefined;
           debouncedShortUpdateMetricData($formData, index);
           return;
         }
 
         // Check if any data-dependent fields changed
-        const prevMetric = widgetMetrics[index];
         const dataFieldsChanged = METRIC_DEPENDENT_FIELDS.some(
           (field) =>
             prevMetric[field as keyof WidgetMetricData] !== metric[field as keyof typeof metric]
@@ -226,9 +234,11 @@
         // If data-dependent fields changed, fetch new data
         if (dataFieldsChanged) {
           if (metric.provider === 'github') {
-            debouncedShortUpdateMetricData($formData, index);
-          } else {
+            widgetMetrics[index].data = undefined;
             debouncedLongUpdateMetricData($formData, index);
+          } else {
+            widgetMetrics[index].data = undefined;
+            debouncedShortUpdateMetricData($formData, index);
           }
         }
         updateMetricDisplay(index, metric);

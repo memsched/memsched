@@ -1,1 +1,0 @@
-ALTER TABLE `objective` ADD `archived` integer DEFAULT false NOT NULL;

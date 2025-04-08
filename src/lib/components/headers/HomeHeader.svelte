@@ -8,7 +8,7 @@
   import { scrollToTop } from '$lib/utils';
 
   import HeaderProfile from '../account/HeaderProfile.svelte';
-  import LogoShort from '../svgs/LogoShort.svelte';
+  import Logo from '../svgs/Logo.svelte';
   import { Button } from '../ui/button';
   import IconButton from '../ui/IconButton.svelte';
   import HomeNavLink from './HomeNavLink.svelte';
@@ -33,11 +33,11 @@
     <div class="flex h-full items-center gap-12">
       {#if page.url.pathname === '/'}
         <button onclick={() => scrollToTop()} aria-label="Scroll to top">
-          <LogoShort />
+          <Logo />
         </button>
       {:else}
         <a href="/" aria-label="Go to homepage">
-          <LogoShort />
+          <Logo />
         </a>
       {/if}
       <div class="flex h-full gap-9 *:h-full">

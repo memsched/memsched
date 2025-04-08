@@ -9,13 +9,14 @@
 
   interface Props {
     metric: PartialBy<WidgetMetricDataHeatmap, 'data'>;
+    color: string;
     accentColor: string;
   }
 
-  const { metric, accentColor }: Props = $props();
+  const { metric, color, accentColor }: Props = $props();
 
-  const HEATMAP_POINT_SIZE = 6;
-  const HEATMAP_POINT_SPACING = 1;
+  const HEATMAP_POINT_SIZE = 7;
+  const HEATMAP_POINT_SPACING = 2;
   const data = $derived(metric.data || { cols: 0, points: [] });
   const cols = $derived(data.cols);
   const heatmapWidth = $derived(HEATMAP_POINT_SIZE * cols + HEATMAP_POINT_SPACING * (cols - 1));
@@ -54,6 +55,7 @@
     {#if metric.style === 'heatmap-metric'}
       <ValueComponent
         metric={metric as ComponentProps<typeof ValueComponent>['metric']}
+        {color}
         {accentColor}
         valueFontSize="1.5rem"
         valuePercentFontSize="1rem"

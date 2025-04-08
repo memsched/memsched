@@ -9,13 +9,14 @@
 
   interface Props {
     metric: PartialBy<WidgetMetricDataPlot, 'data'>;
+    color: string;
     accentColor: string;
   }
 
-  const { metric, accentColor }: Props = $props();
+  const { metric, color, accentColor }: Props = $props();
 
-  const PLOT_WIDTH = 70;
-  const PLOT_HEIGHT = 40;
+  const PLOT_WIDTH = 80;
+  const PLOT_HEIGHT = 45;
   const PLOT_PADDING = 4;
   const PLOT_VIEW_BOX = `${-PLOT_PADDING} ${-PLOT_PADDING} ${PLOT_WIDTH + 2 * PLOT_PADDING} ${PLOT_HEIGHT + 2 * PLOT_PADDING}`;
   const BOTTOM_PADDING_PERCENT = 0.3; // padding below the lowest point
@@ -86,6 +87,7 @@
     {#if metric.style === 'plot-metric'}
       <ValueComponent
         metric={metric as ComponentProps<typeof ValueComponent>['metric']}
+        {color}
         {accentColor}
         valueFontSize="1.5rem"
         valuePercentFontSize="1rem"

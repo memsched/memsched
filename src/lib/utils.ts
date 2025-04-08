@@ -56,15 +56,79 @@ export function roundToDecimal(value: number, decimalPlaces: number) {
   return Math.round(value * 10 ** decimalPlaces) / 10 ** decimalPlaces;
 }
 
+export function hexToRgb(hex: string) {
+  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  return result
+    ? {
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16),
+      }
+    : null;
+}
+
+export function rgbToHex(r: number, g: number, b: number) {
+  return `#${((r << 16) | (g << 8) | b).toString(16).padStart(6, '0')}`;
+}
+
 export function addOpacityRgba(hexColor: string, opacity: number): string {
   // Remove # if present
   const hex = hexColor.replace('#', '');
 
   // Convert hex to RGB
-  const r = parseInt(hex.substring(0, 2), 16);
-  const g = parseInt(hex.substring(2, 4), 16);
-  const b = parseInt(hex.substring(4, 6), 16);
-
+  const rgb = hexToRgb(hex);
+  if (!rgb) {
+    throw new Error('Invalid hex color');
+  }
   // Return rgba string
-  return `rgba(${r}, ${g}, ${b}, ${opacity})`;
+  return `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${opacity})`;
+}
+
+export function darkenHexColor(hexColor: string, amount: number) {
+  const rgb = hexToRgb(hexColor);
+  if (!rgb) {
+    throw new Error('Invalid hex color');
+  }
+  return rgbToHex(
+    Math.max(rgb.r - amount, 0),
+    Math.max(rgb.g - amount, 0),
+    Math.max(rgb.b - amount, 0)
+  );
+}
+
+export function lightenHexColor(hexColor: string, amount: number) {
+  const rgb = hexToRgb(hexColor);
+  if (!rgb) {
+    throw new Error('Invalid hex color');
+  }
+  return rgbToHex(
+    Math.min(rgb.r + amount, 255),
+    Math.min(rgb.g + amount, 255),
+    Math.min(rgb.b + amount, 255)
+  );
+}
+
+export function getMutedHexColor(hexColor: string, mutedIntensity: number = 1.0): string {
+  const rgb = hexToRgb(hexColor);
+  if (!rgb) {
+    throw new Error('Invalid hex color');
+  }
+
+  // Calculate relative luminance using sRGB coefficients
+  const luminance = (rgb.r * 0.299 + rgb.g * 0.587 + rgb.b * 0.114) / 255;
+
+  // Base adjustment amounts
+  const baseLightAdjustment = 130;
+  const baseDarkAdjustment = 75;
+
+  // Determine adjustment amount based on luminance and intensity
+  const adjustmentAmount = Math.round(
+    luminance < 0.5
+      ? baseLightAdjustment * (1 - luminance) * mutedIntensity // Lighter for dark colors
+      : baseDarkAdjustment * luminance * mutedIntensity
+  ); // Darker for light colors
+
+  return luminance < 0.5
+    ? lightenHexColor(hexColor, adjustmentAmount)
+    : darkenHexColor(hexColor, adjustmentAmount);
 }

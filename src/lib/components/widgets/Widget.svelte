@@ -203,16 +203,19 @@
               <ValueComponent
                 metric={metric as ComponentProps<typeof ValueComponent>['metric']}
                 {accentColor}
+                {color}
               />
             {:else if metric.style.startsWith('plot')}
               <PlotComponent
                 metric={metric as ComponentProps<typeof PlotComponent>['metric']}
                 {accentColor}
+                {color}
               />
             {:else if metric.style.startsWith('heatmap')}
               <HeatmapComponent
                 metric={metric as ComponentProps<typeof HeatmapComponent>['metric']}
                 {accentColor}
+                {color}
               />
             {/if}
           </WidgetEditComponent>

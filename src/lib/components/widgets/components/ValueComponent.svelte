@@ -7,22 +7,27 @@
     WidgetMetricDataValue,
   } from '$lib/server/services/metrics/types';
   import type { PartialBy } from '$lib/types';
+  import { getMutedHexColor } from '$lib/utils';
 
   interface Props {
     metric:
       | PartialBy<WidgetMetricDataValue, 'data'>
       | PartialBy<WidgetMetricDataPlotMetric, 'data'>
       | PartialBy<WidgetMetricDataHeatmapMetric, 'data'>;
+    color: string;
     accentColor: string;
     valueFontSize?: string;
     valuePercentFontSize?: string;
+    mutedIntensity?: number;
   }
 
   const {
     metric,
+    color,
     accentColor,
     valueFontSize = '2rem',
     valuePercentFontSize = '1.25rem',
+    mutedIntensity = 1.0,
   }: Props = $props();
 </script>
 
@@ -49,7 +54,7 @@
       {/if}
     </div>
     {#if metric.name}
-      <div style:font-size="0.8rem" style:color="#666">
+      <div style:font-size="0.8rem" style:color={getMutedHexColor(color, mutedIntensity)}>
         {metric.name}
       </div>
     {/if}

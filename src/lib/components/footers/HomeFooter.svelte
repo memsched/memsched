@@ -21,8 +21,8 @@
     <div class="flex items-center justify-between pt-6">
       <p class="text-xs">
         &copy; {new Date().getFullYear()} MEMsched. All rights reserved. Built with <Icon
-          src={IoHeart}
           className="inline"
+          src={IoHeart}
         /> by Leo
         <span class="text-nowrap">
           — a Swiss app

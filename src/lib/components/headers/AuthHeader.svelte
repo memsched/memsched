@@ -6,7 +6,7 @@
 </script>
 
 <header class="w-full">
-  <nav class="main-container flex items-center justify-between" style="height: {HEADER_HEIGHT}px">
+  <nav style:height="{HEADER_HEIGHT}px" class="main-container flex items-center justify-between">
     <a href="/">
       <Logo />
     </a>

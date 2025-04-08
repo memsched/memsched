@@ -12,7 +12,6 @@
 </script>
 
 <SvelteSeo
-  title={pageTitle}
   description={pageDescription}
   openGraph={{
     title: pageTitle,
@@ -21,6 +20,7 @@
     type: 'website',
     site_name: 'MEMsched',
   }}
+  title={pageTitle}
   twitter={{
     card: 'summary',
     site: '@memsched',
@@ -33,20 +33,20 @@
   <h2>Continue to MEMshed</h2>
   <div class="w-full space-y-2 *:block *:w-full *:text-base">
     <IconButton
+      data-umami-event="auth-signin-google-button"
+      href="/auth/signin/google"
       icon={FcGoogle}
       iconPosition="left"
-      variant="outline"
       size="lg"
-      href="/auth/signin/google"
-      data-umami-event="auth-signin-google-button">Continue with Google</IconButton
+      variant="outline">Continue with Google</IconButton
     >
     <IconButton
+      class="bg-black hover:bg-black/80"
+      data-umami-event="auth-signin-github-button"
+      href="/auth/signin/github"
       icon={AiOutlineGithub}
       iconPosition="left"
-      size="lg"
-      href="/auth/signin/github"
-      class="bg-black hover:bg-black/80"
-      data-umami-event="auth-signin-github-button">Continue with Github</IconButton
+      size="lg">Continue with Github</IconButton
     >
   </div>
   <p class="text-sm text-muted-foreground">

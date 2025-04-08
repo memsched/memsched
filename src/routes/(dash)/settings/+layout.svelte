@@ -14,7 +14,7 @@
 
 <DashHeader>
   <div class="px-3 text-sm font-medium text-muted-foreground">Settings</div>
-  <Icon src={IoChevronForward} className="!text-muted-foreground" />
+  <Icon className="!text-muted-foreground" src={IoChevronForward} />
   {#each tabs as tab}
     <TabNavLink {...tab} />
   {/each}

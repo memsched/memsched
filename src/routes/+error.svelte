@@ -15,7 +15,6 @@
 </script>
 
 <SvelteSeo
-  title={pageTitle}
   description={pageDescription}
   openGraph={{
     title: pageTitle,
@@ -24,6 +23,7 @@
     type: 'website',
     site_name: 'MEMsched',
   }}
+  title={pageTitle}
   twitter={{
     card: 'summary',
     site: '@memsched',
@@ -48,11 +48,11 @@
     </div>
     <div class="flex items-center gap-2">
       <IconButton
+        class="-animate-svg"
+        aria-label="Navigate Home"
+        href="/"
         icon={IoArrowBack}
         iconPosition="left"
-        class="-animate-svg"
-        href="/"
-        aria-label="Navigate Home"
       >
         Go Home
       </IconButton>

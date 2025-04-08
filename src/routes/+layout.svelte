@@ -26,11 +26,9 @@
 </script>
 
 <SvelteSeo
-  title={pageTitle}
-  description={pageDescription}
   canonical={DOMAIN}
+  description={pageDescription}
   keywords="learning tracker, skill development, progress widgets, learning goals, showcase skills, educational progress"
-  themeColor="#ffffff"
   openGraph={{
     title: pageTitle,
     description: pageDescription,
@@ -46,6 +44,8 @@
       },
     ],
   }}
+  themeColor="#ffffff"
+  title={pageTitle}
   twitter={{
     card: 'summary_large_image',
     site: '@memsched',
@@ -60,9 +60,9 @@
 <svelte:head>
   {#if import.meta.env.PROD}
     <script
+      data-website-id="048e05e6-5b46-463f-898e-7fb2d8f467e8"
       defer
       src="https://cloud.umami.is/script.js"
-      data-website-id="048e05e6-5b46-463f-898e-7fb2d8f467e8"
     ></script>
   {/if}
 </svelte:head>

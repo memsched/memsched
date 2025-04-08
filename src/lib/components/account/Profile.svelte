@@ -11,7 +11,6 @@
     bio: string | null;
     location: string | null;
     website: string | null;
-    edit: boolean;
   }
   const { name, username, avatarUrl, bio, location, website }: Props = $props();
 </script>

@@ -60,6 +60,7 @@
               name: 'metric name',
               order: 1,
             }}
+            color="#000000"
             accentColor="#32ad86"
           />
         </WidgetTabStyleButton>
@@ -82,6 +83,7 @@
               name: 'metric name',
               order: 1,
             }}
+            color="#000000"
             accentColor="#32ad86"
           />
         </WidgetTabStyleButton>
@@ -104,6 +106,7 @@
                 order: 1,
                 data: PLOT_DATA,
               }}
+              color="#000000"
               accentColor="#32ad86"
             />
           </WidgetTabStyleButton>
@@ -127,6 +130,7 @@
                 name: 'metric name',
                 order: 1,
               }}
+              color="#000000"
               accentColor="#32ad86"
             />
           </WidgetTabStyleButton>
@@ -149,6 +153,7 @@
                   ...HEATMAP_DATA,
                 },
               }}
+              color="#000000"
               accentColor="#32ad86"
             />
           </WidgetTabStyleButton>
@@ -172,6 +177,7 @@
                 name: 'metric name',
                 order: 1,
               }}
+              color="#000000"
               accentColor="#32ad86"
             />
           </WidgetTabStyleButton>

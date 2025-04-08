@@ -78,7 +78,7 @@ export function addOpacityRgba(hexColor: string, opacity: number): string {
   // Convert hex to RGB
   const rgb = hexToRgb(hex);
   if (!rgb) {
-    throw new Error('Invalid hex color');
+    throw new Error(`Invalid hex color: ${hexColor}`);
   }
   // Return rgba string
   return `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${opacity})`;
@@ -87,7 +87,7 @@ export function addOpacityRgba(hexColor: string, opacity: number): string {
 export function darkenHexColor(hexColor: string, amount: number) {
   const rgb = hexToRgb(hexColor);
   if (!rgb) {
-    throw new Error('Invalid hex color');
+    throw new Error(`Invalid hex color: ${hexColor}`);
   }
   return rgbToHex(
     Math.max(rgb.r - amount, 0),
@@ -99,7 +99,7 @@ export function darkenHexColor(hexColor: string, amount: number) {
 export function lightenHexColor(hexColor: string, amount: number) {
   const rgb = hexToRgb(hexColor);
   if (!rgb) {
-    throw new Error('Invalid hex color');
+    throw new Error(`Invalid hex color: ${hexColor}`);
   }
   return rgbToHex(
     Math.min(rgb.r + amount, 255),
@@ -111,7 +111,7 @@ export function lightenHexColor(hexColor: string, amount: number) {
 export function getMutedHexColor(hexColor: string, mutedIntensity: number = 1.0): string {
   const rgb = hexToRgb(hexColor);
   if (!rgb) {
-    throw new Error('Invalid hex color');
+    throw new Error(`Invalid hex color: ${hexColor}`);
   }
 
   // Calculate relative luminance using sRGB coefficients

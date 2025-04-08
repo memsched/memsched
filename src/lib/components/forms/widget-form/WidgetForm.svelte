@@ -172,9 +172,7 @@
   async function updateMetricData(formData: Infer<FormSchema>, index: number) {
     const res = await fetch(
       `/api/widgets/preview/${data.user.id}?config=${btoa(
-        JSON.stringify({
-          ...formData,
-        })
+        JSON.stringify(formData.metrics)
       )}&metricIndex=${index}`
     );
     const widgetData: WidgetMetricData['data'][] = await res.json();
@@ -207,11 +205,14 @@
 
   const metricsLength = $derived($formData.metrics.length);
   const metricDeps = $derived($formData.metrics);
-  const formValid = $derived(formSchema.safeParse($formData).success);
+  const fromMetricsValid = $derived(
+    formSchema.safeParse($formData).error?.formErrors.fieldErrors.metrics?.length === 0 ||
+      formSchema.safeParse($formData).error?.formErrors.fieldErrors.metrics?.length === undefined
+  );
 
   explicitEffect(
     () => {
-      if (!formValid) {
+      if (!fromMetricsValid) {
         return;
       }
 
@@ -244,7 +245,7 @@
         updateMetricDisplay(index, metric);
       });
     },
-    () => [metricsLength, formValid, metricDeps]
+    () => [metricsLength, fromMetricsValid, metricDeps]
   );
 </script>
 

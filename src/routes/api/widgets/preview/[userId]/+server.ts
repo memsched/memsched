@@ -1,7 +1,8 @@
 import { error, json } from '@sveltejs/kit';
 import { okAsync, ResultAsync } from 'neverthrow';
+import { z } from 'zod';
 
-import { formSchema } from '$lib/components/forms/widget-form/schema';
+import { widgetMetricSchema } from '$lib/components/forms/widget-form/schema';
 import { handleDbError } from '$lib/server/utils';
 
 import type { RequestHandler } from './$types';
@@ -17,20 +18,23 @@ export const GET: RequestHandler = async (event) => {
   if (!base64Config) {
     return error(400, 'Missing widget config');
   }
-  let config;
+
+  let metrics: z.infer<typeof widgetMetricSchema>[];
   try {
     const decodedConfig = JSON.parse(atob(base64Config));
-    config = formSchema.parse(decodedConfig);
+    metrics = z.array(widgetMetricSchema).parse(decodedConfig);
   } catch (_) {
     return error(400, 'Invalid widget config');
   }
 
   // Get specific metric index if provided
   const metricIndex = event.url.searchParams.get('metricIndex');
-  const metrics = metricIndex !== null ? [config.metrics[parseInt(metricIndex)]] : config.metrics;
+  const selectedMetrics = metricIndex !== null ? [metrics[parseInt(metricIndex)]] : metrics;
 
   // Verify user has access to all objectives referenced in metrics
-  const objectiveIds = metrics.map((metric) => metric.objectiveId).filter(Boolean);
+  const objectiveIds = selectedMetrics
+    .map((metric) => metric.objectiveId)
+    .filter((id): id is string => Boolean(id));
 
   // Verify access to all objectives
   const objectiveVerifications = await Promise.all(
@@ -50,7 +54,7 @@ export const GET: RequestHandler = async (event) => {
   }
 
   const metricsData = await ResultAsync.combine(
-    metrics.map((metric, i) =>
+    selectedMetrics.map((metric, i) =>
       event.locals.metricDataService.getData({
         ...metric,
         userId,

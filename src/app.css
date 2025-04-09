@@ -17,7 +17,7 @@
     --card-foreground: 240 10% 3.9%;
     --border: 240 5.9% 90%;
     --input: 240 5.9% 90%;
-    --primary: 230 55% 40%;
+    --primary: 230 55% 50%;
     --primary-foreground: 230 80% 96%;
     --secondary: 240 4.8% 95.9%;
     --secondary-foreground: 240 5.9% 10%;
@@ -149,5 +149,19 @@
   .bg-dotted {
     background-image: radial-gradient(circle, rgba(0, 0, 0, 0.1) 1px, transparent 1px);
     background-size: 15px 15px;
+  }
+  .bg-dotted-fade {
+    background-image:
+      radial-gradient(
+        circle at center,
+        rgba(255, 255, 255, 0.75) 0%,
+        rgba(255, 255, 255, 0.5) 30%,
+        transparent 70%,
+        transparent 100%
+      ),
+      radial-gradient(circle, rgba(0, 0, 0, 0.1) 1px, transparent 1px);
+    background-size:
+      100% 100%,
+      15px 15px;
   }
 }

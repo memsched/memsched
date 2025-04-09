@@ -42,13 +42,15 @@
   <section
     id="hero"
     style:height="calc(100vh - {HEADER_HEIGHT}px)"
-    class="flex h-full max-h-[900px] flex-col items-center justify-between !pb-0 text-center"
+    class="bg-dotted-fade flex h-full max-h-[900px] flex-col items-center justify-between !pb-0 text-center"
   >
     <div class="main-container flex flex-col items-center justify-center gap-8 py-20">
       <div class="space-y-3">
         <Badge class="text-sm" variant="translucent">v2 Released 🎉</Badge>
-        <h1>Show the world what you're learning.</h1>
-        <h2 class="h4 font-medium">
+        <h1>Show the world what you're <span class="text-primary">learning.</span></h1>
+        <h2
+          class="h4 bg-gradient-to-r from-zinc-400 to-zinc-500 bg-clip-text font-medium text-transparent"
+        >
           Set goals, log progress, and showcase your journey with beautiful widgets.
         </h2>
       </div>
@@ -56,7 +58,7 @@
         <Button data-umami-event="hero-get-started-button" href="/auth/signin" size="cta"
           >Get Started for Free</Button
         >
-        <Arrow class="absolute left-[105%] top-[60%] -z-10 rotate-6" />
+        <Arrow class="absolute left-[105%] top-[60%] rotate-6" />
       </div>
     </div>
     <WidgetCarousel widgets={mockWidgets} />
@@ -135,60 +137,63 @@
   </section>
 
   <!-- Your Website section -->
-  <section id="your-website" class="main-container mx-auto px-4">
-    <div class="mb-10 flex flex-col items-center text-center">
-      <h2 class="h2 mb-3 w-fit border-b-2 border-dashed border-green-500 pb-1">
-        <span class="me-1 font-bold text-green-500">Live</span>
+  <section id="your-website" class="bg-dotted-fade">
+    <div class="main-container mx-auto px-4">
+      <div class="mb-10 flex flex-col items-center text-center">
+        <h2 class="h2 mb-3 w-fit border-b-2 border-dashed border-green-500 pb-1">
+          <span class="me-1 font-bold text-green-500">Live</span>
 
-        On <span class="me-1 font-bold italic">Your</span> Website
-      </h2>
-      <p class="text-lg text-muted-foreground">
-        Beautiful widgets that seamlessly integrate with your website or portfolio
-      </p>
-    </div>
-
-    <div class="space-y-8">
-      <div class="relative mx-auto w-fit">
-        <div class="absolute right-0 top-0 flex items-center justify-center">
-          <div class="absolute size-5 rounded-full bg-green-500"></div>
-          <div class="absolute size-5 animate-ping rounded-full bg-green-500"></div>
-        </div>
-        <Widget
-          accentColor="#4fc59e"
-          backgroundColor="#ffffff"
-          border={true}
-          borderRadius={6}
-          borderWidth={1}
-          color="#000000"
-          imagePlacement="left"
-          imageUrl={FLAT_COLOR_ICONS.graduation_cap}
-          metrics={[
-            {
-              order: 1,
-              style: 'plot-metric',
-              data: {
-                points: livePoints,
-                value: 2542 + liveIncrement,
-              },
-              valueName: 'all time',
-              valuePercent: false,
-            },
-          ]}
-          padding={13}
-          subtitle="Hours invested in learning"
-          textIcon={null}
-          title="Learning Progress"
-          watermark={true}
-        />
+          On <span class="me-1 font-bold italic">Your</span> Website
+        </h2>
+        <p class="text-lg text-muted-foreground">
+          Beautiful widgets that seamlessly integrate with your website or portfolio
+        </p>
       </div>
 
-      <div class="space-y-4">
-        <p class="text-center text-lg">
-          Embed widgets like this one on your website with a single line of code
-        </p>
-        <pre class="mx-auto w-fit rounded-lg border bg-zinc-800 px-4 font-mono text-sm text-white">
+      <div class="space-y-8">
+        <div class="relative mx-auto w-fit">
+          <div class="absolute right-0 top-0 flex items-center justify-center">
+            <div class="absolute size-5 rounded-full bg-green-500"></div>
+            <div class="absolute size-5 animate-ping rounded-full bg-green-500"></div>
+          </div>
+          <Widget
+            accentColor="#4fc59e"
+            backgroundColor="#ffffff"
+            border={true}
+            borderRadius={6}
+            borderWidth={1}
+            color="#000000"
+            imagePlacement="left"
+            imageUrl={FLAT_COLOR_ICONS.graduation_cap}
+            metrics={[
+              {
+                order: 1,
+                style: 'plot-metric',
+                data: {
+                  points: livePoints,
+                  value: 2542 + liveIncrement,
+                },
+                valueName: 'all time',
+                valuePercent: false,
+              },
+            ]}
+            padding={13}
+            subtitle="Hours invested in learning"
+            textIcon={null}
+            title="Learning Progress"
+            watermark={true}
+          />
+        </div>
+
+        <div class="space-y-4">
+          <p class="text-center text-lg">
+            Embed widgets like this one on your website with a single line of code
+          </p>
+          <pre
+            class="mx-auto w-fit rounded-lg border bg-zinc-800 px-4 font-mono text-sm text-white">
           <code class="whitespace-pre-wrap">{codeSnippet}</code>
         </pre>
+        </div>
       </div>
     </div>
   </section>
@@ -255,25 +260,26 @@
   </section>
 
   <!-- CTA section -->
-  <section
-    id="cta"
-    class="main-container flex justify-between gap-10 text-primary max-md:flex-col max-md:items-center max-md:text-center"
-  >
-    <div>
-      <h2 class="mb-2 text-3xl font-bold">Ready to showcase your learning journey?</h2>
-      <p class="mx-auto max-w-2xl text-lg">
-        Join thousands of learners who are tracking their progress and sharing their achievements
-        with the world.
-      </p>
-    </div>
-    <div class="relative">
-      <Button data-umami-event="cta-get-started-button" href="/auth/signin" size="cta"
-        >Get Started for Free</Button
-      >
-      <Arrow class="absolute left-[-85%] top-[-85%] -z-10 rotate-180" />
-      <p class="mt-2 text-sm text-muted-foreground">
-        No credit card required. Free plan available.
-      </p>
+  <section id="cta" class="bg-dotted-fade">
+    <div
+      class="main-container flex justify-between gap-10 text-primary max-md:flex-col max-md:items-center max-md:text-center"
+    >
+      <div>
+        <h2 class="mb-2 text-3xl font-bold">Ready to showcase your learning journey?</h2>
+        <p class="mx-auto max-w-2xl text-lg">
+          Join thousands of learners who are tracking their progress and sharing their achievements
+          with the world.
+        </p>
+      </div>
+      <div class="relative">
+        <Button data-umami-event="cta-get-started-button" href="/auth/signin" size="cta"
+          >Get Started for Free</Button
+        >
+        <Arrow class="absolute left-[-85%] top-[-85%] -z-10 rotate-180" />
+        <p class="mt-2 text-sm text-muted-foreground">
+          No credit card required. Free plan available.
+        </p>
+      </div>
     </div>
   </section>
 </HomeLayout>

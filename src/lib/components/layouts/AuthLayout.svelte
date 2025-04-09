@@ -10,7 +10,7 @@
   const { children }: Props = $props();
 </script>
 
-<div class="flex h-screen w-screen flex-col">
+<div class="bg-dotted-fade flex h-screen w-screen flex-col">
   <AuthHeader />
   <main class="flex flex-grow items-center justify-center">
     {@render children()}

@@ -2,7 +2,8 @@
   import type { WithElementRef } from 'bits-ui';
   import type { HTMLInputAttributes, HTMLInputTypeAttribute } from 'svelte/elements';
   import { Icon } from 'svelte-icons-pack';
-  import { IoColorFillOutline, IoRefresh } from 'svelte-icons-pack/io';
+  import { FiShuffle } from 'svelte-icons-pack/fi';
+  import { IoColorFillOutline } from 'svelte-icons-pack/io';
 
   import { cn, getRandomHexColor } from '$lib/utils';
 
@@ -88,7 +89,7 @@
         }}
         {disabled}
       >
-        <Icon src={IoRefresh} className="stroke-w-50" />
+        <Icon src={FiShuffle} className="stroke-w-50 p-[0.1rem]" />
       </Button>
       {#each solids as s}
         <Button

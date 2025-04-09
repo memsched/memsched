@@ -72,7 +72,6 @@ export const GET: RequestHandler = async (event) => {
 
   // Render the widget
   const rendered = await renderWidget<WidgetJoinMetricsData>(
-    event,
     Widget,
     widgetDataResult.value,
     renderSvg

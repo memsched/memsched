@@ -30,11 +30,11 @@ export const GET: RequestHandler = async (event) => {
 
   // Return the raw SVG as requested
   if (event.url.searchParams.has('raw')) {
-    return await renderWidget<WidgetJoinMetricsData>(event, Widget, config, renderSvg);
+    return await renderWidget<WidgetJoinMetricsData>(Widget, config, renderSvg);
   }
 
   // Return the SVG string for display in the UI
-  const response = await renderWidget<WidgetJoinMetricsData>(event, Widget, config, true);
+  const response = await renderWidget<WidgetJoinMetricsData>(Widget, config, true);
   const svgText = await response.text();
 
   return json({ svg: svgText });

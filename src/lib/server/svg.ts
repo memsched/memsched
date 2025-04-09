@@ -1,11 +1,22 @@
-import type { RequestEvent } from '@sveltejs/kit';
 import parse from 'html-react-parser';
 import satori from 'satori';
 import type { Component } from 'svelte';
 import { render } from 'svelte/server';
 
+import { fontOptions } from '$lib/server/fonts';
+
+let satoriInstance: ((markup: ReturnType<typeof render>) => ReturnType<typeof satori>) | null =
+  null;
+
+function getSatoriInstance() {
+  if (!satoriInstance) {
+    satoriInstance = (markup) =>
+      satori(markup, { fonts: fontOptions } as Parameters<typeof satori>[1]);
+  }
+  return satoriInstance;
+}
+
 export async function renderWidget<P extends Record<string, any>>(
-  event: RequestEvent,
   Widget: Component<P>,
   props: P,
   renderSvg: boolean = true
@@ -19,46 +30,7 @@ export async function renderWidget<P extends Record<string, any>>(
     });
   }
 
-  const fonts = await Promise.all([
-    event.fetch('/fonts/widgets/Inter_18pt-Regular.ttf').then((res) =>
-      res.arrayBuffer().then((buffer) => ({
-        name: 'Inter',
-        data: buffer,
-        weight: 400,
-        style: 'normal',
-      }))
-    ),
-    event.fetch('/fonts/widgets/Inter_18pt-SemiBold.ttf').then((res) =>
-      res.arrayBuffer().then((buffer) => ({
-        name: 'Inter',
-        data: buffer,
-        weight: 600,
-        style: 'normal',
-      }))
-    ),
-
-    event.fetch('/fonts/widgets/Inter_18pt-ExtraBold.ttf').then((res) =>
-      res.arrayBuffer().then((buffer) => ({
-        name: 'Inter',
-        data: buffer,
-        weight: 800,
-        style: 'normal',
-      }))
-    ),
-    event.fetch('/fonts/widgets/geist-mono-latin-800-normal.ttf').then((res) =>
-      res.arrayBuffer().then((buffer) => ({
-        name: 'Geist Mono',
-        data: buffer,
-        weight: 800,
-        style: 'normal',
-      }))
-    ),
-  ]);
-
-  let svg = await satori(parse(widget, { trim: true }), {
-    // @ts-ignore
-    fonts,
-  });
+  let svg = await getSatoriInstance()(parse(widget, { trim: true }));
 
   // TODO: Simplify these regexes
   svg = svg.replace(/<svg[^>]*height="[^"]*"[^>]*>/, (match) =>

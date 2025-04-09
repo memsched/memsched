@@ -222,7 +222,7 @@
 
         if (!('data' in prevMetric) || prevMetric.data === undefined) {
           widgetMetrics[index].data = undefined;
-          debouncedShortUpdateMetricData($formData, index);
+          updateMetricData($formData, index);
           return;
         }
 

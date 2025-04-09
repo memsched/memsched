@@ -34,6 +34,5 @@
     bio={data.user.bio}
     location={data.user.location}
     website={data.user.website}
-    edit
   />
 </div>

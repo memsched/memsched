@@ -170,9 +170,7 @@
                 points: livePoints,
                 value: 2542 + liveIncrement,
               },
-              name: 'all time',
-              period: 'month',
-              valueDisplayPrecision: 0,
+              valueName: 'all time',
               valuePercent: false,
             },
           ]}

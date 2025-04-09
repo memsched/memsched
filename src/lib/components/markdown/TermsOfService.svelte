@@ -30,7 +30,7 @@ When you purchase a subscription, you gain access to premium features. Our subsc
 ### 2.3 Cancellation and Refunds
 
 - You may cancel your subscription at any time through your account settings
-- Cancellations take effect at the end of your current billing period
+- Cancellations take effect at the end of your current billing valuePeriod
 - You may request a full refund within 7 days of purchase by contacting [info@memsched.com](mailto:info@memsched.com)
 - No refunds are provided for partial months of service
 

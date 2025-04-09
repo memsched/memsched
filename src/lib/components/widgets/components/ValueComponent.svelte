@@ -38,7 +38,7 @@
     <div
       style:font-family="Geist Mono, monospace"
       style:font-size={valueFontSize}
-      style:font-weight="800"
+      style:font-weight="700"
       style:line-height="1"
       style:display="flex"
       style:align-items="flex-end"
@@ -46,17 +46,21 @@
     >
       {#if metric.valuePercent}
         {metric.data.value}
-        <span style:font-size={valuePercentFontSize} style:margin-bottom="0.1rem">%</span>
+        <span
+          style:font-size={valuePercentFontSize}
+          style:margin-bottom="0.1rem"
+          style:margin-right="0.3rem">%</span
+        >
       {:else}
         {metric.data.value}
-        {#if metric.style === 'metric-trend'}
-          <TrendingUpArrow style="stroke: {accentColor}; color: {accentColor}" />
-        {/if}
+      {/if}
+      {#if metric.style === 'metric-trend'}
+        <TrendingUpArrow style="stroke: {accentColor}; color: {accentColor}" />
       {/if}
     </div>
-    {#if metric.name}
+    {#if metric.valueName}
       <div style:font-size="0.8rem" style:color={getMutedHexColor(color, mutedIntensity)}>
-        {metric.name}
+        {metric.valueName}
       </div>
     {/if}
   </div>

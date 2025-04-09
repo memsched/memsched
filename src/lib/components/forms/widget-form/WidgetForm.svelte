@@ -78,7 +78,6 @@
     data.form.data.metrics.map((metric, i) => ({
       ...metric,
       order: i,
-      valuePercent: false,
     }))
   );
 
@@ -136,22 +135,25 @@
     if (currentCount < count) {
       for (let i = currentCount; i < count; i++) {
         metricsCopy.push({
-          name: null,
           style: 'metric-base',
+          valueName: null,
+          valuePeriod: 'day',
+          valueDisplayPrecision: 0,
+          valuePercent: false,
+          plotPeriod: 'week',
+          plotInterval: 'day',
+          heatmapPeriod: 'month',
+          heatmapInterval: 'day',
           provider: 'objective',
           objectiveId: '',
-          period: 'day',
-          valueDisplayPrecision: 0,
           githubUsername: null,
           githubStatType: null,
         });
         widgetMetrics.push({
-          name: null,
           style: 'metric-base',
-          period: 'day',
-          valueDisplayPrecision: 0,
-          order: i,
+          valueName: null,
           valuePercent: false,
+          order: i,
         });
       }
     } else if (currentCount > count) {
@@ -180,7 +182,6 @@
       ...formData.metrics[index],
       data: widgetData[0],
       order: index,
-      valuePercent: false,
     } as WidgetMetricData;
     widgetMetrics[index] = newMetric;
   }
@@ -195,8 +196,13 @@
 
   const METRIC_DEPENDENT_FIELDS: (keyof Infer<FormSchema>['metrics'][number])[] = [
     'style',
-    'period',
+    'valuePeriod',
     'valueDisplayPrecision',
+    'valuePercent',
+    'plotPeriod',
+    'plotInterval',
+    'heatmapPeriod',
+    'heatmapInterval',
     'provider',
     'objectiveId',
     'githubUsername',
@@ -372,7 +378,7 @@
       </Form.Button>
     {/if}
   </div>
-  <div class="main-container w-1/2 space-y-16 overflow-y-scroll border-s bg-background py-8">
+  <div class="main-container w-1/2 space-y-16 overflow-y-scroll border-s bg-background py-8 pb-24">
     {#if focusedTab === 'general.title' || focusedTab === 'general.subtitle'}
       <GeneralTab {form} {formData} bind:titleInput bind:subtitleInput />
     {:else if focusedTab === 'image'}

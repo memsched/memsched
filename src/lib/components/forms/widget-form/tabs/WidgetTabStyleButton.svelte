@@ -15,9 +15,20 @@
     style: WidgetMetric['style'];
     title: string;
     description: string;
+    disabled?: boolean;
+    disabledTooltip?: string;
   }
 
-  const { children, metricIndex, formData, style, title, description }: Props = $props();
+  const {
+    children,
+    metricIndex,
+    formData,
+    style,
+    title,
+    description,
+    disabled = false,
+    disabledTooltip = 'This metric is not available for this provider yet.',
+  }: Props = $props();
 </script>
 
 <Tooltip.Provider disableHoverableContent delayDuration={100}>
@@ -26,9 +37,11 @@
       {#snippet child({ props })}
         <button
           {...props}
+          {disabled}
           class={cn(
             'flex items-center justify-center rounded-lg border p-4',
-            $formData.metrics[metricIndex].style === style && 'border-primary'
+            $formData.metrics[metricIndex].style === style && 'border-primary',
+            disabled && 'opacity-50'
           )}
           onclick={(e) => {
             e.preventDefault();
@@ -41,8 +54,12 @@
       {/snippet}
     </Tooltip.Trigger>
     <Tooltip.Content>
-      <div class="text-sm font-medium">{title}</div>
-      <div class="text-sm text-muted-foreground">{description}</div>
+      {#if disabled && disabledTooltip}
+        <div class="text-sm">{disabledTooltip}</div>
+      {:else}
+        <div class="text-sm font-medium">{title}</div>
+        <div class="text-sm text-muted-foreground">{description}</div>
+      {/if}
     </Tooltip.Content>
   </Tooltip.Root>
 </Tooltip.Provider>

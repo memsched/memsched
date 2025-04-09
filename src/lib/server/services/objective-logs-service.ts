@@ -121,17 +121,16 @@ export class ObjectiveLogsService {
         }
         const newValue = Math.max(0, objective.value - lastLog.value);
         return ResultAsync.combine([
-          okAsync(objective),
+          this.objectivesService.updateObjectiveValue(objectiveId, newValue),
           okAsync(lastLog),
           this.delete(lastLog.id),
-          this.objectivesService.updateObjectiveValue(objectiveId, newValue),
         ]);
       })
-      .andThen(([objective, lastLog]) => {
+      .andThen(([updatedObjective, lastLog]) => {
         return ResultAsync.combine([
-          okAsync(objective),
+          okAsync(updatedObjective),
           okAsync(lastLog),
-          this.metricsService.invalidateMetrics(objective.id, cache),
+          this.metricsService.invalidateMetrics(updatedObjective.id, cache),
         ]);
       });
   }
@@ -230,6 +229,66 @@ export class ObjectiveLogsService {
         )
         .groupBy(dateExpr)
         .orderBy(dateExpr)
+    );
+  }
+
+  public getWeeklyLogPoints(
+    objectiveId: string,
+    userId: string,
+    options: {
+      startDate?: Date;
+      endDate?: Date;
+    } = {}
+  ) {
+    const weekExpr = sql`strftime('%Y-%W', datetime(${table.objectiveLog.loggedAt}, 'unixepoch'))`;
+
+    return wrapResultAsync(
+      this.db
+        .select({
+          date: weekExpr,
+          value: sql<number>`SUM(SUM(${table.objectiveLog.value})) OVER (ORDER BY ${weekExpr})`,
+        })
+        .from(table.objectiveLog)
+        .where(
+          and(
+            eq(table.objectiveLog.objectiveId, objectiveId),
+            eq(table.objectiveLog.userId, userId),
+            ...(options.startDate ? [gte(table.objectiveLog.loggedAt, options.startDate)] : []),
+            ...(options.endDate ? [lte(table.objectiveLog.loggedAt, options.endDate)] : [])
+          )
+        )
+        .groupBy(weekExpr)
+        .orderBy(weekExpr)
+    );
+  }
+
+  public getMonthlyLogPoints(
+    objectiveId: string,
+    userId: string,
+    options: {
+      startDate?: Date;
+      endDate?: Date;
+    } = {}
+  ) {
+    const monthExpr = sql`strftime('%Y-%m', datetime(${table.objectiveLog.loggedAt}, 'unixepoch'))`;
+
+    return wrapResultAsync(
+      this.db
+        .select({
+          date: monthExpr,
+          value: sql<number>`SUM(SUM(${table.objectiveLog.value})) OVER (ORDER BY ${monthExpr})`,
+        })
+        .from(table.objectiveLog)
+        .where(
+          and(
+            eq(table.objectiveLog.objectiveId, objectiveId),
+            eq(table.objectiveLog.userId, userId),
+            ...(options.startDate ? [gte(table.objectiveLog.loggedAt, options.startDate)] : []),
+            ...(options.endDate ? [lte(table.objectiveLog.loggedAt, options.endDate)] : [])
+          )
+        )
+        .groupBy(monthExpr)
+        .orderBy(monthExpr)
     );
   }
 }

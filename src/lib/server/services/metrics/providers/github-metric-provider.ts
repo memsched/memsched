@@ -18,22 +18,22 @@ export class GithubMetricProvider implements BaseMetricProvider {
   public getValueData(metric: WidgetMetric): ResultAsync<DataValue, DrizzleError> {
     assert(metric.githubUsername, 'Missing required GitHub metric parameters');
     assert(metric.githubStatType, 'Missing required GitHub metric parameters');
-    assert(metric.period, 'Missing required GitHub metric parameters');
+    assert(metric.valuePeriod, 'Missing required GitHub metric parameters');
 
     return this.githubService
-      .fetchGitHubStats(metric.githubUsername, metric.period, metric.githubStatType)
+      .fetchGitHubStats(metric.githubUsername, metric.valuePeriod, metric.githubStatType)
       .map((value) => ({ value }));
   }
 
   public getPlotData(metric: WidgetMetric): ResultAsync<DataPlot, DrizzleError> {
     assert(metric.githubUsername, 'Missing required GitHub metric parameters');
     assert(metric.githubStatType, 'Missing required GitHub metric parameters');
-    assert(metric.period, 'Missing required GitHub metric parameters');
+    assert(metric.valuePeriod, 'Missing required GitHub metric parameters');
 
     // For now, we'll return a simple plot with just the current value
     // TODO: Implement time series data when available
     return this.githubService
-      .fetchGitHubStats(metric.githubUsername, metric.period, metric.githubStatType)
+      .fetchGitHubStats(metric.githubUsername, metric.valuePeriod, metric.githubStatType)
       .map((value) => ({
         points: [{ y: value }],
       }));
@@ -42,12 +42,12 @@ export class GithubMetricProvider implements BaseMetricProvider {
   public getHeatmapData(metric: WidgetMetric): ResultAsync<DataHeatmap, DrizzleError> {
     assert(metric.githubUsername, 'Missing required GitHub metric parameters');
     assert(metric.githubStatType, 'Missing required GitHub metric parameters');
-    assert(metric.period, 'Missing required GitHub metric parameters');
+    assert(metric.valuePeriod, 'Missing required GitHub metric parameters');
 
     // For now, we'll return a simple heatmap with just the current value
     // TODO: Implement proper heatmap data when available
     return this.githubService
-      .fetchGitHubStats(metric.githubUsername, metric.period, metric.githubStatType)
+      .fetchGitHubStats(metric.githubUsername, metric.valuePeriod, metric.githubStatType)
       .map((value) => ({
         cols: 1,
         points: [{ z: value }],

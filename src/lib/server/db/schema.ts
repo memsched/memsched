@@ -3,9 +3,13 @@ import { index, integer, primaryKey, real, sqliteTable, text } from 'drizzle-orm
 
 import {
   WIDGET_METRIC_GITHUB_STAT_TYPE,
-  WIDGET_METRIC_PERIOD,
+  WIDGET_METRIC_HEATMAP_INTERVAL,
+  WIDGET_METRIC_HEATMAP_PERIOD,
+  WIDGET_METRIC_PLOT_INTERVAL,
+  WIDGET_METRIC_PLOT_PERIOD,
   WIDGET_METRIC_PROVIDER,
   WIDGET_METRIC_STYLE,
+  WIDGET_METRIC_VALUE_PERIOD,
 } from '../../components/forms/widget-form/schema';
 
 export const user = sqliteTable('user', {
@@ -153,12 +157,19 @@ export const widgetMetric = sqliteTable('widget_metric', {
   })
     .notNull()
     .default('metric-base'),
-  // (metric-base, metric-trend, plot-base, plot-metric, heatmap-base, heatmap-metric)
-  period: text('period', { enum: WIDGET_METRIC_PERIOD }).notNull(),
-  // (metric-base, metric-trend, plot-metric, heatmap-metric)
-  name: text('name'),
+  // Value Confiugration (metric-base, metric-trend, plot-metric, heatmap-metric)
+  valueName: text('value_name'),
+  valuePeriod: text('value_period', { enum: WIDGET_METRIC_VALUE_PERIOD }),
   valueDisplayPrecision: integer('value_display_precision'),
   valuePercent: integer('value_percent', { mode: 'boolean' }),
+
+  // Plot Configuration (plot-base, plot-metric)
+  plotPeriod: text('plot_period', { enum: WIDGET_METRIC_PLOT_PERIOD }),
+  plotInterval: text('plot_interval', { enum: WIDGET_METRIC_PLOT_INTERVAL }),
+
+  // Heatmap Configuration (heatmap-base, heatmap-metric)
+  heatmapPeriod: text('heatmap_period', { enum: WIDGET_METRIC_HEATMAP_PERIOD }),
+  heatmapInterval: text('heatmap_interval', { enum: WIDGET_METRIC_HEATMAP_INTERVAL }),
 
   widgetId: text('widget_id')
     .notNull()

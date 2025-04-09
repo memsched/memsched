@@ -38,7 +38,7 @@
     <div
       style:font-family="Geist Mono, monospace"
       style:font-size={valueFontSize}
-      style:font-weight="800"
+      style:font-weight="700"
       style:line-height="1"
       style:display="flex"
       style:align-items="flex-end"

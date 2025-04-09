@@ -1,7 +1,7 @@
 // Create a new file: src/lib/server/fonts.ts
 import type satori from 'satori';
 
-import geistMono from '$lib/server/assets/fonts/geist-mono-latin-800-normal.woff?raw';
+import geistMono from '$lib/server/assets/fonts/geist-mono-latin-700-normal.woff?raw';
 import interRegular from '$lib/server/assets/fonts/inter-latin-400-normal.woff?raw';
 import interSemiBold from '$lib/server/assets/fonts/inter-latin-600-normal.woff?raw';
 import interExtraBold from '$lib/server/assets/fonts/inter-latin-800-normal.woff?raw';

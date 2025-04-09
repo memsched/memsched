@@ -29,6 +29,17 @@ export const load: PageServerLoad = async (event) => {
   const form = await superValidate(zod(formSchema));
   form.data = widget as any;
 
+  form.data.metrics = widget.metrics.map((metric) => ({
+    ...metric,
+    valuePeriod: metric.valuePeriod ?? 'day',
+    valueDisplayPrecision: metric.valueDisplayPrecision ?? 0,
+    valuePercent: metric.valuePercent ?? false,
+    plotPeriod: metric.plotPeriod ?? 'week',
+    plotInterval: metric.plotInterval ?? 'day',
+    heatmapPeriod: metric.heatmapPeriod ?? 'month',
+    heatmapInterval: metric.heatmapInterval ?? 'day',
+  })) as any;
+
   return {
     objectives,
     form,

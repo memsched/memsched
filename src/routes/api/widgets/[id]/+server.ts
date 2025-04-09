@@ -12,24 +12,29 @@ export const GET: RequestHandler = async (event) => {
   const renderSvg = event.url.searchParams.has('svg');
   const cacheKey = `widget:${widgetId}:${renderSvg ? 'svg' : 'html'}`;
 
-  const clientEtag = event.request.headers.get('If-None-Match');
-  const cachedWidget = await event.locals.cache.get(cacheKey);
+  let cachedWidget: Awaited<ReturnType<typeof event.locals.cache.get>> = null;
+  let isAllowedToAccessWidget = false;
 
-  // If client's etag matches our cached etag, return 304 Not Modified
-  const isAllowedToAccessWidget =
-    cachedWidget?.metadata.visibility === 'public' ||
-    cachedWidget?.metadata.userId === event.locals.session?.userId;
+  if (import.meta.env.VITE_DEBUG_DISABLE_WIDGET_CACHE !== '1' || !import.meta.env.DEV) {
+    const clientEtag = event.request.headers.get('If-None-Match');
+    cachedWidget = await event.locals.cache.get(cacheKey);
 
-  if (clientEtag && cachedWidget && clientEtag === cachedWidget.etag && isAllowedToAccessWidget) {
-    return new Response(null, {
-      status: 304,
-      headers: {
-        ETag: cachedWidget.etag,
-        'Cache-Control': 'no-cache, no-store, must-revalidate',
-        Pragma: 'no-cache',
-        Expires: '0',
-      },
-    });
+    // If client's etag matches our cached etag, return 304 Not Modified
+    isAllowedToAccessWidget =
+      cachedWidget?.metadata.visibility === 'public' ||
+      cachedWidget?.metadata.userId === event.locals.session?.userId;
+
+    if (clientEtag && cachedWidget && clientEtag === cachedWidget.etag && isAllowedToAccessWidget) {
+      return new Response(null, {
+        status: 304,
+        headers: {
+          ETag: cachedWidget.etag,
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          Pragma: 'no-cache',
+          Expires: '0',
+        },
+      });
+    }
   }
 
   // Get the widget data

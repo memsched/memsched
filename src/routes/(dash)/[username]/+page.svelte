@@ -45,7 +45,6 @@
     bio={data.publicUser.bio}
     location={data.publicUser.location}
     website={data.publicUser.website}
-    edit={data.isOwner}
   />
   <div class="flex w-full flex-col gap-8">
     <div class="w-full space-y-3">

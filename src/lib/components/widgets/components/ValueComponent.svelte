@@ -36,6 +36,7 @@
 {:else}
   <div style:display="flex" style:flex-direction="column" style:align-items="flex-start">
     <div
+      style:font-family="Geist Mono, monospace"
       style:font-size={valueFontSize}
       style:font-weight="800"
       style:line-height="1"

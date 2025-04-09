@@ -20,7 +20,7 @@ export async function renderWidget<P extends Record<string, any>>(
   }
 
   const fonts = await Promise.all([
-    event.fetch('/fonts/inter/Inter_18pt-Regular.ttf').then((res) =>
+    event.fetch('/fonts/widgets/Inter_18pt-Regular.ttf').then((res) =>
       res.arrayBuffer().then((buffer) => ({
         name: 'Inter',
         data: buffer,
@@ -28,7 +28,7 @@ export async function renderWidget<P extends Record<string, any>>(
         style: 'normal',
       }))
     ),
-    event.fetch('/fonts/inter/Inter_18pt-SemiBold.ttf').then((res) =>
+    event.fetch('/fonts/widgets/Inter_18pt-SemiBold.ttf').then((res) =>
       res.arrayBuffer().then((buffer) => ({
         name: 'Inter',
         data: buffer,
@@ -37,9 +37,17 @@ export async function renderWidget<P extends Record<string, any>>(
       }))
     ),
 
-    event.fetch('/fonts/inter/Inter_18pt-ExtraBold.ttf').then((res) =>
+    event.fetch('/fonts/widgets/Inter_18pt-ExtraBold.ttf').then((res) =>
       res.arrayBuffer().then((buffer) => ({
         name: 'Inter',
+        data: buffer,
+        weight: 800,
+        style: 'normal',
+      }))
+    ),
+    event.fetch('/fonts/widgets/geist-mono-latin-800-normal.ttf').then((res) =>
+      res.arrayBuffer().then((buffer) => ({
+        name: 'Geist Mono',
         data: buffer,
         weight: 800,
         style: 'normal',

@@ -28,15 +28,15 @@ jobs:
         run: pnpm install
 
       - name: Check code
-        run: pnpm check
+        run: pnpm run check
 
       - name: Lint code
-        run: pnpm lint
+        run: pnpm run lint
 
       - name: Run unit tests
-        run: pnpm test:unit
+        run: pnpm run test:unit
 
-  apply-migrations:
+  deploy:
     needs: [lint-and-test] # This makes migrations run only after successful lint and test
     if: github.ref == 'refs/heads/main' && github.event_name == 'push' # Only run on main branch pushes
     runs-on: ubuntu-latest
@@ -57,6 +57,13 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install
+
+      - name: Deploy to Cloudflare Pages
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CI: true
+        run: pnpm run deploy
 
       - name: Apply migrations
         env:

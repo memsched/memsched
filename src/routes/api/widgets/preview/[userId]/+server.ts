@@ -62,7 +62,6 @@ export const GET: RequestHandler = async (event) => {
         id: '',
         createdAt: new Date(),
         widgetId: 'preview',
-        valuePercent: false,
       })
     )
   );

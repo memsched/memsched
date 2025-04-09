@@ -19,12 +19,12 @@ export class ObjectiveMetricProvider implements BaseMetricProvider {
   public getValueData(metric: WidgetMetric): ResultAsync<DataValue, DrizzleError> {
     return wrapResultAsyncFn(async () => {
       assert(metric.objectiveId, 'Objective ID is required');
-      assert(metric.period, 'Period is required');
+      assert(metric.valuePeriod, 'Period is required');
       assert(metric.valueDisplayPrecision, 'Value display precision is required');
 
       const value = await this.getObjectiveValue(
         metric.objectiveId,
-        metric.period,
+        metric.valuePeriod,
         metric.valueDisplayPrecision,
         metric.valuePercent ?? false,
         metric.userId
@@ -44,7 +44,7 @@ export class ObjectiveMetricProvider implements BaseMetricProvider {
     return wrapResultAsyncFn(async () => {
       assert(metric.objectiveId, 'Objective ID is required');
 
-      const timeAgo = this.getTimeAgoForPeriod(metric.period!);
+      const timeAgo = this.getTimeAgoForPeriod(metric.valuePeriod!);
       const logs = await this.objectiveLogsService.getRunningLogPoints(
         metric.objectiveId,
         metric.userId,
@@ -114,7 +114,7 @@ export class ObjectiveMetricProvider implements BaseMetricProvider {
 
   private getObjectiveValue(
     objectiveId: string,
-    period: NonNullable<WidgetMetric['period']>,
+    valuePeriod: NonNullable<WidgetMetric['valuePeriod']>,
     valueDisplayPrecision: NonNullable<WidgetMetric['valueDisplayPrecision']>,
     valuePercent: boolean,
     userId: string
@@ -136,7 +136,7 @@ export class ObjectiveMetricProvider implements BaseMetricProvider {
         return roundToDecimal(percentage, valueDisplayPrecision);
       }
 
-      if (period === 'all time') {
+      if (valuePeriod === 'all time') {
         const result = await this.objectiveLogsService.getSum(objectiveId, userId);
         if (result.isErr()) {
           throw result.error;
@@ -144,7 +144,7 @@ export class ObjectiveMetricProvider implements BaseMetricProvider {
         return roundToDecimal(result.value, valueDisplayPrecision);
       }
 
-      const timeAgo = this.getTimeAgoForPeriod(period);
+      const timeAgo = this.getTimeAgoForPeriod(valuePeriod);
       if (!timeAgo) {
         return 0;
       }
@@ -160,13 +160,13 @@ export class ObjectiveMetricProvider implements BaseMetricProvider {
     });
   }
 
-  private getTimeAgoForPeriod(period: NonNullable<WidgetMetric['period']>): Date | null {
-    if (period === 'all time') {
+  private getTimeAgoForPeriod(valuePeriod: NonNullable<WidgetMetric['valuePeriod']>): Date | null {
+    if (valuePeriod === 'all time') {
       return null;
     }
 
     const timeAgo = new Date();
-    switch (period) {
+    switch (valuePeriod) {
       case 'day':
         timeAgo.setDate(timeAgo.getDate() - 1);
         break;

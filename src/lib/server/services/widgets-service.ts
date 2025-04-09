@@ -3,7 +3,12 @@ import { okAsync, ResultAsync } from 'neverthrow';
 import { v4 as uuidv4 } from 'uuid';
 import type { z } from 'zod';
 
-import { type FormSchema } from '$lib/components/forms/widget-form/schema';
+import {
+  type FormSchema,
+  HEATMAP_CONFIGURATION,
+  PLOT_CONFIGURATION,
+  VALUE_CONFIGURATION,
+} from '$lib/components/forms/widget-form/schema';
 
 import type { CacheService } from '../cache';
 import type { DBType } from '../db';
@@ -135,18 +140,24 @@ export class WidgetsService {
             throw objectiveResult.error;
           }
         }
-
-        // TODO(METRICS): Compute metric and cache it
+        // TODO(METRICS): Maybe compute the metric and cache it here?
+        const hasValue = VALUE_CONFIGURATION.includes(metric.style);
+        const hasPlot = PLOT_CONFIGURATION.includes(metric.style);
+        const hasHeatmap = HEATMAP_CONFIGURATION.includes(metric.style);
 
         metricInserts.push({
           id: uuidv4(),
           order: i,
 
           style: metric.style,
-          name: metric.name,
-          period: metric.period,
-          valueDisplayPrecision: metric.valueDisplayPrecision,
-          valuePercent: false,
+          valueName: hasValue ? metric.valueName : null,
+          valuePeriod: hasValue ? metric.valuePeriod : null,
+          valueDisplayPrecision: hasValue ? metric.valueDisplayPrecision : null,
+          valuePercent: hasValue ? metric.valuePercent : null,
+          plotPeriod: hasPlot ? metric.plotPeriod : null,
+          plotInterval: hasPlot ? metric.plotInterval : null,
+          heatmapPeriod: hasHeatmap ? metric.heatmapPeriod : null,
+          heatmapInterval: hasHeatmap ? metric.heatmapInterval : null,
 
           provider: metric.provider,
           objectiveId: metric.provider === 'objective' ? metric.objectiveId : null,
@@ -217,17 +228,26 @@ export class WidgetsService {
               throw objectiveResult.error;
             }
           }
-          // TODO(METRICS): Compute metric and cache it
+          // TODO(METRICS): Maybe compute the metric and cache it here?
+
+          const hasValue = VALUE_CONFIGURATION.includes(metric.style);
+          const hasPlot = PLOT_CONFIGURATION.includes(metric.style);
+          const hasHeatmap = HEATMAP_CONFIGURATION.includes(metric.style);
 
           metricInserts.push({
             id: uuidv4(),
             order: i,
 
             style: metric.style,
-            name: metric.name,
-            period: metric.period,
-            valueDisplayPrecision: metric.valueDisplayPrecision,
-            valuePercent: false,
+            valueName: hasValue ? metric.valueName : null,
+            valuePeriod: hasValue ? metric.valuePeriod : null,
+            valueDisplayPrecision: hasValue ? metric.valueDisplayPrecision : null,
+            valuePercent: hasValue ? metric.valuePercent : null,
+            plotPeriod: hasPlot ? metric.plotPeriod : null,
+            plotInterval: hasPlot ? metric.plotInterval : null,
+            heatmapPeriod: hasHeatmap ? metric.heatmapPeriod : null,
+            heatmapInterval: hasHeatmap ? metric.heatmapInterval : null,
+
             provider: metric.provider,
             objectiveId: metric.provider === 'objective' ? metric.objectiveId : null,
             githubUsername: metric.provider === 'github' ? metric.githubUsername : null,

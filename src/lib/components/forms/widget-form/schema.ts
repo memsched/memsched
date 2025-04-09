@@ -9,9 +9,20 @@ export const WIDGET_METRIC_STYLE = [
   'heatmap-base',
   'heatmap-metric',
 ] as const;
-export const WIDGET_METRIC_PERIOD = ['day', 'week', 'month', 'year', 'all time'] as const;
+export const WIDGET_METRIC_VALUE_PERIOD = ['day', 'week', 'month', 'year', 'all time'] as const;
+export const WIDGET_METRIC_PLOT_PERIOD = ['week', 'month', 'year', 'all time'] as const;
+export const WIDGET_METRIC_HEATMAP_PERIOD = ['month'] as const;
+
+export const WIDGET_METRIC_PLOT_INTERVAL = ['day', 'week', 'month', 'year'] as const;
+export const WIDGET_METRIC_HEATMAP_INTERVAL = ['day'] as const;
+
 export const WIDGET_METRIC_GITHUB_STAT_TYPE = ['commits', 'repositories', 'followers'] as const;
 export const WIDGET_METRIC_DISPLAY_PRECISION_MAX = 2;
+
+// Configurations
+export const VALUE_CONFIGURATION = ['metric-base', 'metric-trend', 'plot-metric', 'heatmap-metric'];
+export const PLOT_CONFIGURATION = ['plot-base', 'plot-metric'];
+export const HEATMAP_CONFIGURATION = ['heatmap-base', 'heatmap-metric'];
 
 const widgetMetricBaseSchema = z.object({
   style: z
@@ -19,14 +30,14 @@ const widgetMetricBaseSchema = z.object({
       message: 'Please select a valid style.',
     })
     .default('metric-base'),
-  // Metric Configuration (metric-base, metric-trend, plot-metric, heatmap-metric)
-  name: z
+  // Value Configuration (metric-base, metric-trend, plot-metric, heatmap-metric)
+  valueName: z
     .string()
     .max(25, { message: 'Name must be less than 25 characters.' })
     .nullable()
     .transform((v) => (v === '' ? null : v)),
-  period: z
-    .enum(WIDGET_METRIC_PERIOD, {
+  valuePeriod: z
+    .enum(WIDGET_METRIC_VALUE_PERIOD, {
       message: 'Please select a valid aggregation type.',
     })
     .default('day'),
@@ -40,6 +51,29 @@ const widgetMetricBaseSchema = z.object({
       message: 'Value decimal precision must be less than or equal to 2.',
     })
     .default(0),
+  valuePercent: z.boolean().default(false),
+  // Plot Configuration (plot-base, plot-metric)
+  plotPeriod: z
+    .enum(WIDGET_METRIC_PLOT_PERIOD, {
+      message: 'Please select a valid plot period.',
+    })
+    .default('week'),
+  plotInterval: z
+    .enum(WIDGET_METRIC_PLOT_INTERVAL, {
+      message: 'Please select a valid plot interval.',
+    })
+    .default('day'),
+  // Heatmap Configuration (heatmap-base, heatmap-metric)
+  heatmapPeriod: z
+    .enum(WIDGET_METRIC_HEATMAP_PERIOD, {
+      message: 'Please select a valid heatmap period.',
+    })
+    .default('month'),
+  heatmapInterval: z
+    .enum(WIDGET_METRIC_HEATMAP_INTERVAL, {
+      message: 'Please select a valid heatmap interval.',
+    })
+    .default('day'),
 });
 
 const objectiveWidgetMetricSchema = widgetMetricBaseSchema.extend({

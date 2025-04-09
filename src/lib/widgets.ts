@@ -21,14 +21,12 @@ const baseWidgets: WidgetJoinMetricsData[] = [
     watermark: false,
     metrics: [
       {
-        name: 'completed',
         style: 'metric-trend',
+        valueName: 'completed',
+        valuePercent: false,
         data: {
           value: 13,
         },
-        period: 'day',
-        valueDisplayPrecision: 0,
-        valuePercent: false,
         order: 1,
       },
     ],
@@ -50,26 +48,22 @@ const baseWidgets: WidgetJoinMetricsData[] = [
     watermark: false,
     metrics: [
       {
-        name: null,
         style: 'heatmap-base',
+        valueName: null,
+        valuePercent: false,
         data: {
           cols: 7,
           points: new Array(31).fill(0).map((_, _i) => ({ z: Math.floor(Math.random() * 100) })),
         },
-        period: 'day',
-        valueDisplayPrecision: 0,
-        valuePercent: false,
         order: 1,
       },
       {
-        name: 'all time',
         style: 'metric-trend',
+        valueName: 'all time',
+        valuePercent: false,
         data: {
           value: 953,
         },
-        period: 'day',
-        valueDisplayPrecision: 0,
-        valuePercent: false,
         order: 2,
       },
     ],
@@ -91,15 +85,13 @@ const baseWidgets: WidgetJoinMetricsData[] = [
     watermark: false,
     metrics: [
       {
-        name: 'all time',
         style: 'plot-metric',
+        valueName: 'all time',
+        valuePercent: false,
         data: {
           value: 1452,
           points: new Array(14).fill(0).map((_, _i) => ({ y: Math.floor(Math.random() * 8) })),
         },
-        period: 'day',
-        valueDisplayPrecision: 0,
-        valuePercent: false,
         order: 2,
       },
     ],
@@ -121,8 +113,9 @@ const baseWidgets: WidgetJoinMetricsData[] = [
     watermark: false,
     metrics: [
       {
-        name: 'contributions',
         style: 'plot-base',
+        valueName: 'contributions',
+        valuePercent: false,
         data: {
           points: [
             { y: 20 },
@@ -137,20 +130,15 @@ const baseWidgets: WidgetJoinMetricsData[] = [
             { y: 150 },
           ],
         },
-        period: 'day',
-        valueDisplayPrecision: 0,
-        valuePercent: false,
         order: 1,
       },
       {
-        name: 'all time',
         style: 'metric-trend',
+        valueName: 'all time',
+        valuePercent: false,
         data: {
           value: 347,
         },
-        period: 'day',
-        valueDisplayPrecision: 0,
-        valuePercent: false,
         order: 2,
       },
     ],
@@ -172,14 +160,12 @@ const baseWidgets: WidgetJoinMetricsData[] = [
     watermark: false,
     metrics: [
       {
-        name: 'Design System',
         style: 'metric-trend',
+        valueName: 'Design System',
+        valuePercent: false,
         data: {
           value: 7,
         },
-        period: 'day',
-        valueDisplayPrecision: 0,
-        valuePercent: false,
         order: 1,
       },
     ],

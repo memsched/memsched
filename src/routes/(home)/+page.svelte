@@ -75,7 +75,7 @@
       </div>
 
       <div
-        class="relative grid w-full grid-cols-1 justify-center gap-12 py-8 max-lg:px-16 lg:grid-cols-3"
+        class="relative grid w-full grid-cols-1 justify-center gap-12 p-8 max-lg:px-16 lg:grid-cols-3"
       >
         <Path class="absolute left-[21%] top-[-15%] -translate-x-1/2 max-lg:hidden" />
         <Path class="absolute bottom-0 right-[18%] -translate-x-1/2 rotate-180 max-lg:hidden" />
@@ -133,6 +133,34 @@
           </div>
         </div>
       </div>
+      <div class="mt-28 grid grid-cols-2 gap-10 px-8 text-center max-lg:px-16 max-md:grid-cols-1">
+        <div>
+          <h3 class="h4 mb-3">Manage your objectives</h3>
+          <enhanced:img
+            src="/static/images/objectives.png"
+            alt="Objectives"
+            class="rounded-md border shadow-sm"
+          />
+        </div>
+        <div>
+          <h3 class="h4 mb-3">Customize your widgets</h3>
+          <enhanced:img
+            src="/static/images/create-widget.png"
+            alt="Create widget"
+            class="rounded-md border shadow-sm"
+          />
+        </div>
+        <!-- <div> -->
+        <!--   <h2 class="h2 text-5xl">Customize your widget</h2> -->
+        <!-- </div> -->
+      </div>
+      <!-- <div class="mt-16 space-y-4 text-center"> -->
+      <!--   <img -->
+      <!--     src="/images/create-widget.png" -->
+      <!--     alt="Create widget" -->
+      <!--     class="mx-auto w-1/2 rounded-md border shadow-sm" -->
+      <!--   /> -->
+      <!-- </div> -->
     </div>
   </section>
 

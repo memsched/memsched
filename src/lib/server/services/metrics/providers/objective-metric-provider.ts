@@ -43,20 +43,49 @@ export class ObjectiveMetricProvider implements BaseMetricProvider {
   public getPlotData(metric: WidgetMetric): ResultAsync<DataPlot, DrizzleError> {
     return wrapResultAsyncFn(async () => {
       assert(metric.objectiveId, 'Objective ID is required');
+      assert(metric.plotPeriod, 'Plot period is required');
+      assert(metric.plotInterval, 'Plot interval is required');
 
-      const timeAgo = this.getTimeAgoForPeriod(metric.valuePeriod!);
-      const logs = await this.objectiveLogsService.getRunningLogPoints(
-        metric.objectiveId,
-        metric.userId,
-        timeAgo ? { startDate: timeAgo } : undefined
-      );
+      const timeAgo = this.getTimeAgoForPeriod(metric.plotPeriod);
+      const timeAgoOptions = timeAgo ? { startDate: timeAgo } : undefined;
+
+      let logs;
+      switch (metric.plotInterval) {
+        case 'day':
+          logs = await this.objectiveLogsService.getRunningLogPoints(
+            metric.objectiveId,
+            metric.userId,
+            timeAgoOptions
+          );
+          break;
+        case 'week':
+          logs = await this.objectiveLogsService.getWeeklyLogPoints(
+            metric.objectiveId,
+            metric.userId,
+            timeAgoOptions
+          );
+          break;
+        case 'month':
+          logs = await this.objectiveLogsService.getMonthlyLogPoints(
+            metric.objectiveId,
+            metric.userId,
+            timeAgoOptions
+          );
+          break;
+        default:
+          logs = await this.objectiveLogsService.getRunningLogPoints(
+            metric.objectiveId,
+            metric.userId,
+            timeAgoOptions
+          );
+      }
 
       if (logs.isErr()) {
         throw logs.error;
       }
 
       return {
-        points: logs.value.map(({ value }) => ({
+        points: logs.value.map(({ value }: { value: number }) => ({
           y: value,
         })),
       };
@@ -168,7 +197,7 @@ export class ObjectiveMetricProvider implements BaseMetricProvider {
     const timeAgo = new Date();
     switch (valuePeriod) {
       case 'day':
-        timeAgo.setDate(timeAgo.getDate() - 1);
+        timeAgo.setHours(0, 0, 0, 0);
         break;
       case 'week':
         timeAgo.setDate(timeAgo.getDate() - 7); // TODO: Use ISO week number

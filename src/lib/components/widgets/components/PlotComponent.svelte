@@ -25,17 +25,17 @@
   const CURVE_SMOOTHNESS = 0.4; // Controls curve smoothness: 0-0.5, where higher values = smoother curves
   const TENSION = 0.5; // Controls how much neighboring points influence the curve (0-1)
 
-  const values = $derived(metric.data?.points.map((p) => p.y) || [0, 0]);
+  const values = $derived(
+    metric.data?.points && metric.data.points.length > 1
+      ? metric.data?.points.map((p) => p.y)
+      : [0, 0]
+  );
   const minValue = $derived(Math.min(...values));
   const maxValue = $derived(Math.max(...values));
   const valueRange = $derived(maxValue - minValue || 1);
 
   // Function to create SVG path for line plot with smooth curves
   function createLinePath(): string {
-    if (!values || values.length === 0) {
-      return '';
-    }
-
     if (values.length === 1) {
       // If only one point, draw a horizontal line
       const y = EFFECTIVE_HEIGHT - ((values[0] - minValue) / valueRange) * EFFECTIVE_HEIGHT;

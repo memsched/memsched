@@ -9,6 +9,7 @@
   import { browser } from '$app/environment';
   import DashHeader from '$lib/components/headers/DashHeader.svelte';
   import TabNavLink from '$lib/components/headers/TabNavLink.svelte';
+  import ShareWidget from '$lib/components/ShareWidget.svelte';
   import { Button } from '$lib/components/ui/button';
   import * as Form from '$lib/components/ui/form';
   import IconButton from '$lib/components/ui/IconButton.svelte';
@@ -33,8 +34,8 @@
   const { data, edit = false }: Props = $props();
 
   type MetricTab = 'metric.1' | 'metric.2' | 'metric.3';
-  let focusedTab = $state<'general.title' | 'general.subtitle' | 'image' | MetricTab>(
-    'general.title'
+  let focusedTab = $state<'sharing' | 'general.title' | 'general.subtitle' | 'image' | MetricTab>(
+    edit && data.form.data.visibility === 'public' ? 'sharing' : 'general.title'
   );
 
   const form = superForm(data.form, {
@@ -261,6 +262,13 @@
     <Icon src={IoChevronForward} className="!text-muted-foreground" />
   </Button>
   <div class="px-3 text-sm font-medium">{edit ? 'Edit' : 'New'}</div>
+  {#if edit && data.form.data.visibility === 'public'}
+    <TabNavLink
+      name="Sharing"
+      onclick={() => (focusedTab = 'sharing')}
+      active={focusedTab === 'sharing'}
+    />
+  {/if}
   <TabNavLink
     name="General"
     onclick={() => (focusedTab = 'general.title')}
@@ -379,7 +387,16 @@
     {/if}
   </div>
   <div class="main-container w-1/2 space-y-16 overflow-y-scroll border-s bg-background py-8 pb-24">
-    {#if focusedTab === 'general.title' || focusedTab === 'general.subtitle'}
+    {#if focusedTab === 'sharing'}
+      <div class="space-y-6">
+        <h2 class="h3">Sharing</h2>
+        <ShareWidget
+          title={data.form.data.title}
+          subtitle={data.form.data.subtitle}
+          username={data.user.username}
+        />
+      </div>
+    {:else if focusedTab === 'general.title' || focusedTab === 'general.subtitle'}
       <GeneralTab {form} {formData} bind:titleInput bind:subtitleInput />
     {:else if focusedTab === 'image'}
       <ImageTab {form} {formData} bind:textIconInput />

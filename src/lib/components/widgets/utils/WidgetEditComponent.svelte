@@ -4,6 +4,7 @@
   import { FiX } from 'svelte-icons-pack/fi';
 
   import * as Tooltip from '$lib/components/ui/tooltip';
+  import { cn } from '$lib/utils';
 
   interface Props {
     onclick: (() => void) | undefined;
@@ -12,25 +13,67 @@
     height: string;
     label: string;
     value: any;
+    ondragstart?: (e: DragEvent) => void;
+    ondragover?: (e: DragEvent) => void;
+    ondrop?: (e: DragEvent) => void;
+    ondragend?: (e: DragEvent) => void;
+    isDragged?: boolean;
+    isDragOver?: boolean;
     children: Snippet;
   }
 
-  const { width, height, label, value, children, onclick, onclose }: Props = $props();
+  const {
+    width,
+    height,
+    label,
+    value,
+    children,
+    onclick,
+    onclose,
+    ondragstart,
+    ondragover,
+    ondrop,
+    ondragend,
+    isDragged,
+    isDragOver,
+  }: Props = $props();
+
+  let isHovering = $state(false);
+  let tooltipOpen = $state(false);
+
+  $effect(() => {
+    if (isDragged || isDragOver) {
+      tooltipOpen = false;
+      isHovering = false;
+    }
+  });
 </script>
 
 {#if onclick !== undefined}
   <Tooltip.Provider delayDuration={0} disableHoverableContent>
-    <Tooltip.Root>
+    <Tooltip.Root bind:open={tooltipOpen}>
       <Tooltip.Trigger>
         {#snippet child({ props })}
-          <div class="group relative">
+          <div
+            class="relative select-none"
+            aria-label="Edit"
+            role="button"
+            tabindex="0"
+            onmouseenter={() => (isHovering = true)}
+            onmouseleave={() => (isHovering = false)}
+          >
             <button
               {...props}
               {onclick}
               aria-label="Edit"
               type="button"
-              class="block"
               style={!value ? `width: ${width}; height: ${height};` : ''}
+              class={cn('block', isDragged && 'cursor-grabbing', isDragOver && 'opacity-50')}
+              draggable={true}
+              {ondragstart}
+              {ondragover}
+              {ondrop}
+              {ondragend}
             >
               {#if value === undefined || value === null || value === ''}
                 <div class="h-full w-full rounded-sm bg-zinc-200"></div>
@@ -38,9 +81,12 @@
                 {@render children()}
               {/if}
             </button>
-            {#if onclose}
+            {#if onclose && !isDragged}
               <button
-                class="absolute -right-1.5 -top-1.5 flex size-[15px] items-center justify-center rounded-full border bg-background text-muted-foreground opacity-0 transition-colors hover:border-foreground hover:text-foreground group-hover:opacity-100"
+                class={cn(
+                  'absolute -right-1.5 -top-1.5 flex size-[15px] items-center justify-center rounded-full border bg-background text-muted-foreground opacity-0 transition-colors hover:border-foreground hover:text-foreground',
+                  isHovering && 'opacity-100'
+                )}
                 aria-label="Close"
                 type="button"
                 onclick={onclose}

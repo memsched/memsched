@@ -17,6 +17,7 @@
     onImageClose?: (e: MouseEvent) => void;
     onMetricClick?: (index: number) => void;
     onMetricClose?: (e: MouseEvent, index: number) => void;
+    onMetricDrag?: (fromIndex: number, toIndex: number) => void;
   }
 
   const {
@@ -39,12 +40,39 @@
     onImageClose,
     onMetricClick,
     onMetricClose,
+    onMetricDrag,
   }: Partial<
     WidgetData & {
       metrics: PartialBy<WidgetMetricData, 'data'>[];
     }
   > &
     Props = $props();
+
+  let draggedIndex = $state(-1);
+  let dragOverIndex = $state(-1);
+
+  function handleDragStart(index: number) {
+    draggedIndex = index;
+  }
+
+  function handleDragOver(e: DragEvent, index: number) {
+    e.preventDefault();
+    dragOverIndex = index;
+  }
+
+  function handleDrop(e: DragEvent, index: number) {
+    e.preventDefault();
+    if (draggedIndex !== -1 && draggedIndex !== index && onMetricDrag) {
+      onMetricDrag(draggedIndex, index);
+    }
+    draggedIndex = -1;
+    dragOverIndex = -1;
+  }
+
+  function handleDragEnd() {
+    draggedIndex = -1;
+    dragOverIndex = -1;
+  }
 </script>
 
 <div
@@ -198,6 +226,12 @@
             height="48px"
             label={`Metric ${i + 1}`}
             value={metric.style}
+            ondragstart={() => handleDragStart(i)}
+            ondragover={(e) => handleDragOver(e, i)}
+            ondrop={(e) => handleDrop(e, i)}
+            ondragend={handleDragEnd}
+            isDragged={draggedIndex === i}
+            isDragOver={dragOverIndex === i}
           >
             {#if metric.style.startsWith('metric')}
               <ValueComponent

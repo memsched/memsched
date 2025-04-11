@@ -129,6 +129,33 @@
     updateDefaultMetrics(metricCount, index);
   }
 
+  function onMetricDrag(fromIndex: number, toIndex: number) {
+    // Update metrics array
+    const metricsCopy = [...$formData.metrics];
+    const [movedMetric] = metricsCopy.splice(fromIndex, 1);
+    metricsCopy.splice(toIndex, 0, movedMetric);
+    $formData.metrics = metricsCopy;
+
+    // Update widget metrics array
+    const widgetMetricsCopy = [...widgetMetrics];
+    const [movedWidgetMetric] = widgetMetricsCopy.splice(fromIndex, 1);
+    widgetMetricsCopy.splice(toIndex, 0, movedWidgetMetric);
+    widgetMetrics = widgetMetricsCopy;
+
+    // Update the focused tab to follow the moved metric
+    const currentTab = focusedTab;
+    if (currentTab.startsWith('metric.')) {
+      const currentMetricIndex = parseInt(currentTab.split('.')[1]) - 1;
+      if (currentMetricIndex === fromIndex) {
+        focusedTab = `metric.${toIndex + 1}` as MetricTab;
+      } else if (currentMetricIndex > fromIndex && currentMetricIndex <= toIndex) {
+        focusedTab = `metric.${currentMetricIndex}` as MetricTab;
+      } else if (currentMetricIndex < fromIndex && currentMetricIndex >= toIndex) {
+        focusedTab = `metric.${currentMetricIndex + 2}` as MetricTab;
+      }
+    }
+  }
+
   function updateDefaultMetrics(count: number, index: number) {
     const currentCount = $formData.metrics.length;
     const metricsCopy = [...$formData.metrics];
@@ -347,7 +374,10 @@
         className="mt-0.5 size-5 flex-shrink-0 text-muted-foreground"
       />
       <div class="space-y-1">
-        <p>Click on the gray areas to edit the individual components.</p>
+        <p>
+          Click on the gray areas to edit the individual components. You can also drag and drop
+          metrics to reorder them.
+        </p>
       </div>
     </div>
 
@@ -372,6 +402,7 @@
           focusedTab = `metric.${i + 1}` as MetricTab;
         }}
         onMetricClose={onRemoveMetric}
+        {onMetricDrag}
       />
     </div>
 

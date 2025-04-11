@@ -227,7 +227,7 @@
   </section>
 
   <!-- FAQ Section -->
-  <section id="faq" class="border-y bg-background">
+  <section id="faq" class="z-10 border-y bg-background">
     <div class="main-container mx-auto px-4">
       <div class="mb-16 flex flex-col items-center text-center">
         <h2 class="h2 mb-3 w-fit border-b-2 border-dashed border-primary pb-1">
@@ -303,7 +303,7 @@
         <Button data-umami-event="cta-get-started-button" href="/auth/signin" size="cta"
           >Get Started for Free</Button
         >
-        <Arrow class="absolute left-[-85%] top-[-85%] -z-10 rotate-180" />
+        <Arrow class="absolute left-[-85%] top-[-85%] rotate-180" />
         <p class="mt-2 text-sm text-muted-foreground">
           No credit card required. Free plan available.
         </p>

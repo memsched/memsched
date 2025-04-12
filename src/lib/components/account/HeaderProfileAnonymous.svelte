@@ -13,7 +13,7 @@
   <DropdownMenu.Trigger
     class="flex flex-row items-center justify-center gap-3 border border-transparent"
   >
-    <div class="size-8 rounded-full bg-zinc-200"></div>
+    <div class="grid size-8 place-items-center rounded-full bg-zinc-200">?</div>
   </DropdownMenu.Trigger>
   <DropdownMenu.Content class="min-w-40" align="start" side="right">
     <DropdownMenu.Group>
@@ -28,6 +28,7 @@
             {...props}
             href="/auth/signin"
             class={cn(props?.class as string, 'font-semibold text-primary')}
+            aria-label="Sign In"
           >
             <Icon src={FiLogIn} className="text-primary" />
             Sign In
@@ -36,7 +37,7 @@
       </DropdownMenu.Item>
       <DropdownMenu.Item class="cursor-pointer hover:text-accent-foreground">
         {#snippet child({ props })}
-          <a href="/" {...props} data-sveltekit-reload>
+          <a href="/" {...props} aria-label="MEMsched Homepage" data-sveltekit-reload>
             <Icon src={FiHome} className="!text-muted-foreground" />
             Home
           </a>
@@ -53,7 +54,7 @@
       </DropdownMenu.Item>
       <DropdownMenu.Item class="cursor-pointer hover:text-accent-foreground">
         {#snippet child({ props })}
-          <a href="mailto:info@memsched.com" {...props}>
+          <a href="mailto:info@memsched.com" {...props} aria-label="Contact Us">
             <Icon src={FiLifeBuoy} className="!text-muted-foreground" />
             Support
           </a>

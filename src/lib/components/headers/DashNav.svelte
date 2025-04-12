@@ -11,7 +11,7 @@
 
   const NAV_ITEMS = [
     {
-      href: !page.data.user ? '/' : getUserOverviewUrl(page.data.user.username),
+      href: !page.data.user ? '/auth/signin' : getUserOverviewUrl(page.data.user.username),
       text: 'Overview',
       icon: IoFlash,
     },
@@ -21,18 +21,20 @@
 </script>
 
 <div class="flex h-full flex-col items-center justify-between border-e bg-white px-2 py-4">
-  <div class="flex flex-col items-center *:py-3 first:*:mb-2 first:*:pt-0">
-    {#if page.data.user}
-      <HeaderProfile compact />
-    {:else}
-      <HeaderProfileAnonymous />
-    {/if}
+  <div class="flex flex-col items-center">
+    <div class="mb-4">
+      {#if page.data.user}
+        <HeaderProfile compact />
+      {:else}
+        <HeaderProfileAnonymous />
+      {/if}
+    </div>
 
     {#each NAV_ITEMS as item}
       <DashNavLink {...item} />
     {/each}
   </div>
-  <a href="/" aria-label="MEMsched Homepage" data-sveltekit-reload>
+  <a href="/" class="p-1" aria-label="MEMsched Homepage" data-sveltekit-reload>
     <LogoShort height={20} />
   </a>
 </div>

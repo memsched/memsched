@@ -23,7 +23,7 @@
 
 <Tooltip.Provider delayDuration={300}>
   <Tooltip.Root>
-    <Tooltip.Trigger>
+    <Tooltip.Trigger class="px-1.5 py-3">
       {#snippet child({ props })}
         <a {href} aria-label={text} {...props}>
           <Icon src={icon} className={cn('!text-zinc-400', isActive && '!text-black')} size={20} />

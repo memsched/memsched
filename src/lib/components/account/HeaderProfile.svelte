@@ -43,7 +43,7 @@
       <DropdownMenuSeparator />
       <DropdownMenu.Item class="cursor-pointer hover:text-accent-foreground">
         {#snippet child({ props })}
-          <a href="/settings/profile" {...props}>
+          <a href="/settings/profile" {...props} aria-label="Settings">
             <Icon src={FiSettings} className="!text-muted-foreground" />
             Settings
           </a>
@@ -51,7 +51,7 @@
       </DropdownMenu.Item>
       <DropdownMenu.Item class="cursor-pointer hover:text-accent-foreground">
         {#snippet child({ props })}
-          <a href="/docs" {...props} data-sveltekit-reload>
+          <a href="/docs" {...props} aria-label="Documentation" data-sveltekit-reload>
             <Icon src={FiBookOpen} className="!text-muted-foreground" />
             Docs
           </a>
@@ -59,7 +59,7 @@
       </DropdownMenu.Item>
       <DropdownMenu.Item class="cursor-pointer hover:text-accent-foreground">
         {#snippet child({ props })}
-          <a href="mailto:info@memsched.com" {...props}>
+          <a href="mailto:info@memsched.com" {...props} aria-label="Contact Us">
             <Icon src={FiLifeBuoy} className="!text-muted-foreground" />
             Support
           </a>
@@ -69,7 +69,7 @@
       <form action="/auth/signout" method="POST" use:enhance>
         <DropdownMenu.Item class="w-full cursor-pointer hover:text-accent-foreground">
           {#snippet child({ props })}
-            <button {...props}>
+            <button {...props} aria-label="Sign Out">
               <Icon src={FiLogOut} className="!text-muted-foreground" />
               Sign Out
             </button>

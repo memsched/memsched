@@ -9,6 +9,7 @@
   import AccessibilityToolbar from '$lib/components/AccessibilityToolbar.svelte';
   // import { ModeWatcher } from 'mode-watcher';
   import ColorPickerToolbar from '$lib/components/ColorPickerToolbar.svelte';
+  import PageLoadProgress from '$lib/components/layouts/PageLoadProgress.svelte';
 
   beforeNavigate(({ willUnload, to }) => {
     if (updated.current && !willUnload && to?.url) {
@@ -35,6 +36,7 @@
   {/if}
 </svelte:head>
 
+<PageLoadProgress />
 <!-- <ModeWatcher defaultMode="light" track={false} /> -->
 {@render children()}
 {#if browser}

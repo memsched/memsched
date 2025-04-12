@@ -23,11 +23,13 @@
 
 <Tooltip.Provider delayDuration={300}>
   <Tooltip.Root>
-    <a {href}>
-      <Tooltip.Trigger>
-        <Icon src={icon} className={cn('!text-zinc-400', isActive && '!text-black')} size={20} />
-      </Tooltip.Trigger>
-    </a>
+    <Tooltip.Trigger>
+      {#snippet child({ props })}
+        <a {href} aria-label={text} {...props}>
+          <Icon src={icon} className={cn('!text-zinc-400', isActive && '!text-black')} size={20} />
+        </a>
+      {/snippet}
+    </Tooltip.Trigger>
     <Tooltip.Content
       side="right"
       align="center"

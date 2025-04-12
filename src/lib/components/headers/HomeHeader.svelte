@@ -36,7 +36,7 @@
           <Logo />
         </button>
       {:else}
-        <a href="/" aria-label="Go to homepage">
+        <a href="/" aria-label="MEMsched Homepage">
           <Logo />
         </a>
       {/if}

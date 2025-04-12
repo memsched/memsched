@@ -91,7 +91,6 @@
 <SvelteSeo
   title={currentSeo.title}
   description={currentSeo.description}
-  canonical={`${DOMAIN}${page.url.pathname}`}
   openGraph={{
     title: currentSeo.title,
     description: currentSeo.description,
@@ -149,7 +148,7 @@
     >
       <!-- Logo -->
       <div class="mb-12">
-        <a href="/docs" class="inline-block">
+        <a href="/docs" class="inline-block" aria-label="MEMsched Documentation Homepage">
           <Logo class="h-6 w-auto text-primary" />
         </a>
       </div>

@@ -40,7 +40,7 @@
       class:!bg-muted-foreground={isOnline === null}
     ></span>
   </span>
-  <p class="text-muted-foreground/75 transition-colors hover:text-muted-foreground">
+  <p class="text-muted-foreground transition-colors hover:text-foreground">
     {isOnline === null
       ? 'Checking...'
       : isOnline

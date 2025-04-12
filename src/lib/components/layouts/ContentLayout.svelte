@@ -34,7 +34,7 @@
     {@render children()}
   </section>
   <div class="flex w-full justify-center">
-    <a href="/">
+    <a href="/" aria-label="MEMsched Homepage">
       <Logo />
     </a>
   </div>

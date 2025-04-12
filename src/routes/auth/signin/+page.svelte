@@ -50,7 +50,10 @@
     >
   </div>
   <p class="text-sm text-muted-foreground">
-    By joining, you agree to our <a href="/tos">Terms of <br /> Service</a> and
-    <a href="/privacy">Privacy Policy</a>.
+    By joining, you agree to our <a href="/tos" aria-label="Terms of Service"
+      >Terms of <br /> Service</a
+    >
+    and
+    <a href="/privacy" aria-label="Privacy Policy">Privacy Policy</a>.
   </p>
 </div>

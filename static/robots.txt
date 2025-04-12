@@ -3,8 +3,8 @@ User-agent: *
 Allow: /
 
 # Disallowed paths
+Disallow: /auth/signin/*/callback
 Disallow: /api/
-Disallow: /dev/
 Disallow: /objectives/
 Disallow: /settings/
 Disallow: /widgets/

@@ -20,6 +20,7 @@
 <DropdownMenu.Root>
   <DropdownMenu.Trigger
     class="flex flex-row items-center justify-center gap-3 border border-transparent"
+    aria-label="User Profile"
   >
     {#if !compact}
       <div class="flex flex-col text-end *:leading-tight">

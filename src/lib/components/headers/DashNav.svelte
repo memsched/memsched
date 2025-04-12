@@ -32,7 +32,7 @@
       <DashNavLink {...item} />
     {/each}
   </div>
-  <a href="/" data-sveltekit-reload>
+  <a href="/" aria-label="MEMsched Homepage" data-sveltekit-reload>
     <LogoShort height={20} />
   </a>
 </div>

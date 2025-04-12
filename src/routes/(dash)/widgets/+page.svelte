@@ -9,7 +9,6 @@
   import DashHeader from '$lib/components/headers/DashHeader.svelte';
   import IconButton from '$lib/components/ui/IconButton.svelte';
   import * as Tooltip from '$lib/components/ui/tooltip';
-  import { DOMAIN } from '$lib/constants';
 
   import { type PageProps } from './$types';
 
@@ -21,23 +20,7 @@
     'Create and manage your learning widgets on MEMsched. Showcase your progress and share them with the world.';
 </script>
 
-<SvelteSeo
-  title={pageTitle}
-  description={pageDescription}
-  openGraph={{
-    title: pageTitle,
-    description: pageDescription,
-    url: `${DOMAIN}/widgets`,
-    type: 'website',
-    site_name: 'MEMsched',
-  }}
-  twitter={{
-    card: 'summary',
-    site: '@memsched',
-    title: pageTitle,
-    description: pageDescription,
-  }}
-/>
+<SvelteSeo title={pageTitle} description={pageDescription} noindex={true} nofollow={true} />
 
 <DashHeader>
   <div class="px-3 text-sm font-medium">Widgets</div>

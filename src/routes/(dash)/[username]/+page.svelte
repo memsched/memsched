@@ -14,6 +14,32 @@
 
   const pageTitle = `${data.publicUser.name || data.publicUser.username} - MEMsched Profile`;
   const pageDescription = `View ${data.publicUser.name || data.publicUser.username}'s learning journey on MEMsched. See their learning widgets and progress.`;
+
+  const personSchema = {
+    '@context': 'https://schema.org' as const,
+    '@type': 'Person' as const,
+    mainEntityOfPage: {
+      '@type': 'WebPage' as const,
+      '@id': `${DOMAIN}/${data.publicUser.username}`,
+    },
+    name: data.publicUser.name || data.publicUser.username,
+    description: data.publicUser.bio || pageDescription,
+    identifier: data.publicUser.username,
+    url: `${DOMAIN}/${data.publicUser.username}`,
+    ...(data.publicUser.location && {
+      homeLocation: {
+        '@type': 'Place' as const,
+        name: data.publicUser.location,
+      },
+    }),
+    ...(data.publicUser.website && { sameAs: [data.publicUser.website] }),
+    ...(data.publicUser.avatarUrl && {
+      image: {
+        '@type': 'ImageObject' as const,
+        url: data.publicUser.avatarUrl,
+      },
+    }),
+  } as const;
 </script>
 
 <SvelteSeo
@@ -32,6 +58,7 @@
     title: pageTitle,
     description: pageDescription,
   }}
+  jsonLd={personSchema}
 />
 
 <DashHeader>

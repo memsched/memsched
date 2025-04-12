@@ -1,7 +1,28 @@
 <script lang="ts">
   import { Icon } from 'svelte-icons-pack';
   import { IoCode, IoRocket } from 'svelte-icons-pack/io';
+  import SvelteSeo from 'svelte-seo';
+
+  const pageTitle = 'Documentation - MEMsched';
+  const pageDescription =
+    'Everything you need to know about creating, customizing, and embedding MEMsched widgets. Learn how to track and showcase your learning journey.';
 </script>
+
+<SvelteSeo
+  title={pageTitle}
+  description={pageDescription}
+  openGraph={{
+    title: pageTitle,
+    description: pageDescription,
+    type: 'website',
+  }}
+  twitter={{
+    card: 'summary',
+    title: pageTitle,
+    description: pageDescription,
+    site: '@memsched',
+  }}
+/>
 
 <div class="space-y-12">
   <!-- Hero section -->

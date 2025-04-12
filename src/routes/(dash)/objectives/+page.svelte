@@ -21,7 +21,6 @@
   import IconButton from '$lib/components/ui/IconButton.svelte';
   import { Progress } from '$lib/components/ui/progress/index';
   import * as Tooltip from '$lib/components/ui/tooltip';
-  import { DOMAIN } from '$lib/constants';
   import type { Objective } from '$lib/server/db/schema';
 
   import type { PageProps } from './$types';
@@ -65,23 +64,7 @@
   }
 </script>
 
-<SvelteSeo
-  title={pageTitle}
-  description={pageDescription}
-  openGraph={{
-    title: pageTitle,
-    description: pageDescription,
-    url: `${DOMAIN}/objectives${data.isArchived ? '?archived' : data.isCompleted ? '?completed' : ''}`,
-    type: 'website',
-    site_name: 'MEMsched',
-  }}
-  twitter={{
-    card: 'summary',
-    site: '@memsched',
-    title: pageTitle,
-    description: pageDescription,
-  }}
-/>
+<SvelteSeo title={pageTitle} description={pageDescription} noindex={true} nofollow={true} />
 
 <DashHeader>
   <div class="px-3 text-sm font-medium">Objectives</div>

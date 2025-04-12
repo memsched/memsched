@@ -12,6 +12,7 @@
 </script>
 
 <SvelteSeo
+  title={pageTitle}
   description={pageDescription}
   openGraph={{
     title: pageTitle,
@@ -20,7 +21,6 @@
     type: 'website',
     site_name: 'MEMsched',
   }}
-  title={pageTitle}
   twitter={{
     card: 'summary',
     site: '@memsched',

@@ -1,7 +1,13 @@
 <script lang="ts">
+  import SvelteSeo from 'svelte-seo';
+
   import { page } from '$app/state';
   import CodeBlock from '$lib/components/CodeBlock.svelte';
   import * as Alert from '$lib/components/ui/alert';
+
+  const pageTitle = 'HTML & Markdown Embedding Guide - MEMsched Documentation';
+  const pageDescription =
+    'Learn how to embed your MEMsched widgets using HTML or Markdown. Step-by-step guide with code examples and customization options.';
 
   // Example widget for documentation
   const exampleWidgetUrl = `${page.url.origin}/api/widgets/example`;
@@ -20,6 +26,22 @@
      height="80"
 />`;
 </script>
+
+<SvelteSeo
+  title={pageTitle}
+  description={pageDescription}
+  openGraph={{
+    title: pageTitle,
+    description: pageDescription,
+    type: 'article',
+  }}
+  twitter={{
+    card: 'summary',
+    title: pageTitle,
+    description: pageDescription,
+    site: '@memsched',
+  }}
+/>
 
 <div class="space-y-8">
   <div class="space-y-4">

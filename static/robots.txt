@@ -5,11 +5,12 @@ Allow: /
 # Disallowed paths
 Disallow: /api/
 Disallow: /dev/
-Disallow: /objectives/new
-Disallow: /objectives/*/
+Disallow: /objectives/
 Disallow: /settings/
-Disallow: /widgets/new
-Disallow: /widgets/*/
+Disallow: /widgets/
+
+# Allow public user profiles
+Allow: /*/
 
 # Host
 Host: https://memsched.com

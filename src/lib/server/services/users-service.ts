@@ -259,4 +259,11 @@ export class UsersService {
       return { success: true };
     });
   }
+
+  public getUsernames() {
+    return wrapResultAsyncFn(async () => {
+      const users = await this.db.select({ username: table.user.username }).from(table.user);
+      return users.map((user) => user.username);
+    });
+  }
 }

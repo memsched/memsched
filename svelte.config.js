@@ -46,7 +46,7 @@ const config = {
           'self',
           'unsafe-inline',
           'https://cloud.umami.is/script.js',
-          'https://static.cloudflareinsights.com/beacon.min.js',
+          'https://static.cloudflareinsights.com/',
         ],
         'style-src': ['self', 'unsafe-inline'],
         'img-src': [

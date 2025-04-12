@@ -2,6 +2,7 @@
   import { onMount } from 'svelte';
   import { Icon } from 'svelte-icons-pack';
   import { IoArrowForward, IoCube, IoGlobe, IoPersonCircle } from 'svelte-icons-pack/io';
+  import SvelteSeo from 'svelte-seo';
 
   import HomeLayout from '$lib/components/layouts/HomeLayout.svelte';
   import Arrow from '$lib/components/svgs/Arrow.svelte';
@@ -13,6 +14,7 @@
   import WidgetCarousel from '$lib/components/WidgetCarousel.svelte';
   import Widget from '$lib/components/widgets/Widget.svelte';
   import { HEADER_HEIGHT } from '$lib/constants';
+  import { DOMAIN } from '$lib/constants';
   import { FLAT_COLOR_ICONS } from '$lib/icons';
   import { mockWidgets } from '$lib/widgets';
 
@@ -36,7 +38,41 @@
     // Start the first update
     updateData();
   });
+
+  const pageTitle = "MEMsched - Show the world what you're learning";
+  const pageDescription =
+    'Set goals, log progress, and showcase your learning journey with beautiful widgets. Track your skills development and share your achievements.';
+  const imageAlt = 'MEMsched - Track and showcase your learning journey';
 </script>
+
+<SvelteSeo
+  title={pageTitle}
+  description={pageDescription}
+  canonical={DOMAIN}
+  openGraph={{
+    title: pageTitle,
+    description: pageDescription,
+    url: DOMAIN,
+    type: 'website',
+    site_name: 'MEMsched',
+    images: [
+      {
+        url: `${DOMAIN}/opengraph-image.png`,
+        width: 1200,
+        height: 630,
+        alt: imageAlt,
+      },
+    ],
+  }}
+  twitter={{
+    card: 'summary_large_image',
+    site: '@memsched',
+    title: pageTitle,
+    description: pageDescription,
+    image: `${DOMAIN}/twitter-image.png`,
+    imageAlt: imageAlt,
+  }}
+/>
 
 <HomeLayout class="*:py-20" container={false}>
   <section

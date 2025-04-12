@@ -9,7 +9,6 @@
   import AccessibilityToolbar from '$lib/components/AccessibilityToolbar.svelte';
   // import { ModeWatcher } from 'mode-watcher';
   import ColorPickerToolbar from '$lib/components/ColorPickerToolbar.svelte';
-  import { DOMAIN } from '$lib/constants';
 
   beforeNavigate(({ willUnload, to }) => {
     if (updated.current && !willUnload && to?.url) {
@@ -18,42 +17,11 @@
   });
 
   const { children } = $props();
-
-  const pageTitle = "MEMsched - Show the world what you're learning";
-  const pageDescription =
-    'Set goals, log progress, and showcase your learning journey with beautiful widgets. Track your skills development and share your achievements.';
-  const imageAlt = 'MEMsched - Track and showcase your learning journey';
 </script>
 
 <SvelteSeo
-  canonical={DOMAIN}
-  description={pageDescription}
   keywords="learning tracker, skill development, progress widgets, learning goals, showcase skills, educational progress"
-  openGraph={{
-    title: pageTitle,
-    description: pageDescription,
-    url: DOMAIN,
-    type: 'website',
-    site_name: 'MEMsched',
-    images: [
-      {
-        url: `${DOMAIN}/opengraph-image.png`,
-        width: 1200,
-        height: 628,
-        alt: imageAlt,
-      },
-    ],
-  }}
   themeColor="#ffffff"
-  title={pageTitle}
-  twitter={{
-    card: 'summary_large_image',
-    site: '@memsched',
-    title: pageTitle,
-    description: pageDescription,
-    image: `${DOMAIN}/twitter-image.png`,
-    imageAlt: imageAlt,
-  }}
 />
 
 <!-- Umami Web Analytics -->

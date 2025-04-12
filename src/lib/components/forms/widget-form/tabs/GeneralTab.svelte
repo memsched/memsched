@@ -96,11 +96,7 @@
       <Form.Control>
         {#snippet children({ props })}
           <Form.Label>Foreground Color</Form.Label>
-          <ColorPickerInput
-            {...props}
-            bind:value={$formData.color}
-            solids={['#000000', '#333333', '#666666', '#999999', '#cccccc', '#f2f2f2', '#ffffff']}
-          />
+          <ColorPickerInput {...props} bind:value={$formData.color} />
         {/snippet}
       </Form.Control>
       <Form.FieldErrors />
@@ -110,21 +106,7 @@
       <Form.Control>
         {#snippet children({ props })}
           <Form.Label>Background Color</Form.Label>
-          <ColorPickerInput
-            {...props}
-            bind:value={$formData.backgroundColor}
-            solids={[
-              '#000000',
-              '#333333',
-              '#666666',
-              '#999999',
-              '#cccccc',
-              '#f2f2f2',
-              '#ffffff',
-              '#ffffff00',
-            ]}
-            alpha
-          />
+          <ColorPickerInput {...props} bind:value={$formData.backgroundColor} alpha />
         {/snippet}
       </Form.Control>
       <Form.FieldErrors />
@@ -145,23 +127,10 @@
       <Form.Control>
         {#snippet children({ props })}
           <Form.Label>Border Radius</Form.Label>
-          <Input
-            {...props}
-            type="number"
-            value={$formData.borderRadius}
-            oninput={(e) => {
-              if (e.currentTarget.value === '') {
-                $formData.borderRadius = 0;
-              } else {
-                $formData.borderRadius = parseInt(e.currentTarget.value);
-              }
-            }}
-            min="0"
-            max="50"
-          />
+          <Input {...props} type="number" min="0" max="50" bind:value={$formData.borderRadius} />
         {/snippet}
       </Form.Control>
-      <Form.Description>Set the roundness of the border in pixels.</Form.Description>
+      <Form.Description>Set the border radius for your widget.</Form.Description>
       <Form.FieldErrors />
     </Form.Field>
 
@@ -186,6 +155,21 @@
         {/snippet}
       </Form.Control>
       <Form.Description>Set the roundness of the border in pixels.</Form.Description>
+      <Form.FieldErrors />
+    </Form.Field>
+
+    <Form.Field {form} name="borderColor">
+      <Form.Control>
+        {#snippet children({ props })}
+          <Form.Label>Border Color</Form.Label>
+          <ColorPickerInput
+            {...props}
+            bind:value={$formData.borderColor}
+            disabled={!$formData.border}
+          />
+        {/snippet}
+      </Form.Control>
+      <Form.Description>Set the border color for your widget.</Form.Description>
       <Form.FieldErrors />
     </Form.Field>
 

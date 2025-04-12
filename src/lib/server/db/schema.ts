@@ -124,6 +124,7 @@ export const widget = sqliteTable('widget', {
   border: integer('border', { mode: 'boolean' }).notNull(),
   borderWidth: integer('border_width').notNull(),
   borderRadius: integer('border_radius').notNull(),
+  borderColor: text('border_color').notNull(),
   color: text('color').notNull(),
   accentColor: text('accent_color').notNull(),
   backgroundColor: text('background_color').notNull(),

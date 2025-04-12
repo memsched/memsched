@@ -30,6 +30,7 @@
     padding = 16,
     border = true,
     borderRadius = 8,
+    borderColor = '#ededed',
     color = 'black',
     backgroundColor = 'white',
     accentColor = 'lime',
@@ -82,7 +83,7 @@
   style:gap="0.2rem"
 >
   <div
-    style:border={border ? '1px solid #ededed' : 'none'}
+    style:border={border ? `1px solid ${borderColor || '#ededed'}` : 'none'}
     style:border-radius="{borderRadius}px"
     style:color
     style:background-color={backgroundColor}

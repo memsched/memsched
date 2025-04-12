@@ -15,6 +15,13 @@
       "when": 1744181917696,
       "tag": "0001_add_metric_plot_and_heatmap_options",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1744479726830,
+      "tag": "0002_add_widget_border_color",
+      "breakpoints": true
     }
   ]
 }

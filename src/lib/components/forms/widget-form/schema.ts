@@ -145,6 +145,10 @@ export const formSchema = z.object({
     .min(0, { message: 'Border radius must be 0 or greater.' })
     .max(50, { message: 'Border radius must be less than 50.' })
     .default(6),
+  borderColor: z
+    .string()
+    .regex(/^#[0-9A-Fa-f]{6}$/, { message: 'Please enter a valid hex color code.' })
+    .default('#ededed'),
   color: z
     .string()
     .regex(/^#[0-9A-Fa-f]{6}$/, { message: 'Please enter a valid hex color code.' })

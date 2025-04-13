@@ -7,6 +7,7 @@
   import { Button } from '../ui/button';
   import { Input } from '../ui/input';
   import { Label } from '../ui/label';
+  import LoadingButton from '../ui/LoadingButton.svelte';
   import { RadioGroup, RadioGroupItem } from '../ui/radio-group';
 
   interface Props {
@@ -33,6 +34,8 @@
     { value: 'privacy_concerns', label: 'Privacy concerns' },
     { value: 'other', label: 'Other reason' },
   ];
+
+  let loading = $state(false);
 </script>
 
 <Dialog.Root>
@@ -46,7 +49,18 @@
       </Dialog.Description>
     </Dialog.Header>
 
-    <form {action} method="POST" use:enhance class="space-y-6">
+    <form
+      {action}
+      method="POST"
+      class="space-y-6"
+      use:enhance={() => {
+        loading = true;
+        return async ({ update }) => {
+          loading = false;
+          update();
+        };
+      }}
+    >
       <input type="hidden" {name} {value} />
       <input
         type="hidden"
@@ -85,7 +99,9 @@
           <Dialog.Close>
             <Button type="button" variant="outline">Cancel</Button>
           </Dialog.Close>
-          <Button type="submit" variant="destructive" disabled={!isValid}>Delete Account</Button>
+          <LoadingButton type="submit" variant="destructive" disabled={!isValid} {loading}>
+            Delete Account
+          </LoadingButton>
         </div>
       </Dialog.Footer>
     </form>

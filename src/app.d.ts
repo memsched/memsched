@@ -5,8 +5,10 @@ import type {
   D1Database,
   ExecutionContext,
   KVNamespace,
+  R2Bucket,
 } from '@cloudflare/workers-types';
 
+import type { AvatarStorageService } from '$lib/server/avatar-store';
 import type { CacheService } from '$lib/server/cache';
 import type { DBType } from '$lib/server/db';
 import type { Session } from '$lib/server/db/schema';
@@ -21,6 +23,7 @@ import type {
   UsersService,
   WidgetsService,
 } from '$lib/server/services';
+import type { StorageService } from '$lib/server/store';
 import type { LocalUser } from '$lib/types';
 
 declare global {
@@ -30,6 +33,8 @@ declare global {
       session: Session | null;
       db: DBType;
       cache: CacheService;
+      store: StorageService;
+      avatarStore: AvatarStorageService;
       sessionsService: SessionsService;
       usersService: UsersService;
       objectivesService: ObjectivesService;
@@ -44,6 +49,7 @@ declare global {
       env: {
         DB: D1Database;
         CACHE_KV: KVNamespace;
+        STORAGE_R2: R2Bucket;
       };
       cf: CfProperties;
       ctx: ExecutionContext;

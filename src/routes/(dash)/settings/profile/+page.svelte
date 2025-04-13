@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { toast } from 'svelte-french-toast';
   import { IoPerson } from 'svelte-icons-pack/io';
   import SvelteSeo from 'svelte-seo';
 
@@ -8,7 +9,17 @@
 
   import type { PageProps } from './$types';
 
-  const { data }: PageProps = $props();
+  const { data, form }: PageProps = $props();
+
+  // Show toast message when form action completes successfully
+  $effect(() => {
+    if (form?.success && form?.message) {
+      toast.success(form.message);
+    }
+    if (form?.error) {
+      toast.error(form.error);
+    }
+  });
 </script>
 
 <SvelteSeo

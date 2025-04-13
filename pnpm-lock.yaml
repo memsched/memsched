@@ -13,6 +13,9 @@ importers:
 
   .:
     dependencies:
+      '@cf-wasm/photon':
+        specifier: ^0.1.29
+        version: 0.1.29
       '@fontsource-variable/inter':
         specifier: ^5.2.5
         version: 5.2.5
@@ -199,6 +202,12 @@ packages:
   '@babel/runtime@7.27.0':
     resolution: {integrity: sha512-VtPOkrdPHZsKc/clNqyi9WUA8TINkZ4cGk63UUE3u4pmB2k+ZMQRDuIOagv8UVd6j7k0T3+RRIb7beKTebNbcw==}
     engines: {node: '>=6.9.0'}
+
+  '@cf-wasm/internals@0.0.3':
+    resolution: {integrity: sha512-v6PmiQnJIrVvL2IdPg5aCqARSKw/U1JvFsms2cCt3Szx3/3EvtVVhN9MALCh6kZ2CV2fvzs3tmiYezRQ6JyqcQ==}
+
+  '@cf-wasm/photon@0.1.29':
+    resolution: {integrity: sha512-dqKRSfcqOQpVATTdMrnGjrf0iUH/Yv5woYn81o2nBv2xwSmB91MsnY1b83Bt24vC/oxVqbvio9JQByXT/Ry1lw==}
 
   '@cloudflare/kv-asset-handler@0.4.0':
     resolution: {integrity: sha512-+tv3z+SPp+gqTIcImN9o0hqE9xyfQjI1XD9pL6NuKjua9B1y7mNYv0S9cP+QEbA4ppVgGZEmKOvHX5G5Ei1CVA==}
@@ -2911,6 +2920,12 @@ snapshots:
     dependencies:
       regenerator-runtime: 0.14.1
     optional: true
+
+  '@cf-wasm/internals@0.0.3': {}
+
+  '@cf-wasm/photon@0.1.29':
+    dependencies:
+      '@cf-wasm/internals': 0.0.3
 
   '@cloudflare/kv-asset-handler@0.4.0':
     dependencies:

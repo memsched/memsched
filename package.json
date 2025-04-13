@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite dev --open",
-    "build": "vite build",
+    "build": "rm -rf static/uploads && vite build",
     "build:e2e": "vite build --mode testing",
     "preview": "wrangler pages dev --port 5173",
     "prepare": "svelte-kit sync || echo ''",
@@ -73,6 +73,7 @@
     "zod": "^3.24.2"
   },
   "dependencies": {
+    "@cf-wasm/photon": "^0.1.29",
     "@fontsource-variable/inter": "^5.2.5",
     "@fontsource/geist-mono": "^5.2.5",
     "@libsql/client": "^0.14.0",

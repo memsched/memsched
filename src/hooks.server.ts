@@ -2,6 +2,7 @@ import type { Handle } from '@sveltejs/kit';
 import { sequence } from '@sveltejs/kit/hooks';
 
 import { building } from '$app/environment';
+import { getAvatarStore } from '$lib/server/avatar-store';
 import { getCache } from '$lib/server/cache';
 import { type DBType, getDB } from '$lib/server/db';
 import {
@@ -16,7 +17,7 @@ import {
   UsersService,
   WidgetsService,
 } from '$lib/server/services';
-
+import { getStore } from '$lib/server/store';
 const PRERENDERED_ROUTES = ['/docs', '/privacy', '/tos'];
 
 function isPrerenderedRoute(url: URL) {
@@ -62,6 +63,8 @@ const dbHandle: Handle = async ({ event, resolve }) => {
   // Make database available via event.platform
   event.locals.db = getDB(event.platform) as DBType;
   event.locals.cache = getCache(event.platform);
+  event.locals.store = getStore(event.platform);
+  event.locals.avatarStore = getAvatarStore(event.platform);
   const services = initializeServices(event.locals.db);
   Object.assign(event.locals, services);
 

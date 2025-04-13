@@ -2,7 +2,8 @@
   import { Icon } from 'svelte-icons-pack';
   import { FiCamera, FiGlobe, FiMapPin } from 'svelte-icons-pack/fi';
 
-  import { Button } from '$lib/components/ui/button';
+  import { enhance } from '$app/forms';
+  import LoadingButton from '$lib/components/ui/LoadingButton.svelte';
 
   import UserAvatar from './UserAvatar.svelte';
   interface Props {
@@ -15,6 +16,22 @@
     edit?: boolean;
   }
   const { name, username, avatarUrl, bio, location, website, edit = false }: Props = $props();
+
+  let fileInput: HTMLInputElement | undefined = $state();
+
+  function handleClick() {
+    fileInput?.click();
+  }
+
+  function handleFileChange(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files?.length) {
+      const form = input.form;
+      if (form) form.requestSubmit();
+    }
+  }
+
+  let loading = $state(false);
 </script>
 
 <div class="sticky top-0 h-fit w-[250px] flex-shrink-0">
@@ -22,14 +39,36 @@
     <UserAvatar {username} {avatarUrl} large />
     {#if edit}
       <div class="absolute bottom-2 left-2 size-12 rounded-full border-2 bg-back !p-0"></div>
-      <Button
-        href="/account/settings"
-        size="sm"
-        class="absolute bottom-2 left-2 size-12 rounded-full border-[3px] border-back !p-0 [&_svg]:size-5"
-        variant="translucent"
+      <form
+        method="POST"
+        action="/settings/profile?/updateAvatar"
+        enctype="multipart/form-data"
+        use:enhance={() => {
+          loading = true;
+          return async ({ update }) => {
+            loading = false;
+            update();
+          };
+        }}
       >
-        <Icon src={FiCamera} className="h-full w-full" />
-      </Button>
+        <input
+          bind:this={fileInput}
+          type="file"
+          name="avatar"
+          accept="image/*"
+          class="hidden"
+          onchange={handleFileChange}
+        />
+        <LoadingButton
+          type="button"
+          onclick={handleClick}
+          size="sm"
+          class="absolute bottom-2 left-2 size-12 rounded-full border-[3px] border-back !p-0 [&_svg]:size-5"
+          variant="translucent"
+          {loading}
+          icon={FiCamera}
+        />
+      </form>
     {/if}
   </div>
   <h2 class="mt-8">{name}</h2>

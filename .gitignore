@@ -10,6 +10,7 @@ node_modules
 /build
 .test-db*
 .eslintcache
+static/uploads
 
 # OS
 .DS_Store

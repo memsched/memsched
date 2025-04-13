@@ -1,4 +1,4 @@
-import { fail, redirect } from '@sveltejs/kit';
+import { error, fail, redirect } from '@sveltejs/kit';
 import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 
@@ -59,7 +59,7 @@ export const load: PageServerLoad = async (event) => {
 export const actions: Actions = {
   log: async (event) => {
     if (!event.locals.session) {
-      return redirect(302, '/auth/signin');
+      return error(401, 'Unauthorized');
     }
 
     const form = await superValidate(event, zod(logSchema));
@@ -90,7 +90,7 @@ export const actions: Actions = {
 
   undoLog: async (event) => {
     if (!event.locals.session) {
-      return redirect(302, '/auth/signin');
+      return error(401, 'Unauthorized');
     }
 
     const formData = await event.request.formData();
@@ -121,7 +121,7 @@ export const actions: Actions = {
 
   toggleArchive: async (event) => {
     if (!event.locals.session) {
-      return redirect(302, '/auth/signin');
+      return error(401, 'Unauthorized');
     }
 
     const formData = await event.request.formData();

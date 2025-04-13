@@ -1,9 +1,11 @@
-import { fail, redirect } from '@sveltejs/kit';
+import { error, fail, redirect } from '@sveltejs/kit';
+import { okAsync } from 'neverthrow';
 import { message, setError, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { z } from 'zod';
 
 import { formSchema } from '$lib/components/forms/profile-form/schema';
+import { imageUploadLimiter } from '$lib/server/rate-limiter';
 import { handleFormDbError } from '$lib/server/utils';
 import type { LocalUser } from '$lib/types';
 
@@ -37,7 +39,7 @@ export const load: PageServerLoad = async (event) => {
 export const actions: Actions = {
   post: async (event) => {
     if (!event.locals.session) {
-      return redirect(302, '/auth/signin');
+      return error(401, 'Unauthorized');
     }
 
     const currentUser = event.locals.user as LocalUser;
@@ -114,7 +116,7 @@ export const actions: Actions = {
   // Add a check action for debounced username validation
   check: async (event) => {
     if (!event.locals.session) {
-      return redirect(302, '/auth/signin');
+      return error(401, 'Unauthorized');
     }
 
     const currentUser = event.locals.user as LocalUser;
@@ -140,5 +142,72 @@ export const actions: Actions = {
     }
 
     return { form };
+  },
+
+  updateAvatar: async (event) => {
+    if (!event.locals.session) {
+      return error(401, 'Unauthorized');
+    }
+
+    if (await imageUploadLimiter.isLimited(event)) {
+      return fail(429, { error: 'Too many requests, please try again later.' });
+    }
+
+    const userId = event.locals.session.userId;
+
+    // File Validation
+    const formData = await event.request.formData();
+    const avatarFile = formData.get('avatar');
+
+    if (!avatarFile || !(avatarFile instanceof File) || avatarFile.size === 0) {
+      return fail(400, { error: 'No avatar file provided or file is empty.' });
+    }
+
+    // Basic MIME type validation (adjust as needed)
+    if (!avatarFile.type.startsWith('image/')) {
+      return fail(400, { error: 'Invalid file type. Only images are allowed.' });
+    }
+
+    // Size validation (e.g., 5MB limit)
+    const maxSize = 5 * 1024 * 1024; // 5MB
+    if (avatarFile.size > maxSize) {
+      return fail(400, { error: `File size exceeds the limit of ${maxSize / 1024 / 1024}MB.` });
+    }
+
+    // Get file extension and generate unique filename
+    // Upload file using storage service
+    const uploadResult = await event.locals.avatarStore.uploadAvatar(
+      avatarFile,
+      userId,
+      event.locals.user!.avatarUrl
+    );
+
+    if (uploadResult.isErr()) {
+      console.error('Failed to upload avatar:', uploadResult.error);
+      return fail(500, { error: 'Failed to update avatar.' });
+    }
+
+    const avatarUrl = event.url.origin + uploadResult.value;
+
+    const res = await (
+      import.meta.env.PROD ? event.locals.moderationService.isImageSafe(avatarUrl) : okAsync(true)
+    ).andThen((isSafe) => {
+      if (!isSafe) {
+        return event.locals.avatarStore
+          .deleteAvatar(avatarUrl)
+          .andThen(() => okAsync(fail(400, { error: 'This avatar is not allowed.' })));
+      }
+      return event.locals.usersService
+        .updateAvatar(userId, avatarUrl)
+        .andThen(() => okAsync({ success: true, message: 'Avatar updated successfully.' }));
+    });
+
+    if (res.isErr()) {
+      event.locals.avatarStore.deleteAvatar(avatarUrl);
+      console.error('Failed to update avatar:', res.error);
+      return fail(500, { error: 'Failed to update avatar.' });
+    }
+
+    return res.value;
   },
 };

@@ -45,8 +45,6 @@
    * https://developers.cloudflare.com/workers/wrangler/configuration/#service-bindings
    */
   // "services": [{ "binding": "MY_SERVICE", "service": "my-service" }]
-
-  // Add D1 binding
   "d1_databases": [
     {
       "binding": "DB",
@@ -55,12 +53,16 @@
       "migrations_dir": "drizzle"
     }
   ],
-
-  // Add KV namespace for caching
   "kv_namespaces": [
     {
       "binding": "CACHE_KV",
       "id": "c57c2e3e2de841abb6fae843d0b85936"
+    }
+  ],
+  "r2_buckets": [
+    {
+      "binding": "STORAGE_R2",
+      "bucket_name": "memsched-r2"
     }
   ]
 }

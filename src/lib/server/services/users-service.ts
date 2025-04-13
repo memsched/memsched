@@ -24,6 +24,8 @@ export const RESERVED_USERNAMES = [
   'api',
   'privacy',
   'tos',
+  'docs',
+  'objects',
   // Not currently used, but reserved for future use
   'signin',
   'signup',
@@ -35,7 +37,6 @@ export const RESERVED_USERNAMES = [
   'home',
   'dashboard',
   'search',
-  'docs',
   'new',
 ];
 
@@ -265,5 +266,11 @@ export class UsersService {
       const users = await this.db.select({ username: table.user.username }).from(table.user);
       return users.map((user) => user.username);
     });
+  }
+
+  public updateAvatar(userId: string, avatarUrl: string) {
+    return wrapResultAsync(
+      this.db.update(table.user).set({ avatarUrl }).where(eq(table.user.id, userId))
+    );
   }
 }

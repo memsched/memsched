@@ -8,7 +8,7 @@
   import WidgetEditComponent from '$lib/components/widgets/utils/WidgetEditComponent.svelte';
   import type { WidgetData, WidgetMetricData } from '$lib/server/services/metrics/types';
   import type { PartialBy } from '$lib/types';
-  import { addOpacityRgba } from '$lib/utils';
+  import { addOpacityRgba, getMutedHexColor } from '$lib/utils';
 
   interface Props {
     onTitleClick?: () => void;
@@ -175,7 +175,12 @@
           label="Subtitle"
           value={subtitle}
         >
-          <div style:font-size="0.8rem" style:max-width="350px" style:overflow="hidden">
+          <div
+            style:font-size="0.8rem"
+            style:max-width="350px"
+            style:overflow="hidden"
+            style:color={getMutedHexColor(color, 1.0)}
+          >
             {subtitle}
           </div>
         </WidgetEditComponent>

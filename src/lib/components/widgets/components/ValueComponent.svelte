@@ -18,7 +18,6 @@
     accentColor: string;
     valueFontSize?: string;
     valuePercentFontSize?: string;
-    mutedIntensity?: number;
   }
 
   const {
@@ -27,7 +26,6 @@
     accentColor,
     valueFontSize = '2rem',
     valuePercentFontSize = '1.25rem',
-    mutedIntensity = 1.0,
   }: Props = $props();
 </script>
 
@@ -59,7 +57,7 @@
       {/if}
     </div>
     {#if metric.valueName}
-      <div style:font-size="0.8rem" style:color={getMutedHexColor(color, mutedIntensity)}>
+      <div style:font-size="0.8rem" style:color={getMutedHexColor(color, 1.0)}>
         {metric.valueName}
       </div>
     {/if}

@@ -67,25 +67,23 @@
   });
 
   $effect(() => {
-    const currentHsva = hexToHsva(value);
-    if (currentHsva && !isDraggingSatVal && !isDraggingHue && !isDraggingAlpha) {
-      h = currentHsva.h;
-      s = currentHsva.s;
-      v = currentHsva.v;
-      if (alpha && value.length > 7) {
-        a = currentHsva.a;
-      } else if (alpha && value.length <= 7) {
-        a = 1;
-      } else {
-        a = 1;
+    if (!isDraggingSatVal && !isDraggingHue && !isDraggingAlpha) {
+      const currentHsva = hexToHsva(value);
+      const currentStateHex = alpha ? hsvaToHexa(h, s, v, a) : hsvToHex(h, s, v);
+
+      if (value.toLowerCase() !== currentStateHex.toLowerCase()) {
+        if (currentHsva) {
+          h = currentHsva.h;
+          s = currentHsva.s;
+          v = currentHsva.v;
+
+          if (alpha) {
+            a = value.length > 7 ? currentHsva.a : 1;
+          } else {
+            a = 1;
+          }
+        }
       }
-    } else if (!currentHsva && alpha) {
-      // Handle invalid initial color in alpha mode - maybe default?
-      // For now, just keep previous state or default to white opaque
-      // h = 0; s = 0; v = 100; a = 1;
-    } else if (!currentHsva && !alpha) {
-      // Handle invalid initial color in non-alpha mode
-      // h = 0; s = 0; v = 100; a = 1;
     }
   });
 
@@ -97,8 +95,10 @@
   });
 
   let hueColor = $derived(hsvToHex(h, 100, 100));
-  let satValHandleX = $derived(satValRect ? (s / 100) * satValRect.width : 0);
-  let satValHandleY = $derived(satValRect ? ((100 - v) / 100) * satValRect.height : 0);
+  let satValHandleX = $derived(satValPickerEl ? (s / 100) * satValPickerEl.clientWidth : 0);
+  let satValHandleY = $derived(
+    satValPickerEl ? ((100 - v) / 100) * satValPickerEl.clientHeight : 0
+  );
   let hueHandleY = $derived(hueRect ? (h / 360) * hueRect.height : 0);
   let alphaHandleY = $derived(alphaRect ? (1 - a) * alphaRect.height : 0);
   let alphaGradientColor = $derived(hsvToHex(h, s, v));
@@ -109,12 +109,21 @@
   let placeholder = $derived(placeholderProp ?? (alpha ? '#RRGGBBAA' : '#RRGGBB'));
 
   function updateSaturationValue(e: PointerEvent) {
-    if (!satValRect) return;
-    const x = Math.max(0, Math.min(e.clientX - satValRect.left, satValRect.width));
-    const y = Math.max(0, Math.min(e.clientY - satValRect.top, satValRect.height));
+    if (!satValRect || !satValPickerEl) return;
 
-    s = roundToDecimal((x / satValRect.width) * 100, 2);
-    v = roundToDecimal(100 - (y / satValRect.height) * 100, 2);
+    const style = window.getComputedStyle(satValPickerEl);
+    const borderLeft = parseFloat(style.borderLeftWidth);
+    const borderTop = parseFloat(style.borderTopWidth);
+
+    const pickerWidth = satValPickerEl.clientWidth;
+    const pickerHeight = satValPickerEl.clientHeight;
+
+    // Calculate pointer position relative to the content box (inside the border)
+    const x = Math.max(0, Math.min(e.clientX - satValRect.left - borderLeft, pickerWidth));
+    const y = Math.max(0, Math.min(e.clientY - satValRect.top - borderTop, pickerHeight));
+
+    s = roundToDecimal((x / pickerWidth) * 100, 2);
+    v = roundToDecimal(100 - (y / pickerHeight) * 100, 2);
   }
 
   function updateHue(e: PointerEvent) {
@@ -182,21 +191,8 @@
     const hexPattern = alpha ? /^#[0-9A-Fa-f]{8}$/i : /^#[0-9A-Fa-f]{6}$/i;
 
     if (hexPattern.test(inputValue)) {
-      const newHsva = hexToHsva(inputValue);
-      if (newHsva) {
-        const checkHex = alpha
-          ? hsvaToHexa(newHsva.h, newHsva.s, newHsva.v, newHsva.a)
-          : hsvToHex(newHsva.h, newHsva.s, newHsva.v);
-        if (checkHex.toLowerCase() !== value.toLowerCase()) {
-          h = newHsva.h;
-          s = newHsva.s;
-          v = newHsva.v;
-          if (alpha) {
-            a = newHsva.a;
-          } else {
-            a = 1;
-          }
-        }
+      if (inputValue.toLowerCase() !== value.toLowerCase()) {
+        value = inputValue;
       }
     } else {
       // Handle partially valid input? Or just ignore until valid.
@@ -205,8 +201,8 @@
   }
 
   function handleInputKeydown(event: KeyboardEvent) {
-    event.preventDefault();
     if (event.key === 'Enter') {
+      event.preventDefault();
       const target = event.currentTarget as HTMLInputElement;
       updateColorFromInput({ currentTarget: target } as any);
       open = false;

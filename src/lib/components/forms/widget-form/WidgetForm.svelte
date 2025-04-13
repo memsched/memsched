@@ -409,7 +409,12 @@
 
     {#if edit}
       <div class="absolute bottom-4 left-1/2 flex -translate-x-1/2 gap-2">
-        <LoadingButton type="submit" loading={$submitting}>Update Widget</LoadingButton>
+        <LoadingButton
+          type="submit"
+          loading={$submitting}
+          form="widget-form"
+          onclick={() => formRef?.requestSubmit()}>Update Widget</LoadingButton
+        >
         <ConfirmDeleteDialog
           action="/widgets/delete"
           name="widgetId"

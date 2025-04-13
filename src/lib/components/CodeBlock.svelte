@@ -31,7 +31,7 @@
 </script>
 
 <pre
-  class="flex items-start justify-between gap-3 text-wrap rounded-md border bg-background p-4 font-mono text-xs">
+  class="flex items-start justify-between gap-3 text-wrap rounded-md border bg-secondary p-4 font-mono text-xs">
     <code class="overflow-hidden">{code}</code>
     <button class="flex items-center" onclick={copyToClipboard}>
         <Icon

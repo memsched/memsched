@@ -255,7 +255,7 @@
             Embed widgets like this one on your website with a single line of code
           </p>
           <pre
-            class="mx-auto w-fit rounded-lg border bg-background px-4 font-mono text-sm text-white">
+            class="mx-auto w-fit rounded-lg border bg-background px-4 font-mono text-sm text-foreground">
           <code class="whitespace-pre-wrap">{codeSnippet}</code>
         </pre>
         </div>
@@ -279,7 +279,7 @@
         <Accordion.Root type="single">
           <Accordion.Item>
             <Accordion.Trigger>What is MEMsched and how does it work?</Accordion.Trigger>
-            <Accordion.Content>
+            <Accordion.Content class="text-muted-foreground">
               MEMsched is a web app that helps you track learning objectives and create widgets to
               showcase your progress on websites, GitHub profiles, and portfolios.
             </Accordion.Content>
@@ -287,7 +287,7 @@
 
           <Accordion.Item>
             <Accordion.Trigger>How do I embed widgets on my website?</Accordion.Trigger>
-            <Accordion.Content>
+            <Accordion.Content class="text-muted-foreground">
               Simply copy the provided HTML image tag and paste it into your website's code. Your
               widget will automatically update whenever you log new progress.
             </Accordion.Content>
@@ -295,7 +295,7 @@
 
           <Accordion.Item>
             <Accordion.Trigger>What are the available subscription plans?</Accordion.Trigger>
-            <Accordion.Content>
+            <Accordion.Content class="text-muted-foreground">
               We offer a Free Plan that's free forever - no credit card required. For those who want
               to support our mission, we offer a Pro Plan (the price of two coffees per month) that
               includes unlimited widgets and premium features. Your support helps us grow and
@@ -305,7 +305,7 @@
 
           <Accordion.Item>
             <Accordion.Trigger>How is my data protected?</Accordion.Trigger>
-            <Accordion.Content>
+            <Accordion.Content class="text-muted-foreground">
               We encrypt all data and store it on European servers in compliance with FADP and GDPR
               regulations. We never share or sell your personal information.
             </Accordion.Content>
@@ -313,7 +313,7 @@
 
           <Accordion.Item>
             <Accordion.Trigger>Can I delete my account and data?</Accordion.Trigger>
-            <Accordion.Content>
+            <Accordion.Content class="text-muted-foreground">
               You can delete your account at any time. We'll immediately anonymize your data and
               remove your objectives and widgets, with all remaining data being permanently deleted
               after 30 days.

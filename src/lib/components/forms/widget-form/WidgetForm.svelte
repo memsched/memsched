@@ -11,8 +11,8 @@
   import TabNavLink from '$lib/components/headers/TabNavLink.svelte';
   import ShareWidget from '$lib/components/ShareWidget.svelte';
   import { Button } from '$lib/components/ui/button';
-  import * as Form from '$lib/components/ui/form';
   import IconButton from '$lib/components/ui/IconButton.svelte';
+  import LoadingButton from '$lib/components/ui/LoadingButton.svelte';
   import Widget from '$lib/components/widgets/Widget.svelte';
   import { SUB_NAV_HEIGHT } from '$lib/constants';
   import { type Objective } from '$lib/server/db/schema';
@@ -65,7 +65,7 @@
       }
     },
   });
-  const { form: formData, enhance } = form;
+  const { form: formData, enhance, submitting } = form;
 
   let titleInput = $state<HTMLInputElement | null>(null);
   let subtitleInput = $state<HTMLInputElement | null>(null);
@@ -407,14 +407,22 @@
     </div>
 
     {#if edit}
-      <Form.Button class="absolute bottom-4 left-1/2 -translate-x-1/2" type="submit">
+      <LoadingButton
+        class="absolute bottom-4 left-1/2 -translate-x-1/2"
+        type="submit"
+        loading={$submitting}
+      >
         Update Widget
-      </Form.Button>
+      </LoadingButton>
     {:else}
-      <Form.Button class="absolute bottom-4 left-1/2 -translate-x-1/2" type="submit">
+      <LoadingButton
+        class="absolute bottom-4 left-1/2 -translate-x-1/2"
+        type="submit"
+        loading={$submitting}
+        icon={FiPlus}
+      >
         Create Widget
-        <Icon src={FiPlus} className="size-4" />
-      </Form.Button>
+      </LoadingButton>
     {/if}
   </div>
   <div class="main-container w-1/2 space-y-16 overflow-y-scroll border-s bg-background py-8 pb-24">

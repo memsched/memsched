@@ -7,6 +7,7 @@ import { type DBType, getDB } from '$lib/server/db';
 import {
   MetricDataService,
   MetricsService,
+  ModerationService,
   ObjectiveLogsService,
   ObjectivesService,
   PaymentService,
@@ -37,6 +38,7 @@ function initializeServices(db: DBType) {
   const widgetsService = new WidgetsService(db, objectivesService, metricDataService);
   const sessionsService = new SessionsService(db);
   const paymentService = new PaymentService(db);
+  const moderationService = new ModerationService();
 
   return {
     usersService,
@@ -47,6 +49,7 @@ function initializeServices(db: DBType) {
     metricDataService,
     sessionsService,
     paymentService,
+    moderationService,
   };
 }
 

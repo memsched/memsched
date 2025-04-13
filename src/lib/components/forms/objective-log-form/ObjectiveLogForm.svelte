@@ -5,6 +5,7 @@
   import { browser } from '$app/environment';
   import * as Form from '$lib/components/ui/form';
   import { Input } from '$lib/components/ui/input';
+  import LoadingButton from '$lib/components/ui/LoadingButton.svelte';
   import { Textarea } from '$lib/components/ui/textarea';
   import type { Objective } from '$lib/server/db/schema';
 
@@ -27,7 +28,7 @@
       }
     },
   });
-  const { form: formData, enhance } = form;
+  const { form: formData, enhance, submitting } = form;
 
   // Set the objective ID when the component is mounted
   $effect(() => {
@@ -76,7 +77,7 @@
     <Form.FieldErrors />
   </Form.Field>
 
-  <Form.Button>Log Progress</Form.Button>
+  <LoadingButton type="submit" loading={$submitting}>Log Progress</LoadingButton>
 </form>
 {#if browser && import.meta.env.VITE_DEBUG_FORMS === '1' && import.meta.env.DEV}
   <SuperDebug data={$formData} />

@@ -13,6 +13,7 @@ import type { Session } from '$lib/server/db/schema';
 import type {
   MetricDataService,
   MetricsService,
+  ModerationService,
   ObjectiveLogsService,
   ObjectivesService,
   PaymentService,
@@ -37,6 +38,7 @@ declare global {
       metricDataService: MetricDataService;
       metricsService: MetricsService;
       paymentService: PaymentService;
+      moderationService: ModerationService;
     }
     interface Platform {
       env: {

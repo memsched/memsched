@@ -1,6 +1,7 @@
 export * from './github-metrics-service';
 export * from './metrics/data/metric-data-service';
 export * from './metrics-service';
+export * from './moderation-service';
 export * from './objective-logs-service';
 export * from './objectives-service';
 export * from './payment-service';

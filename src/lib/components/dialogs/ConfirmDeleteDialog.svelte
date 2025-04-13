@@ -4,7 +4,7 @@
   import { enhance } from '$app/forms';
   import * as Dialog from '$lib/components/ui/dialog';
 
-  import { Button } from '../ui/button';
+  import LoadingButton from '../ui/LoadingButton.svelte';
 
   interface Props {
     children: Snippet;
@@ -14,6 +14,8 @@
   }
 
   const { children, action, name, value }: Props = $props();
+
+  let loading = $state(false);
 </script>
 
 <Dialog.Root>
@@ -26,11 +28,23 @@
       This action cannot be undone. This will permanently delete it.
     </Dialog.Description>
     <Dialog.Footer>
-      <form {action} method="POST" use:enhance>
+      <form
+        {action}
+        method="POST"
+        use:enhance={() => {
+          loading = true;
+          return async ({ update }) => {
+            loading = false;
+            update();
+          };
+        }}
+      >
         <input type="hidden" {name} {value} />
         <Dialog.Close>
           {#snippet child({ props })}
-            <Button type="submit" variant="destructive" {...props}>Delete</Button>
+            <LoadingButton type="submit" variant="destructive" {loading} {...props}>
+              Delete
+            </LoadingButton>
           {/snippet}
         </Dialog.Close>
       </form>

@@ -49,6 +49,14 @@ export const actions: Actions = {
 
     // Check if username is already taken by another user
     if (form.data.username !== currentUser.username) {
+      const isUsernameSafe = await event.locals.moderationService.isTextSafe(form.data.username);
+      if (isUsernameSafe.isErr()) {
+        return handleFormDbError(isUsernameSafe, form);
+      }
+      if (!isUsernameSafe.value) {
+        setError(form, 'username', 'This username is not allowed.');
+        return fail(400, { form });
+      }
       const usernameValid = await event.locals.usersService.isUsernameValid(
         form.data.username,
         currentUser.id
@@ -58,6 +66,39 @@ export const actions: Actions = {
       }
       if (!usernameValid.value) {
         setError(form, 'username', 'This username is already taken.');
+        return fail(400, { form });
+      }
+    }
+
+    if (form.data.bio && form.data.bio !== currentUser.bio) {
+      const isBioSafe = await event.locals.moderationService.isTextSafe(form.data.bio);
+      if (isBioSafe.isErr()) {
+        return handleFormDbError(isBioSafe, form);
+      }
+      if (!isBioSafe.value) {
+        setError(form, 'bio', 'This bio is not allowed.');
+        return fail(400, { form });
+      }
+    }
+
+    if (form.data.location && form.data.location !== currentUser.location) {
+      const isLocationSafe = await event.locals.moderationService.isTextSafe(form.data.location);
+      if (isLocationSafe.isErr()) {
+        return handleFormDbError(isLocationSafe, form);
+      }
+      if (!isLocationSafe.value) {
+        setError(form, 'location', 'This location is not allowed.');
+        return fail(400, { form });
+      }
+    }
+
+    if (form.data.website && form.data.website !== currentUser.website) {
+      const isWebsiteSafe = await event.locals.moderationService.isTextSafe(form.data.website);
+      if (isWebsiteSafe.isErr()) {
+        return handleFormDbError(isWebsiteSafe, form);
+      }
+      if (!isWebsiteSafe.value) {
+        setError(form, 'website', 'This website is not allowed.');
         return fail(400, { form });
       }
     }

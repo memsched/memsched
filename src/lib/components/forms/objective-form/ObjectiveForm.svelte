@@ -1,6 +1,5 @@
 <script lang="ts">
   import toast from 'svelte-french-toast';
-  import { Icon } from 'svelte-icons-pack';
   import { FiPlus } from 'svelte-icons-pack/fi';
   import SuperDebug, { type Infer, superForm, type SuperValidated } from 'sveltekit-superforms';
   import { zodClient } from 'sveltekit-superforms/adapters';
@@ -8,6 +7,7 @@
   import { browser } from '$app/environment';
   import * as Form from '$lib/components/ui/form';
   import { Input } from '$lib/components/ui/input';
+  import LoadingButton from '$lib/components/ui/LoadingButton.svelte';
   import * as Select from '$lib/components/ui/select';
   import * as Tabs from '$lib/components/ui/tabs/index';
   import { Textarea } from '$lib/components/ui/textarea';
@@ -31,7 +31,7 @@
       }
     },
   });
-  const { form: formData, enhance } = form;
+  const { form: formData, enhance, submitting } = form;
 </script>
 
 <form method="POST" use:enhance class="w-full space-y-5">
@@ -136,12 +136,11 @@
     </div>
   </section>
   {#if edit}
-    <Form.Button type="submit">Update Objective</Form.Button>
+    <LoadingButton type="submit" loading={$submitting}>Update Objective</LoadingButton>
   {:else}
-    <Form.Button type="submit">
+    <LoadingButton type="submit" loading={$submitting} icon={FiPlus}>
       Create Objective
-      <Icon src={FiPlus} className="size-4" />
-    </Form.Button>
+    </LoadingButton>
   {/if}
   {#if browser && import.meta.env.VITE_DEBUG_FORMS === '1' && import.meta.env.DEV}
     <SuperDebug data={$formData} />

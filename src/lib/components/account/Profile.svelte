@@ -1,9 +1,10 @@
 <script lang="ts">
   import { Icon } from 'svelte-icons-pack';
-  import { FiGlobe, FiMapPin } from 'svelte-icons-pack/fi';
+  import { FiCamera, FiGlobe, FiMapPin } from 'svelte-icons-pack/fi';
+
+  import { Button } from '$lib/components/ui/button';
 
   import UserAvatar from './UserAvatar.svelte';
-
   interface Props {
     username: string;
     name: string;
@@ -11,24 +12,25 @@
     bio: string | null;
     location: string | null;
     website: string | null;
+    edit?: boolean;
   }
-  const { name, username, avatarUrl, bio, location, website }: Props = $props();
+  const { name, username, avatarUrl, bio, location, website, edit = false }: Props = $props();
 </script>
 
 <div class="sticky top-0 h-fit w-[250px] flex-shrink-0">
   <div class="relative">
     <UserAvatar {username} {avatarUrl} large />
-    <!-- {#if edit} -->
-    <!--   <div class="absolute bottom-2 left-2 size-12 rounded-full border-2 bg-back !p-0"></div> -->
-    <!-- <Button -->
-    <!--   href="/account/settings" -->
-    <!--   size="sm" -->
-    <!--   class="absolute bottom-2 left-2 size-12 rounded-full border-[3px] border-back !p-0 [&_svg]:size-5" -->
-    <!--   variant="translucent" -->
-    <!-- > -->
-    <!--   <Icon src={FiCamera} className="h-full w-full" /> -->
-    <!-- </Button> -->
-    <!-- {/if} -->
+    {#if edit}
+      <div class="absolute bottom-2 left-2 size-12 rounded-full border-2 bg-back !p-0"></div>
+      <Button
+        href="/account/settings"
+        size="sm"
+        class="absolute bottom-2 left-2 size-12 rounded-full border-[3px] border-back !p-0 [&_svg]:size-5"
+        variant="translucent"
+      >
+        <Icon src={FiCamera} className="h-full w-full" />
+      </Button>
+    {/if}
   </div>
   <h2 class="mt-8">{name}</h2>
   <p class="text-lg text-muted-foreground">{username}</p>

@@ -8,6 +8,7 @@
   import { browser } from '$app/environment';
   import * as Form from '$lib/components/ui/form';
   import { Input } from '$lib/components/ui/input';
+  import LoadingButton from '$lib/components/ui/LoadingButton.svelte';
   import { Textarea } from '$lib/components/ui/textarea';
   import { debounce } from '$lib/utils';
 
@@ -30,7 +31,7 @@
       }
     },
   });
-  const { form: formData, enhance, errors } = form;
+  const { form: formData, enhance, errors, submitting } = form;
 
   const {
     delayed,
@@ -150,7 +151,7 @@
       </Form.Field>
     </div>
   </section>
-  <Form.Button>Save Profile</Form.Button>
+  <LoadingButton loading={$submitting} type="submit">Save Profile</LoadingButton>
   {#if browser && import.meta.env.VITE_DEBUG_FORMS === '1' && import.meta.env.DEV}
     <SuperDebug data={$formData} />
   {/if}

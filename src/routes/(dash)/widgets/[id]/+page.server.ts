@@ -1,6 +1,6 @@
 import { error, fail, redirect } from '@sveltejs/kit';
 import { okAsync, ResultAsync } from 'neverthrow';
-import { message, superValidate } from 'sveltekit-superforms';
+import { message, setError, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 
 import { formSchema } from '$lib/components/forms/widget-form/schema';
@@ -66,6 +66,23 @@ export const actions: Actions = {
         form,
         error: 'Invalid image URL',
       });
+    }
+
+    const isTitleSafe = await event.locals.moderationService.isTextSafe(form.data.title);
+    if (isTitleSafe.isErr()) {
+      return handleFormDbError(isTitleSafe, form);
+    }
+    if (!isTitleSafe.value) {
+      setError(form, 'title', 'This title is not allowed.');
+      return fail(400, { form });
+    }
+    const isSubtitleSafe = await event.locals.moderationService.isTextSafe(form.data.subtitle);
+    if (isSubtitleSafe.isErr()) {
+      return handleFormDbError(isSubtitleSafe, form);
+    }
+    if (!isSubtitleSafe.value) {
+      setError(form, 'subtitle', 'This subtitle is not allowed.');
+      return fail(400, { form });
     }
 
     const widgetId = event.params.id;

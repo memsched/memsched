@@ -285,6 +285,8 @@
     },
     () => [metricsLength, fromMetricsValid, metricDeps]
   );
+
+  let deleteLoading = $state(false);
 </script>
 
 <DashHeader>
@@ -408,10 +410,20 @@
     {#if edit}
       <div class="absolute bottom-4 left-1/2 flex -translate-x-1/2 gap-2">
         <LoadingButton type="submit" loading={$submitting}>Update Widget</LoadingButton>
-        <ConfirmDeleteDialog action="/widgets/delete" name="widgetId" value={page.params.id}>
+        <ConfirmDeleteDialog
+          action="/widgets/delete"
+          name="widgetId"
+          value={page.params.id}
+          bind:loading={deleteLoading}
+        >
           <Dialog.Trigger>
             {#snippet child({ props })}
-              <LoadingButton variant="destructive" icon={FiTrash2} {...props} />
+              <LoadingButton
+                variant="destructive"
+                icon={FiTrash2}
+                loading={deleteLoading}
+                {...props}
+              />
             {/snippet}
           </Dialog.Trigger>
         </ConfirmDeleteDialog>

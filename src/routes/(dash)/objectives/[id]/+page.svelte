@@ -1,5 +1,6 @@
 <script lang="ts">
   import { Icon } from 'svelte-icons-pack';
+  import { FiTrash2 } from 'svelte-icons-pack/fi';
   import { IoChevronForward } from 'svelte-icons-pack/io';
   import SvelteSeo from 'svelte-seo';
 
@@ -14,6 +15,8 @@
   import type { PageProps } from './$types';
 
   const { data }: PageProps = $props();
+
+  let deleteLoading = $state(false);
 </script>
 
 <SvelteSeo
@@ -34,10 +37,15 @@
 <div class="main-container space-y-6 py-16">
   <div class="flex w-full items-center justify-between">
     <h1 class="h2">Edit Objective</h1>
-    <ConfirmDeleteDialog action="/objectives/delete" name="objectiveId" value={page.params.id}>
+    <ConfirmDeleteDialog
+      action="/objectives/delete"
+      name="objectiveId"
+      value={page.params.id}
+      bind:loading={deleteLoading}
+    >
       <Dialog.Trigger>
         {#snippet child({ props })}
-          <LoadingButton variant="destructive" {...props}>Delete</LoadingButton>
+          <LoadingButton variant="destructive" icon={FiTrash2} loading={deleteLoading} {...props} />
         {/snippet}
       </Dialog.Trigger>
     </ConfirmDeleteDialog>

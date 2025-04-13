@@ -11,11 +11,10 @@
     action: string;
     name: string;
     value: any;
+    loading?: boolean;
   }
 
-  const { children, action, name, value }: Props = $props();
-
-  let loading = $state(false);
+  let { children, action, name, value, loading = $bindable(false) }: Props = $props();
 </script>
 
 <Dialog.Root>

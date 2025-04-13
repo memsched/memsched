@@ -1,6 +1,5 @@
 <script lang="ts">
   import { Icon } from 'svelte-icons-pack';
-  import { FiTrash2 } from 'svelte-icons-pack/fi';
   import { IoChevronForward } from 'svelte-icons-pack/io';
   import SvelteSeo from 'svelte-seo';
 
@@ -10,7 +9,7 @@
   import DashHeader from '$lib/components/headers/DashHeader.svelte';
   import { Button } from '$lib/components/ui/button';
   import * as Dialog from '$lib/components/ui/dialog';
-  import IconButton from '$lib/components/ui/IconButton.svelte';
+  import LoadingButton from '$lib/components/ui/LoadingButton.svelte';
 
   import type { PageProps } from './$types';
 
@@ -38,7 +37,7 @@
     <ConfirmDeleteDialog action="/objectives/delete" name="objectiveId" value={page.params.id}>
       <Dialog.Trigger>
         {#snippet child({ props })}
-          <IconButton icon={FiTrash2} variant="destructive" {...props}>Delete</IconButton>
+          <LoadingButton variant="destructive" {...props}>Delete</LoadingButton>
         {/snippet}
       </Dialog.Trigger>
     </ConfirmDeleteDialog>

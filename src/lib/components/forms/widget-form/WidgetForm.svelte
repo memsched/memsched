@@ -1,16 +1,19 @@
 <script lang="ts">
   import toast from 'svelte-french-toast';
   import { Icon } from 'svelte-icons-pack';
-  import { FiPlus, FiX } from 'svelte-icons-pack/fi';
+  import { FiPlus, FiTrash2, FiX } from 'svelte-icons-pack/fi';
   import { IoChevronForward, IoInformationCircle } from 'svelte-icons-pack/io';
   import SuperDebug, { type Infer, superForm, type SuperValidated } from 'sveltekit-superforms';
   import { zodClient } from 'sveltekit-superforms/adapters';
 
   import { browser } from '$app/environment';
+  import { page } from '$app/state';
+  import ConfirmDeleteDialog from '$lib/components/dialogs/ConfirmDeleteDialog.svelte';
   import DashHeader from '$lib/components/headers/DashHeader.svelte';
   import TabNavLink from '$lib/components/headers/TabNavLink.svelte';
   import ShareWidget from '$lib/components/ShareWidget.svelte';
   import { Button } from '$lib/components/ui/button';
+  import * as Dialog from '$lib/components/ui/dialog';
   import IconButton from '$lib/components/ui/IconButton.svelte';
   import LoadingButton from '$lib/components/ui/LoadingButton.svelte';
   import Widget from '$lib/components/widgets/Widget.svelte';
@@ -67,6 +70,7 @@
   });
   const { form: formData, enhance, submitting } = form;
 
+  let formRef = $state<HTMLFormElement | null>(null);
   let titleInput = $state<HTMLInputElement | null>(null);
   let subtitleInput = $state<HTMLInputElement | null>(null);
   let textIconInput = $state<HTMLInputElement | null>(null);
@@ -359,12 +363,7 @@
   {/if}
 </DashHeader>
 
-<form
-  method="POST"
-  use:enhance
-  class="flex flex-grow"
-  style="height: calc(100vh - {SUB_NAV_HEIGHT}px);"
->
+<div class="flex flex-grow" style="height: calc(100vh - {SUB_NAV_HEIGHT}px);">
   <div class="bg-dotted relative flex max-w-[60%] flex-grow items-center justify-center p-2">
     <div
       class="absolute left-2 right-2 top-2 flex items-center gap-3 rounded-lg border bg-muted p-3 text-sm"
@@ -407,25 +406,36 @@
     </div>
 
     {#if edit}
-      <LoadingButton
-        class="absolute bottom-4 left-1/2 -translate-x-1/2"
-        type="submit"
-        loading={$submitting}
-      >
-        Update Widget
-      </LoadingButton>
+      <div class="absolute bottom-4 left-1/2 flex -translate-x-1/2 gap-2">
+        <LoadingButton type="submit" loading={$submitting}>Update Widget</LoadingButton>
+        <ConfirmDeleteDialog action="/widgets/delete" name="widgetId" value={page.params.id}>
+          <Dialog.Trigger>
+            {#snippet child({ props })}
+              <LoadingButton variant="destructive" icon={FiTrash2} {...props} />
+            {/snippet}
+          </Dialog.Trigger>
+        </ConfirmDeleteDialog>
+      </div>
     {:else}
       <LoadingButton
         class="absolute bottom-4 left-1/2 -translate-x-1/2"
         type="submit"
         loading={$submitting}
         icon={FiPlus}
+        form="widget-form"
+        onclick={() => formRef?.requestSubmit()}
       >
         Create Widget
       </LoadingButton>
     {/if}
   </div>
-  <div class="main-container w-1/2 space-y-16 overflow-y-scroll border-s bg-background py-8 pb-24">
+  <form
+    bind:this={formRef}
+    method="POST"
+    id="widget-form"
+    use:enhance
+    class="main-container w-1/2 space-y-16 overflow-y-scroll border-s bg-background py-8 pb-24"
+  >
     {#if focusedTab === 'sharing'}
       <div class="space-y-6">
         <h2 class="h3">Sharing</h2>
@@ -450,5 +460,5 @@
     {#if browser && import.meta.env.VITE_DEBUG_FORMS === '1' && import.meta.env.DEV}
       <SuperDebug data={$formData} />
     {/if}
-  </div>
-</form>
+  </form>
+</div>

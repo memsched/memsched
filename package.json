@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite dev --open",
-    "build": "rm -rf static/uploads && vite build",
+    "build": "vite build",
     "build:e2e": "vite build --mode testing",
     "preview": "wrangler pages dev --port 5173",
     "prepare": "svelte-kit sync || echo ''",

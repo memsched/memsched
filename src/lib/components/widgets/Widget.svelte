@@ -28,7 +28,7 @@
     textIcon,
     imagePlacement = 'left',
     padding = 16,
-    border = true,
+    borderWidth = 1,
     borderRadius = 8,
     borderColor = '#ededed',
     color = 'black',
@@ -83,7 +83,7 @@
   style:gap="0.2rem"
 >
   <div
-    style:border={border ? `1px solid ${borderColor || '#ededed'}` : 'none'}
+    style:border={`${borderWidth}px solid ${borderColor}`}
     style:border-radius="{borderRadius}px"
     style:color
     style:background-color={backgroundColor}

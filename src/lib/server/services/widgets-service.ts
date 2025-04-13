@@ -179,7 +179,6 @@ export class WidgetsService {
         visibility: widgetData.visibility,
 
         padding: widgetData.padding,
-        border: widgetData.border,
         borderWidth: widgetData.borderWidth,
         borderRadius: widgetData.borderRadius,
         borderColor: widgetData.borderColor,
@@ -270,7 +269,6 @@ export class WidgetsService {
           visibility: widgetData.visibility,
 
           padding: widgetData.padding,
-          border: widgetData.border,
           borderWidth: widgetData.borderWidth,
           borderRadius: widgetData.borderRadius,
           borderColor: widgetData.borderColor,

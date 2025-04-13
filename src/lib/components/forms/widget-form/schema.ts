@@ -132,7 +132,6 @@ export const formSchema = z.object({
     .min(0, { message: 'Padding must be 0 or greater.' })
     .max(30, { message: 'Padding must be less than 30.' })
     .default(13),
-  border: z.boolean().default(true),
   borderWidth: z
     .number()
     .int()

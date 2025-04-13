@@ -19,7 +19,7 @@
   }
 
   let {
-    value = $bindable('#4fc59e'),
+    value = $bindable('#000000'),
     class: className = '',
     disabled = false,
     id = 'color-picker-input',
@@ -27,6 +27,8 @@
     placeholder: placeholderProp,
     alpha = false,
   }: Props = $props();
+
+  let open = $state(false);
 
   let h = $state(0);
   let s = $state(100);
@@ -43,6 +45,26 @@
   let isDraggingSatVal = $state(false);
   let isDraggingHue = $state(false);
   let isDraggingAlpha = $state(false);
+
+  $effect(() => {
+    if (satValPickerEl) {
+      satValRect = satValPickerEl.getBoundingClientRect();
+    }
+  });
+
+  $effect(() => {
+    if (huePickerEl) {
+      hueRect = huePickerEl.getBoundingClientRect();
+    }
+  });
+
+  $effect(() => {
+    if (alpha && alphaPickerEl) {
+      alphaRect = alphaPickerEl.getBoundingClientRect();
+    } else {
+      alphaRect = undefined;
+    }
+  });
 
   $effect(() => {
     const currentHsva = hexToHsva(value);
@@ -181,9 +203,18 @@
       // For now, do nothing if the pattern doesn't match.
     }
   }
+
+  function handleInputKeydown(event: KeyboardEvent) {
+    event.preventDefault();
+    if (event.key === 'Enter') {
+      const target = event.currentTarget as HTMLInputElement;
+      updateColorFromInput({ currentTarget: target } as any);
+      open = false;
+    }
+  }
 </script>
 
-<Popover.Root>
+<Popover.Root bind:open>
   <Popover.Trigger {disabled}>
     {#snippet child({ props })}
       <Button
@@ -273,6 +304,7 @@
       {placeholder}
       {disabled}
       aria-label="Hex Color Input"
+      onkeydown={handleInputKeydown}
     />
   </Popover.Content>
 </Popover.Root>

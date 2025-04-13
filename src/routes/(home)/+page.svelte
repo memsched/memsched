@@ -223,9 +223,9 @@
           <Widget
             accentColor="#4fc59e"
             backgroundColor="#ffffff"
-            border={true}
             borderRadius={6}
             borderWidth={1}
+            borderColor="#ededed"
             color="#000000"
             imagePlacement="left"
             imageUrl={FLAT_COLOR_ICONS.graduation_cap}

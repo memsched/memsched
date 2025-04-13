@@ -1,14 +1,16 @@
 <script lang="ts">
   import { Icon } from 'svelte-icons-pack';
+  import { BsBorderWidth } from 'svelte-icons-pack/bs';
   import { IoDocumentLockOutline, IoGlobeOutline } from 'svelte-icons-pack/io';
+  import { TrOutlineBorderRadius, TrOutlineBoxPadding } from 'svelte-icons-pack/tr';
   import type { Infer } from 'sveltekit-superforms/adapters';
   import type { SuperForm, SuperFormData } from 'sveltekit-superforms/client';
 
   import ColorPickerInput from '$lib/components/inputs/ColorPickerInput.svelte';
+  import SliderInput from '$lib/components/inputs/SliderInput.svelte';
   import * as Form from '$lib/components/ui/form';
   import { Input } from '$lib/components/ui/input';
   import * as RadioGroup from '$lib/components/ui/radio-group';
-  import { Switch } from '$lib/components/ui/switch';
 
   import type { FormSchema } from '../schema';
 
@@ -122,39 +124,41 @@
       <Form.FieldErrors />
     </Form.Field>
   </div>
-  <div class="grid grid-cols-2 gap-x-10 gap-y-6">
+
+  <div class="grid grid-cols-3 gap-x-10 gap-y-6">
+    <Form.Field {form} name="borderWidth">
+      <Form.Control>
+        {#snippet children({ props })}
+          <Form.Label>Border Width</Form.Label>
+          <SliderInput
+            label="Border Width"
+            min={0}
+            max={10}
+            step={1}
+            icon={BsBorderWidth}
+            {...props}
+            bind:value={$formData.borderWidth}
+          />
+        {/snippet}
+      </Form.Control>
+      <Form.FieldErrors />
+    </Form.Field>
+
     <Form.Field {form} name="borderRadius">
       <Form.Control>
         {#snippet children({ props })}
           <Form.Label>Border Radius</Form.Label>
-          <Input {...props} type="number" min="0" max="50" bind:value={$formData.borderRadius} />
-        {/snippet}
-      </Form.Control>
-      <Form.Description>Set the border radius for your widget.</Form.Description>
-      <Form.FieldErrors />
-    </Form.Field>
-
-    <Form.Field {form} name="padding">
-      <Form.Control>
-        {#snippet children({ props })}
-          <Form.Label>Padding</Form.Label>
-          <Input
+          <SliderInput
+            label="Border Radius"
+            min={0}
+            max={50}
+            step={1}
+            icon={TrOutlineBorderRadius}
             {...props}
-            value={$formData.padding}
-            oninput={(e) => {
-              if (e.currentTarget.value === '') {
-                $formData.padding = 0;
-              } else {
-                $formData.padding = parseInt(e.currentTarget.value);
-              }
-            }}
-            type="number"
-            min="0"
-            max="30"
+            bind:value={$formData.borderRadius}
           />
         {/snippet}
       </Form.Control>
-      <Form.Description>Set the roundness of the border in pixels.</Form.Description>
       <Form.FieldErrors />
     </Form.Field>
 
@@ -162,24 +166,30 @@
       <Form.Control>
         {#snippet children({ props })}
           <Form.Label>Border Color</Form.Label>
-          <ColorPickerInput
+          <ColorPickerInput {...props} bind:value={$formData.borderColor} />
+        {/snippet}
+      </Form.Control>
+      <Form.FieldErrors />
+    </Form.Field>
+  </div>
+
+  <div class="grid grid-cols-2 gap-x-10 gap-y-6">
+    <Form.Field {form} name="padding">
+      <Form.Control>
+        {#snippet children({ props })}
+          <Form.Label>Padding</Form.Label>
+          <SliderInput
+            label="Padding"
+            min={0}
+            max={50}
+            step={1}
+            icon={TrOutlineBoxPadding}
             {...props}
-            bind:value={$formData.borderColor}
-            disabled={!$formData.border}
+            bind:value={$formData.padding}
           />
         {/snippet}
       </Form.Control>
-      <Form.Description>Set the border color for your widget.</Form.Description>
       <Form.FieldErrors />
-    </Form.Field>
-
-    <Form.Field {form} name="border" class="flex items-center gap-3 space-y-0 py-2">
-      <Form.Control>
-        {#snippet children({ props })}
-          <Switch {...props} bind:checked={$formData.border} />
-          <Form.Label>Enable Border</Form.Label>
-        {/snippet}
-      </Form.Control>
     </Form.Field>
   </div>
 </section>

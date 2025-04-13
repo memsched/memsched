@@ -15,6 +15,19 @@ export function base64ToArrayBuffer(base64: string): ArrayBuffer {
 }
 
 /**
+ * Converts a File to a base64 string
+ */
+export async function fileToBase64(file: File): Promise<string> {
+  const buffer = await file.arrayBuffer();
+  const bytes = new Uint8Array(buffer);
+  let binary = '';
+  for (let i = 0; i < bytes.byteLength; i++) {
+    binary += String.fromCharCode(bytes[i]);
+  }
+  return `data:${file.type};base64,${btoa(binary)}`;
+}
+
+/**
  * Converts an ArrayBuffer to a base64 string
  */
 export function arrayBufferToBase64(buffer: ArrayBuffer, mimeType: string = 'image/jpeg'): string {

@@ -1,5 +1,4 @@
 import { error, fail, redirect } from '@sveltejs/kit';
-import { okAsync } from 'neverthrow';
 import { message, setError, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { z } from 'zod';
@@ -7,6 +6,7 @@ import { z } from 'zod';
 import { formSchema } from '$lib/components/forms/profile-form/schema';
 import { imageUploadLimiter } from '$lib/server/rate-limiter';
 import { handleFormDbError } from '$lib/server/utils';
+import { fileToBase64 } from '$lib/server/utils/image';
 import type { LocalUser } from '$lib/types';
 
 import type { Actions, PageServerLoad } from './$types';
@@ -174,7 +174,20 @@ export const actions: Actions = {
       return fail(400, { error: `File size exceeds the limit of ${maxSize / 1024 / 1024}MB.` });
     }
 
-    // Get file extension and generate unique filename
+    // Convert file to base64 for validation
+    const base64Avatar = await fileToBase64(avatarFile);
+
+    // Validate image content before storage
+    const isSafe = await event.locals.moderationService.isImageSafe(base64Avatar);
+    if (isSafe.isErr()) {
+      console.error('Failed to validate avatar:', isSafe.error);
+      return fail(500, { error: 'Failed to validate avatar.' });
+    }
+
+    if (!isSafe.value) {
+      return fail(400, { error: 'This avatar is not allowed.' });
+    }
+
     // Upload file using storage service
     const uploadResult = await event.locals.avatarStore.uploadAvatar(
       avatarFile,
@@ -189,25 +202,14 @@ export const actions: Actions = {
 
     const avatarUrl = event.url.origin + uploadResult.value;
 
-    const res = await (
-      import.meta.env.PROD ? event.locals.moderationService.isImageSafe(avatarUrl) : okAsync(true)
-    ).andThen((isSafe) => {
-      if (!isSafe) {
-        return event.locals.avatarStore
-          .deleteAvatar(avatarUrl)
-          .andThen(() => okAsync(fail(400, { error: 'This avatar is not allowed.' })));
-      }
-      return event.locals.usersService
-        .updateAvatar(userId, avatarUrl)
-        .andThen(() => okAsync({ success: true, message: 'Avatar updated successfully.' }));
-    });
-
-    if (res.isErr()) {
+    const updateResult = await event.locals.usersService.updateAvatar(userId, avatarUrl);
+    if (updateResult.isErr()) {
+      // Clean up the uploaded file if user update fails
       event.locals.avatarStore.deleteAvatar(avatarUrl);
-      console.error('Failed to update avatar:', res.error);
+      console.error('Failed to update avatar:', updateResult.error);
       return fail(500, { error: 'Failed to update avatar.' });
     }
 
-    return res.value;
+    return { success: true, message: 'Avatar updated successfully.' };
   },
 };

@@ -54,15 +54,15 @@ export const oauthLimiter = new RateLimiter({
 
 // Image upload rate limiter
 export const imageUploadLimiter = new RateLimiter({
-  IP: [10, 'm'], // 10 requests per minute
-  IPUA: [5, 'm'], // 5 requests per minute based on IP + User Agent
+  IP: [30, 'm'], // 30 requests per minute
+  IPUA: [20, 'm'], // 20 requests per minute based on IP + User Agent
   plugins: import.meta.env.PROD
     ? [
         new CloudflareIPRateLimiter(
-          [10, 'm'] // 10 requests per minute
+          [30, 'm'] // 30 requests per minute
         ),
         new CloudflareIPUARateLimiter(
-          [5, 'm'] // 5 requests per minute
+          [20, 'm'] // 20 requests per minute
         ),
       ]
     : [],

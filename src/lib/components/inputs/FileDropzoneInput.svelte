@@ -6,9 +6,10 @@
 
   interface Props {
     value: string | null;
+    maxSize?: number;
   }
 
-  let { value = $bindable() }: Props = $props();
+  let { value = $bindable(), maxSize = 5 * 1024 * 1024 }: Props = $props();
 
   let isDragging = $state(false);
   let inputRef: HTMLInputElement | null = null;
@@ -19,8 +20,8 @@
       return;
     }
 
-    if (file.size > 2 * 1024 * 1024) {
-      alert('File size must be less than 2MB');
+    if (file.size > maxSize) {
+      alert(`File size must be less than ${maxSize / 1024 / 1024}MB`);
       return;
     }
 
@@ -91,7 +92,9 @@
       {:else}
         <Icon src={OiUpload16} className="size-10 !text-muted-foreground" />
         <div class="text-base font-medium">Drop image here or click to upload</div>
-        <p class="text-xs text-muted-foreground">PNG, JPG or GIF (max. 2MB)</p>
+        <p class="text-xs text-muted-foreground">
+          PNG, JPG or GIF (max. {maxSize / 1024 / 1024}MB)
+        </p>
       {/if}
     </div>
   </div>

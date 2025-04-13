@@ -57,7 +57,7 @@ export const actions: Actions = {
     }
 
     if (await imageUploadLimiter.isLimited(event)) {
-      return error(429, 'Too many requests. Please try again later.');
+      return fail(429, { error: 'Too many requests. Please try again later.' });
     }
 
     const form = await superValidate(event, zod(formSchema));

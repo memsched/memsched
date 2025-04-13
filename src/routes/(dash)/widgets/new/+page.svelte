@@ -1,11 +1,18 @@
 <script lang="ts">
+  import { toast } from 'svelte-french-toast';
   import SvelteSeo from 'svelte-seo';
 
   import WidgetForm from '$lib/components/forms/widget-form/WidgetForm.svelte';
 
   import type { PageProps } from './$types';
 
-  const { data }: PageProps = $props();
+  const { data, form }: PageProps = $props();
+
+  $effect(() => {
+    if (form?.error) {
+      toast.error(form.error);
+    }
+  });
 </script>
 
 <SvelteSeo

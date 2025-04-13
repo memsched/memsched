@@ -4,6 +4,7 @@ import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 
 import { formSchema } from '$lib/components/forms/widget-form/schema';
+import { imageUploadLimiter } from '$lib/server/rate-limiter';
 import { handleDbError, handleFormDbError } from '$lib/server/utils';
 import { processWidgetImage } from '$lib/server/utils/image';
 import type { LocalUser } from '$lib/types';
@@ -34,6 +35,10 @@ export const actions: Actions = {
   default: async (event) => {
     if (!event.locals.session) {
       return error(401, 'Unauthorized');
+    }
+
+    if (await imageUploadLimiter.isLimited(event)) {
+      return fail(429, { error: 'Too many requests. Please try again later.' });
     }
 
     const form = await superValidate(event, zod(formSchema));

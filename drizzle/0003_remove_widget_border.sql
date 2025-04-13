@@ -1,0 +1,1 @@
+ALTER TABLE `widget` DROP COLUMN `border`;

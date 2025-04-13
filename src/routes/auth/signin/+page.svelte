@@ -41,7 +41,7 @@
       variant="outline">Continue with Google</IconButton
     >
     <IconButton
-      class="bg-black hover:bg-black/80"
+      class="bg-black hover:bg-zinc-900"
       data-umami-event="auth-signin-github-button"
       href="/auth/signin/github"
       icon={AiOutlineGithub}

@@ -59,7 +59,7 @@
 </script>
 
 <div class="space-y-4">
-  <div class="flex items-center gap-3 rounded-lg border bg-muted p-3 text-sm">
+  <div class="flex items-center gap-3 rounded-lg border bg-background p-3 text-sm">
     <Icon src={IoInformationCircle} className="mt-0.5 size-5 flex-shrink-0 text-muted-foreground" />
     <div class="space-y-1">
       <p>

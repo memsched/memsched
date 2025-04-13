@@ -7,8 +7,8 @@
   import { HEADER_HEIGHT } from '$lib/constants';
   import { scrollToTop } from '$lib/utils';
 
-  import HeaderProfile from '../account/HeaderProfile.svelte';
   import Logo from '../svgs/Logo.svelte';
+  import ThemeToggle from '../ThemeToggle.svelte';
   import { Button } from '../ui/button';
   import IconButton from '../ui/IconButton.svelte';
   import HomeNavLink from './HomeNavLink.svelte';
@@ -46,9 +46,9 @@
         {/each}
       </div>
     </div>
-    {#if page.data.user}
-      <div class="flex gap-3">
-        <HeaderProfile compact />
+    <div class="flex gap-3">
+      <ThemeToggle compact />
+      {#if page.data.user}
         <IconButton
           icon={FiArrowRight}
           href={getUserOverviewUrl(page.data.user.username)}
@@ -58,9 +58,7 @@
         >
           Dashboard
         </IconButton>
-      </div>
-    {:else}
-      <div class="flex gap-3">
+      {:else}
         <Button href="/auth/signin" size="sm" data-umami-event="home-header-join-now-button"
           >Join Now</Button
         >
@@ -74,7 +72,7 @@
         >
           Log In
         </IconButton>
-      </div>
-    {/if}
+      {/if}
+    </div>
   </nav>
 </header>

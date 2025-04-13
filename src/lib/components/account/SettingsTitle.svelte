@@ -11,7 +11,9 @@
 </script>
 
 <div class="mb-10 flex items-center gap-4">
-  <div class="flex size-12 items-center justify-center rounded-full bg-primary/10 text-primary">
+  <div
+    class="flex size-12 items-center justify-center rounded-full bg-primary/10 text-primary dark:bg-primary/20"
+  >
     <Icon src={icon} className="size-6" />
   </div>
   <div>

@@ -26,7 +26,14 @@
     <Tooltip.Trigger class="px-1.5 py-3">
       {#snippet child({ props })}
         <a {href} aria-label={text} {...props}>
-          <Icon src={icon} className={cn('!text-zinc-400', isActive && '!text-black')} size={20} />
+          <Icon
+            src={icon}
+            className={cn(
+              '!text-zinc-400 dark:!text-zinc-500',
+              isActive && '!text-black dark:!text-white'
+            )}
+            size={20}
+          />
         </a>
       {/snippet}
     </Tooltip.Trigger>

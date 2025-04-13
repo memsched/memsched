@@ -5,6 +5,7 @@
   import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
   import { cn } from '$lib/utils';
 
+  import ThemeToggle from '../ThemeToggle.svelte';
   import DropdownMenuLabel from '../ui/dropdown-menu/dropdown-menu-label.svelte';
   import DropdownMenuSeparator from '../ui/dropdown-menu/dropdown-menu-separator.svelte';
 </script>
@@ -13,7 +14,7 @@
   <DropdownMenu.Trigger
     class="flex flex-row items-center justify-center gap-3 border border-transparent"
   >
-    <div class="grid size-8 place-items-center rounded-full bg-zinc-200">?</div>
+    <div class="grid size-8 place-items-center rounded-full bg-zinc-200 dark:bg-zinc-700">?</div>
   </DropdownMenu.Trigger>
   <DropdownMenu.Content class="min-w-40" align="start" side="right">
     <DropdownMenu.Group>
@@ -35,6 +36,7 @@
           </a>
         {/snippet}
       </DropdownMenu.Item>
+      <DropdownMenuSeparator />
       <DropdownMenu.Item class="cursor-pointer hover:text-accent-foreground">
         {#snippet child({ props })}
           <a href="/" {...props} aria-label="MEMsched Homepage" data-sveltekit-reload>
@@ -43,7 +45,6 @@
           </a>
         {/snippet}
       </DropdownMenu.Item>
-      <DropdownMenuSeparator />
       <DropdownMenu.Item class="cursor-pointer hover:text-accent-foreground">
         {#snippet child({ props })}
           <a href="/docs" {...props} data-sveltekit-reload>
@@ -52,6 +53,13 @@
           </a>
         {/snippet}
       </DropdownMenu.Item>
+      <DropdownMenuSeparator />
+      <DropdownMenu.Item class="cursor-pointer hover:text-accent-foreground">
+        {#snippet child({ props })}
+          <ThemeToggle {...props} />
+        {/snippet}
+      </DropdownMenu.Item>
+      <DropdownMenuSeparator />
       <DropdownMenu.Item class="cursor-pointer hover:text-accent-foreground">
         {#snippet child({ props })}
           <a href="mailto:info@memsched.com" {...props} aria-label="Contact Us">

@@ -69,7 +69,7 @@
             </li>
             <li class="flex items-center gap-2">
               <Icon src={IoCheckmark} className="size-5 !text-muted-foreground" />
-              <span>Up to {FREE_PLAN_LIMITS.maxWidgets} public widget</span>
+              <span>Up to {FREE_PLAN_LIMITS.maxWidgets} widgets</span>
             </li>
             <li class="flex items-center gap-2">
               <Icon src={IoCheckmark} className="size-5 !text-muted-foreground" />
@@ -82,7 +82,7 @@
       <!-- Pro Plan Card -->
       <Card.Root
         class={cn(
-          'border bg-gradient-to-br from-white to-amber-50',
+          'border bg-gradient-to-br from-white to-amber-50 dark:from-zinc-900 dark:to-amber-900',
           isSubscribed && 'border-amber-500'
         )}
       >
@@ -167,7 +167,7 @@
                 class="animate-svg w-full bg-amber-800 text-amber-200 hover:bg-amber-700"
                 data-umami-event="account-upgrade-to-pro-button"
               >
-                Upgrade to Pro
+                Support Us
               </IconButton>
             </form>
           {/if}
@@ -183,7 +183,9 @@
     </div>
 
     <!-- Delete Account Section -->
-    <div class="rounded-lg border border-destructive/20 bg-destructive/5 p-5">
+    <div
+      class="rounded-lg border border-destructive/20 bg-destructive/5 p-5 dark:border-destructive/30 dark:bg-destructive/10"
+    >
       <div class="flex flex-col gap-6">
         <div class="space-y-2">
           <h3 class="text-xl font-semibold text-destructive">Delete Account</h3>

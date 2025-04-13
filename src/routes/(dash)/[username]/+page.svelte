@@ -98,7 +98,7 @@
         </div>
       {:else}
         <div
-          class="flex h-48 w-full flex-col items-center justify-center gap-3 rounded-lg border bg-muted p-4 text-muted-foreground"
+          class="flex h-48 w-full flex-col items-center justify-center gap-3 rounded-lg border bg-background p-4 text-muted-foreground"
         >
           No public widgets yet
           {#if data.isOwner}

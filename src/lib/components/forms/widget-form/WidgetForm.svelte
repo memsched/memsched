@@ -176,10 +176,19 @@
           plotInterval: 'day',
           heatmapPeriod: 'month',
           heatmapInterval: 'day',
-          provider: 'objective',
-          objectiveId: '',
-          githubUsername: null,
-          githubStatType: null,
+          ...(data.objectives.length > 0
+            ? {
+                provider: 'objective',
+                objectiveId: '',
+                githubUsername: null,
+                githubStatType: null,
+              }
+            : {
+                provider: 'github',
+                objectiveId: null,
+                githubUsername: '',
+                githubStatType: 'commits',
+              }),
         });
         widgetMetrics.push({
           style: 'metric-base',
@@ -351,7 +360,7 @@
       size="xs"
       icon={FiPlus}
       variant="translucent"
-      class="rounded-none">Image</IconButton
+      class="rounded-none border-none">Image</IconButton
     >
   {/if}
   {#if metricCount < 3}
@@ -360,7 +369,7 @@
       size="xs"
       icon={FiPlus}
       variant="translucent"
-      class="rounded-none">Metric</IconButton
+      class="rounded-none border-none">Metric</IconButton
     >
   {/if}
 </DashHeader>
@@ -368,7 +377,7 @@
 <div class="flex flex-grow" style="height: calc(100vh - {SUB_NAV_HEIGHT}px);">
   <div class="bg-dotted relative flex max-w-[60%] flex-grow items-center justify-center p-2">
     <div
-      class="absolute left-2 right-2 top-2 flex items-center gap-3 rounded-lg border bg-muted p-3 text-sm"
+      class="absolute left-2 right-2 top-2 flex items-center gap-3 rounded-lg border bg-background p-3 text-sm"
     >
       <Icon
         src={IoInformationCircle}

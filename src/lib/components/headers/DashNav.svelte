@@ -20,7 +20,7 @@
   ];
 </script>
 
-<div class="flex h-full flex-col items-center justify-between border-e bg-white px-2 py-4">
+<div class="flex h-full flex-col items-center justify-between border-e bg-background px-2 py-4">
   <div class="flex flex-col items-center">
     <div class="mb-4">
       {#if page.data.user}

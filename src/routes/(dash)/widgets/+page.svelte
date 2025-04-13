@@ -54,7 +54,7 @@
       size="xs"
       icon={FiPlus}
       variant="translucent"
-      class="rounded-none">New</IconButton
+      class="rounded-none border-none">New</IconButton
     >
   {/if}
 </DashHeader>

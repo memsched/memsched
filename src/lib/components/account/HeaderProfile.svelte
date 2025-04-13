@@ -1,11 +1,12 @@
 <script lang="ts">
   import { Icon } from 'svelte-icons-pack';
-  import { FiBookOpen, FiLifeBuoy, FiLogOut, FiSettings } from 'svelte-icons-pack/fi';
+  import { FiBookOpen, FiHome, FiLifeBuoy, FiLogOut, FiSettings } from 'svelte-icons-pack/fi';
 
   import { enhance } from '$app/forms';
   import { page } from '$app/state';
   import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
 
+  import ThemeToggle from '../ThemeToggle.svelte';
   import DropdownMenuLabel from '../ui/dropdown-menu/dropdown-menu-label.svelte';
   import DropdownMenuSeparator from '../ui/dropdown-menu/dropdown-menu-separator.svelte';
   import UserAvatar from './UserAvatar.svelte';
@@ -57,6 +58,21 @@
           </a>
         {/snippet}
       </DropdownMenu.Item>
+      <DropdownMenu.Item class="cursor-pointer hover:text-accent-foreground">
+        {#snippet child({ props })}
+          <a href="/" {...props} aria-label="Home" data-sveltekit-reload>
+            <Icon src={FiHome} className="!text-muted-foreground" />
+            Home
+          </a>
+        {/snippet}
+      </DropdownMenu.Item>
+      <DropdownMenuSeparator />
+      <DropdownMenu.Item class="cursor-pointer hover:text-accent-foreground">
+        {#snippet child({ props })}
+          <ThemeToggle {...props} />
+        {/snippet}
+      </DropdownMenu.Item>
+      <DropdownMenuSeparator />
       <DropdownMenu.Item class="cursor-pointer hover:text-accent-foreground">
         {#snippet child({ props })}
           <a href="mailto:info@memsched.com" {...props} aria-label="Contact Us">

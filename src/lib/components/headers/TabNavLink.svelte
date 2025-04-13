@@ -26,7 +26,8 @@
   size="xs"
   class={cn(
     'rounded-none bg-background text-zinc-400 hover:bg-background hover:text-foreground',
-    isActive && 'bg-zinc-100 text-foreground hover:bg-zinc-100'
+    isActive &&
+      'bg-zinc-100 text-foreground hover:bg-zinc-100 dark:bg-zinc-700/50 dark:hover:bg-zinc-700/50'
   )}
 >
   {name}

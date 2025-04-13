@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { mode } from 'mode-watcher';
   import { onMount } from 'svelte';
   import { Icon } from 'svelte-icons-pack';
   import { IoArrowForward, IoCube, IoGlobe, IoPersonCircle } from 'svelte-icons-pack/io';
@@ -16,7 +17,7 @@
   import { HEADER_HEIGHT } from '$lib/constants';
   import { DOMAIN } from '$lib/constants';
   import { FLAT_COLOR_ICONS } from '$lib/icons';
-  import { mockWidgets } from '$lib/widgets';
+  import { mockWidgets, mockWidgetsDark } from '$lib/widgets';
 
   const codeSnippet = `
 <img src="https://memsched.com/api/widgets/example?svg" />`;
@@ -97,7 +98,7 @@
         <Arrow class="absolute left-[105%] top-[60%] rotate-6" />
       </div>
     </div>
-    <WidgetCarousel widgets={mockWidgets} />
+    <WidgetCarousel widgets={$mode === 'dark' ? mockWidgetsDark : mockWidgets} />
   </section>
 
   <!-- How it works section -->
@@ -117,7 +118,7 @@
         <Path class="absolute bottom-0 right-[18%] -translate-x-1/2 rotate-180 max-lg:hidden" />
         <div class="flex justify-start gap-6">
           <div
-            class="mt-1 inline-flex size-8 flex-shrink-0 items-center justify-center rounded-full bg-zinc-300 text-lg font-bold"
+            class="mt-1 inline-flex size-8 flex-shrink-0 items-center justify-center rounded-full bg-zinc-300 text-lg font-bold dark:bg-zinc-700"
           >
             1
           </div>
@@ -141,7 +142,7 @@
 
         <div class="flex justify-start gap-6">
           <div
-            class="mt-1 inline-flex size-8 flex-shrink-0 items-center justify-center rounded-full bg-zinc-300 text-lg font-bold"
+            class="mt-1 inline-flex size-8 flex-shrink-0 items-center justify-center rounded-full bg-zinc-300 text-lg font-bold dark:bg-zinc-700"
           >
             2
           </div>
@@ -156,7 +157,7 @@
 
         <div class="flex justify-start gap-6">
           <div
-            class="mt-1 inline-flex size-8 flex-shrink-0 items-center justify-center rounded-full bg-zinc-300 text-lg font-bold"
+            class="mt-1 inline-flex size-8 flex-shrink-0 items-center justify-center rounded-full bg-zinc-300 text-lg font-bold dark:bg-zinc-700"
           >
             3
           </div>
@@ -222,11 +223,11 @@
           </div>
           <Widget
             accentColor="#4fc59e"
-            backgroundColor="#ffffff"
+            backgroundColor={$mode === 'dark' ? '#111111' : '#ffffff'}
             borderRadius={6}
             borderWidth={1}
-            borderColor="#ededed"
-            color="#000000"
+            borderColor={$mode === 'dark' ? '#333333' : '#ededed'}
+            color={$mode === 'dark' ? '#ffffff' : '#000000'}
             imagePlacement="left"
             imageUrl={FLAT_COLOR_ICONS.graduation_cap}
             metrics={[
@@ -254,7 +255,7 @@
             Embed widgets like this one on your website with a single line of code
           </p>
           <pre
-            class="mx-auto w-fit rounded-lg border bg-zinc-800 px-4 font-mono text-sm text-white">
+            class="mx-auto w-fit rounded-lg border bg-background px-4 font-mono text-sm text-white">
           <code class="whitespace-pre-wrap">{codeSnippet}</code>
         </pre>
         </div>
@@ -330,7 +331,7 @@
     >
       <div>
         <h2 class="mb-2 text-3xl font-bold">Ready to showcase your learning journey?</h2>
-        <p class="mx-auto max-w-2xl text-lg">
+        <p class="mx-auto max-w-2xl text-lg opacity-75">
           Join thousands of learners who are tracking their progress and sharing their achievements
           with the world.
         </p>

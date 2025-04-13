@@ -1,9 +1,6 @@
 import { CIRCLE_FLAG_ICONS, VSCODE_ICONS } from './icons';
 import type { WidgetJoinMetricsData } from './server/services/metrics/types';
 
-const backgroundColors = ['#ffffff', '#eaeaea', '#222222'];
-const colors = ['#000000', '#000000', '#ffffff'];
-
 const baseWidgets: WidgetJoinMetricsData[] = [
   {
     title: 'Projects Completed',
@@ -172,11 +169,18 @@ const baseWidgets: WidgetJoinMetricsData[] = [
   },
 ];
 
-// create three copies of the base widgets, each with a different background color
-export const mockWidgets: WidgetJoinMetricsData[] = Array.from({ length: 3 }, (_, copyIndex) =>
+// create three copies of the base widgets
+export const mockWidgets: WidgetJoinMetricsData[] = Array.from({ length: 3 }, () =>
   baseWidgets.map((widget) => ({
     ...widget,
-    backgroundColor: backgroundColors[copyIndex],
-    color: colors[copyIndex],
+  }))
+).flat();
+
+export const mockWidgetsDark: WidgetJoinMetricsData[] = Array.from({ length: 3 }, () =>
+  baseWidgets.map((widget) => ({
+    ...widget,
+    backgroundColor: '#111111',
+    color: '#ffffff',
+    borderColor: '#333333',
   }))
 ).flat();

@@ -38,8 +38,8 @@
   }
 
   .dark {
-    --back: 230 15% 15%;
-    --background: 230 15% 13%;
+    --back: 230 2% 8%;
+    --background: 230 10% 11%;
     --foreground: 0 0% 90%;
     --muted: 240 3.7% 15.9%;
     --muted-foreground: 240 5% 64.9%;
@@ -49,13 +49,13 @@
     --card-foreground: 0 0% 98%;
     --border: 240 4.8% 20%;
     --input: 240 3.7% 15.9%;
-    --primary: 230 60% 55%;
+    --primary: 230 85% 60%;
     --primary-foreground: 230 80% 96%;
     --secondary: 240 3.7% 15.9%;
     --secondary-foreground: 0 0% 98%;
     --accent: 230 30% 20%;
     --accent-foreground: 230 80% 96%;
-    --destructive: 0 62.8% 30.6%;
+    --destructive: 0 62.8% 42%;
     --destructive-foreground: 0 0% 98%;
     --ring: 240 4.9% 30%;
     --sidebar-background: 240 5.9% 10%;
@@ -147,21 +147,35 @@
     @apply mx-auto w-full max-w-screen-xl px-6 lg:px-10;
   }
   .bg-dotted {
-    background-image: radial-gradient(circle, rgba(0, 0, 0, 0.1) 1px, transparent 1px);
+    background-image: radial-gradient(circle, theme('colors.zinc.100') 1px, transparent 1px);
     background-size: 15px 15px;
+  }
+  .dark .bg-dotted {
+    background-image: radial-gradient(circle, theme('colors.zinc.800') 1px, transparent 1px);
   }
   .bg-dotted-fade {
     background-image:
       radial-gradient(
         circle at center,
-        rgba(255, 255, 255, 0.75) 0%,
-        rgba(255, 255, 255, 0.5) 30%,
+        theme('colors.back/75') 0%,
+        theme('colors.back/50') 30%,
         transparent 70%,
         transparent 100%
       ),
-      radial-gradient(circle, rgba(0, 0, 0, 0.1) 1px, transparent 1px);
+      radial-gradient(circle, theme('colors.zinc.300') 1px, transparent 1px);
     background-size:
       100% 100%,
       15px 15px;
+  }
+  .dark .bg-dotted-fade {
+    background-image:
+      radial-gradient(
+        circle at center,
+        theme('colors.back/75') 0%,
+        theme('colors.back/50') 30%,
+        transparent 70%,
+        transparent 100%
+      ),
+      radial-gradient(circle, theme('colors.zinc.700') 1px, transparent 1px);
   }
 }

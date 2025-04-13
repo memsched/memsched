@@ -1,13 +1,13 @@
 <script lang="ts">
   import '../app.css';
 
+  import { ModeWatcher } from 'mode-watcher';
   import SvelteSeo from 'svelte-seo';
 
   import { browser } from '$app/environment';
   import { beforeNavigate } from '$app/navigation';
   import { updated } from '$app/state';
   import AccessibilityToolbar from '$lib/components/AccessibilityToolbar.svelte';
-  // import { ModeWatcher } from 'mode-watcher';
   import ColorPickerToolbar from '$lib/components/ColorPickerToolbar.svelte';
   import PageLoadProgress from '$lib/components/layouts/PageLoadProgress.svelte';
 
@@ -37,7 +37,7 @@
 </svelte:head>
 
 <PageLoadProgress />
-<!-- <ModeWatcher defaultMode="light" track={false} /> -->
+<ModeWatcher defaultMode="dark" track />
 {@render children()}
 {#if browser}
   {#await import('svelte-french-toast') then { Toaster }}

@@ -106,10 +106,16 @@ export const formSchema = z.object({
     .max(100, { message: 'Subtitle must be less than 100 characters.' }),
   imageUrl: z
     .string()
-    .url({ message: 'Please enter a valid image URL.' })
-    .refine((url) => !url || url.toLowerCase().endsWith('.svg'), {
-      message: 'Image URL must end with .svg',
-    })
+    .refine(
+      (url) => {
+        if (!url) return true;
+        return (
+          url.startsWith('data:image/') ||
+          (url.match(/^https?:\/\//) && url.toLowerCase().endsWith('.svg'))
+        );
+      },
+      { message: 'Image URL must either be a data URL or an SVG file URL' }
+    )
     .nullable()
     .transform((v) => (v === '' ? null : v)),
   textIcon: z

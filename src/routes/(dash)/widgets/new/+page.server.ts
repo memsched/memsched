@@ -5,6 +5,7 @@ import { zod } from 'sveltekit-superforms/adapters';
 
 import { formSchema } from '$lib/components/forms/widget-form/schema';
 import { handleDbError, handleFormDbError } from '$lib/server/utils';
+import { processWidgetImage } from '$lib/server/utils/image';
 import type { LocalUser } from '$lib/types';
 
 import type { Actions, PageServerLoad } from './$types';
@@ -42,13 +43,6 @@ export const actions: Actions = {
       });
     }
 
-    if (form.data.imageUrl && !form.data.imageUrl.startsWith(event.url.origin)) {
-      return fail(400, {
-        form,
-        error: 'Invalid image URL',
-      });
-    }
-
     const widgetCount = await event.locals.widgetsService.getUserWidgetCount(
       event.locals.session.userId
     );
@@ -67,6 +61,31 @@ export const actions: Actions = {
         widgetLimitReached: true,
         message: `You've reached the maximum limit of ${planLimits.value.maxWidgets} widgets.`,
       });
+    }
+
+    // Validate and process the image if present
+    if (form.data.imageUrl) {
+      if (form.data.imageUrl.startsWith('data:image/')) {
+        // Check base64 image with moderation service
+        const isSafe = await event.locals.moderationService.isImageSafe(form.data.imageUrl);
+        if (isSafe.isErr()) {
+          return handleFormDbError(isSafe, form);
+        }
+        if (!isSafe.value) {
+          return fail(400, {
+            form,
+            message: 'The provided image was flagged as inappropriate.',
+          });
+        }
+      } else if (!form.data.imageUrl.startsWith(event.url.origin)) {
+        return fail(400, {
+          form,
+          message: 'External image URLs are not allowed.',
+        });
+      }
+
+      // Process the image
+      form.data.imageUrl = await processWidgetImage(form.data.imageUrl);
     }
 
     const res = await event.locals.widgetsService

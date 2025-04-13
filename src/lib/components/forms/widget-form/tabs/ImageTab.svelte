@@ -3,6 +3,7 @@
   import type { SuperForm, SuperFormData } from 'sveltekit-superforms/client';
 
   import { browser } from '$app/environment';
+  import FileDropzoneInput from '$lib/components/inputs/FileDropzoneInput.svelte';
   import * as Form from '$lib/components/ui/form';
   import { Input } from '$lib/components/ui/input';
   import { Label } from '$lib/components/ui/label';
@@ -17,16 +18,19 @@
   }
 
   let { form, formData, textIconInput = $bindable() }: Props = $props();
+
+  let tabValue = $derived.by(() => {
+    if ($formData.textIcon || !$formData.imageUrl) return 'text-icon';
+    if (new URL($formData.imageUrl).pathname.startsWith('/icons')) return 'icon';
+    return 'upload';
+  });
 </script>
 
 <section class="space-y-6">
   <h2 class="h3">Image</h2>
   <div class="col-span-2">
     <Label>Type</Label>
-    <Tabs.Root
-      value={$formData.textIcon ? 'text-icon' : $formData.imageUrl ? 'icon' : 'text-icon'}
-      class="mt-1 space-y-6"
-    >
+    <Tabs.Root value={tabValue} class="mt-1 space-y-6">
       <Tabs.List class="w-full *:w-full">
         <Tabs.Trigger
           onfocusin={() => {
@@ -43,9 +47,23 @@
           value="icon"
           onclick={() => {
             $formData.textIcon = null;
+            if (tabValue !== 'icon') {
+              $formData.imageUrl = null;
+            }
           }}
         >
           Icon
+        </Tabs.Trigger>
+        <Tabs.Trigger
+          value="upload"
+          onclick={() => {
+            $formData.textIcon = null;
+            if (tabValue !== 'upload') {
+              $formData.imageUrl = null;
+            }
+          }}
+        >
+          Upload
         </Tabs.Trigger>
       </Tabs.List>
       <Form.Fieldset {form} name="imagePlacement" class="col-span-2">
@@ -98,6 +116,20 @@
             {#await import('$lib/components/inputs/IconPickerInput.svelte') then { default: IconPickerInput }}
               <IconPickerInput bind:value={$formData.imageUrl} />
             {/await}
+          {/if}
+        </Tabs.Content>
+        <Tabs.Content value="upload" class="space-y-6">
+          <div class="space-y-2">
+            <Form.Legend>Placement</Form.Legend>
+            <Tabs.Root bind:value={$formData.imagePlacement}>
+              <Tabs.List class="w-full *:w-full">
+                <Tabs.Trigger value="left">Left</Tabs.Trigger>
+                <Tabs.Trigger value="right">Right</Tabs.Trigger>
+              </Tabs.List>
+            </Tabs.Root>
+          </div>
+          {#if browser}
+            <FileDropzoneInput bind:value={$formData.imageUrl} />
           {/if}
         </Tabs.Content>
       </Form.Fieldset>

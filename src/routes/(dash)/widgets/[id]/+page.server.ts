@@ -4,7 +4,9 @@ import { message, setError, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 
 import { formSchema } from '$lib/components/forms/widget-form/schema';
+import { imageUploadLimiter } from '$lib/server/rate-limiter';
 import { handleDbError, handleFormDbError } from '$lib/server/utils';
+import { processWidgetImage } from '$lib/server/utils/image';
 import type { LocalUser } from '$lib/types';
 
 import type { Actions, PageServerLoad } from './$types';
@@ -54,17 +56,14 @@ export const actions: Actions = {
       return error(401, 'Unauthorized');
     }
 
+    if (await imageUploadLimiter.isLimited(event)) {
+      return error(429, 'Too many requests. Please try again later.');
+    }
+
     const form = await superValidate(event, zod(formSchema));
     if (!form.valid) {
       return fail(400, {
         form,
-      });
-    }
-
-    if (form.data.imageUrl && !form.data.imageUrl.startsWith(event.url.origin)) {
-      return fail(400, {
-        form,
-        error: 'Invalid image URL',
       });
     }
 
@@ -83,6 +82,31 @@ export const actions: Actions = {
     if (!isSubtitleSafe.value) {
       setError(form, 'subtitle', 'This subtitle is not allowed.');
       return fail(400, { form });
+    }
+
+    // Validate and process the image if present
+    if (form.data.imageUrl) {
+      if (form.data.imageUrl.startsWith('data:image/')) {
+        // Check base64 image with moderation service
+        const isSafe = await event.locals.moderationService.isImageSafe(form.data.imageUrl);
+        if (isSafe.isErr()) {
+          return handleFormDbError(isSafe, form);
+        }
+        if (!isSafe.value) {
+          return fail(400, {
+            form,
+            message: 'This image is not allowed.',
+          });
+        }
+      } else if (!form.data.imageUrl.startsWith(event.url.origin)) {
+        return fail(400, {
+          form,
+          message: 'External image URLs are not allowed.',
+        });
+      }
+
+      // Process the image
+      form.data.imageUrl = await processWidgetImage(form.data.imageUrl);
     }
 
     const widgetId = event.params.id;

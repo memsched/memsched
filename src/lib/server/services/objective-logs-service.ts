@@ -87,7 +87,12 @@ export class ObjectiveLogsService {
     });
   }
 
-  public log(logData: z.infer<LogSchema>, userId: string, cache: CacheService) {
+  public log(
+    logData: z.infer<LogSchema>,
+    userId: string,
+    cache: CacheService,
+    referenceDate?: Date
+  ) {
     return this.objectivesService
       .get(logData.objectiveId, userId)
       .andThen((objective) => {
@@ -95,7 +100,7 @@ export class ObjectiveLogsService {
 
         return ResultAsync.combine([
           this.objectivesService.updateObjectiveValue(logData.objectiveId, newValue),
-          this.create(logData, userId),
+          this.create(logData, userId, referenceDate),
         ]);
       })
       .andThen(([objective, log]) =>
@@ -153,13 +158,13 @@ export class ObjectiveLogsService {
     });
   }
 
-  private create(logData: z.infer<LogSchema>, userId: string) {
+  private create(logData: z.infer<LogSchema>, userId: string, referenceDate?: Date) {
     return wrapResultAsync(
       this.db.insert(table.objectiveLog).values({
         id: uuidv4(),
         value: logData.value,
         notes: logData.notes || null,
-        loggedAt: new Date(),
+        loggedAt: referenceDate ?? new Date(),
         objectiveId: logData.objectiveId,
         userId,
       })

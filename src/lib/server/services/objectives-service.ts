@@ -105,7 +105,7 @@ export class ObjectivesService {
     );
   }
 
-  public create(objectiveData: z.infer<FormSchema>, userId: string) {
+  public create(objectiveData: z.infer<FormSchema>, userId: string, referenceDate?: Date) {
     return wrapResultAsyncFn(async () => {
       const objectiveId = uuidv4();
       const batchRes = await this.db.batch([
@@ -127,7 +127,7 @@ export class ObjectivesService {
           id: uuidv4(),
           value: objectiveData.startValue,
           notes: '',
-          loggedAt: new Date(),
+          loggedAt: referenceDate ?? new Date(),
           objectiveId,
           userId,
         }),

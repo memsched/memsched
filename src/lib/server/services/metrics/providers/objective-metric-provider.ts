@@ -16,7 +16,10 @@ export class ObjectiveMetricProvider implements BaseMetricProvider {
     private readonly objectiveLogsService: ObjectiveLogsService
   ) {}
 
-  public getValueData(metric: WidgetMetric): ResultAsync<DataValue, DrizzleError> {
+  public getValueData(
+    metric: WidgetMetric,
+    referenceDate?: Date
+  ): ResultAsync<DataValue, DrizzleError> {
     return wrapResultAsyncFn(async () => {
       assert(metric.objectiveId, 'Objective ID is required');
       assert(metric.valuePeriod, 'Period is required');
@@ -27,7 +30,8 @@ export class ObjectiveMetricProvider implements BaseMetricProvider {
         metric.valuePeriod,
         metric.valueDisplayPrecision,
         metric.valuePercent ?? false,
-        metric.userId
+        metric.userId,
+        referenceDate
       );
 
       if (value.isErr()) {
@@ -40,13 +44,16 @@ export class ObjectiveMetricProvider implements BaseMetricProvider {
     });
   }
 
-  public getPlotData(metric: WidgetMetric): ResultAsync<DataPlot, DrizzleError> {
+  public getPlotData(
+    metric: WidgetMetric,
+    referenceDate?: Date
+  ): ResultAsync<DataPlot, DrizzleError> {
     return wrapResultAsyncFn(async () => {
       assert(metric.objectiveId, 'Objective ID is required');
       assert(metric.plotPeriod, 'Plot period is required');
       assert(metric.plotInterval, 'Plot interval is required');
 
-      const timeAgo = this.getTimeAgoForPeriod(metric.plotPeriod);
+      const timeAgo = this.getTimeAgoForPeriod(metric.plotPeriod, referenceDate);
       const timeAgoOptions = timeAgo ? { startDate: timeAgo } : undefined;
 
       let logs;
@@ -92,11 +99,14 @@ export class ObjectiveMetricProvider implements BaseMetricProvider {
     });
   }
 
-  public getHeatmapData(metric: WidgetMetric): ResultAsync<DataHeatmap, DrizzleError> {
+  public getHeatmapData(
+    metric: WidgetMetric,
+    referenceDate?: Date
+  ): ResultAsync<DataHeatmap, DrizzleError> {
     return wrapResultAsyncFn(async () => {
       assert(metric.objectiveId, 'Objective ID is required');
 
-      const now = new Date();
+      const now = referenceDate ?? new Date();
       const monthStart = startOfMonth(now);
       const monthEnd = endOfMonth(now);
       const daysInMonth = getDaysInMonth(now);
@@ -146,7 +156,8 @@ export class ObjectiveMetricProvider implements BaseMetricProvider {
     valuePeriod: NonNullable<WidgetMetric['valuePeriod']>,
     valueDisplayPrecision: NonNullable<WidgetMetric['valueDisplayPrecision']>,
     valuePercent: boolean,
-    userId: string
+    userId: string,
+    referenceDate?: Date
   ) {
     return wrapResultAsyncFn(async () => {
       if (valuePercent) {
@@ -173,7 +184,7 @@ export class ObjectiveMetricProvider implements BaseMetricProvider {
         return roundToDecimal(result.value, valueDisplayPrecision);
       }
 
-      const timeAgo = this.getTimeAgoForPeriod(valuePeriod);
+      const timeAgo = this.getTimeAgoForPeriod(valuePeriod, referenceDate);
       if (!timeAgo) {
         return 0;
       }
@@ -189,12 +200,22 @@ export class ObjectiveMetricProvider implements BaseMetricProvider {
     });
   }
 
-  private getTimeAgoForPeriod(valuePeriod: NonNullable<WidgetMetric['valuePeriod']>): Date | null {
+  /**
+   * Get the time ago for a given period, aka lookback period
+   * Note: this is not the same as the start of the period, we only want to look back
+   * @param valuePeriod - The period to get the time ago for
+   * @param referenceDate - Optional reference date to calculate from (defaults to now)
+   * @returns The time ago for the given period
+   */
+  private getTimeAgoForPeriod(
+    valuePeriod: NonNullable<WidgetMetric['valuePeriod']>,
+    referenceDate?: Date
+  ): Date | null {
     if (valuePeriod === 'all time') {
       return null;
     }
 
-    const timeAgo = new Date();
+    const timeAgo = referenceDate ? new Date(referenceDate) : new Date();
     switch (valuePeriod) {
       case 'day':
         timeAgo.setHours(0, 0, 0, 0);

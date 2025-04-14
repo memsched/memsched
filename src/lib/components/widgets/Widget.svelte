@@ -153,7 +153,7 @@
               style:justify-content="center"
               style:width="48px"
               style:height="48px"
-              style:background-color={formatHex8(setOpacity(accentColor, 0.1))}
+              style:background-color={formatHex8(setOpacity(accentColor, 0.15))}
               style:border-radius="6px"
               style:font-weight="600"
               style:font-size="1.2rem"
@@ -223,7 +223,7 @@
               style:justify-content="center"
               style:width="48px"
               style:height="48px"
-              style:background-color={formatHex8(setOpacity(accentColor, 0.1))}
+              style:background-color={formatHex8(setOpacity(accentColor, 0.15))}
               style:border-radius="6px"
               style:font-weight="600"
               style:font-size="1.2rem"

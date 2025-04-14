@@ -59,7 +59,7 @@
   />
 {/snippet}
 
-<div style="height: {height}px" class="w-full">
+<div style="height: {height}px" class={cn(!loaded && 'w-full')}>
   {#if browser}
     {#if url || href}
       <a href={trueHref} {...rest}>

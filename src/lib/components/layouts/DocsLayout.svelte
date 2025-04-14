@@ -55,6 +55,19 @@
         },
       ],
     },
+    {
+      title: 'Customization',
+      links: [
+        {
+          href: '/docs/customization/styling',
+          label: 'Styling',
+          seo: {
+            title: 'MEMsched Documentation - Styling',
+            description: 'Learn how to customize the appearance of your MEMsched widgets.',
+          },
+        },
+      ],
+    },
   ];
 
   const allLinks = sidebarLinks.flatMap((section) => section.links);
@@ -183,21 +196,17 @@
           </div>
         {/each}
 
-        <!-- Back Link -->
+        <!-- Home Link -->
         <div class="mt-8 border-t pt-6">
           <button
             onclick={() => {
-              if (window.history.length > 1) {
-                window.history.back();
-              } else {
-                goto('/', { invalidateAll: true });
-              }
+              goto('/', { invalidateAll: true });
             }}
             class="block w-full rounded-md px-3 py-1.5 text-start text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-            aria-label="Back"
+            aria-label="Home"
             data-sveltekit-reload
           >
-            ← Back
+            ← Home
           </button>
         </div>
       </nav>

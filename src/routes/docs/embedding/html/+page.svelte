@@ -1,13 +1,7 @@
 <script lang="ts">
-  import SvelteSeo from 'svelte-seo';
-
   import { page } from '$app/state';
   import CodeBlock from '$lib/components/CodeBlock.svelte';
   import * as Alert from '$lib/components/ui/alert';
-
-  const pageTitle = 'HTML & Markdown Embedding Guide - MEMsched Documentation';
-  const pageDescription =
-    'Learn how to embed your MEMsched widgets using HTML or Markdown. Step-by-step guide with code examples and customization options.';
 
   // Example widget for documentation
   const exampleWidgetUrl = `${page.url.origin}/api/widgets/example`;
@@ -26,22 +20,6 @@
      height="80"
 />`;
 </script>
-
-<SvelteSeo
-  title={pageTitle}
-  description={pageDescription}
-  openGraph={{
-    title: pageTitle,
-    description: pageDescription,
-    type: 'article',
-  }}
-  twitter={{
-    card: 'summary',
-    title: pageTitle,
-    description: pageDescription,
-    site: '@memsched',
-  }}
-/>
 
 <div class="space-y-8">
   <div class="space-y-4">
@@ -81,16 +59,13 @@
       <p>Use this option if you want to display the widget without making it clickable:</p>
       <CodeBlock code={htmlSnippetNoLink} />
     </div>
-  </div>
 
-  <div class="space-y-6">
-    <h2 class="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight">
-      Customization Options
-    </h2>
-    <p>You can customize how your widget appears by adding parameters to the widget URL:</p>
-    <ul class="list-disc space-y-2 pl-6">
-      <li><code>height</code> - Adjust the height of the widget (default: 80px)</li>
-    </ul>
+    <p class="mt-4">
+      For customization options like dark mode or adjusting the height, please refer to the
+      <a href="/docs/customization/styling" class="text-primary hover:underline"
+        >Styling & Customization</a
+      > page.
+    </p>
   </div>
 
   <div class="space-y-6">
@@ -103,11 +78,10 @@
           public
         </li>
         <li>
-          <strong>Wrong size:</strong> Check if you've specified the correct height value
-        </li>
-        <li>
-          <strong>Styling conflicts:</strong> Try using <code>style="height: 80px"</code> instead of
-          the <code>height="80"</code> parameter
+          <strong>Wrong size:</strong> Check the
+          <a href="/docs/customization/styling" class="text-primary hover:underline"
+            >Styling & Customization</a
+          > page for details on setting the height.
         </li>
       </ul>
     </div>

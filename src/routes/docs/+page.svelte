@@ -70,6 +70,24 @@
         <span class="text-sm text-primary">Learn more →</span>
       </div>
     </a>
+
+    <a
+      class="group relative rounded-lg border bg-card p-6 transition-colors hover:bg-muted/50"
+      href="/docs/customization/styling"
+    >
+      <div class="mb-3 flex items-center gap-3">
+        <div class="rounded-md bg-primary/10 p-2 text-primary">
+          <Icon className="size-5" src={IoCode} />
+        </div>
+        <h2 class="h3">Customization</h2>
+      </div>
+      <p class="text-sm text-muted-foreground">
+        Learn how to customize the appearance of your widgets.
+      </p>
+      <div class="absolute bottom-3 right-4 opacity-0 transition-opacity group-hover:opacity-100">
+        <span class="text-sm text-primary">Learn more →</span>
+      </div>
+    </a>
   </div>
 
   <!-- Introduction section -->

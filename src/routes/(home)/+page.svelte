@@ -176,7 +176,12 @@
           <enhanced:img
             src="/static/images/objectives.png"
             alt="Objectives"
-            class="rounded-md border shadow-sm"
+            class="rounded-md border shadow-sm dark:hidden"
+          />
+          <enhanced:img
+            src="/static/images/objectives-dark.png"
+            alt="Objectives"
+            class="hidden rounded-md border shadow-sm dark:block"
           />
         </div>
         <div>
@@ -184,7 +189,12 @@
           <enhanced:img
             src="/static/images/create-widget.png"
             alt="Create widget"
-            class="rounded-md border shadow-sm"
+            class="rounded-md border shadow-sm dark:hidden"
+          />
+          <enhanced:img
+            src="/static/images/create-widget-dark.png"
+            alt="Create widget"
+            class="hidden rounded-md border shadow-sm dark:block"
           />
         </div>
         <!-- <div> -->

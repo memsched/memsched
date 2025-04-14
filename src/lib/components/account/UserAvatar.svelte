@@ -10,13 +10,18 @@
   }
 
   const { username, avatarUrl, large = false }: Props = $props();
+
+  let useCustomAvatar = $state(avatarUrl !== null);
 </script>
 
-{#if avatarUrl}
+{#if useCustomAvatar}
   <img
     class={cn('inline-block rounded-full', large ? 'size-[250px] ring-2 ring-border' : 'size-8')}
     src={avatarUrl}
     alt="User profile avatar"
+    onerror={() => {
+      useCustomAvatar = false;
+    }}
   />
 {:else}
   <Avvvatars value={username} size={large ? 250 : 32} style="shape" />

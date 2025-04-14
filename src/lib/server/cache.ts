@@ -17,6 +17,7 @@ export interface CacheService {
   get(key: string): Promise<CacheValue | null>;
   set(key: string, value: string, etag: string, metadata?: CacheMetadata): Promise<void>;
   delete(key: string): Promise<void>;
+  keys(): Promise<string[]>;
 }
 
 class MemoryCacheService implements CacheService {
@@ -30,6 +31,10 @@ class MemoryCacheService implements CacheService {
 
   async delete(key: string): Promise<void> {
     memoryCache.delete(key);
+  }
+
+  async keys(): Promise<string[]> {
+    return Array.from(memoryCache.keys());
   }
 }
 
@@ -54,6 +59,11 @@ class KVCacheService implements CacheService {
 
   async delete(key: string): Promise<void> {
     await this.kv.delete(key);
+  }
+
+  async keys(): Promise<string[]> {
+    const keys = await this.kv.list();
+    return keys.keys.map((key) => key.name);
   }
 }
 

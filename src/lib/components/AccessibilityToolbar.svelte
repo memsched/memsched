@@ -2,6 +2,8 @@
   import { onDestroy, onMount } from 'svelte';
 
   import { browser } from '$app/environment';
+  import { getLuminance, hexToRgb } from '$lib/colors';
+  import { roundToDecimal } from '$lib/utils';
 
   // Configuration
   const INITIAL_POSITION = { x: 20, y: 200 };
@@ -197,86 +199,24 @@
   }
 
   // Contrast checking functions
-  function hexToRgb(hex: string): { r: number; g: number; b: number } | null {
-    // Remove the hash if it exists
-    hex = hex.replace(/^#/, '');
-
-    // Parse RGB components
-    const bigint = parseInt(hex, 16);
-
-    // Handle different hex formats (3, 6, or 8 digits)
-    if (hex.length === 3) {
-      const r = ((bigint >> 8) & 15) * 17;
-      const g = ((bigint >> 4) & 15) * 17;
-      const b = (bigint & 15) * 17;
-      return { r, g, b };
-    } else if (hex.length === 6 || hex.length === 8) {
-      const r = (bigint >> 16) & 255;
-      const g = (bigint >> 8) & 255;
-      const b = bigint & 255;
-      return { r, g, b };
+  function calculateContrastRatio(
+    color1: { r: number; g: number; b: number } | null,
+    color2: { r: number; g: number; b: number } | null
+  ): number | null {
+    if (!color1 || !color2) {
+      return null;
     }
 
-    return null;
-  }
+    // Convert hex to RGB for luminance calculation
+    const hex1 = `#${color1.r.toString(16).padStart(2, '0')}${color1.g.toString(16).padStart(2, '0')}${color1.b.toString(16).padStart(2, '0')}`;
+    const hex2 = `#${color2.r.toString(16).padStart(2, '0')}${color2.g.toString(16).padStart(2, '0')}${color2.b.toString(16).padStart(2, '0')}`;
 
-  function getRgbFromColor(color: string): { r: number; g: number; b: number } | null {
-    if (!color) return null;
+    // Use imported getLuminance
+    const lum1 = getLuminance(hex1);
+    const lum2 = getLuminance(hex2);
 
-    // Handle hex values
-    if (color.startsWith('#')) {
-      return hexToRgb(color);
-    }
-
-    // Handle RGB / RGBA
-    if (color.startsWith('rgb')) {
-      const rgbRegex = /rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*[\d.]+)?\)/i;
-      const match = color.match(rgbRegex);
-      if (match) {
-        return {
-          r: parseInt(match[1], 10),
-          g: parseInt(match[2], 10),
-          b: parseInt(match[3], 10),
-        };
-      }
-    }
-
-    // Handle named colors by creating a temporary element
-    if (browser) {
-      const tempEl = document.createElement('div');
-      tempEl.style.color = color;
-      document.body.appendChild(tempEl);
-      const computedColor = getComputedStyle(tempEl).color;
-      document.body.removeChild(tempEl);
-
-      // Recursive call with computed color (should be rgb)
-      return getRgbFromColor(computedColor);
-    }
-
-    return null;
-  }
-
-  function getLuminance(color: { r: number; g: number; b: number }): number {
-    // Convert RGB to luminance following the WCAG formula
-    const { r, g, b } = color;
-
-    const [rSRGB, gSRGB, bSRGB] = [r / 255, g / 255, b / 255].map((val) => {
-      return val <= 0.03928 ? val / 12.92 : Math.pow((val + 0.055) / 1.055, 2.4);
-    });
-
-    return 0.2126 * rSRGB + 0.7152 * gSRGB + 0.0722 * bSRGB;
-  }
-
-  function getContrastRatio(
-    fg: { r: number; g: number; b: number },
-    bg: { r: number; g: number; b: number }
-  ): number {
-    const fgLuminance = getLuminance(fg);
-    const bgLuminance = getLuminance(bg);
-
-    // Formula: (lighter + 0.05) / (darker + 0.05)
-    const lighter = Math.max(fgLuminance, bgLuminance);
-    const darker = Math.min(fgLuminance, bgLuminance);
+    const lighter = Math.max(lum1, lum2);
+    const darker = Math.min(lum1, lum2);
 
     return (lighter + 0.05) / (darker + 0.05);
   }
@@ -351,17 +291,35 @@
               const backgroundColor = getEffectiveBackgroundColor(element);
 
               // Parse colors
-              const fg = getRgbFromColor(foregroundColor);
-              const bg = getRgbFromColor(backgroundColor);
+              const fg = hexToRgb(foregroundColor);
+              const bg = hexToRgb(backgroundColor);
 
               if (!fg || !bg) return;
 
               const largeText = isLargeText(element);
               const requiredRatio = largeText ? 3 : 4.5;
-              const ratio = getContrastRatio(fg, bg);
+              const ratio = calculateContrastRatio(fg, bg);
+
+              // If ratio is null (due to invalid colors), treat as failing
+              if (ratio === null) {
+                contrastIssues = [
+                  ...contrastIssues,
+                  {
+                    element,
+                    text: text.length > 30 ? text.substring(0, 30) + '...' : text,
+                    foregroundColor,
+                    backgroundColor,
+                    ratio: -1, // Indicate invalid ratio
+                    requiredRatio,
+                    isLargeText: largeText,
+                    passes: false,
+                  },
+                ];
+                return; // Skip to next element
+              }
+
               const passes = ratio >= requiredRatio;
 
-              // If it fails, add to issues list
               if (!passes) {
                 contrastIssues = [
                   ...contrastIssues,
@@ -370,7 +328,7 @@
                     text: text.length > 30 ? text.substring(0, 30) + '...' : text,
                     foregroundColor,
                     backgroundColor,
-                    ratio,
+                    ratio: ratio, // Now guaranteed to be a number
                     requiredRatio,
                     isLargeText: largeText,
                     passes,
@@ -807,7 +765,9 @@
                       class:dark:bg-red-950={issue.ratio < issue.requiredRatio}
                       class:dark:text-red-300={issue.ratio < issue.requiredRatio}
                     >
-                      {formatContrastRatio(issue.ratio)}
+                      {issue.ratio !== null
+                        ? roundToDecimal(issue.ratio as number, 2) // Cast as it's checked now
+                        : 'N/A'}
                     </span>
                   </span>
                 </div>

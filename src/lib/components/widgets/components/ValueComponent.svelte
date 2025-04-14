@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { getMutedHexColor } from '$lib/colors';
   import TrendingUpArrow from '$lib/components/svgs/TrendingUpArrow.svelte';
   import MetricSkeleton from '$lib/components/widgets/utils/MetricSkeleton.svelte';
   import type {
@@ -7,7 +8,6 @@
     WidgetMetricDataValue,
   } from '$lib/server/services/metrics/types';
   import type { PartialBy } from '$lib/types';
-  import { getMutedHexColor } from '$lib/utils';
 
   interface Props {
     metric:

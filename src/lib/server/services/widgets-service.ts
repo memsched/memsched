@@ -280,12 +280,6 @@ export class WidgetsService {
           userId,
         };
 
-        // Clear cache
-        await Promise.all([
-          cache.delete(`widget:${widgetId}:html`),
-          cache.delete(`widget:${widgetId}:svg`),
-        ]);
-
         // Update in DB (batch so we handle the case where there are no metrics)
         if (metricInserts.length > 0) {
           await this.db.batch([
@@ -295,6 +289,13 @@ export class WidgetsService {
         } else {
           await this.db.update(table.widget).set(widgetUpdate).where(eq(table.widget.id, widgetId));
         }
+
+        // Invalidate the cache
+        await Promise.all(
+          ['html', 'svg'].flatMap((type) =>
+            ['light', 'dark'].map((theme) => cache.delete(`widget:${widgetId}:${type}:${theme}`))
+          )
+        );
 
         return widgetId;
       })
@@ -308,11 +309,12 @@ export class WidgetsService {
           .delete(table.widget)
           .where(and(eq(table.widget.id, widgetId), eq(table.widget.userId, userId)));
 
-        // Invalidate the widget cache
-        await Promise.all([
-          cache.delete(`widget:${widgetId}:html`),
-          cache.delete(`widget:${widgetId}:svg`),
-        ]);
+        // Invalidate the cache
+        await Promise.all(
+          ['html', 'svg'].flatMap((type) =>
+            ['light', 'dark'].map((theme) => cache.delete(`widget:${widgetId}:${type}:${theme}`))
+          )
+        );
       })
     );
   }

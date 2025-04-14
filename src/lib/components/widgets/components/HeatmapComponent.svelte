@@ -1,11 +1,11 @@
 <script lang="ts">
   import type { ComponentProps } from 'svelte';
 
+  import { addOpacityRgba } from '$lib/colors';
   import ValueComponent from '$lib/components/widgets/components/ValueComponent.svelte';
   import MetricSkeleton from '$lib/components/widgets/utils/MetricSkeleton.svelte';
   import type { WidgetMetricDataHeatmap } from '$lib/server/services/metrics/types';
   import type { PartialBy } from '$lib/types';
-  import { addOpacityRgba } from '$lib/utils';
 
   interface Props {
     metric: PartialBy<WidgetMetricDataHeatmap, 'data'>;

@@ -2,7 +2,8 @@
   import { Icon } from 'svelte-icons-pack';
   import { IoColorFillOutline } from 'svelte-icons-pack/io';
 
-  import { cn, hexToHsva, hsvaToHexa, hsvToHex, roundToDecimal } from '$lib/utils';
+  import { hexToHsva, hsvaToHexa, hsvToHex } from '$lib/colors';
+  import { cn, roundToDecimal } from '$lib/utils';
 
   import { Button } from '../ui/button';
   import { Input } from '../ui/input';

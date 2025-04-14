@@ -1,7 +1,6 @@
 import { error } from '@sveltejs/kit';
 
 import Widget from '$lib/components/widgets/Widget.svelte';
-import { type WidgetJoinMetricsData } from '$lib/server/services/metrics/types';
 import { renderWidget } from '$lib/server/svg';
 import { handleDbError } from '$lib/server/utils';
 
@@ -10,7 +9,8 @@ import type { RequestHandler } from './$types';
 export const GET: RequestHandler = async (event) => {
   const widgetId = event.params.id;
   const renderSvg = event.url.searchParams.has('svg');
-  const cacheKey = `widget:${widgetId}:${renderSvg ? 'svg' : 'html'}`;
+  const dark = event.url.searchParams.has('dark');
+  const cacheKey = `widget:${widgetId}:${renderSvg ? 'svg' : 'html'}:${dark ? 'dark' : 'light'}`;
 
   let cachedWidget: Awaited<ReturnType<typeof event.locals.cache.get>> = null;
   let isAllowedToAccessWidget = false;
@@ -71,9 +71,12 @@ export const GET: RequestHandler = async (event) => {
   }
 
   // Render the widget
-  const rendered = await renderWidget<WidgetJoinMetricsData>(
+  const rendered = await renderWidget(
     Widget,
-    widgetDataResult.value,
+    {
+      ...widgetDataResult.value,
+      dark,
+    },
     renderSvg
   );
   const renderedContent = await rendered.text();

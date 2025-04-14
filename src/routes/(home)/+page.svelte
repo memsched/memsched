@@ -17,7 +17,7 @@
   import { HEADER_HEIGHT } from '$lib/constants';
   import { DOMAIN } from '$lib/constants';
   import { FLAT_COLOR_ICONS } from '$lib/icons';
-  import { mockWidgets, mockWidgetsDark } from '$lib/widgets';
+  import { mockWidgets } from '$lib/widgets';
 
   const codeSnippet = `
 <img src="https://memsched.com/api/widgets/example?svg" />`;
@@ -98,7 +98,7 @@
         <Arrow class="absolute left-[105%] top-[60%] rotate-6" />
       </div>
     </div>
-    <WidgetCarousel widgets={$mode === 'dark' ? mockWidgetsDark : mockWidgets} />
+    <WidgetCarousel widgets={mockWidgets} />
   </section>
 
   <!-- How it works section -->
@@ -233,11 +233,11 @@
           </div>
           <Widget
             accentColor="#4fc59e"
-            backgroundColor={$mode === 'dark' ? '#111111' : '#ffffff'}
+            backgroundColor="#ffffff"
             borderRadius={6}
             borderWidth={1}
-            borderColor={$mode === 'dark' ? '#333333' : '#ededed'}
-            color={$mode === 'dark' ? '#ffffff' : '#000000'}
+            borderColor="#ededed"
+            color="#000000"
             imagePlacement="left"
             imageUrl={FLAT_COLOR_ICONS.graduation_cap}
             metrics={[
@@ -257,6 +257,7 @@
             textIcon={null}
             title="Learning Progress"
             watermark={true}
+            dark={$mode === 'dark'}
           />
         </div>
 

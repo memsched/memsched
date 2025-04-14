@@ -2,13 +2,12 @@
   import { FiPlus } from 'svelte-icons-pack/fi';
   import { IoArrowForward, IoCubeOutline } from 'svelte-icons-pack/io';
   import SvelteSeo from 'svelte-seo';
-  import { v4 as uuid4 } from 'uuid';
 
-  import { browser } from '$app/environment';
   import CreateNew from '$lib/components/CreateNew.svelte';
   import DashHeader from '$lib/components/headers/DashHeader.svelte';
   import IconButton from '$lib/components/ui/IconButton.svelte';
   import * as Tooltip from '$lib/components/ui/tooltip';
+  import WidgetImage from '$lib/components/widgets/WidgetImage.svelte';
 
   import { type PageProps } from './$types';
 
@@ -63,15 +62,14 @@
   <div class="p-4">
     <div class="flex flex-wrap gap-4">
       {#each data.widgets as widget}
-        <a href="/widgets/{widget}">
-          {#if browser}
-            <img
-              src="/api/widgets/{widget}?svg&v={uuid4()}"
-              alt="MEMsched Widget"
-              class="h-[85px]"
-            />
-          {/if}
-        </a>
+        <WidgetImage
+          widget={{
+            id: widget,
+            title: 'MEMsched',
+            subtitle: 'Widget',
+          }}
+          url
+        />
       {/each}
     </div>
   </div>

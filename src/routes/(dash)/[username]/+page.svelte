@@ -1,11 +1,11 @@
 <script lang="ts">
   import { FiPlus } from 'svelte-icons-pack/fi';
   import SvelteSeo from 'svelte-seo';
-  import { v4 as uuid4 } from 'uuid';
 
   import Profile from '$lib/components/account/Profile.svelte';
   import DashHeader from '$lib/components/headers/DashHeader.svelte';
   import IconButton from '$lib/components/ui/IconButton.svelte';
+  import WidgetImage from '$lib/components/widgets/WidgetImage.svelte';
   import { DOMAIN } from '$lib/constants';
 
   import type { PageProps } from './$types';
@@ -80,18 +80,21 @@
         <div class="flex flex-wrap gap-3">
           {#each data.publicUser.widgets as widget}
             {#if data.isOwner}
-              <a href="/widgets/{widget}">
-                <img
-                  src="/api/widgets/{widget}?svg&v={uuid4()}"
-                  alt="MEMsched Widget"
-                  class="h-[85px]"
-                />
-              </a>
+              <WidgetImage
+                widget={{
+                  id: widget,
+                  title: 'MEMsched',
+                  subtitle: 'Widget',
+                }}
+                url
+              />
             {:else}
-              <img
-                src="/api/widgets/{widget}?svg&v={uuid4()}"
-                alt="MEMsched Widget"
-                class="h-[85px]"
+              <WidgetImage
+                widget={{
+                  id: widget,
+                  title: 'MEMsched',
+                  subtitle: 'Widget',
+                }}
               />
             {/if}
           {/each}

@@ -175,12 +175,3 @@ export const mockWidgets: WidgetJoinMetricsData[] = Array.from({ length: 3 }, ()
     ...widget,
   }))
 ).flat();
-
-export const mockWidgetsDark: WidgetJoinMetricsData[] = Array.from({ length: 3 }, () =>
-  baseWidgets.map((widget) => ({
-    ...widget,
-    backgroundColor: '#111111',
-    color: '#ffffff',
-    borderColor: '#333333',
-  }))
-).flat();

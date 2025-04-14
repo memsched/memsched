@@ -16,10 +16,12 @@
   import * as Dialog from '$lib/components/ui/dialog';
   import IconButton from '$lib/components/ui/IconButton.svelte';
   import LoadingButton from '$lib/components/ui/LoadingButton.svelte';
+  import { Switch } from '$lib/components/ui/switch';
   import Widget from '$lib/components/widgets/Widget.svelte';
   import { SUB_NAV_HEIGHT } from '$lib/constants';
   import { type Objective } from '$lib/server/db/schema';
   import type { WidgetMetricData } from '$lib/server/services/metrics/types';
+  import { updateState } from '$lib/state.svelte';
   import type { LocalUser, PartialBy } from '$lib/types';
   import { debounce } from '$lib/utils';
   import { explicitEffect } from '$lib/utils.svelte';
@@ -35,6 +37,8 @@
   }
 
   const { data, edit = false }: Props = $props();
+
+  let widgetMode = $state<'light' | 'dark'>('light');
 
   type MetricTab = 'metric.1' | 'metric.2' | 'metric.3';
   let focusedTab = $state<'sharing' | 'general.title' | 'general.subtitle' | 'image' | MetricTab>(
@@ -66,6 +70,7 @@
       if (form.message) {
         toast.success(form.message);
       }
+      updateState.widgetCounter++;
     },
   });
   const { form: formData, enhance, submitting } = form;
@@ -376,18 +381,27 @@
 
 <div class="flex flex-grow" style="height: calc(100vh - {SUB_NAV_HEIGHT}px);">
   <div class="bg-dotted relative flex max-w-[60%] flex-grow items-center justify-center p-2">
-    <div
-      class="absolute left-2 right-2 top-2 flex items-center gap-3 rounded-lg border bg-background p-3 text-sm"
-    >
-      <Icon
-        src={IoInformationCircle}
-        className="mt-0.5 size-5 flex-shrink-0 text-muted-foreground"
-      />
-      <div class="space-y-1">
-        <p>
-          Click on the gray areas to edit the individual components. You can also drag and drop
-          metrics to reorder them.
-        </p>
+    <div class="absolute left-2 right-2 top-2 space-y-2">
+      <div class="flex items-center gap-3 rounded-lg border bg-background p-3 text-sm">
+        <Icon
+          src={IoInformationCircle}
+          className="mt-0.5 size-5 flex-shrink-0 text-muted-foreground"
+        />
+        <div class="space-y-1">
+          <p>
+            Click on the gray areas to edit the individual components. You can also drag and drop
+            metrics to reorder them.
+          </p>
+        </div>
+      </div>
+      <div
+        class="flex w-fit items-center gap-3 rounded-lg border bg-background p-3 text-sm font-medium"
+      >
+        <Switch
+          checked={widgetMode === 'dark'}
+          onCheckedChange={() => (widgetMode = widgetMode === 'dark' ? 'light' : 'dark')}
+        />
+        {widgetMode === 'dark' ? 'Dark' : 'Light'} Mode
       </div>
     </div>
 
@@ -413,6 +427,7 @@
         }}
         onMetricClose={onRemoveMetric}
         {onMetricDrag}
+        dark={widgetMode === 'dark'}
       />
     </div>
 

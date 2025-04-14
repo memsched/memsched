@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { ComponentProps } from 'svelte';
 
+  import { addOpacityRgba, getMutedHexColor, lightenHexColor, smartInvertColor } from '$lib/colors';
   import Watermark from '$lib/components/svgs/Watermark.svelte';
   import HeatmapComponent from '$lib/components/widgets/components/HeatmapComponent.svelte';
   import PlotComponent from '$lib/components/widgets/components/PlotComponent.svelte';
@@ -8,7 +9,6 @@
   import WidgetEditComponent from '$lib/components/widgets/utils/WidgetEditComponent.svelte';
   import type { WidgetData, WidgetMetricData } from '$lib/server/services/metrics/types';
   import type { PartialBy } from '$lib/types';
-  import { addOpacityRgba, getMutedHexColor } from '$lib/utils';
 
   interface Props {
     onTitleClick?: () => void;
@@ -18,6 +18,11 @@
     onMetricClick?: (index: number) => void;
     onMetricClose?: (e: MouseEvent, index: number) => void;
     onMetricDrag?: (fromIndex: number, toIndex: number) => void;
+  }
+
+  interface WidgetProps extends Partial<WidgetData>, Props {
+    metrics?: PartialBy<WidgetMetricData, 'data'>[];
+    dark?: boolean;
   }
 
   const {
@@ -42,12 +47,16 @@
     onMetricClick,
     onMetricClose,
     onMetricDrag,
-  }: Partial<
-    WidgetData & {
-      metrics: PartialBy<WidgetMetricData, 'data'>[];
-    }
-  > &
-    Props = $props();
+    dark = false,
+  }: WidgetProps = $props();
+
+  const effectiveBorderColor = $derived(
+    dark ? lightenHexColor(smartInvertColor(borderColor), 15) : borderColor
+  );
+  const effectiveColor = $derived(dark ? smartInvertColor(color) : color);
+  const effectiveBackgroundColor = $derived(
+    dark ? smartInvertColor(backgroundColor) : backgroundColor
+  );
 
   let draggedIndex = $state(-1);
   let dragOverIndex = $state(-1);
@@ -83,10 +92,10 @@
   style:gap="0.2rem"
 >
   <div
-    style:border={`${borderWidth}px solid ${borderColor}`}
+    style:border={`${borderWidth}px solid ${effectiveBorderColor}`}
     style:border-radius="{borderRadius}px"
-    style:color
-    style:background-color={backgroundColor}
+    style:color={effectiveColor}
+    style:background-color={effectiveBackgroundColor}
     style:padding="{padding}px"
     style:margin="1px"
     style:display="flex"
@@ -173,13 +182,13 @@
           width="100px"
           height="0.8rem"
           label="Subtitle"
-          value={subtitle}
+          value={subtitle || ''}
         >
           <div
             style:font-size="0.8rem"
             style:max-width="350px"
             style:overflow="hidden"
-            style:color={getMutedHexColor(color, 1.0)}
+            style:color={getMutedHexColor(effectiveColor, 1.0)}
           >
             {subtitle}
           </div>
@@ -243,19 +252,19 @@
               <ValueComponent
                 metric={metric as ComponentProps<typeof ValueComponent>['metric']}
                 {accentColor}
-                {color}
+                color={effectiveColor}
               />
             {:else if metric.style.startsWith('plot')}
               <PlotComponent
                 metric={metric as ComponentProps<typeof PlotComponent>['metric']}
                 {accentColor}
-                {color}
+                color={effectiveColor}
               />
             {:else if metric.style.startsWith('heatmap')}
               <HeatmapComponent
                 metric={metric as ComponentProps<typeof HeatmapComponent>['metric']}
                 {accentColor}
-                {color}
+                color={effectiveColor}
               />
             {/if}
           </WidgetEditComponent>

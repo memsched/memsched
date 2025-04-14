@@ -1,4 +1,8 @@
 <script lang="ts">
+  import { mode } from 'mode-watcher';
+  import { fade } from 'svelte/transition';
+
+  import { browser } from '$app/environment';
   import Widget from '$lib/components/widgets/Widget.svelte';
   import type { WidgetJoinMetricsData } from '$lib/server/services/metrics/types';
 
@@ -40,24 +44,29 @@
   });
 </script>
 
-<div class="relative w-full overflow-hidden">
-  <div
-    class="pointer-events-none absolute inset-0 z-10 bg-gradient-to-b from-transparent to-zinc-700/25"
-  ></div>
-  <!-- Generate rows based on columns prop with alternating directions -->
-  {#each widgetColumns as column}
-    <div class="relative py-1 last-of-type:pb-6">
+{#if browser}
+  <div class="relative w-full overflow-hidden">
+    <div
+      class="pointer-events-none absolute inset-0 z-10 bg-gradient-to-b from-transparent to-zinc-700/25"
+    ></div>
+    <!-- Generate rows based on columns prop with alternating directions -->
+    {#each widgetColumns as column, i}
       <div
-        class="animate-scroll-{column.direction} inline-flex flex-shrink-0 gap-4"
-        style="animation-duration: {animationDuration}s; animation-timing-function: linear; animation-iteration-count: infinite;"
+        class="relative py-1 last-of-type:pb-6"
+        in:fade|global={{ delay: i * 20, duration: 200 }}
       >
-        {#each column.widgets as widget, j (j)}
-          <Widget {...widget} />
-        {/each}
+        <div
+          class="animate-scroll-{column.direction} inline-flex flex-shrink-0 gap-4"
+          style="animation-duration: {animationDuration}s; animation-timing-function: linear; animation-iteration-count: infinite;"
+        >
+          {#each column.widgets as widget, j (j)}
+            <Widget {...widget} dark={$mode === 'dark'} />
+          {/each}
+        </div>
       </div>
-    </div>
-  {/each}
-</div>
+    {/each}
+  </div>
+{/if}
 
 <style>
   @keyframes scroll-left {

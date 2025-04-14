@@ -21,6 +21,7 @@
     toggleMode();
   }}
   class={cn(props.class, 'relative flex w-full min-w-[32px] items-center px-2 py-1.5')}
+  aria-label="Toggle theme"
 >
   {#if $mode === 'dark'}
     <div in:slide={{ duration: 200 }} out:slide={{ duration: 200 }} class="absolute left-[8px]">

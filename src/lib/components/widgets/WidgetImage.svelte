@@ -4,6 +4,7 @@
   import { browser } from '$app/environment';
   import { page } from '$app/state';
   import { updateState } from '$lib/state.svelte';
+  import { cn } from '$lib/utils';
 
   interface Props {
     widget: {
@@ -24,10 +25,18 @@
       ($mode === 'dark' ? '&dark' : '')
   );
   const imgAlt = $derived(`${widget.title} - ${widget.subtitle}`);
+
+  let loaded = $state(false);
 </script>
 
 {#snippet widgetImage()}
-  <img src={imgSrc} alt={imgAlt} style="height: {height}px;" />
+  <img
+    src={imgSrc}
+    alt={imgAlt}
+    style="height: {height}px;"
+    class={cn('transition-opacity duration-200', loaded ? 'opacity-100' : 'opacity-0')}
+    onload={() => (loaded = true)}
+  />
 {/snippet}
 
 {#if browser}

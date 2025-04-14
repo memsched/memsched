@@ -1,7 +1,8 @@
 <script lang="ts">
+  import { formatHex8 } from 'culori';
   import type { ComponentProps } from 'svelte';
 
-  import { addOpacityRgba } from '$lib/colors';
+  import { setOpacity } from '$lib/colors';
   import ValueComponent from '$lib/components/widgets/components/ValueComponent.svelte';
   import MetricSkeleton from '$lib/components/widgets/utils/MetricSkeleton.svelte';
   import type { WidgetMetricDataHeatmap } from '$lib/server/services/metrics/types';
@@ -28,7 +29,8 @@
 
   function getColorIntensity(value: number) {
     const normalizedValue = (value - minValue) / (maxValue - minValue);
-    return addOpacityRgba(accentColor, 0.1 + normalizedValue * 0.9);
+    // Set alpha based on normalized value (0.25 to 1)
+    return formatHex8(setOpacity(accentColor, 0.25 + normalizedValue * 0.75));
   }
 </script>
 

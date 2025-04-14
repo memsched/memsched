@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { z } from 'zod';
 
 import type { LogSchema } from '$lib/components/forms/objective-log-form/schema';
+import { assert } from '$lib/utils';
 
 import type { CacheService } from '../cache';
 import type { DBType } from '../db';
@@ -14,15 +15,25 @@ import {
   wrapResultAsync,
   wrapResultAsyncFn,
 } from '../db/types';
-import type { MetricsService } from './metrics-service';
 import type { ObjectivesService } from './objectives-service';
+import type { WidgetsService } from './widgets-service';
 
 export class ObjectiveLogsService {
+  private widgetsService: WidgetsService | null = null;
+
   constructor(
     private readonly db: DBType,
-    private readonly objectivesService: ObjectivesService,
-    private readonly metricsService: MetricsService
+    private readonly objectivesService: ObjectivesService
   ) {}
+
+  public setWidgetsService(widgetsService: WidgetsService) {
+    this.widgetsService = widgetsService;
+  }
+
+  private getWidgetsService() {
+    assert(this.widgetsService, 'Widgets service not set');
+    return this.widgetsService;
+  }
 
   public getAll(objectiveId: string, userId: string) {
     return wrapResultAsync(
@@ -107,7 +118,7 @@ export class ObjectiveLogsService {
         ResultAsync.combine([
           okAsync(objective),
           okAsync(log),
-          this.metricsService.invalidateMetrics(objective.id, cache),
+          this.getWidgetsService().invalidateWidgets(objective.id, cache),
         ])
       );
   }
@@ -135,7 +146,7 @@ export class ObjectiveLogsService {
         return ResultAsync.combine([
           okAsync(updatedObjective),
           okAsync(lastLog),
-          this.metricsService.invalidateMetrics(updatedObjective.id, cache),
+          this.getWidgetsService().invalidateWidgets(updatedObjective.id, cache),
         ]);
       });
   }

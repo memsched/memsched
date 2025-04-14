@@ -1,5 +1,7 @@
 <script lang="ts">
-  import { getMutedHexColor } from '$lib/colors';
+  import { formatHex8 } from 'culori';
+
+  import { getMutedColor } from '$lib/colors';
   import TrendingUpArrow from '$lib/components/svgs/TrendingUpArrow.svelte';
   import MetricSkeleton from '$lib/components/widgets/utils/MetricSkeleton.svelte';
   import type {
@@ -57,7 +59,7 @@
       {/if}
     </div>
     {#if metric.valueName}
-      <div style:font-size="0.8rem" style:color={getMutedHexColor(color, 1.0)}>
+      <div style:font-size="0.8rem" style:color={formatHex8(getMutedColor(color, 1.0))}>
         {metric.valueName}
       </div>
     {/if}

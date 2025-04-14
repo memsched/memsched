@@ -2,7 +2,7 @@
   import { onDestroy, onMount } from 'svelte';
 
   import { browser } from '$app/environment';
-  import { getLuminance, hexToRgb } from '$lib/colors';
+  import { getLuminance, parseColor, toRgb } from '$lib/colors';
   import { roundToDecimal } from '$lib/utils';
 
   // Configuration
@@ -212,8 +212,8 @@
     const hex2 = `#${color2.r.toString(16).padStart(2, '0')}${color2.g.toString(16).padStart(2, '0')}${color2.b.toString(16).padStart(2, '0')}`;
 
     // Use imported getLuminance
-    const lum1 = getLuminance(hex1);
-    const lum2 = getLuminance(hex2);
+    const lum1 = getLuminance(parseColor(hex1));
+    const lum2 = getLuminance(parseColor(hex2));
 
     const lighter = Math.max(lum1, lum2);
     const darker = Math.min(lum1, lum2);
@@ -291,8 +291,8 @@
               const backgroundColor = getEffectiveBackgroundColor(element);
 
               // Parse colors
-              const fg = hexToRgb(foregroundColor);
-              const bg = hexToRgb(backgroundColor);
+              const fg = toRgb(parseColor(foregroundColor));
+              const bg = toRgb(parseColor(backgroundColor));
 
               if (!fg || !bg) return;
 

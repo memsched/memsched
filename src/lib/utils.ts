@@ -55,3 +55,7 @@ export function formatCurrency(amount: number, currency: string) {
 export function roundToDecimal(value: number, decimalPlaces: number) {
   return Math.round(value * 10 ** decimalPlaces) / 10 ** decimalPlaces;
 }
+
+export function clamp(value: number, min: number, max: number) {
+  return Math.min(Math.max(value, min), max);
+}

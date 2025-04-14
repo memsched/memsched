@@ -1,7 +1,8 @@
 <script lang="ts">
+  import { formatHex8 } from 'culori';
   import type { ComponentProps } from 'svelte';
 
-  import { addOpacityRgba, getMutedHexColor, lightenHexColor, smartInvertColor } from '$lib/colors';
+  import { brighten, getMutedColor, setOpacity, smartInvert } from '$lib/colors';
   import Watermark from '$lib/components/svgs/Watermark.svelte';
   import HeatmapComponent from '$lib/components/widgets/components/HeatmapComponent.svelte';
   import PlotComponent from '$lib/components/widgets/components/PlotComponent.svelte';
@@ -50,12 +51,15 @@
     dark = false,
   }: WidgetProps = $props();
 
-  const effectiveBorderColor = $derived(
-    dark ? lightenHexColor(smartInvertColor(borderColor), 15) : borderColor
-  );
-  const effectiveColor = $derived(dark ? smartInvertColor(color) : color);
+  const effectiveColor = $derived(dark ? formatHex8(smartInvert(color)) : color);
   const effectiveBackgroundColor = $derived(
-    dark ? smartInvertColor(backgroundColor) : backgroundColor
+    dark ? formatHex8(smartInvert(backgroundColor)) : backgroundColor
+  );
+  const effectiveAccentColor = $derived(
+    dark ? formatHex8(brighten(smartInvert(accentColor), 0.2)) : accentColor
+  );
+  const effectiveBorderColor = $derived(
+    dark ? formatHex8(brighten(smartInvert(borderColor), 0.125)) : borderColor
   );
 
   let draggedIndex = $state(-1);
@@ -149,7 +153,7 @@
               style:justify-content="center"
               style:width="48px"
               style:height="48px"
-              style:background-color={addOpacityRgba(accentColor, 0.1)}
+              style:background-color={formatHex8(setOpacity(accentColor, 0.1))}
               style:border-radius="6px"
               style:font-weight="600"
               style:font-size="1.2rem"
@@ -188,7 +192,7 @@
             style:font-size="0.8rem"
             style:max-width="350px"
             style:overflow="hidden"
-            style:color={getMutedHexColor(effectiveColor, 1.0)}
+            style:color={formatHex8(getMutedColor(effectiveColor, 1.0))}
           >
             {subtitle}
           </div>
@@ -219,7 +223,7 @@
               style:justify-content="center"
               style:width="48px"
               style:height="48px"
-              style:background-color={addOpacityRgba(accentColor, 0.1)}
+              style:background-color={formatHex8(setOpacity(accentColor, 0.1))}
               style:border-radius="6px"
               style:font-weight="600"
               style:font-size="1.2rem"
@@ -251,19 +255,19 @@
             {#if metric.style.startsWith('metric')}
               <ValueComponent
                 metric={metric as ComponentProps<typeof ValueComponent>['metric']}
-                {accentColor}
+                accentColor={effectiveAccentColor}
                 color={effectiveColor}
               />
             {:else if metric.style.startsWith('plot')}
               <PlotComponent
                 metric={metric as ComponentProps<typeof PlotComponent>['metric']}
-                {accentColor}
+                accentColor={effectiveAccentColor}
                 color={effectiveColor}
               />
             {:else if metric.style.startsWith('heatmap')}
               <HeatmapComponent
                 metric={metric as ComponentProps<typeof HeatmapComponent>['metric']}
-                {accentColor}
+                accentColor={effectiveAccentColor}
                 color={effectiveColor}
               />
             {/if}

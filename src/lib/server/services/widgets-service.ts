@@ -70,6 +70,18 @@ export class WidgetsService {
     );
   }
 
+  public getAllByObjectiveId(objectiveId: string) {
+    return wrapResultAsyncFn(async () => {
+      const widgets = await this.db
+        .select({ widget: table.widget })
+        .from(table.widget)
+        .leftJoin(table.widgetMetric, eq(table.widget.id, table.widgetMetric.widgetId))
+        .where(eq(table.widgetMetric.objectiveId, objectiveId));
+
+      return widgets.map((widget) => widget.widget);
+    });
+  }
+
   public getWithMetrics(widgetId: string, userId?: string) {
     return wrapResultAsyncFn(async () => {
       const widgetWithMetrics = await this.db
@@ -291,11 +303,7 @@ export class WidgetsService {
         }
 
         // Invalidate the cache
-        await Promise.all(
-          ['html', 'svg'].flatMap((type) =>
-            ['light', 'dark'].map((theme) => cache.delete(`widget:${widgetId}:${type}:${theme}`))
-          )
-        );
+        await this.invalidateWidget(widgetId, cache);
 
         return widgetId;
       })
@@ -310,11 +318,7 @@ export class WidgetsService {
           .where(and(eq(table.widget.id, widgetId), eq(table.widget.userId, userId)));
 
         // Invalidate the cache
-        await Promise.all(
-          ['html', 'svg'].flatMap((type) =>
-            ['light', 'dark'].map((theme) => cache.delete(`widget:${widgetId}:${type}:${theme}`))
-          )
-        );
+        await this.invalidateWidget(widgetId, cache);
       })
     );
   }
@@ -328,5 +332,21 @@ export class WidgetsService {
 
       return count.count;
     });
+  }
+
+  public invalidateWidget(widgetId: string, cache: CacheService) {
+    return wrapResultAsyncFn(async () => {
+      await Promise.all(
+        ['html', 'svg'].flatMap((type) =>
+          ['light', 'dark'].map((theme) => cache.delete(`widget:${widgetId}:${type}:${theme}`))
+        )
+      );
+    });
+  }
+
+  public invalidateWidgets(objectiveId: string, cache: CacheService) {
+    return this.getAllByObjectiveId(objectiveId).andThen((widgets) =>
+      ResultAsync.combine(widgets.map((widget) => this.invalidateWidget(widget.id, cache)))
+    );
   }
 }

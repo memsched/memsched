@@ -7,7 +7,6 @@ import { getCache } from '$lib/server/cache';
 import { type DBType, getDB } from '$lib/server/db';
 import {
   MetricDataService,
-  MetricsService,
   ModerationService,
   ObjectiveLogsService,
   ObjectivesService,
@@ -32,11 +31,14 @@ function isPrerenderedRoute(url: URL) {
 function initializeServices(db: DBType) {
   // Create independent services first
   const usersService = new UsersService(db);
+
   const objectivesService = new ObjectivesService(db);
-  const metricsService = new MetricsService(db);
-  const objectiveLogsService = new ObjectiveLogsService(db, objectivesService, metricsService);
+  const objectiveLogsService = new ObjectiveLogsService(db, objectivesService);
+
   const metricDataService = new MetricDataService(db, objectivesService, objectiveLogsService);
   const widgetsService = new WidgetsService(db, objectivesService, metricDataService);
+  objectiveLogsService.setWidgetsService(widgetsService);
+
   const sessionsService = new SessionsService(db);
   const paymentService = new PaymentService(db);
   const moderationService = new ModerationService();
@@ -46,7 +48,6 @@ function initializeServices(db: DBType) {
     objectivesService,
     objectiveLogsService,
     widgetsService,
-    metricsService,
     metricDataService,
     sessionsService,
     paymentService,

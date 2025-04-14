@@ -1,8 +1,9 @@
 <script lang="ts">
+  import { formatHex, formatHex8, type Hsv } from 'culori';
   import { Icon } from 'svelte-icons-pack';
   import { IoColorFillOutline } from 'svelte-icons-pack/io';
 
-  import { hexToHsva, hsvaToHexa, hsvToHex } from '$lib/colors';
+  import { toHsv } from '$lib/colors';
   import { cn, roundToDecimal } from '$lib/utils';
 
   import { Button } from '../ui/button';
@@ -31,10 +32,13 @@
 
   let open = $state(false);
 
-  let h = $state(0);
-  let s = $state(100);
-  let v = $state(100);
-  let a = $state(1);
+  let color = $state<Required<Hsv>>({
+    h: 0,
+    s: 1,
+    v: 1,
+    alpha: 1,
+    mode: 'hsv',
+  });
 
   let satValRect: DOMRect | undefined = $state();
   let hueRect: DOMRect | undefined = $state();
@@ -69,42 +73,30 @@
 
   $effect(() => {
     if (!isDraggingSatVal && !isDraggingHue && !isDraggingAlpha) {
-      const currentHsva = hexToHsva(value);
-      const currentStateHex = alpha ? hsvaToHexa(h, s, v, a) : hsvToHex(h, s, v);
+      const currentHsva = toHsv(value);
+      const currentStateHex = alpha ? formatHex8(color) : formatHex(color);
 
-      if (value.toLowerCase() !== currentStateHex.toLowerCase()) {
-        if (currentHsva) {
-          h = currentHsva.h;
-          s = currentHsva.s;
-          v = currentHsva.v;
-
-          if (alpha) {
-            a = value.length > 7 ? currentHsva.a : 1;
-          } else {
-            a = 1;
-          }
-        }
+      if (value.toLowerCase() !== currentStateHex.toLowerCase() && currentHsva) {
+        color = currentHsva as Required<Hsv>;
       }
     }
   });
 
   $effect(() => {
-    const newHex = alpha ? hsvaToHexa(h, s, v, a) : hsvToHex(h, s, v);
+    const newHex = alpha ? formatHex8(color) : formatHex(color);
     if (value.toLowerCase() !== newHex.toLowerCase()) {
       value = newHex;
     }
   });
 
-  let hueColor = $derived(hsvToHex(h, 100, 100));
-  let satValHandleX = $derived(satValPickerEl ? (s / 100) * satValPickerEl.clientWidth : 0);
-  let satValHandleY = $derived(
-    satValPickerEl ? ((100 - v) / 100) * satValPickerEl.clientHeight : 0
-  );
-  let hueHandleY = $derived(hueRect ? (h / 360) * hueRect.height : 0);
-  let alphaHandleY = $derived(alphaRect ? (1 - a) * alphaRect.height : 0);
-  let alphaGradientColor = $derived(hsvToHex(h, s, v));
+  let hueColor = $derived(formatHex({ h: color.h, s: 1, v: 1, mode: 'hsv' }));
+  let satValHandleX = $derived(satValPickerEl ? color.s * satValPickerEl.clientWidth : 0);
+  let satValHandleY = $derived(satValPickerEl ? (1 - color.v) * satValPickerEl.clientHeight : 0);
+  let hueHandleY = $derived(hueRect ? (color.h / 360) * hueRect.height : 0);
+  let alphaHandleY = $derived(alphaRect ? (1 - color.alpha) * alphaRect.height : 0);
+  let alphaGradientColor = $derived(formatHex(color));
   let satValHandleStyle = $derived(
-    `left: ${satValHandleX}px; top: ${satValHandleY}px; background-color: ${alpha ? hsvaToHexa(h, s, v, a) : hsvToHex(h, s, v)};`
+    `left: ${satValHandleX}px; top: ${satValHandleY}px; background-color: ${formatHex8(color)};`
   );
 
   let placeholder = $derived(placeholderProp ?? (alpha ? '#RRGGBBAA' : '#RRGGBB'));
@@ -123,20 +115,20 @@
     const x = Math.max(0, Math.min(e.clientX - satValRect.left - borderLeft, pickerWidth));
     const y = Math.max(0, Math.min(e.clientY - satValRect.top - borderTop, pickerHeight));
 
-    s = roundToDecimal((x / pickerWidth) * 100, 2);
-    v = roundToDecimal(100 - (y / pickerHeight) * 100, 2);
+    color.s = roundToDecimal(x / pickerWidth, 2);
+    color.v = roundToDecimal(1 - y / pickerHeight, 2);
   }
 
   function updateHue(e: PointerEvent) {
     if (!hueRect) return;
     const y = Math.max(0, Math.min(e.clientY - hueRect.top, hueRect.height));
-    h = roundToDecimal((y / hueRect.height) * 360, 2);
+    color.h = roundToDecimal((y / hueRect.height) * 360, 2);
   }
 
   function updateAlpha(e: PointerEvent) {
     if (!alphaRect) return;
     const y = Math.max(0, Math.min(e.clientY - alphaRect.top, alphaRect.height));
-    a = roundToDecimal(1 - y / alphaRect.height, 2);
+    color.alpha = roundToDecimal(1 - y / alphaRect.height, 2);
   }
 
   function handleSatValPointerDown(e: PointerEvent) {

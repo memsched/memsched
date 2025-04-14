@@ -14,7 +14,6 @@ import type { DBType } from '$lib/server/db';
 import type { Session } from '$lib/server/db/schema';
 import type {
   MetricDataService,
-  MetricsService,
   ModerationService,
   ObjectiveLogsService,
   ObjectivesService,
@@ -41,7 +40,6 @@ declare global {
       objectiveLogsService: ObjectiveLogsService;
       widgetsService: WidgetsService;
       metricDataService: MetricDataService;
-      metricsService: MetricsService;
       paymentService: PaymentService;
       moderationService: ModerationService;
     }

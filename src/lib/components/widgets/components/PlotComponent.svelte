@@ -1,7 +1,8 @@
 <script lang="ts">
+  import { formatHex8 } from 'culori';
   import type { ComponentProps } from 'svelte';
 
-  import { addOpacityRgba } from '$lib/colors';
+  import { setOpacity } from '$lib/colors';
   import ValueComponent from '$lib/components/widgets/components/ValueComponent.svelte';
   import MetricSkeleton from '$lib/components/widgets/utils/MetricSkeleton.svelte';
   import type { WidgetMetricDataPlot } from '$lib/server/services/metrics/types';
@@ -120,7 +121,7 @@
         <!-- Subtle area under the line -->
         <path
           d={`${createLinePath()} L${PLOT_WIDTH},${PLOT_HEIGHT} L0,${PLOT_HEIGHT} Z`}
-          fill={addOpacityRgba(accentColor, 0.1)}
+          fill={formatHex8(setOpacity(accentColor, 0.15))}
           stroke="none"
         />
       </svg>

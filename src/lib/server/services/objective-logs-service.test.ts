@@ -8,34 +8,34 @@ import * as table from '$lib/server/db/schema';
 import { getTestDB, getTestUsers } from '$lib/server/test-utils/test-context';
 
 import type { CacheService } from '../cache';
-import { MetricsService } from './metrics-service';
 import { ObjectiveLogsService } from './objective-logs-service';
 import { ObjectivesService } from './objectives-service';
+import type { WidgetsService } from './widgets-service';
 
 describe('ObjectiveLogsService', () => {
   let db: DBType;
   let testUsers: table.User[];
   let objectiveLogsService: ObjectiveLogsService;
   let objectivesService: ObjectivesService;
-  let metricsService: MetricsService;
   let mockCache: CacheService;
+  let mockWidgetsService: WidgetsService;
   let testObjectiveId: string;
 
   beforeEach(async () => {
     db = getTestDB();
     testUsers = getTestUsers();
 
-    // Create mock services with proper Result types
-    metricsService = {
-      invalidateMetrics: vi.fn().mockImplementation(() => okAsync(undefined)),
-    } as unknown as MetricsService;
-
     mockCache = {
       del: vi.fn(),
     } as unknown as CacheService;
 
+    mockWidgetsService = {
+      invalidateWidgets: vi.fn().mockReturnValue(okAsync(undefined)),
+    } as unknown as WidgetsService;
+
     objectivesService = new ObjectivesService(db);
-    objectiveLogsService = new ObjectiveLogsService(db, objectivesService, metricsService);
+    objectiveLogsService = new ObjectiveLogsService(db, objectivesService);
+    objectiveLogsService.setWidgetsService(mockWidgetsService);
 
     // Create a test objective
     const createResult = await objectivesService.create(

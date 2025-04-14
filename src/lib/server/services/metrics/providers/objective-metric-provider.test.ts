@@ -1,15 +1,15 @@
 import { subDays } from 'date-fns';
 import { okAsync } from 'neverthrow';
-import { beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import type { DBType } from '$lib/server/db';
 import type { WidgetMetric } from '$lib/server/db/schema';
 import * as table from '$lib/server/db/schema';
 import { getTestDB, getTestUsers } from '$lib/server/test-utils/test-context';
 
-import { MetricsService } from '../../metrics-service';
 import { ObjectiveLogsService } from '../../objective-logs-service';
 import { ObjectivesService } from '../../objectives-service';
+import type { WidgetsService } from '../../widgets-service';
 import { ObjectiveMetricProvider } from './objective-metric-provider';
 
 describe('ObjectiveMetricProvider', () => {
@@ -18,7 +18,7 @@ describe('ObjectiveMetricProvider', () => {
   let objectiveMetricProvider: ObjectiveMetricProvider;
   let objectivesService: ObjectivesService;
   let objectiveLogsService: ObjectiveLogsService;
-  let metricsService: MetricsService;
+  let mockWidgetsService: WidgetsService;
   let testObjectiveId: string;
   const referenceDate = new Date(2024, 4, 12, 12, 0, 0); // Sunday, May 12th, 2024, noon
   const saturday = subDays(referenceDate, 1); // Saturday, May 11th, 2024
@@ -28,13 +28,14 @@ describe('ObjectiveMetricProvider', () => {
     db = getTestDB();
     testUsers = getTestUsers();
 
-    // Initialize services
-    metricsService = {
-      invalidateMetrics: () => okAsync(undefined),
-    } as unknown as MetricsService;
+    mockWidgetsService = {
+      invalidateWidgets: vi.fn().mockReturnValue(okAsync(undefined)),
+    } as unknown as WidgetsService;
 
+    // Initialize services
     objectivesService = new ObjectivesService(db);
-    objectiveLogsService = new ObjectiveLogsService(db, objectivesService, metricsService);
+    objectiveLogsService = new ObjectiveLogsService(db, objectivesService);
+    objectiveLogsService.setWidgetsService(mockWidgetsService);
     objectiveMetricProvider = new ObjectiveMetricProvider(objectivesService, objectiveLogsService);
 
     // Create a test objective with initial log on Friday

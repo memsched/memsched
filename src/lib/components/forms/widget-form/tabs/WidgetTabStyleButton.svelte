@@ -39,7 +39,7 @@
           {...props}
           {disabled}
           class={cn(
-            'flex items-center justify-center rounded-lg border p-4',
+            'flex items-center justify-center overflow-hidden rounded-lg border p-4',
             $formData.metrics[metricIndex].style === style && 'border-primary',
             disabled && 'opacity-50'
           )}
@@ -48,7 +48,6 @@
             $formData.metrics[metricIndex].style = style;
           }}
         >
-          <!-- <div class="h4">{title}</div> -->
           {@render children()}
         </button>
       {/snippet}

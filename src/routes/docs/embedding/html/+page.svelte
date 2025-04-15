@@ -51,13 +51,13 @@
         This option wraps your widget in a link that directs users to your MEMsched profile when
         clicked:
       </p>
-      <CodeBlock code={htmlSnippet} />
+      <CodeBlock code={htmlSnippet} language="html" />
     </div>
 
     <div class="space-y-4">
       <h3 class="text-2xl font-semibold tracking-tight">Without Profile Link</h3>
       <p>Use this option if you want to display the widget without making it clickable:</p>
-      <CodeBlock code={htmlSnippetNoLink} />
+      <CodeBlock code={htmlSnippetNoLink} language="html" />
     </div>
 
     <p class="mt-4">

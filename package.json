@@ -84,6 +84,7 @@
     "culori": "^4.0.1",
     "date-fns": "^4.1.0",
     "drizzle-orm": "^0.41.0",
+    "highlight.js": "^11.11.1",
     "html-react-parser": "^5.2.3",
     "mode-watcher": "^0.5.1",
     "satori": "^0.12.2",

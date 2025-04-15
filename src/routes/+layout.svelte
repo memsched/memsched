@@ -1,7 +1,7 @@
 <script lang="ts">
   import '../app.css';
 
-  import { ModeWatcher } from 'mode-watcher';
+  import { mode, ModeWatcher } from 'mode-watcher';
   import SvelteSeo from 'svelte-seo';
 
   import { browser } from '$app/environment';
@@ -25,8 +25,8 @@
   themeColor="#ffffff"
 />
 
-<!-- Umami Web Analytics -->
 <svelte:head>
+  <!-- Umami Web Analytics -->
   {#if import.meta.env.PROD}
     <script
       data-website-id="048e05e6-5b46-463f-898e-7fb2d8f467e8"
@@ -34,10 +34,16 @@
       src="https://cloud.umami.is/script.js"
     ></script>
   {/if}
+  <!-- Highlight.js -->
+  {#if $mode === 'dark'}
+    <link rel="stylesheet" href="/highlightjs/github-dark.min.css" />
+  {:else}
+    <link rel="stylesheet" href="/highlightjs/github.min.css" />
+  {/if}
 </svelte:head>
 
 <PageLoadProgress />
-<ModeWatcher defaultMode="dark" track />
+<ModeWatcher defaultMode="dark" track disableHeadScriptInjection />
 {@render children()}
 {#if browser}
   {#await import('svelte-french-toast') then { Toaster }}

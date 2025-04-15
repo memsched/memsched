@@ -73,6 +73,9 @@
   * {
     @apply border-border;
   }
+  html {
+    @apply bg-back;
+  }
   body {
     @apply bg-back text-foreground;
   }

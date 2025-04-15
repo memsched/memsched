@@ -1,5 +1,6 @@
 import type { Handle } from '@sveltejs/kit';
 import { sequence } from '@sveltejs/kit/hooks';
+import { generateSetInitialModeExpression } from 'mode-watcher';
 
 import { building } from '$app/environment';
 import { getAvatarStore } from '$lib/server/avatar-store';
@@ -106,5 +107,24 @@ const authHandle: Handle = async ({ event, resolve }) => {
   return resolve(event);
 };
 
+const securityHeadersHandle: Handle = async ({ event, resolve }) => {
+  const response = await resolve(event);
+
+  response.headers.set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
+  response.headers.set('X-Content-Type-Options', 'nosniff');
+  response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
+  response.headers.set('Permissions-Policy', 'camera=(), geolocation=(), microphone=()');
+
+  return response;
+};
+
+const injectHeadScripts: Handle = async ({ event, resolve }) => {
+  return resolve(event, {
+    transformPageChunk: ({ html }) => {
+      return html.replace('%modewatcher.snippet%', generateSetInitialModeExpression({}));
+    },
+  });
+};
+
 // Apply database handle first, then auth handle
-export const handle = sequence(dbHandle, authHandle);
+export const handle = sequence(securityHeadersHandle, injectHeadScripts, dbHandle, authHandle);

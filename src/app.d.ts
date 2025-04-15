@@ -28,6 +28,7 @@ import type { LocalUser } from '$lib/types';
 declare global {
   namespace App {
     interface Locals {
+      nonce: string;
       user: LocalUser | null;
       session: Session | null;
       db: DBType;

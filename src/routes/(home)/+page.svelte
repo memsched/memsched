@@ -5,6 +5,7 @@
   import { IoArrowForward, IoCube, IoGlobe, IoPersonCircle } from 'svelte-icons-pack/io';
   import SvelteSeo from 'svelte-seo';
 
+  import CodeBlock from '$lib/components/CodeBlock.svelte';
   import HomeLayout from '$lib/components/layouts/HomeLayout.svelte';
   import Arrow from '$lib/components/svgs/Arrow.svelte';
   import Path from '$lib/components/svgs/Path.svelte';
@@ -265,10 +266,12 @@
           <p class="text-center text-lg">
             Embed widgets like this one on your website with a single line of code
           </p>
-          <pre
-            class="mx-auto w-fit rounded-lg border bg-background px-4 font-mono text-sm text-foreground">
-          <code class="whitespace-pre-wrap">{codeSnippet}</code>
-        </pre>
+          <CodeBlock
+            code={codeSnippet}
+            language="html"
+            copy={false}
+            class="mx-auto w-fit justify-center bg-background text-base"
+          />
         </div>
       </div>
     </div>

@@ -63,9 +63,9 @@
     <Icon src={IoInformationCircle} className="mt-0.5 size-5 flex-shrink-0 text-muted-foreground" />
     <div class="space-y-1">
       <p>
-        For detailed setup instructions and troubleshooting, check out our <a
-          href="/docs/embedding/html"
-          class="text-primary hover:underline">widget documentation</a
+        For detailed setup instructions and troubleshooting, check out our
+        <a href="/docs/embedding/html" class="text-primary hover:underline" data-sveltekit-reload
+          >widget documentation</a
         >.
       </p>
     </div>
@@ -84,7 +84,7 @@
         <Label for="profile-link">Include Profile Link</Label>
       </div>
       <div class="space-y-2">
-        <CodeBlock code={includeProfileLink ? htmlSnippet : htmlSnippetNoLink} />
+        <CodeBlock code={includeProfileLink ? htmlSnippet : htmlSnippetNoLink} language="html" />
       </div>
       <p class="text-sm text-muted-foreground">
         Copy the code above and paste it into your HTML website or blog.

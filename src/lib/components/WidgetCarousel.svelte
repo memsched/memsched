@@ -47,7 +47,7 @@
 {#if browser}
   <div class="relative w-full overflow-hidden">
     <div
-      class="pointer-events-none absolute inset-0 z-10 bg-gradient-to-b from-transparent to-zinc-700/25"
+      class="pointer-events-none absolute inset-0 z-10 bg-gradient-to-b from-transparent to-zinc-700/10 dark:to-zinc-700/25"
     ></div>
     <!-- Generate rows based on columns prop with alternating directions -->
     {#each widgetColumns as column, i}

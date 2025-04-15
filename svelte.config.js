@@ -43,7 +43,6 @@ const config = {
         ],
         'script-src': [
           'self',
-          'unsafe-inline',
           'https://cloud.umami.is/script.js',
           'https://static.cloudflareinsights.com/',
         ],

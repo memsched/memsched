@@ -25,6 +25,7 @@
   href={'https://stats.uptimerobot.com/' + PUBLIC_UPTIME_ROBOT_ID}
   target="_blank"
   class="mt-2 inline-flex items-center space-x-1"
+  data-umami-event="uptime-robot-button"
 >
   <span class="relative me-1 inline-flex h-2.5 w-2.5">
     <span

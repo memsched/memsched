@@ -13,10 +13,12 @@
       <div
         class="flex gap-x-12 gap-y-2 text-muted-foreground *:whitespace-nowrap *:transition-colors hover:*:text-foreground max-sm:flex-col"
       >
-        <a href="/docs" data-sveltekit-reload> Documentation </a>
-        <a href="/tos">Terms of Service</a>
-        <a href="/privacy">Privacy Policy</a>
-        <a href="mailto:info@memsched.com">Contact</a>
+        <a href="/docs" data-sveltekit-reload data-umami-event="footer-docs-button">
+          Documentation
+        </a>
+        <a href="/tos" data-umami-event="footer-tos-button">Terms of Service</a>
+        <a href="/privacy" data-umami-event="footer-privacy-button">Privacy Policy</a>
+        <a href="mailto:info@memsched.com" data-umami-event="footer-contact-button">Contact</a>
       </div>
       <UptimeRobot />
     </div>

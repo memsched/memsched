@@ -1,6 +1,6 @@
 <script lang="ts">
   import { Icon } from 'svelte-icons-pack';
-  import { FiBookOpen, FiHome, FiLifeBuoy, FiLogIn } from 'svelte-icons-pack/fi';
+  import { FiBookOpen, FiHome, FiLogIn } from 'svelte-icons-pack/fi';
 
   import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
   import { cn } from '$lib/utils';
@@ -29,7 +29,8 @@
             {...props}
             href="/auth/signin"
             class={cn(props?.class as string, 'font-semibold text-primary')}
-            aria-label="Sign In"
+            aria-label="Log In"
+            data-umami-event="header-profile-anonymous-login-button"
           >
             <Icon src={FiLogIn} className="text-primary" />
             Sign In
@@ -39,7 +40,13 @@
       <DropdownMenuSeparator />
       <DropdownMenu.Item class="cursor-pointer hover:text-accent-foreground">
         {#snippet child({ props })}
-          <a href="/" {...props} aria-label="MEMsched Homepage" data-sveltekit-reload>
+          <a
+            href="/"
+            {...props}
+            aria-label="MEMsched Homepage"
+            data-sveltekit-reload
+            data-umami-event="header-profile-anonymous-home-button"
+          >
             <Icon src={FiHome} className="!text-muted-foreground" />
             Home
           </a>
@@ -47,7 +54,12 @@
       </DropdownMenu.Item>
       <DropdownMenu.Item class="cursor-pointer hover:text-accent-foreground">
         {#snippet child({ props })}
-          <a href="/docs" {...props} data-sveltekit-reload>
+          <a
+            href="/docs"
+            {...props}
+            data-sveltekit-reload
+            data-umami-event="header-profile-anonymous-docs-button"
+          >
             <Icon src={FiBookOpen} className="!text-muted-foreground" />
             Docs
           </a>
@@ -57,15 +69,6 @@
       <DropdownMenu.Item class="cursor-pointer hover:text-accent-foreground">
         {#snippet child({ props })}
           <ThemeToggle {...props} />
-        {/snippet}
-      </DropdownMenu.Item>
-      <DropdownMenuSeparator />
-      <DropdownMenu.Item class="cursor-pointer hover:text-accent-foreground">
-        {#snippet child({ props })}
-          <a href="mailto:info@memsched.com" {...props} aria-label="Contact Us">
-            <Icon src={FiLifeBuoy} className="!text-muted-foreground" />
-            Support
-          </a>
         {/snippet}
       </DropdownMenu.Item>
     </DropdownMenu.Group>

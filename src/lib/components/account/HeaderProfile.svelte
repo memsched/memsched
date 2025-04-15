@@ -45,7 +45,12 @@
       <DropdownMenuSeparator />
       <DropdownMenu.Item class="cursor-pointer hover:text-accent-foreground">
         {#snippet child({ props })}
-          <a href="/settings/profile" {...props} aria-label="Settings">
+          <a
+            href="/settings/profile"
+            {...props}
+            aria-label="Settings"
+            data-umami-event="header-profile-settings-button"
+          >
             <Icon src={FiSettings} className="!text-muted-foreground" />
             Settings
           </a>
@@ -53,7 +58,13 @@
       </DropdownMenu.Item>
       <DropdownMenu.Item class="cursor-pointer hover:text-accent-foreground">
         {#snippet child({ props })}
-          <a href="/docs" {...props} aria-label="Documentation" data-sveltekit-reload>
+          <a
+            href="/docs"
+            {...props}
+            aria-label="Documentation"
+            data-sveltekit-reload
+            data-umami-event="header-profile-docs-button"
+          >
             <Icon src={FiBookOpen} className="!text-muted-foreground" />
             Docs
           </a>
@@ -61,7 +72,13 @@
       </DropdownMenu.Item>
       <DropdownMenu.Item class="cursor-pointer hover:text-accent-foreground">
         {#snippet child({ props })}
-          <a href="/" {...props} aria-label="Home" data-sveltekit-reload>
+          <a
+            href="/"
+            {...props}
+            aria-label="Home"
+            data-sveltekit-reload
+            data-umami-event="header-profile-home-button"
+          >
             <Icon src={FiHome} className="!text-muted-foreground" />
             Home
           </a>
@@ -76,7 +93,12 @@
       <DropdownMenuSeparator />
       <DropdownMenu.Item class="cursor-pointer hover:text-accent-foreground">
         {#snippet child({ props })}
-          <a href="https://memsched.featurebase.app" {...props} aria-label="Ideas & Bugs">
+          <a
+            href="https://memsched.featurebase.app"
+            {...props}
+            aria-label="Ideas & Bugs"
+            data-umami-event="header-profile-ideas-bugs-button"
+          >
             <Icon src={IoBulb} className="!text-muted-foreground" />
             Ideas & Bugs
           </a>
@@ -86,7 +108,11 @@
       <form action="/auth/signout" method="POST" use:enhance>
         <DropdownMenu.Item class="w-full cursor-pointer hover:text-accent-foreground">
           {#snippet child({ props })}
-            <button {...props} aria-label="Sign Out">
+            <button
+              {...props}
+              aria-label="Sign Out"
+              data-umami-event="header-profile-sign-out-button"
+            >
               <Icon src={FiLogOut} className="!text-muted-foreground" />
               Sign Out
             </button>

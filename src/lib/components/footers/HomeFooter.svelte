@@ -10,7 +10,9 @@
 <footer class="border-t bg-background text-sm">
   <div class="main-container flex flex-col gap-6 divide-y py-10">
     <div class="flex flex-col gap-3">
-      <div class="flex gap-12 text-muted-foreground *:transition-colors hover:*:text-foreground">
+      <div
+        class="flex gap-x-12 gap-y-2 text-muted-foreground *:whitespace-nowrap *:transition-colors hover:*:text-foreground max-sm:flex-col"
+      >
         <a href="/docs"> Documentation </a>
         <a href="/tos">Terms of Service</a>
         <a href="/privacy">Privacy Policy</a>
@@ -18,7 +20,7 @@
       </div>
       <UptimeRobot />
     </div>
-    <div class="flex items-center justify-between pt-6">
+    <div class="flex items-center justify-between gap-6 pt-2">
       <p class="text-xs">
         &copy; {new Date().getFullYear()} MEMsched. All rights reserved. Built with <Icon
           className="inline"

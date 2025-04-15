@@ -103,7 +103,7 @@
 
   <!-- How it works section -->
   <section id="how-it-works" class="border-y bg-background">
-    <div class="container mx-auto px-4">
+    <div class="container px-4">
       <div class="mb-16 flex flex-col items-center text-center">
         <h2 class="h2 mb-3 w-fit border-b-2 border-dashed border-primary pb-1">How It Works</h2>
         <p class="text-lg text-muted-foreground">
@@ -112,7 +112,7 @@
       </div>
 
       <div
-        class="relative grid w-full grid-cols-1 justify-center gap-12 p-8 max-lg:px-16 lg:grid-cols-3"
+        class="relative grid w-full grid-cols-1 justify-center gap-12 p-8 max-sm:px-4 lg:grid-cols-3"
       >
         <Path class="absolute left-[21%] top-[-15%] -translate-x-1/2 max-lg:hidden" />
         <Path class="absolute bottom-0 right-[18%] -translate-x-1/2 rotate-180 max-lg:hidden" />
@@ -170,7 +170,7 @@
           </div>
         </div>
       </div>
-      <div class="mt-28 grid grid-cols-2 gap-10 px-8 text-center max-lg:px-16 max-md:grid-cols-1">
+      <div class="mt-28 grid grid-cols-2 gap-10 px-8 text-center max-md:grid-cols-1 max-sm:px-4">
         <div>
           <h3 class="h4 mb-3">Manage your objectives</h3>
           <enhanced:img

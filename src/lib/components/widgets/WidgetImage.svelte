@@ -59,14 +59,12 @@
   />
 {/snippet}
 
-<div style="height: {height}px" class={cn(!loaded && 'w-full')}>
-  {#if browser}
-    {#if url || href}
-      <a href={trueHref} {...rest}>
-        {@render widgetImage({})}
-      </a>
-    {:else}
-      {@render widgetImage(rest)}
-    {/if}
+{#if browser}
+  {#if url || href}
+    <a href={trueHref} {...rest}>
+      {@render widgetImage({})}
+    </a>
+  {:else}
+    {@render widgetImage(rest)}
   {/if}
-</div>
+{/if}

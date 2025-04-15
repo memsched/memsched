@@ -1,0 +1,6 @@
+/tos
+	Cache-Control: public, immutable, max-age=86400
+/privacy
+	Cache-Control: public, immutable, max-age=86400
+/docs/*
+	Cache-Control: public, immutable, max-age=86400

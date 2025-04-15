@@ -36,10 +36,13 @@ const config = {
     csp: {
       mode: 'auto',
       directives: {
-        'default-src': [
+        'default-src': ['self'],
+        'connect-src': [
           'self',
           'https://api-gateway.umami.dev/api/send',
           'https://stats.uptimerobot.com/',
+          'https://*.githubusercontent.com',
+          'https://*.googleusercontent.com',
         ],
         'script-src': [
           'self',
@@ -50,8 +53,8 @@ const config = {
         'img-src': [
           'self',
           'data:',
-          'https://avatars.githubusercontent.com',
-          'https://lh3.googleusercontent.com',
+          'https://*.githubusercontent.com',
+          'https://*.googleusercontent.com',
         ],
         'font-src': ['self'],
         'object-src': ['none'],

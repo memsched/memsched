@@ -4,8 +4,10 @@
 
   import { enhance } from '$app/forms';
   import LoadingButton from '$lib/components/ui/LoadingButton.svelte';
+  import { updateState } from '$lib/state.svelte';
 
   import UserAvatar from './UserAvatar.svelte';
+
   interface Props {
     username: string;
     name: string;
@@ -48,6 +50,7 @@
           return async ({ update }) => {
             loading = false;
             update();
+            updateState.avatarCounter++;
           };
         }}
       >

@@ -1,6 +1,8 @@
 <script lang="ts">
   import { onMount } from 'svelte';
+  import { fade } from 'svelte/transition';
 
+  import { updateState } from '$lib/state.svelte';
   import { cn } from '$lib/utils';
 
   import Avvvatars from '../avvvatars/Avvvatars.svelte';
@@ -13,33 +15,44 @@
 
   const { username, avatarUrl, large = false }: Props = $props();
 
-  let useCustomAvatar = $state(false);
+  let loaded = $state(false);
+  let error = $state(false);
 
   onMount(() => {
     if (avatarUrl) {
       fetch(avatarUrl, { method: 'HEAD' })
         .then((res) => {
           if (res.ok) {
-            useCustomAvatar = true;
+            loaded = true;
           } else {
-            useCustomAvatar = false;
+            error = true;
           }
         })
         .catch(() => {
-          useCustomAvatar = false;
+          error = true;
         });
-    } else {
-      useCustomAvatar = false;
     }
   });
 </script>
 
-{#if useCustomAvatar && avatarUrl}
-  <img
-    class={cn('inline-block rounded-full', large ? 'size-[250px] ring-2 ring-border' : 'size-8')}
-    src={avatarUrl}
-    alt="User profile avatar"
-  />
+{#if error || !avatarUrl}
+  <div in:fade={{ duration: 100 }}>
+    <Avvvatars value={username} size={large ? 250 : 32} style="shape" />
+  </div>
+{:else if loaded}
+  <div in:fade={{ duration: 100 }}>
+    <img
+      class={cn('inline-block rounded-full', large ? 'size-[250px] ring-2 ring-border' : 'size-8')}
+      src={avatarUrl + '?v=' + updateState.avatarCounter}
+      alt="User profile avatar"
+    />
+  </div>
 {:else}
-  <Avvvatars value={username} size={large ? 250 : 32} style="shape" />
+  <div
+    class={cn(
+      'rounded-full bg-background ring-2 ring-border',
+      large ? 'size-[250px]' : 'size-8 ring-1',
+      'animate-pulse'
+    )}
+  ></div>
 {/if}

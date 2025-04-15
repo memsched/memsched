@@ -1,6 +1,7 @@
 <script lang="ts">
   import { Icon } from 'svelte-icons-pack';
-  import { FiBookOpen, FiHome, FiLifeBuoy, FiLogOut, FiSettings } from 'svelte-icons-pack/fi';
+  import { FiBookOpen, FiHome, FiLogOut, FiSettings } from 'svelte-icons-pack/fi';
+  import { IoBulb } from 'svelte-icons-pack/io';
 
   import { enhance } from '$app/forms';
   import { page } from '$app/state';
@@ -75,9 +76,9 @@
       <DropdownMenuSeparator />
       <DropdownMenu.Item class="cursor-pointer hover:text-accent-foreground">
         {#snippet child({ props })}
-          <a href="mailto:info@memsched.com" {...props} aria-label="Contact Us">
-            <Icon src={FiLifeBuoy} className="!text-muted-foreground" />
-            Support
+          <a href="https://memsched.featurebase.app" {...props} aria-label="Ideas & Bugs">
+            <Icon src={IoBulb} className="!text-muted-foreground" />
+            Ideas & Bugs
           </a>
         {/snippet}
       </DropdownMenu.Item>

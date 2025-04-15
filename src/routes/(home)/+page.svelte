@@ -346,8 +346,8 @@
       <div>
         <h2 class="mb-2 text-3xl font-bold">Ready to showcase your learning journey?</h2>
         <p class="mx-auto max-w-2xl text-lg opacity-75">
-          Join thousands of learners who are tracking their progress and sharing their achievements
-          with the world.
+          Join the learners who are tracking their progress and sharing their achievements with the
+          world.
         </p>
       </div>
       <div class="relative">

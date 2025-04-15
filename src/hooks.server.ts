@@ -18,7 +18,8 @@ import {
   WidgetsService,
 } from '$lib/server/services';
 import { getStore } from '$lib/server/store';
-const PRERENDERED_ROUTES = ['/docs', '/privacy', '/tos'];
+
+const PRERENDERED_ROUTES: string[] = [];
 
 function isPrerenderedRoute(url: URL) {
   return PRERENDERED_ROUTES.some((route) => url.pathname.startsWith(route));

@@ -5,7 +5,7 @@ import { ThemeToggle } from '@memsched/ui/components/ui';
 ---
 
 <header
-  class="fixed top-0 left-0 right-0 backdrop-blur-md bg-background/80 flex justify-center items-center"
+  class="fixed top-0 left-0 right-0 backdrop-blur-md bg-background/80 flex justify-center items-center z-10"
   style={`height: ${HEADER_HEIGHT}px`}
 >
   <div
@@ -19,6 +19,8 @@ import { ThemeToggle } from '@memsched/ui/components/ui';
     >
       <Logo />
     </a>
-    <ThemeToggle compact class="w-fit justify-self-end block" client:load />
+    <div class="justify-self-end">
+      <ThemeToggle compact client:load />
+    </div>
   </div>
 </header>

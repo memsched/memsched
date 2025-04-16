@@ -1,12 +1,15 @@
 ---
+import { cn } from '@memsched/ui/utils';
+
 interface Props {
   date: Date;
+  class?: string;
 }
 
-const { date } = Astro.props;
+const { date, class: className } = Astro.props;
 ---
 
-<time datetime={date.toISOString()} class="text-sm text-gray-500">
+<time datetime={date.toISOString()} class={cn('text-sm text-gray-500', className)}>
   {
     date.toLocaleDateString('en-us', {
       year: 'numeric',

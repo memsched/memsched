@@ -4,11 +4,11 @@
   "version": "0.0.1",
   "scripts": {
     "dev": "pnpm -r run dev",
-    "build": "pnpm run build",
-    "preview": "pnpm run preview",
+    "build": "pnpm -r run build",
+    "preview": "pnpm -r run preview",
     "format": "pnpm exec prettier --write . && pnpm -r run format",
     "lint": "pnpm --filter memsched run lint",
-    "deploy": "pnpm run deploy"
+    "deploy": "pnpm -r run deploy"
   },
   "devDependencies": {
     "prettier": "^3.5.3"

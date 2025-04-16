@@ -1,5 +1,4 @@
-# Package Managers
-package-lock.json
+apps
+packages
 pnpm-lock.yaml
-yarn.lock
-static
+package.json

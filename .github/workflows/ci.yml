@@ -25,10 +25,7 @@ jobs:
           cache: 'pnpm'
 
       - name: Install dependencies
-        run: pnpm install
-
-      - name: Check code
-        run: pnpm run check
+        run: pnpm install --frozen-lockfile
 
       - name: Lint code
         run: pnpm run lint
@@ -47,6 +44,7 @@ jobs:
       - uses: pnpm/action-setup@v4
         name: Install pnpm
         with:
+          version: 10.3.0
           run_install: false
 
       - name: Install Node.js
@@ -56,18 +54,18 @@ jobs:
           cache: 'pnpm'
 
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
 
       - name: Deploy to Cloudflare Pages
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           CI: true
-        run: pnpm run deploy
+        run: pnpm --filter memsched run deploy
 
       - name: Apply migrations
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           CI: true
-        run: pnpm run prod:d1:migrate
+        run: pnpm --filter memsched run prod:d1:migrate

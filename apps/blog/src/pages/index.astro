@@ -1,43 +1,37 @@
 ---
-import BaseHead from '../components/BaseHead.astro';
-import { SITE_TITLE, SITE_DESCRIPTION } from '../lib/constants';
-import { getCollection, type CollectionEntry } from 'astro:content';
+import BaseHead from "../components/BaseHead.astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { SITE_TITLE, SITE_DESCRIPTION } from "../lib/constants";
+import { getCollection, type CollectionEntry } from "astro:content";
 
-const posts = await getCollection('blog') as CollectionEntry<'blog'>[];
-posts.sort((a, b) => 
-	b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
-);
+const posts = (await getCollection("blog")) as CollectionEntry<"blog">[];
+posts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 ---
 
-<!DOCTYPE html>
-<html lang="en">
-	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-	</head>
-	<body class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-		<main>
-			<h1 class="text-4xl font-bold mb-8">My Blog</h1>
-			<section class="space-y-8">
-				{
-					posts.map((post) => (
-						<article class="border-b border-gray-200 pb-8">
-							<h2 class="text-2xl font-semibold mb-2">
-								<a href={`/posts/${post.id}`} class="hover:text-blue-600">
-									{post.data.title}
-								</a>
-							</h2>
-							<p class="text-gray-600 mb-4">{post.data.description}</p>
-							<time datetime={post.data.pubDate.toISOString()} class="text-sm text-gray-500">
-								{post.data.pubDate.toLocaleDateString('en-us', {
-									year: 'numeric',
-									month: 'short',
-									day: 'numeric',
-								})}
-							</time>
-						</article>
-					))
-				}
-			</section>
-		</main>
-	</body>
-</html>
+<BaseLayout title={SITE_TITLE} description={SITE_DESCRIPTION}>
+  <h1 class="text-4xl font-bold mb-8">My Blog</h1>
+  <section class="space-y-8">
+    {
+      posts.map((post) => (
+        <article class="border-b border-gray-200 pb-8">
+          <h2 class="text-2xl font-semibold mb-2">
+            <a href={`/posts/${post.id}`} class="hover:text-blue-600">
+              {post.data.title}
+            </a>
+          </h2>
+          <p class="text-gray-600 mb-4">{post.data.description}</p>
+          <time
+            datetime={post.data.pubDate.toISOString()}
+            class="text-sm text-gray-500"
+          >
+            {post.data.pubDate.toLocaleDateString("en-us", {
+              year: "numeric",
+              month: "short",
+              day: "numeric",
+            })}
+          </time>
+        </article>
+      ))
+    }
+  </section>
+</BaseLayout>

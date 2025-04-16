@@ -8,7 +8,7 @@
     "preview": "pnpm --filter memsched preview",
     "check": "pnpm -r run check",
     "fix": "pnpm -r run fix",
-    "format": "prettier --write .",
+    "format": "pnpm -r run format",
     "lint": "prettier --check . && pnpm -r run lint",
     "test": "pnpm -r run test",
     "test:unit": "pnpm -r run test:unit",
@@ -30,4 +30,4 @@
   "engines": {
     "node": "^22.12.0"
   }
-} 
+}

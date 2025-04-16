@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.1",
   "scripts": {
-    "dev": "pnpm --filter memsched dev",
+    "dev": "pnpm -r run dev",
     "build": "pnpm --filter memsched build",
     "preview": "pnpm --filter memsched preview",
     "check": "pnpm -r run check",

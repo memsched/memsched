@@ -12,7 +12,6 @@
     "format": "prettier --write ."
   },
   "dependencies": {
-    "@astrojs/cloudflare": "^12.5.0",
     "@astrojs/mdx": "^4.2.4",
     "@astrojs/svelte": "^7.0.10",
     "@astrojs/tailwind": "^6.0.2",

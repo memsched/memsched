@@ -1,13 +1,15 @@
 ---
 import type { CollectionEntry } from "astro:content";
 import BaseLayout from "./BaseLayout.astro";
+import FormattedDate from "../components/FormattedDate.astro";
+
 type Props = CollectionEntry<"blog">["data"];
 
 const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 ---
 
 <BaseLayout title={title} description={description}>
-  <article class="prose lg:prose-xl">
+  <article class="prose lg:prose-lg pt-10 pb-16">
     {
       heroImage && (
         <img
@@ -17,29 +19,14 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
         />
       )
     }
-    <h1 class="text-4xl font-bold mb-4">{title}</h1>
+    <h1 class="!mb-3">{title}</h1>
     <div class="flex gap-2 text-gray-600 mb-8">
-      <time datetime={pubDate.toISOString()}>
-        {
-          pubDate.toLocaleDateString("en-us", {
-            year: "numeric",
-            month: "short",
-            day: "numeric",
-          })
-        }
-      </time>
+      <FormattedDate date={pubDate} />
       {
         updatedDate && (
           <div>
             <span>•</span>
-            <time datetime={updatedDate.toISOString()}>
-              Updated on{" "}
-              {updatedDate.toLocaleDateString("en-us", {
-                year: "numeric",
-                month: "short",
-                day: "numeric",
-              })}
-            </time>
+            <FormattedDate date={updatedDate} />
           </div>
         )
       }

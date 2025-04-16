@@ -1,37 +1,58 @@
 ---
-import BaseHead from "../components/BaseHead.astro";
-import BaseLayout from "../layouts/BaseLayout.astro";
+import BaseLayout from "../lib/layouts/BaseLayout.astro";
 import { SITE_TITLE, SITE_DESCRIPTION } from "../lib/constants";
+import FormattedDate from "../lib/components/FormattedDate.astro";
 import { getCollection, type CollectionEntry } from "astro:content";
 
-const posts = (await getCollection("blog")) as CollectionEntry<"blog">[];
+let posts = (await getCollection("blog")) as CollectionEntry<"blog">[];
 posts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+posts = [...posts, ...posts, ...posts, ...posts, ...posts, ...posts, ...posts];
 ---
 
 <BaseLayout title={SITE_TITLE} description={SITE_DESCRIPTION}>
-  <h1 class="text-4xl font-bold mb-8">My Blog</h1>
-  <section class="space-y-8">
-    {
-      posts.map((post) => (
-        <article class="border-b border-gray-200 pb-8">
-          <h2 class="text-2xl font-semibold mb-2">
-            <a href={`/posts/${post.id}`} class="hover:text-blue-600">
-              {post.data.title}
-            </a>
-          </h2>
-          <p class="text-gray-600 mb-4">{post.data.description}</p>
-          <time
-            datetime={post.data.pubDate.toISOString()}
-            class="text-sm text-gray-500"
-          >
-            {post.data.pubDate.toLocaleDateString("en-us", {
-              year: "numeric",
-              month: "short",
-              day: "numeric",
-            })}
-          </time>
-        </article>
-      ))
-    }
+  <!-- Hero Section -->
+  <section class="bg-dotted-fade bg-back py-20 w-full">
+    <div class="max-w-3xl main-container text-center">
+      <h1 class="text-4xl md:text-5xl font-bold mb-6">
+        Hey there! Welcome to the <span class="text-primary">MEMsched</span> blog
+      </h1>
+      <p class="text md:text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
+        Just some thoughts on learning stuff, staying productive, and keeping
+        track of what you've learned along the way
+      </p>
+      <!-- <div class="flex justify-center gap-4">
+        <a
+          href="#latest-posts"
+          class="px-6 py-2 bg-primary text-primary-foreground rounded-md hover:opacity-90 transition-opacity"
+        >
+          Check Out Recent Posts
+        </a>
+        <a
+          href="/posts/archive"
+          class="px-6 py-2 border border-input rounded-md hover:bg-accent hover:text-accent-foreground transition-colors"
+        >
+          See Everything
+        </a>
+      </div> -->
+    </div>
+  </section>
+
+  <section class="space-y-8 main-container py-16">
+    <h2 class="h2 text-3xl">Latest Posts</h2>
+    <div class="divide-y space-y-4 *:pt-8">
+      {
+        posts.map((post) => (
+          <a href={`/posts/${post.id}`} class="group block">
+            <article class="pb-8 hover:bg-accent/5 rounded-md p-4 -m-4 transition-colors">
+              <h2 class="text-2xl font-semibold mb-2 group-hover:text-primary transition-colors">
+                {post.data.title}
+              </h2>
+              <p class="text-gray-600 mb-4">{post.data.description}</p>
+              <FormattedDate date={post.data.pubDate} />
+            </article>
+          </a>
+        ))
+      }
+    </div>
   </section>
 </BaseLayout>

@@ -37,12 +37,6 @@ export async function GET(event: RequestEvent) {
     <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
   </url>
   <url>
-    <loc>${DOMAIN}/docs/quick-start</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
-  </url>
-  <url>
     <loc>${DOMAIN}/docs/embedding/html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>

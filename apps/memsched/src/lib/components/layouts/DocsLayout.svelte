@@ -30,15 +30,6 @@
               'Get started with MEMsched - learn how to track and showcase your learning journey with beautiful widgets.',
           },
         },
-        {
-          href: '/docs/quick-start',
-          label: 'Quick Start',
-          seo: {
-            title: 'MEMsched Documentation - Quick Start Guide',
-            description:
-              'Quick start guide for MEMsched - set up your first learning widget in minutes.',
-          },
-        },
       ],
     },
     {

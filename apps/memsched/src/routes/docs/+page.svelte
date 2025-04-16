@@ -1,6 +1,6 @@
 <script lang="ts">
   import { Icon } from 'svelte-icons-pack';
-  import { IoCode, IoRocket } from 'svelte-icons-pack/io';
+  import { IoCode } from 'svelte-icons-pack/io';
   import SvelteSeo from 'svelte-seo';
 
   const pageTitle = 'Documentation - MEMsched';
@@ -35,24 +35,6 @@
 
   <!-- Quick links grid -->
   <div class="grid gap-6 sm:grid-cols-2">
-    <a
-      class="group relative rounded-lg border bg-card p-6 transition-colors hover:bg-muted/50"
-      href="/docs/quick-start"
-    >
-      <div class="mb-3 flex items-center gap-3">
-        <div class="rounded-md bg-primary/10 p-2 text-primary">
-          <Icon className="size-5" src={IoRocket} />
-        </div>
-        <h2 class="h3">Quick Start</h2>
-      </div>
-      <p class="text-sm text-muted-foreground">
-        Get up and running with MEMsched in just a few minutes.
-      </p>
-      <div class="absolute bottom-3 right-4 opacity-0 transition-opacity group-hover:opacity-100">
-        <span class="text-sm text-primary">Learn more →</span>
-      </div>
-    </a>
-
     <a
       class="group relative rounded-lg border bg-card p-6 transition-colors hover:bg-muted/50"
       href="/docs/embedding/html"

@@ -1,5 +1,5 @@
-@import "@fontsource-variable/inter";
-@import "@fontsource/geist-mono/700.css";
+@import '@fontsource-variable/inter';
+@import '@fontsource/geist-mono/700.css';
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -140,7 +140,7 @@
 
   .md ol li:before {
     @apply me-2 text-muted-foreground;
-    content: counter(item) ". ";
+    content: counter(item) '. ';
     counter-increment: item;
   }
 }
@@ -150,30 +150,22 @@
     @apply mx-auto w-full max-w-screen-xl px-6 lg:px-10;
   }
   .bg-dotted {
-    background-image: radial-gradient(
-      circle,
-      theme("colors.zinc.300") 1px,
-      transparent 1px
-    );
+    background-image: radial-gradient(circle, theme('colors.zinc.300') 1px, transparent 1px);
     background-size: 15px 15px;
   }
   .dark .bg-dotted {
-    background-image: radial-gradient(
-      circle,
-      theme("colors.zinc.700") 1px,
-      transparent 1px
-    );
+    background-image: radial-gradient(circle, theme('colors.zinc.700') 1px, transparent 1px);
   }
   .bg-dotted-fade {
     background-image:
       radial-gradient(
         circle at center,
-        theme("colors.back/75") 0%,
-        theme("colors.back/50") 30%,
+        theme('colors.back/75') 0%,
+        theme('colors.back/50') 30%,
         transparent 70%,
         transparent 100%
       ),
-      radial-gradient(circle, theme("colors.zinc.300") 1px, transparent 1px);
+      radial-gradient(circle, theme('colors.zinc.300') 1px, transparent 1px);
     background-size:
       100% 100%,
       15px 15px;
@@ -182,11 +174,11 @@
     background-image:
       radial-gradient(
         circle at center,
-        theme("colors.back/75") 0%,
-        theme("colors.back/50") 30%,
+        theme('colors.back/75') 0%,
+        theme('colors.back/50') 30%,
         transparent 70%,
         transparent 100%
       ),
-      radial-gradient(circle, theme("colors.zinc.700") 1px, transparent 1px);
+      radial-gradient(circle, theme('colors.zinc.700') 1px, transparent 1px);
   }
 }

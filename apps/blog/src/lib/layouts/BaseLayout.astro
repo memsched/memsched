@@ -1,8 +1,8 @@
 ---
-import Header from "../components/Header.astro";
-import Footer from "../components/Footer.astro";
-import BaseHead from "../components/BaseHead.astro";
-import { HEADER_HEIGHT } from "../constants";
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import BaseHead from '../components/BaseHead.astro';
+import { HEADER_HEIGHT } from '../constants';
 
 interface Props {
   title: string;
@@ -19,10 +19,7 @@ const { title, description } = Astro.props;
   </head>
   <body class="flex flex-col min-h-screen">
     <Header />
-    <main
-      class="flex-grow flex flex-col items-center"
-      style={`padding-top: ${HEADER_HEIGHT}px`}
-    >
+    <main class="flex-grow flex flex-col items-center" style={`padding-top: ${HEADER_HEIGHT}px`}>
       <slot />
     </main>
     <Footer />

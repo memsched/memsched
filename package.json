@@ -8,7 +8,7 @@
     "preview": "pnpm --filter memsched preview",
     "check": "pnpm -r run check",
     "fix": "pnpm -r run fix",
-    "format": "pnpm -r run format",
+    "format": "pnpm exec prettier --write . && pnpm -r run format",
     "lint": "pnpm --filter memsched run lint",
     "test": "pnpm --filter memsched run test",
     "test:unit": "pnpm --filter memsched run test:unit",
@@ -16,8 +16,7 @@
     "deploy": "pnpm --filter memsched deploy"
   },
   "devDependencies": {
-    "prettier": "^3.5.3",
-    "prettier-plugin-tailwindcss": "^0.6.11"
+    "prettier": "^3.5.3"
   },
   "packageManager": "pnpm@10.3.0",
   "pnpm": {

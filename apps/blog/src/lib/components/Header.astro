@@ -1,20 +1,15 @@
 ---
-import { Logo } from "@memsched/ui/components/svgs";
-import { HEADER_HEIGHT } from "../constants";
+import { Logo } from '@memsched/ui/components/svgs';
+import { HEADER_HEIGHT } from '../constants';
 ---
 
 <header
   class="fixed top-0 left-0 right-0 backdrop-blur-md bg-background/80 flex justify-center items-center"
   style={`height: ${HEADER_HEIGHT}px`}
 >
-  <div
-    class="main-container grid grid-cols-3 h-full items-center border-b border-black/10"
-  >
+  <div class="main-container grid grid-cols-3 h-full items-center border-b border-black/10">
     <a href="/" class="font-medium text-xl mt-0.5">Blog</a>
-    <a
-      href="https://memsched.com"
-      class="justify-self-center flex items-center space-x-2"
-    >
+    <a href="https://memsched.com" class="justify-self-center flex items-center space-x-2">
       <Logo client:load />
     </a>
   </div>

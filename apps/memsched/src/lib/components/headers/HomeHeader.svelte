@@ -1,5 +1,6 @@
 <script lang="ts">
   import { Logo } from '@memsched/ui/components/svgs';
+  import { ThemeToggle } from '@memsched/ui/components/ui';
   import { FiArrowRight } from 'svelte-icons-pack/fi';
   import { IoArrowForward } from 'svelte-icons-pack/io';
 
@@ -8,7 +9,6 @@
   import { HEADER_HEIGHT } from '$lib/constants';
   import { scrollToTop } from '$lib/utils';
 
-  import ThemeToggle from '../ThemeToggle.svelte';
   import { Button } from '../ui/button';
   import IconButton from '../ui/IconButton.svelte';
   import HomeNavLink from './HomeNavLink.svelte';

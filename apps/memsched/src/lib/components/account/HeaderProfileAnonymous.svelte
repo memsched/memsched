@@ -1,11 +1,11 @@
 <script lang="ts">
+  import { ThemeToggle } from '@memsched/ui/components/ui';
   import { cn } from '@memsched/ui/utils';
   import { Icon } from 'svelte-icons-pack';
   import { FiBookOpen, FiHome, FiLogIn } from 'svelte-icons-pack/fi';
 
   import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
 
-  import ThemeToggle from '../ThemeToggle.svelte';
   import DropdownMenuLabel from '../ui/dropdown-menu/dropdown-menu-label.svelte';
   import DropdownMenuSeparator from '../ui/dropdown-menu/dropdown-menu-separator.svelte';
 </script>

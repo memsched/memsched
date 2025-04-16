@@ -3,7 +3,7 @@
 </script>
 
 <svg
-  fill="inherit"
+  fill="currentColor"
   height="26"
   viewBox="0 0 31 31"
   width="26"

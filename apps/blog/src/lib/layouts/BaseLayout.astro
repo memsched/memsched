@@ -3,6 +3,7 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import BaseHead from '../components/BaseHead.astro';
 import { HEADER_HEIGHT } from '../constants';
+import { ModeWatcher } from 'mode-watcher';
 
 interface Props {
   title: string;
@@ -16,8 +17,56 @@ const { title, description } = Astro.props;
 <html lang="en">
   <head>
     <BaseHead title={title} description={description} />
+    <script lang="javascript" is:inline>
+      (function setInitialMode({
+        defaultMode = 'system',
+        themeColors: themeColors2,
+        darkClassNames: darkClassNames2 = ['dark'],
+        lightClassNames: lightClassNames2 = [],
+        defaultTheme = '',
+        modeStorageKey: modeStorageKey2 = 'mode-watcher-mode',
+        themeStorageKey: themeStorageKey2 = 'mode-watcher-theme',
+      }) {
+        const rootEl = document.documentElement;
+        const mode = localStorage.getItem(modeStorageKey2) || defaultMode;
+        const theme2 = localStorage.getItem(themeStorageKey2) || defaultTheme;
+        const light =
+          mode === 'light' ||
+          (mode === 'system' && window.matchMedia('(prefers-color-scheme: light)').matches);
+        if (light) {
+          if (darkClassNames2.length) rootEl.classList.remove(...darkClassNames2);
+          if (lightClassNames2.length) rootEl.classList.add(...lightClassNames2);
+        } else {
+          if (lightClassNames2.length) rootEl.classList.remove(...lightClassNames2);
+          if (darkClassNames2.length) rootEl.classList.add(...darkClassNames2);
+        }
+        rootEl.style.colorScheme = light ? 'light' : 'dark';
+        if (themeColors2) {
+          const themeMetaEl = document.querySelector('meta[name="theme-color"]');
+          if (themeMetaEl) {
+            themeMetaEl.setAttribute(
+              'content',
+              mode === 'light' ? themeColors2.light : themeColors2.dark
+            );
+          }
+        }
+        if (theme2) {
+          rootEl.setAttribute('data-theme', theme2);
+          localStorage.setItem(themeStorageKey2, theme2);
+        }
+        localStorage.setItem(modeStorageKey2, mode);
+      })({
+        defaultMode: 'dark',
+        darkClassNames: ['dark'],
+        lightClassNames: [],
+        defaultTheme: '',
+        modeStorageKey: 'mode-watcher-mode',
+        themeStorageKey: 'mode-watcher-theme',
+      });
+    </script>
   </head>
   <body class="flex flex-col min-h-screen">
+    <ModeWatcher defaultMode="dark" track disableHeadScriptInjection client:load />
     <Header />
     <main class="flex-grow flex flex-col items-center" style={`padding-top: ${HEADER_HEIGHT}px`}>
       <slot />

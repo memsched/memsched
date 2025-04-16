@@ -4,14 +4,13 @@ import { SITE_TITLE, SITE_DESCRIPTION } from '../lib/constants';
 import FormattedDate from '../lib/components/FormattedDate.astro';
 import { getCollection, type CollectionEntry } from 'astro:content';
 
-let posts = (await getCollection('blog')) as CollectionEntry<'blog'>[];
+const posts = (await getCollection('blog')) as CollectionEntry<'blog'>[];
 posts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
-posts = [...posts, ...posts, ...posts, ...posts, ...posts, ...posts, ...posts];
 ---
 
 <BaseLayout title={SITE_TITLE} description={SITE_DESCRIPTION}>
   <!-- Hero Section -->
-  <section class="bg-dotted-fade bg-back py-20 w-full">
+  <section class="bg-dotted-fade bg-back py-20 w-full border-b">
     <div class="max-w-3xl main-container text-center">
       <h1 class="text-4xl md:text-5xl font-bold mb-6">
         Hey there! Welcome to the <span class="text-primary">MEMsched</span> blog
@@ -37,7 +36,7 @@ posts = [...posts, ...posts, ...posts, ...posts, ...posts, ...posts, ...posts];
     </div>
   </section>
 
-  <section class="space-y-8 main-container py-16">
+  <section class="space-y-8 main-container py-20">
     <h2 class="h2 text-3xl">Latest Posts</h2>
     <div class="divide-y space-y-4 *:pt-8">
       {
@@ -53,6 +52,29 @@ posts = [...posts, ...posts, ...posts, ...posts, ...posts, ...posts, ...posts];
           </a>
         ))
       }
+    </div>
+  </section>
+
+  <!-- CTA section -->
+  <section class="bg-dotted-fade bg-back py-16 w-full border-t">
+    <div
+      class="main-container flex flex-col md:flex-row items-center justify-between gap-8 text-center md:text-left text-primary"
+    >
+      <div>
+        <h2 class="text-3xl font-bold mb-2">Want to track your own progress?</h2>
+        <p class="text-lg text-primary/75">
+          Turn reading about learning into actual learning progress you can track and share!
+        </p>
+      </div>
+      <div class="flex flex-col items-center">
+        <a
+          href="https://memsched.com/auth/signin"
+          class="px-8 py-3 bg-primary text-primary-foreground rounded-md text-lg font-medium hover:opacity-90 transition-opacity"
+        >
+          Start tracking for free
+        </a>
+        <p class="mt-2 text-sm text-muted-foreground">No credit card needed.</p>
+      </div>
     </div>
   </section>
 </BaseLayout>

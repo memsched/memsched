@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { ThemeToggle } from '@memsched/ui/components/ui';
   import { Icon } from 'svelte-icons-pack';
   import { FiBookOpen, FiHome, FiLogOut, FiSettings } from 'svelte-icons-pack/fi';
   import { IoBulb } from 'svelte-icons-pack/io';
@@ -7,7 +8,6 @@
   import { page } from '$app/state';
   import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
 
-  import ThemeToggle from '../ThemeToggle.svelte';
   import DropdownMenuLabel from '../ui/dropdown-menu/dropdown-menu-label.svelte';
   import DropdownMenuSeparator from '../ui/dropdown-menu/dropdown-menu-separator.svelte';
   import UserAvatar from './UserAvatar.svelte';

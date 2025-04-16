@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { cn } from '@memsched/ui/utils';
+  import { cn } from '../../utils';
   import { mode, toggleMode } from 'mode-watcher';
   import type { HTMLButtonAttributes } from 'svelte/elements';
   import { slide } from 'svelte/transition';
@@ -19,7 +19,7 @@
     e.preventDefault();
     toggleMode();
   }}
-  class={cn(props.class, 'relative flex w-full min-w-[32px] items-center px-2 py-1.5')}
+  class={cn('relative flex w-full min-w-[32px] items-center px-2 py-1.5', props.class)}
   aria-label="Toggle theme"
 >
   {#if $mode === 'dark'}

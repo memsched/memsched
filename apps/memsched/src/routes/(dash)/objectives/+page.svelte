@@ -22,6 +22,7 @@
   import { Progress } from '$lib/components/ui/progress/index';
   import * as Tooltip from '$lib/components/ui/tooltip';
   import type { Objective } from '$lib/server/db/schema';
+  import { updateState } from '$lib/state.svelte';
 
   import type { PageProps } from './$types';
 
@@ -158,25 +159,61 @@
               <!-- Actions section -->
               <div class="col-span-5 flex items-center justify-between">
                 <div class="flex flex-wrap items-center gap-2">
-                  <form action="?/log" method="POST" use:enhance>
+                  <form
+                    action="?/log"
+                    method="POST"
+                    use:enhance={() => {
+                      return async ({ update }) => {
+                        updateState.widgetCounter++;
+                        update();
+                      };
+                    }}
+                  >
                     <input type="hidden" name="objectiveId" value={objective.id} />
                     <input type="hidden" name="value" value="1" />
                     <Button size="xs" variant="outline" class="h-7 px-2" type="submit">+1</Button>
                   </form>
 
-                  <form action="?/log" method="POST" use:enhance>
+                  <form
+                    action="?/log"
+                    method="POST"
+                    use:enhance={() => {
+                      return async ({ update }) => {
+                        updateState.widgetCounter++;
+                        update();
+                      };
+                    }}
+                  >
                     <input type="hidden" name="objectiveId" value={objective.id} />
                     <input type="hidden" name="value" value="5" />
                     <Button size="xs" variant="outline" class="h-7 px-2" type="submit">+5</Button>
                   </form>
 
-                  <form action="?/log" method="POST" use:enhance>
+                  <form
+                    action="?/log"
+                    method="POST"
+                    use:enhance={() => {
+                      return async ({ update }) => {
+                        updateState.widgetCounter++;
+                        update();
+                      };
+                    }}
+                  >
                     <input type="hidden" name="objectiveId" value={objective.id} />
                     <input type="hidden" name="value" value="10" />
                     <Button size="xs" variant="outline" class="h-7 px-2" type="submit">+10</Button>
                   </form>
 
-                  <form action="?/undoLog" method="POST" use:enhance>
+                  <form
+                    action="?/undoLog"
+                    method="POST"
+                    use:enhance={() => {
+                      return async ({ update }) => {
+                        updateState.widgetCounter++;
+                        update();
+                      };
+                    }}
+                  >
                     <input type="hidden" name="objectiveId" value={objective.id} />
                     <Button
                       size="xs"

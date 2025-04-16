@@ -1,9 +1,9 @@
 <script lang="ts">
+  import { cn } from '@memsched/ui/utils';
   import { Icon } from 'svelte-icons-pack';
   import { FiBookOpen, FiHome, FiLogIn } from 'svelte-icons-pack/fi';
 
   import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
-  import { cn } from '$lib/utils';
 
   import ThemeToggle from '../ThemeToggle.svelte';
   import DropdownMenuLabel from '../ui/dropdown-menu/dropdown-menu-label.svelte';

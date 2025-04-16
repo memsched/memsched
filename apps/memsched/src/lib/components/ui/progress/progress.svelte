@@ -1,7 +1,6 @@
 <script lang="ts">
+  import { cn } from '@memsched/ui/utils';
   import { Progress as ProgressPrimitive, type WithoutChildrenOrChild } from 'bits-ui';
-
-  import { cn } from '$lib/utils.js';
 
   let {
     ref = $bindable(null),

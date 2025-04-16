@@ -1,8 +1,8 @@
 <script lang="ts">
+  import { cn } from '@memsched/ui/utils';
   import type { IconType } from 'svelte-icons-pack';
 
   import { page } from '$app/state';
-  import { cn } from '$lib/utils';
 
   import IconButton from '../ui/IconButton.svelte';
 

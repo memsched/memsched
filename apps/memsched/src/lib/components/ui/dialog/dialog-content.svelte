@@ -1,9 +1,8 @@
 <script lang="ts">
+  import { cn } from '@memsched/ui/utils';
   import { Dialog as DialogPrimitive, type WithoutChildrenOrChild } from 'bits-ui';
   import X from 'lucide-svelte/icons/x';
   import type { Snippet } from 'svelte';
-
-  import { cn } from '$lib/utils.js';
 
   import * as Dialog from './index.js';
 

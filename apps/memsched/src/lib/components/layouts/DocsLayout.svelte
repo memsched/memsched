@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { Logo } from '@memsched/ui/components/svgs';
+  import { cn } from '@memsched/ui/utils';
   import type { Snippet } from 'svelte';
   import { Icon } from 'svelte-icons-pack';
   import { IoClose, IoMenu } from 'svelte-icons-pack/io';
@@ -6,9 +8,7 @@
 
   import { goto } from '$app/navigation';
   import { page } from '$app/state';
-  import Logo from '$lib/components/svgs/Logo.svelte';
   import { DOMAIN } from '$lib/constants';
-  import { cn } from '$lib/utils';
 
   interface Props {
     class?: string;
@@ -214,7 +214,7 @@
 
     <!-- Main content -->
     <div class="min-w-0 max-w-3xl flex-auto lg:ml-64">
-      <div class="prose prose-slate dark:prose-invert max-w-none">
+      <div class="prose prose-slate max-w-none dark:prose-invert">
         {@render children()}
 
         <!-- Navigation -->

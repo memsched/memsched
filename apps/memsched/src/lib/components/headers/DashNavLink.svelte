@@ -1,10 +1,10 @@
 <script lang="ts">
+  import { cn } from '@memsched/ui/utils';
   import type { IconType } from 'svelte-icons-pack';
   import { Icon } from 'svelte-icons-pack';
 
   import { page } from '$app/state';
   import * as Tooltip from '$lib/components/ui/tooltip';
-  import { cn } from '$lib/utils';
 
   interface Props {
     href: string;

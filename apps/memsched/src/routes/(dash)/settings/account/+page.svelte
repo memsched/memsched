@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { cn } from '@memsched/ui/utils';
   import { Icon } from 'svelte-icons-pack';
   import { IoArrowForward, IoCheckmark, IoKey } from 'svelte-icons-pack/io';
   import SvelteSeo from 'svelte-seo';
@@ -12,7 +13,6 @@
   import IconButton from '$lib/components/ui/IconButton.svelte';
   import { FREE_PLAN_LIMITS } from '$lib/constants';
   import { formatCurrency } from '$lib/utils';
-  import { cn } from '$lib/utils';
 
   import type { PageProps } from './$types';
 

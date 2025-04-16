@@ -1,8 +1,8 @@
 <script>
+  import { Logo } from '@memsched/ui/components/svgs';
   import { Icon } from 'svelte-icons-pack';
   import { IoHeart } from 'svelte-icons-pack/io';
 
-  import Logo from '../svgs/Logo.svelte';
   import SwissFlag from '../svgs/SwissFlag.svelte';
   import UptimeRobot from '../UptimeRobot.svelte';
 </script>

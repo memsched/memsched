@@ -1,9 +1,9 @@
 <script lang="ts">
+  import { cn } from '@memsched/ui/utils';
   import { onMount } from 'svelte';
   import { fade } from 'svelte/transition';
 
   import { updateState } from '$lib/state.svelte';
-  import { cn } from '$lib/utils';
 
   import Avvvatars from '../avvvatars/Avvvatars.svelte';
 

@@ -1,5 +1,5 @@
-import type { Config } from 'tailwindcss';
 import sharedConfig from '@memsched/ui/tailwind';
+import type { Config } from 'tailwindcss';
 
 const config: Config = {
   presets: [sharedConfig],

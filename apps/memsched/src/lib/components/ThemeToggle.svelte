@@ -1,11 +1,10 @@
 <script lang="ts">
+  import { cn } from '@memsched/ui/utils';
   import { mode, toggleMode } from 'mode-watcher';
   import type { HTMLButtonAttributes } from 'svelte/elements';
   import { slide } from 'svelte/transition';
   import { Icon } from 'svelte-icons-pack';
   import { IoMoon, IoSunny } from 'svelte-icons-pack/io';
-
-  import { cn } from '$lib/utils';
 
   interface Props extends HTMLButtonAttributes {
     compact?: boolean;

@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { LogoShort } from '@memsched/ui/components/svgs';
   import { IoCube, IoFlash, IoFolderOpen } from 'svelte-icons-pack/io';
 
   import { page } from '$app/state';
@@ -6,7 +7,6 @@
 
   import HeaderProfile from '../account/HeaderProfile.svelte';
   import HeaderProfileAnonymous from '../account/HeaderProfileAnonymous.svelte';
-  import LogoShort from '../svgs/LogoShort.svelte';
   import DashNavLink from './DashNavLink.svelte';
 
   const NAV_ITEMS = [

@@ -1,8 +1,7 @@
 <script lang="ts">
+  import { cn } from '@memsched/ui/utils';
   import { Icon } from 'svelte-icons-pack';
   import { OiUpload16 } from 'svelte-icons-pack/oi';
-
-  import { cn } from '$lib/utils';
 
   interface Props {
     value: string | null;

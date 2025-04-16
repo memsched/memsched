@@ -1,8 +1,7 @@
 <script lang="ts">
+  import { cn } from '@memsched/ui/utils';
   import { Icon, type IconType } from 'svelte-icons-pack';
   import { TrOutlineLoader2 } from 'svelte-icons-pack/tr';
-
-  import { cn } from '$lib/utils';
 
   import { Button, type ButtonProps } from './button';
 

@@ -1,8 +1,8 @@
 <script lang="ts">
+  import { cn } from '@memsched/ui/utils';
   import type { Snippet } from 'svelte';
 
   import { page } from '$app/state';
-  import { cn } from '$lib/utils';
 
   import { Button } from '../ui/button';
 

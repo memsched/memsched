@@ -1,8 +1,7 @@
 <script lang="ts">
+  import { cn } from '@memsched/ui/utils';
   import { onDestroy } from 'svelte';
   import { Icon, type IconType } from 'svelte-icons-pack';
-
-  import { cn } from '$lib/utils';
 
   import { Input } from '../ui/input';
 

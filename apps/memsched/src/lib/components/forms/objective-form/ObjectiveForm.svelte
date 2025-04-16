@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { cn } from '@memsched/ui/utils';
   import toast from 'svelte-french-toast';
   import { FiPlus } from 'svelte-icons-pack/fi';
   import SuperDebug, { type Infer, superForm, type SuperValidated } from 'sveltekit-superforms';
@@ -11,7 +12,6 @@
   import * as Select from '$lib/components/ui/select';
   import * as Tabs from '$lib/components/ui/tabs/index';
   import { Textarea } from '$lib/components/ui/textarea';
-  import { cn } from '$lib/utils';
 
   import { type FormSchema, formSchema, OBJECTIVE_UNITS } from './schema';
 

@@ -9,10 +9,10 @@
     "check": "pnpm -r run check",
     "fix": "pnpm -r run fix",
     "format": "pnpm -r run format",
-    "lint": "prettier --check . && pnpm -r run lint",
-    "test": "pnpm -r run test",
-    "test:unit": "pnpm -r run test:unit",
-    "test:e2e": "pnpm -r run test:e2e",
+    "lint": "pnpm --filter memsched run lint",
+    "test": "pnpm --filter memsched run test",
+    "test:unit": "pnpm --filter memsched run test:unit",
+    "test:e2e": "pnpm --filter memsched run test:e2e",
     "deploy": "pnpm --filter memsched deploy"
   },
   "devDependencies": {

@@ -1,8 +1,7 @@
 <script lang="ts">
+  import { cn } from '@memsched/ui/utils';
   import { RadioGroup as RadioGroupPrimitive, type WithoutChildrenOrChild } from 'bits-ui';
   import Circle from 'lucide-svelte/icons/circle';
-
-  import { cn } from '$lib/utils.js';
 
   let {
     ref = $bindable(null),

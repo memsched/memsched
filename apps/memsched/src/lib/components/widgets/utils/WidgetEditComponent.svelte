@@ -1,10 +1,10 @@
 <script lang="ts">
+  import { cn } from '@memsched/ui/utils';
   import type { Snippet } from 'svelte';
   import { Icon } from 'svelte-icons-pack';
   import { FiX } from 'svelte-icons-pack/fi';
 
   import * as Tooltip from '$lib/components/ui/tooltip';
-  import { cn } from '$lib/utils';
 
   interface Props {
     onclick: (() => void) | undefined;

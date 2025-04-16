@@ -1,11 +1,11 @@
 <script lang="ts">
+  import { cn } from '@memsched/ui/utils';
   import { mode } from 'mode-watcher';
   import type { HTMLAnchorAttributes, HTMLImgAttributes } from 'svelte/elements';
 
   import { browser } from '$app/environment';
   import { page } from '$app/state';
   import { updateState } from '$lib/state.svelte';
-  import { cn } from '$lib/utils';
 
   type ExtendProps = Omit<HTMLAnchorAttributes, 'href'> & Omit<HTMLImgAttributes, 'src'>;
 

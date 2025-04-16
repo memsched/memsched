@@ -4,14 +4,10 @@
   "version": "0.0.1",
   "scripts": {
     "dev": "pnpm -r run dev",
-    "build": "pnpm --filter memsched run build",
-    "preview": "pnpm --filter memsched run preview",
-    "fix": "pnpm -r run fix",
+    "build": "pnpm run build",
+    "preview": "pnpm run preview",
     "format": "pnpm exec prettier --write . && pnpm -r run format",
     "lint": "pnpm --filter memsched run lint",
-    "test": "pnpm --filter memsched run test",
-    "test:unit": "pnpm --filter memsched run test:unit",
-    "test:e2e": "pnpm --filter memsched run test:e2e",
     "deploy": "pnpm run deploy"
   },
   "devDependencies": {

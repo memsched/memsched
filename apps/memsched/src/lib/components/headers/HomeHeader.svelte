@@ -13,15 +13,8 @@
   import IconButton from '../ui/IconButton.svelte';
   import HomeNavLink from './HomeNavLink.svelte';
 
-  const NAV_ITEMS: { href: string; text: string; icon: any }[] = [
-    // {
-    //   href: !page.data.user ? '/' : getUserOverviewUrl(page.data.user.username),
-    //   text: 'Overview',
-    //   icon: IoFlashOutline,
-    // },
-    // { href: '/objectives', text: 'Objectives', icon: IoFolderOpenOutline },
-    // { href: '/widgets', text: 'Widgets', icon: IoCubeOutline },
-    // { href: '/explore', text: 'Explore', icon: IoCompassOutline },
+  const NAV_ITEMS: { href: string; text: string; icon?: any }[] = [
+    { href: '/blog/', text: 'Blog' },
   ];
 </script>
 
@@ -30,7 +23,7 @@
     class="main-container flex w-full items-center justify-between"
     style="height: {HEADER_HEIGHT}px"
   >
-    <div class="flex h-full items-center gap-12">
+    <div class="flex h-full items-center gap-8">
       {#if page.url.pathname === '/'}
         <button onclick={() => scrollToTop()} aria-label="Scroll to top">
           <Logo />
@@ -40,9 +33,9 @@
           <Logo />
         </a>
       {/if}
-      <div class="flex h-full gap-9 *:h-full">
-        {#each NAV_ITEMS as { href, text, icon }}
-          <HomeNavLink {href} {text} {icon} />
+      <div class="me-6 flex h-full gap-6 *:h-full">
+        {#each NAV_ITEMS as { href, text }}
+          <HomeNavLink {href} {text} />
         {/each}
       </div>
     </div>

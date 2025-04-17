@@ -1,27 +1,23 @@
 <script lang="ts">
-  import { cn } from '@memsched/ui/utils';
-  import type { IconType } from 'svelte-icons-pack';
-
-  import { page } from '$app/state';
+  import { FiArrowUpRight } from 'svelte-icons-pack/fi';
 
   import IconButton from '../ui/IconButton.svelte';
 
   interface Props {
     href: string;
     text: string;
-    icon: IconType;
   }
 
-  const { href, text, icon }: Props = $props();
-  const isActive = $derived.by(() => {
-    if (href.length === 1) {
-      return page.url.pathname === href;
-    }
-    return page.url.pathname.startsWith(href);
-  });
+  const { href, text }: Props = $props();
+  // const isActive = $derived.by(() => {
+  //   if (href.length === 1) {
+  //     return page.url.pathname === href;
+  //   }
+  //   return page.url.pathname.startsWith(href);
+  // });
 </script>
 
-<IconButton
+<!-- <IconButton
   {icon}
   variant="link"
   size="lg"
@@ -32,6 +28,14 @@
     isActive && 'text-primary after:scale-x-100'
   )}
   childrenClass="max-md:hidden"
+>
+    {text}
+  </IconButton> -->
+<IconButton
+  icon={FiArrowUpRight}
+  variant="link"
+  {href}
+  class="px-1 text-muted-foreground [&_svg]:size-3.5"
 >
   {text}
 </IconButton>

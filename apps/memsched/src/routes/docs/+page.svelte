@@ -1,6 +1,4 @@
 <script lang="ts">
-  import { Icon } from 'svelte-icons-pack';
-  import { IoCode } from 'svelte-icons-pack/io';
   import SvelteSeo from 'svelte-seo';
 
   const pageTitle = 'Documentation - MEMsched';
@@ -30,45 +28,6 @@
     <p class="max-w-2xl text-xl text-muted-foreground">
       Everything you need to know about creating, customizing, and embedding MEMsched widgets.
     </p>
-  </div>
-
-  <!-- Quick links grid -->
-  <div class="grid gap-6 sm:grid-cols-2">
-    <a
-      class="group relative rounded-lg border bg-card p-6 transition-colors hover:bg-muted/50"
-      href="/docs/embedding/html"
-    >
-      <div class="mb-3 flex items-center gap-3">
-        <div class="rounded-md bg-primary/10 p-2 text-primary">
-          <Icon className="size-5" src={IoCode} />
-        </div>
-        <h2 class="h3">Embedding Guide</h2>
-      </div>
-      <p class="text-sm text-muted-foreground">
-        Learn how to embed your widgets in various platforms.
-      </p>
-      <div class="absolute bottom-3 right-4 opacity-0 transition-opacity group-hover:opacity-100">
-        <span class="text-sm text-primary">Learn more →</span>
-      </div>
-    </a>
-
-    <a
-      class="group relative rounded-lg border bg-card p-6 transition-colors hover:bg-muted/50"
-      href="/docs/customization/styling"
-    >
-      <div class="mb-3 flex items-center gap-3">
-        <div class="rounded-md bg-primary/10 p-2 text-primary">
-          <Icon className="size-5" src={IoCode} />
-        </div>
-        <h2 class="h3">Customization</h2>
-      </div>
-      <p class="text-sm text-muted-foreground">
-        Learn how to customize the appearance of your widgets.
-      </p>
-      <div class="absolute bottom-3 right-4 opacity-0 transition-opacity group-hover:opacity-100">
-        <span class="text-sm text-primary">Learn more →</span>
-      </div>
-    </a>
   </div>
 
   <!-- Introduction section -->

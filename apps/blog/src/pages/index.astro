@@ -186,25 +186,27 @@ const posts: PostWithReadingTime[] = rawPosts.map((post) => {
   <!-- CTA section -->
   <section class="bg-dotted-fade bg-back py-20 w-full border-t">
     <div
-      class="main-container flex flex-col md:flex-row items-center justify-between gap-10 text-center md:text-left"
+      class="main-container flex flex-col lg:flex-row items-center justify-between lg:gap-10 gap-4 text-center lg:text-left"
     >
-      <div class="md:max-w-xl">
+      <div class="lg:max-w-xl">
         <h2 class="text-3xl font-bold mb-4">Want to track your own progress?</h2>
         <p class="text-lg text-muted-foreground mb-6">
           Turn reading about learning into actual learning progress you can track and share.
         </p>
       </div>
       <div>
-        <div class="flex flex-col md:flex-row gap-4 justify-center md:justify-start">
+        <div class="flex flex-col lg:flex-row gap-4 justify-center lg:justify-start">
           <a
             href="/"
             class="px-8 py-3 bg-background text-background-foreground border rounded-md text-lg font-medium hover:bg-secondary/90 transition-colors text-nowrap"
+            aria-label="Learn more about MEMsched"
           >
             Learn more
           </a>
           <a
             href="/auth/signin"
             class="px-8 py-3 bg-primary text-primary-foreground rounded-md text-lg font-medium hover:bg-primary/90 transition-colors text-nowrap"
+            aria-label="Start tracking for free"
           >
             Start tracking for free
           </a>

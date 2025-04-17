@@ -33,17 +33,6 @@ export default defineConfig({
       changefreq: 'weekly',
       priority: 0.7,
       lastmod: new Date(),
-      serialize: (item) => {
-        // Prefix urls with /blog
-        const url = new URL(item.url);
-        if (url.pathname === '/') {
-          url.pathname = '/blog';
-        } else {
-          url.pathname = `/blog${url.pathname}`;
-        }
-        item.url = url.toString();
-        return item;
-      },
     }),
   ],
 });

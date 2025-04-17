@@ -56,7 +56,7 @@
     description: pageDescription,
     url: DOMAIN,
     type: 'website',
-    site_name: 'MEMsched',
+    site_name: 'MEMsched - Learning Progress Tracker',
     images: [
       {
         url: `${DOMAIN}/opengraph.png`,
@@ -88,12 +88,13 @@
         <h2
           class="h4 bg-gradient-to-r from-zinc-400 to-zinc-500 bg-clip-text font-medium text-transparent"
         >
-          Set goals, log progress, and showcase your journey with beautiful widgets.
+          Set measurable goals, log daily progress, and showcase your journey with embeddable
+          widgets.
         </h2>
       </div>
       <div class="relative w-fit">
         <Button data-umami-event="hero-get-started-button" href="/auth/signin" size="cta"
-          >Get Started for Free</Button
+          >Start Tracking Your Progress</Button
         >
         <Arrow class="absolute left-[105%] top-[60%] rotate-6" />
       </div>
@@ -105,9 +106,11 @@
   <section id="how-it-works" class="border-y bg-background">
     <div class="container px-4">
       <div class="mb-16 flex flex-col items-center text-center">
-        <h2 class="h2 mb-3 w-fit border-b-2 border-dashed border-primary pb-1">How It Works</h2>
+        <h2 class="h2 mb-3 w-fit border-b-2 border-dashed border-primary pb-1">
+          How MEMsched Works
+        </h2>
         <p class="text-lg text-muted-foreground">
-          Three simple steps to showcase your learning journey
+          Three simple steps to track metrics and showcase your learning journey
         </p>
       </div>
 
@@ -124,9 +127,10 @@
           </div>
           <div class="space-y-1">
             <Icon className="size-10" src={IoPersonCircle} />
-            <h3 class="text-xl font-semibold">Setup Profile & Create an Objective</h3>
+            <h3 class="text-xl font-semibold">Create Learning Objectives & Goals</h3>
             <p class="!mb-3 text-muted-foreground">
-              Set up a new learning objective with your goals and metrics to track.
+              Define measurable learning objectives with specific metrics to track your skill
+              development.
             </p>
             <IconButton
               class="animate-svg"
@@ -135,7 +139,7 @@
               icon={IoArrowForward}
               size="lg"
             >
-              Create Profile for Free
+              Start Tracking for Free
             </IconButton>
           </div>
         </div>
@@ -148,9 +152,10 @@
           </div>
           <div class="space-y-1">
             <Icon className="size-10" src={IoCube} />
-            <h3 class="mb-2 text-xl font-semibold">Log Your Progress</h3>
+            <h3 class="mb-2 text-xl font-semibold">Log Daily Progress Metrics</h3>
             <p class="text-muted-foreground">
-              Regularly update your metrics to see your growth over time.
+              Regularly update your learning metrics to visualize growth patterns and track
+              achievements over time.
             </p>
           </div>
         </div>
@@ -163,51 +168,42 @@
           </div>
           <div class="space-y-1">
             <Icon className="size-10" src={IoGlobe} />
-            <h3 class="mb-2 text-xl font-semibold">Share Your Widgets</h3>
+            <h3 class="mb-2 text-xl font-semibold">Embed Progress Widgets Anywhere</h3>
             <p class="text-muted-foreground">
-              Generate custom widgets and embed them wherever you want to showcase your journey.
+              Generate customizable widgets to embed on your website, GitHub profile, or portfolio
+              to showcase your learning metrics.
             </p>
           </div>
         </div>
       </div>
       <div class="mt-28 grid grid-cols-2 gap-10 px-8 text-center max-md:grid-cols-1 max-sm:px-4">
         <div>
-          <h3 class="h4 mb-3">Manage your objectives</h3>
+          <h3 class="h4 mb-3">Manage multiple learning objectives</h3>
           <enhanced:img
             src="/static/images/objectives.png"
-            alt="Objectives"
+            alt="Learning objectives dashboard tracking multiple skills"
             class="rounded-md border shadow-sm dark:hidden"
           />
           <enhanced:img
             src="/static/images/objectives-dark.png"
-            alt="Objectives"
+            alt="Learning objectives dashboard tracking multiple skills"
             class="hidden rounded-md border shadow-sm dark:block"
           />
         </div>
         <div>
-          <h3 class="h4 mb-3">Customize your widgets</h3>
+          <h3 class="h4 mb-3">Create custom progress widgets</h3>
           <enhanced:img
             src="/static/images/create-widget.png"
-            alt="Create widget"
+            alt="Create customizable learning progress widgets"
             class="rounded-md border shadow-sm dark:hidden"
           />
           <enhanced:img
             src="/static/images/create-widget-dark.png"
-            alt="Create widget"
+            alt="Create customizable learning progress widgets"
             class="hidden rounded-md border shadow-sm dark:block"
           />
         </div>
-        <!-- <div> -->
-        <!--   <h2 class="h2 text-5xl">Customize your widget</h2> -->
-        <!-- </div> -->
       </div>
-      <!-- <div class="mt-16 space-y-4 text-center"> -->
-      <!--   <img -->
-      <!--     src="/images/create-widget.png" -->
-      <!--     alt="Create widget" -->
-      <!--     class="mx-auto w-1/2 rounded-md border shadow-sm" -->
-      <!--   /> -->
-      <!-- </div> -->
     </div>
   </section>
 
@@ -216,12 +212,12 @@
     <div class="main-container mx-auto px-4">
       <div class="mb-10 flex flex-col items-center text-center">
         <h2 class="h2 mb-3 w-fit border-b-2 border-dashed border-green-500 pb-1">
-          <span class="me-1 font-bold text-green-500">Live</span>
+          <span class="me-1 font-bold text-green-500">Embed</span>
 
           On <span class="me-1 font-bold italic">Your</span> Website
         </h2>
         <p class="text-lg text-muted-foreground">
-          Beautiful widgets that seamlessly integrate with your website or portfolio
+          Auto-updating progress widgets that seamlessly integrate with your website or portfolio
         </p>
       </div>
 
@@ -263,7 +259,7 @@
 
         <div class="space-y-4">
           <p class="text-center text-lg">
-            Embed widgets like this one on your website with a single line of code
+            Embed auto-updating progress widgets on your website with a single line of code
           </p>
           <CodeBlock
             code={codeSnippet}
@@ -281,28 +277,43 @@
     <div class="main-container mx-auto px-4">
       <div class="mb-16 flex flex-col items-center text-center">
         <h2 class="h2 mb-3 w-fit border-b-2 border-dashed border-primary pb-1">
-          Frequently Asked Questions
+          Common Questions About MEMsched
         </h2>
         <p class="text-lg text-muted-foreground">
-          Common questions about MEMsched and how it works
+          Learn more about our learning progress tracking platform
         </p>
       </div>
 
       <div class="mx-auto max-w-3xl">
         <Accordion.Root type="single">
           <Accordion.Item>
-            <Accordion.Trigger>What is MEMsched and how does it work?</Accordion.Trigger>
+            <Accordion.Trigger
+              >What is MEMsched and how does it track learning progress?</Accordion.Trigger
+            >
             <Accordion.Content class="text-muted-foreground">
-              MEMsched is a web app that helps you track learning objectives and create widgets to
+              MEMsched is a learning progress tracking platform that helps you set measurable
+              learning goals, track skill development metrics, and create embeddable widgets to
               showcase your progress on websites, GitHub profiles, and portfolios.
             </Accordion.Content>
           </Accordion.Item>
 
           <Accordion.Item>
-            <Accordion.Trigger>How do I embed widgets on my website?</Accordion.Trigger>
+            <Accordion.Trigger
+              >How do I embed progress tracking widgets on my website?</Accordion.Trigger
+            >
             <Accordion.Content class="text-muted-foreground">
-              Simply copy the provided HTML image tag and paste it into your website's code. Your
-              widget will automatically update whenever you log new progress.
+              Simply copy the generated HTML image tag and paste it into your website's code. Your
+              progress widget will automatically update in real-time whenever you log new learning
+              metrics or achievements.
+            </Accordion.Content>
+          </Accordion.Item>
+
+          <Accordion.Item>
+            <Accordion.Trigger>What types of learning metrics can I track?</Accordion.Trigger>
+            <Accordion.Content class="text-muted-foreground">
+              MEMsched supports various learning metrics including hours spent, completion
+              percentage, proficiency levels, books read, courses completed, and custom metrics
+              tailored to your specific learning objectives and skill development goals.
             </Accordion.Content>
           </Accordion.Item>
 
@@ -317,19 +328,10 @@
           </Accordion.Item>
 
           <Accordion.Item>
-            <Accordion.Trigger>How is my data protected?</Accordion.Trigger>
+            <Accordion.Trigger>Is my learning data secure?</Accordion.Trigger>
             <Accordion.Content class="text-muted-foreground">
-              We encrypt all data and store it on European servers in compliance with FADP and GDPR
-              regulations. We never share or sell your personal information.
-            </Accordion.Content>
-          </Accordion.Item>
-
-          <Accordion.Item>
-            <Accordion.Trigger>Can I delete my account and data?</Accordion.Trigger>
-            <Accordion.Content class="text-muted-foreground">
-              You can delete your account at any time. We'll immediately anonymize your data and
-              remove your objectives and widgets, with all remaining data being permanently deleted
-              after 30 days.
+              Yes, all your learning metrics and progress data are securely encrypted and stored on
+              European servers in compliance with privacy regulations.
             </Accordion.Content>
           </Accordion.Item>
         </Accordion.Root>
@@ -343,15 +345,15 @@
       class="main-container flex justify-between gap-10 text-primary max-md:flex-col max-md:items-center max-md:text-center"
     >
       <div>
-        <h2 class="mb-2 text-3xl font-bold">Ready to showcase your learning journey?</h2>
-        <p class="mx-auto max-w-2xl text-lg opacity-75">
+        <h2 class="mb-2 text-3xl font-bold">Ready to track and showcase your learning journey?</h2>
+        <p class="max-w-2xl text-lg opacity-75">
           Join the learners who are tracking their progress and sharing their achievements with the
           world.
         </p>
       </div>
       <div class="relative">
         <Button data-umami-event="cta-get-started-button" href="/auth/signin" size="cta"
-          >Get Started for Free</Button
+          >Start Tracking Now</Button
         >
         <Arrow class="absolute left-[-85%] top-[-85%] rotate-180" />
         <p class="mt-2 text-sm text-muted-foreground">

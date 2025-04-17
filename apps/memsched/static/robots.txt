@@ -17,4 +17,6 @@ Allow: /*/
 Host: https://memsched.com
 
 # Sitemaps
+Sitemap: https://memsched.com/sitemap-index.xml
 Sitemap: https://memsched.com/sitemap.xml
+Sitemap: https://memsched.com/blog/sitemap-0.xml

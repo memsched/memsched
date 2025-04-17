@@ -5,7 +5,7 @@ const { href }: Record<string, any> = Astro.props;
 let attr: { target?: string; rel?: string } = {};
 
 // check if the link is external
-if (!href.includes(import.meta.env.SITE) && !href.startsWith('/') && !href.startsWith('#')) {
+if (!href.includes('memsched.com') && !href.startsWith('/') && !href.startsWith('#')) {
   // if it is, add target="_blank" and rel="noopener noreferrer"
   attr['target'] = '_blank';
   attr['rel'] = 'noopener noreferrer';

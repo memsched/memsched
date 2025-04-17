@@ -20,7 +20,6 @@
     card: 'summary',
     title: pageTitle,
     description: pageDescription,
-    site: '@memsched',
   }}
 />
 

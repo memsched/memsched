@@ -18,7 +18,12 @@ const {
   heroImageWidth,
   heroImageHeight,
   id,
+  twitterCreator,
 } = Astro.props;
+
+const images = import.meta.glob<{ default: ImageMetadata }>('/src/assets/*.{jpeg,jpg,png,gif}');
+if (heroImage && !images[heroImage])
+  throw new Error(`"${heroImage}" does not exist in glob: "src/assets/*.{jpeg,jpg,png,gif}"`);
 
 // Calculate estimated reading time (240 words per minute)
 function getReadingTime(content: string) {
@@ -33,15 +38,22 @@ const content = await Astro.slots.render('default');
 const readingTime = getReadingTime(content);
 ---
 
-<BaseLayout title={title} description={description}>
+<BaseLayout
+  title={title}
+  description={description}
+  image={heroImage}
+  twitterCreator={twitterCreator}
+>
   <div class="bg-dotted-fade bg-back py-6 border-b w-full">
     <div class="main-container">
       <nav class="flex" aria-label="Breadcrumb">
-        <ol class="flex items-center space-x-2 text-sm">
-          <li>
-            <a href="/" class="text-muted-foreground hover:text-primary transition-colors">Home</a>
+        <ol class="flex items-center space-x-2 text-sm overflow-hidden w-full">
+          <li class="flex-shrink-0">
+            <a href="/blog" class="text-muted-foreground hover:text-primary transition-colors"
+              >Home</a
+            >
           </li>
-          <li class="flex items-center">
+          <li class="flex items-center min-w-0 flex-1">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="16"
@@ -52,9 +64,11 @@ const readingTime = getReadingTime(content);
               stroke-width="2"
               stroke-linecap="round"
               stroke-linejoin="round"
-              class="text-muted-foreground"><path d="m9 18 6-6-6-6"></path></svg
+              class="text-muted-foreground flex-shrink-0"><path d="m9 18 6-6-6-6"></path></svg
             >
-            <span class="ml-2 text-foreground font-medium truncate" title={title}>{title}</span>
+            <span class="ml-2 text-foreground font-medium truncate max-w-full block" title={title}
+              >{title}</span
+            >
           </li>
         </ol>
       </nav>
@@ -68,7 +82,7 @@ const readingTime = getReadingTime(content);
       {
         heroImage && (
           <Image
-            src={heroImage}
+            src={images[heroImage]()}
             alt={heroImageAlt}
             width={heroImageWidth}
             height={heroImageHeight}

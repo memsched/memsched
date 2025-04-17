@@ -61,6 +61,10 @@ export async function GET(event: RequestEvent) {
     <priority>0.5</priority>
     <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
   </url>
+  <!-- Blog routes -->
+  <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <sitemap><loc>${DOMAIN}/blog/sitemap-0.xml</loc></sitemap>
+  </sitemapindex>
   <!-- Dynamic user profile routes -->
   ${usernames
     .map(

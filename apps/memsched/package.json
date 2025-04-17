@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite dev --open",
-    "build": "vite build",
+    "build": "pnpm -C ../blog build && vite build",
     "build:e2e": "vite build --mode testing",
     "preview": "wrangler pages dev --port 5173",
     "prepare": "svelte-kit sync || echo ''",
@@ -30,11 +30,11 @@
     "prod:d1:execute": "wrangler d1 execute memsched-db --remote --env production"
   },
   "devDependencies": {
-    "@memsched/ui": "workspace:*",
     "@cloudflare/workers-types": "^4.20250412.0",
     "@eslint/compat": "^1.2.8",
     "@eslint/js": "^9.24.0",
     "@lucide/svelte": "^0.483.0",
+    "@memsched/ui": "workspace:*",
     "@playwright/test": "^1.51.1",
     "@sveltejs/adapter-cloudflare": "^7.0.1",
     "@sveltejs/enhanced-img": "^0.4.4",

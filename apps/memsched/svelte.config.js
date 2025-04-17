@@ -21,8 +21,9 @@ const config = {
           '/icons/*',
           '/_app/immutable/*',
           '/_app/version.json',
-          '/favicon.png',
+          '/favicon.svg',
           '/robots.txt',
+          '/blog/*',
         ],
       },
       platformProxy: {

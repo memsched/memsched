@@ -62,7 +62,7 @@ const posts: PostWithReadingTime[] = rawPosts.map((post) => {
             ><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"
             ></polyline></svg
           >
-          <span>{posts.length} articles</span>
+          <span>{posts.length} article{posts.length === 1 ? '' : 's'}</span>
         </div>
         <div class="w-1 h-1 rounded-full bg-muted-foreground"></div>
         <div class="flex items-center gap-2">
@@ -91,30 +91,6 @@ const posts: PostWithReadingTime[] = rawPosts.map((post) => {
       <h2 class="text-3xl font-bold border-b-2 border-dashed border-primary pb-1">
         Latest Articles
       </h2>
-      {
-        posts.length > 3 && (
-          <a
-            href="/archives"
-            class="text-primary hover:text-primary/80 text-sm font-medium flex items-center gap-1 transition-colors"
-          >
-            View all articles
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path d="M5 12h14" />
-              <path d="m12 5 7 7-7 7" />
-            </svg>
-          </a>
-        )
-      }
     </div>
     <div class="space-y-10">
       {
@@ -144,14 +120,17 @@ const posts: PostWithReadingTime[] = rawPosts.map((post) => {
               </div>
             </div>
 
-            <a href={`/posts/${post.id}`} class="block group-hover:text-primary transition-colors">
+            <a
+              href={`/blog/posts/${post.id}`}
+              class="block group-hover:text-primary transition-colors"
+            >
               <h2 class="text-2xl md:text-3xl font-semibold mb-2">{post.data.title}</h2>
             </a>
 
             <p class="text-muted-foreground mb-5 max-w-3xl">{post.data.description}</p>
 
             <a
-              href={`/posts/${post.id}`}
+              href={`/blog/posts/${post.id}`}
               class="inline-flex items-center text-primary text-sm font-medium hover:underline"
             >
               Read article
@@ -214,50 +193,25 @@ const posts: PostWithReadingTime[] = rawPosts.map((post) => {
         <p class="text-lg text-muted-foreground mb-6">
           Turn reading about learning into actual learning progress you can track and share.
         </p>
-        <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
+      </div>
+      <div>
+        <div class="flex flex-col md:flex-row gap-4 justify-center md:justify-start">
           <a
-            href="https://memsched.com/auth/signin"
-            class="px-8 py-3 bg-primary text-primary-foreground rounded-md text-lg font-medium hover:bg-primary/90 transition-colors"
-          >
-            Start tracking for free
-          </a>
-          <a
-            href="https://memsched.com"
-            class="px-8 py-3 bg-background text-background-foreground border rounded-md text-lg font-medium hover:bg-secondary/90 transition-colors"
+            href="/"
+            class="px-8 py-3 bg-background text-background-foreground border rounded-md text-lg font-medium hover:bg-secondary/90 transition-colors text-nowrap"
           >
             Learn more
+          </a>
+          <a
+            href="/auth/signin"
+            class="px-8 py-3 bg-primary text-primary-foreground rounded-md text-lg font-medium hover:bg-primary/90 transition-colors text-nowrap"
+          >
+            Start tracking for free
           </a>
         </div>
         <p class="mt-4 text-sm text-muted-foreground">
           No credit card needed. Get started in seconds.
         </p>
-      </div>
-      <div class="hidden md:block relative">
-        <div
-          class="absolute inset-0 bg-gradient-to-tr from-primary/20 to-transparent rounded-2xl -rotate-6"
-        >
-        </div>
-        <div class="relative border border-border bg-card p-1 rounded-2xl shadow-lg rotate-3">
-          <div
-            class="w-[300px] h-[200px] rounded-xl bg-primary/10 flex items-center justify-center"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="64"
-              height="64"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="text-primary"
-              ><path
-                d="M12 20.94c1.5 0 2.75 1.06 4 1.06 3 0 6-8 6-12.22A4.91 4.91 0 0 0 17 5c-2.22 0-4 1.44-5 2-1-.56-2.78-2-5-2a4.9 4.9 0 0 0-5 4.78C2 14 5 22 8 22c1.25 0 2.5-1.06 4-1.06Z"
-              ></path><path d="M10 2c1 .5 2 2 2 5"></path></svg
-            >
-          </div>
-        </div>
       </div>
     </div>
   </section>

@@ -104,7 +104,6 @@
   }}
   twitter={{
     card: 'summary_large_image',
-    site: '@memsched',
     title: currentSeo.title,
     description: currentSeo.description,
   }}

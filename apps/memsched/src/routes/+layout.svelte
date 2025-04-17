@@ -20,10 +20,7 @@
   const { children } = $props();
 </script>
 
-<SvelteSeo
-  keywords="learning tracker, skill development, progress widgets, learning goals, showcase skills, educational progress"
-  themeColor="#ffffff"
-/>
+<SvelteSeo />
 
 <svelte:head>
   <!-- Umami Web Analytics -->

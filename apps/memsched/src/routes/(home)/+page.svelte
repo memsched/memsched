@@ -59,7 +59,7 @@
     site_name: 'MEMsched',
     images: [
       {
-        url: `${DOMAIN}/opengraph-image.png`,
+        url: `${DOMAIN}/opengraph.png`,
         width: 1200,
         height: 630,
         alt: imageAlt,
@@ -68,10 +68,9 @@
   }}
   twitter={{
     card: 'summary_large_image',
-    site: '@memsched',
     title: pageTitle,
     description: pageDescription,
-    image: `${DOMAIN}/twitter-image.png`,
+    image: `${DOMAIN}/opengraph.png`,
     imageAlt: imageAlt,
   }}
 />

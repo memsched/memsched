@@ -8,15 +8,23 @@ import { ModeWatcher } from 'mode-watcher';
 interface Props {
   title: string;
   description: string;
+  image?: string;
+  metaImage?: string;
+  twitterCreator?: string;
 }
 
-const { title, description } = Astro.props;
+const { title, description, image, metaImage, twitterCreator } = Astro.props;
 ---
 
 <!doctype html>
 <html lang="en">
   <head>
-    <BaseHead title={title} description={description} />
+    <BaseHead
+      title={title}
+      description={description}
+      image={metaImage}
+      twitterCreator={twitterCreator}
+    />
     <script lang="javascript" is:inline>
       (function setInitialMode({
         defaultMode = 'system',

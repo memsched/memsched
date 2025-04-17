@@ -4,54 +4,66 @@
 import '@memsched/ui/styles';
 import interWoff2 from '@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url';
 import geistMonoWoff2 from '@fontsource/geist-mono/files/geist-mono-latin-400-normal.woff2?url';
-import { SITE_TITLE } from '../constants';
+import fs from 'fs';
 
 interface Props {
   title: string;
   description: string;
   image?: string;
+  twitterCreator?: string;
 }
 
-const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const { title, description, image = 'opengraph.png', twitterCreator } = Astro.props;
 
-const { title, description, image = '/blog-placeholder-1.jpg' } = Astro.props;
+const pathname = Astro.url.pathname.replace('/blog', '');
+const fsImagePath = './public' + pathname + '/' + image;
+if (!fs.existsSync(fsImagePath)) {
+  throw new Error(`Open Graph Image ${fsImagePath} does not exist for ${pathname}`);
+}
+const imageFullPath = Astro.url + '/' + image;
 ---
 
 <!-- Global Metadata -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-<link rel="sitemap" href="/sitemap-index.xml" />
-<link
-  rel="alternate"
-  type="application/rss+xml"
-  title={SITE_TITLE}
-  href={new URL('rss.xml', Astro.site)}
-/>
-<meta name="generator" content={Astro.generator} />
+<link rel="sitemap" href="/sitemap.xml" />
 
 <!-- Preload fonts -->
 <link rel="preload" as="font" type="font/woff2" href={interWoff2} crossorigin="anonymous" />
 <link rel="preload" as="font" type="font/woff2" href={geistMonoWoff2} crossorigin="anonymous" />
 
-<!-- Canonical URL -->
-<link rel="canonical" href={canonicalURL} />
-
 <!-- Primary Meta Tags -->
 <title>{title}</title>
 <meta name="title" content={title} />
 <meta name="description" content={description} />
+<meta name="robots" content="index, follow" />
 
 <!-- Open Graph / Facebook -->
 <meta property="og:type" content="website" />
 <meta property="og:url" content={Astro.url} />
 <meta property="og:title" content={title} />
 <meta property="og:description" content={description} />
-<meta property="og:image" content={new URL(image, Astro.url)} />
+<meta property="og:image" content={imageFullPath} />
+<meta property="og:image:alt" content={title} />
 
 <!-- Twitter -->
 <meta property="twitter:card" content="summary_large_image" />
 <meta property="twitter:url" content={Astro.url} />
 <meta property="twitter:title" content={title} />
 <meta property="twitter:description" content={description} />
-<meta property="twitter:image" content={new URL(image, Astro.url)} />
+<meta property="twitter:image" content={imageFullPath} />
+<meta property="twitter:image:alt" content={title} />
+{twitterCreator && <meta property="twitter:creator" content={twitterCreator} />}
+
+<!-- Umami Analytics -->
+{
+  import.meta.env.PROD && (
+    <script
+      data-website-id="048e05e6-5b46-463f-898e-7fb2d8f467e8"
+      defer
+      src="https://cloud.umami.is/script.js"
+      is:inline
+    />
+  )
+}

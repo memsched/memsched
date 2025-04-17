@@ -23,7 +23,6 @@
   }}
   twitter={{
     card: 'summary',
-    site: '@memsched',
     title: pageTitle,
     description: pageDescription,
   }}

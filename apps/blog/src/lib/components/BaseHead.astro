@@ -20,7 +20,10 @@ const fsImagePath = './public' + pathname + '/' + image;
 if (!fs.existsSync(fsImagePath)) {
   throw new Error(`Open Graph Image ${fsImagePath} does not exist for ${pathname}`);
 }
-const imageFullPath = Astro.url + '/' + image;
+
+const newPathname = Astro.url.pathname.replace('.html', '');
+const newUrl = new URL(newPathname, Astro.url);
+const imageFullPath = newUrl + '/' + image;
 ---
 
 <!-- Global Metadata -->

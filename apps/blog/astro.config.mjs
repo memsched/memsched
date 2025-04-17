@@ -9,7 +9,7 @@ import sitemap from '@astrojs/sitemap';
 // https://astro.build/config
 export default defineConfig({
   site: 'https://memsched.com/blog',
-  base: '/blog',
+  base: '/blog/',
   experimental: {
     responsiveImages: true,
   },
@@ -19,9 +19,10 @@ export default defineConfig({
     experimentalLayout: 'responsive',
   },
   output: 'static',
-  // trailingSlash: 'never',
+  trailingSlash: 'never',
   outDir: '../memsched/static/blog',
   build: {
+    format: 'file',
     assetsPrefix: '/blog',
   },
   integrations: [

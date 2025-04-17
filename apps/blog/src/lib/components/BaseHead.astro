@@ -15,7 +15,7 @@ interface Props {
 
 const { title, description, image = 'opengraph.png', twitterCreator } = Astro.props;
 
-const pathname = Astro.url.pathname.replace('/blog', '');
+const pathname = Astro.url.pathname.replace('/blog', '').replace('.html', '');
 const fsImagePath = './public' + pathname + '/' + image;
 if (!fs.existsSync(fsImagePath)) {
   throw new Error(`Open Graph Image ${fsImagePath} does not exist for ${pathname}`);

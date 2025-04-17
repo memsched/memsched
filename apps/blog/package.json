@@ -22,6 +22,8 @@
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20250412.0",
+    "@fontsource-variable/inter": "^5.2.5",
+    "@fontsource/geist-mono": "^5.2.5",
     "@memsched/ui": "workspace:*",
     "mode-watcher": "^0.5.1",
     "prettier": "^3.5.3",

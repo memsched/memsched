@@ -2,12 +2,23 @@
 import type { CollectionEntry } from 'astro:content';
 import BaseLayout from './BaseLayout.astro';
 import FormattedDate from '../components/FormattedDate.astro';
+import { Image } from 'astro:assets';
 
 type Props = CollectionEntry<'blog'>['data'] & {
   id?: string;
 };
 
-const { title, description, pubDate, updatedDate, heroImage, id } = Astro.props;
+const {
+  title,
+  description,
+  pubDate,
+  updatedDate,
+  heroImage,
+  heroImageAlt,
+  heroImageWidth,
+  heroImageHeight,
+  id,
+} = Astro.props;
 
 // Calculate estimated reading time (240 words per minute)
 function getReadingTime(content: string) {
@@ -54,7 +65,17 @@ const readingTime = getReadingTime(content);
     <article
       class="mx-auto prose dark:prose-invert prose-zinc lg:prose-lg pt-10 max-sm:pt-6 pb-16 leading-snug"
     >
-      {heroImage && <img src={heroImage} alt="" class="w-full h-48 object-cover rounded-lg " />}
+      {
+        heroImage && (
+          <Image
+            src={heroImage}
+            alt={heroImageAlt}
+            width={heroImageWidth}
+            height={heroImageHeight}
+            class="w-full h-64 object-cover rounded-lg "
+          />
+        )
+      }
       <h1 class="!mb-3 !mt-10">{title}</h1>
       <div class="flex flex-wrap gap-2 text-muted-foreground mb-8 text-sm">
         <div class="flex items-center">

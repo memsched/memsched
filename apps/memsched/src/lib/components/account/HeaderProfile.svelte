@@ -94,8 +94,10 @@
       <DropdownMenu.Item class="cursor-pointer hover:text-accent-foreground">
         {#snippet child({ props })}
           <a
-            href="https://memsched.featurebase.app"
             {...props}
+            href="https://memsched.featurebase.app"
+            target="_blank"
+            rel="noopener noreferrer"
             aria-label="Ideas & Bugs"
             data-umami-event="header-profile-ideas-bugs-button"
           >

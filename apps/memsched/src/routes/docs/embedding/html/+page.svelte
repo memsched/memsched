@@ -8,7 +8,7 @@
   const exampleUserUrl = `${page.url.origin}/johndoe`;
   const exampleTitle = 'Learning Progress';
 
-  const htmlSnippet = `<a href="${exampleUserUrl}" target="_blank">
+  const htmlSnippet = `<a href="${exampleUserUrl}" target="_blank" rel="noopener noreferrer">
     <img src="${exampleWidgetUrl}?svg" 
          alt="${exampleTitle}"
          height="80"

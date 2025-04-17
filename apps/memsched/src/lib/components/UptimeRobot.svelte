@@ -24,6 +24,7 @@
 <a
   href={'https://stats.uptimerobot.com/' + PUBLIC_UPTIME_ROBOT_ID}
   target="_blank"
+  rel="noopener noreferrer"
   class="mt-2 inline-flex items-center space-x-1"
   data-umami-event="uptime-robot-button"
 >

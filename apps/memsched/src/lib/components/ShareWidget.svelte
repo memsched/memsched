@@ -24,7 +24,7 @@
 
   // HTML snippet with anchor tag
   const htmlSnippet = $derived(
-    `<a href="${userUrl}" target="_blank">
+    `<a href="${userUrl}" target="_blank" rel="noopener noreferrer">
     <img src="${widgetUrl}?svg" 
          alt="${title}${subtitle ? ' - ' + subtitle : ''}"
          height="80"

@@ -11,9 +11,18 @@ interface Props {
   description: string;
   image?: string;
   twitterCreator?: string;
+  pubDate?: Date;
+  updatedDate?: Date;
 }
 
-const { title, description, image = 'opengraph.png', twitterCreator } = Astro.props;
+const {
+  title,
+  description,
+  image = 'opengraph.png',
+  twitterCreator,
+  pubDate,
+  updatedDate,
+} = Astro.props;
 
 const pathname = Astro.url.pathname.replace('/blog', '').replace('.html', '');
 const fsImagePath = './public' + pathname + '/' + image;
@@ -58,6 +67,45 @@ const imageFullPath = newUrl + '/' + image;
 <meta property="twitter:image" content={imageFullPath} />
 <meta property="twitter:image:alt" content={title} />
 {twitterCreator && <meta property="twitter:creator" content={twitterCreator} />}
+
+<!-- JSON-LD for Articles -->
+{
+  Astro.url.pathname.includes('/posts/') && (
+    <script
+      is:inline
+      type="application/ld+json"
+      set:html={JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'Article',
+        headline: title,
+        description: description,
+        image: imageFullPath,
+        author: {
+          '@type': 'Person',
+          name: twitterCreator ? twitterCreator.replace('@', '') : 'MEMsched',
+        },
+        publisher: {
+          '@type': 'Organization',
+          name: 'MEMsched',
+          logo: {
+            '@type': 'ImageObject',
+            url: new URL('/favicon.svg', Astro.url).toString(),
+          },
+        },
+        datePublished: pubDate ? new Date(pubDate).toISOString() : null,
+        dateModified: updatedDate
+          ? new Date(updatedDate).toISOString()
+          : pubDate
+            ? new Date(pubDate).toISOString()
+            : null,
+        mainEntityOfPage: {
+          '@type': 'WebPage',
+          '@id': Astro.url.toString(),
+        },
+      }).replace(/"null"/g, 'null')}
+    />
+  )
+}
 
 <!-- Umami Analytics -->
 {

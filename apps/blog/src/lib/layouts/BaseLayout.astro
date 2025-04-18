@@ -8,12 +8,13 @@ import { ModeWatcher } from 'mode-watcher';
 interface Props {
   title: string;
   description: string;
-  image?: string;
   metaImage?: string;
   twitterCreator?: string;
+  pubDate?: Date;
+  updatedDate?: Date;
 }
 
-const { title, description, image, metaImage, twitterCreator } = Astro.props;
+const { title, description, metaImage, twitterCreator, pubDate, updatedDate } = Astro.props;
 ---
 
 <!doctype html>
@@ -24,6 +25,8 @@ const { title, description, image, metaImage, twitterCreator } = Astro.props;
       description={description}
       image={metaImage}
       twitterCreator={twitterCreator}
+      pubDate={pubDate}
+      updatedDate={updatedDate}
     />
     <script lang="javascript" is:inline>
       (function setInitialMode({

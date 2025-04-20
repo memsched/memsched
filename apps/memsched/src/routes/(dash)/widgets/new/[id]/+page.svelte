@@ -27,7 +27,7 @@
   </div>
   <div class="flex gap-5">
     <img
-      src="/api/widgets/{page.params.id}?svg&v={uuid4()}"
+      src="/api/widgets/{page.params.id}?f=svg&v={uuid4()}"
       alt="Widget Preview"
       class="h-[100px] object-contain object-left"
       loading="eager"

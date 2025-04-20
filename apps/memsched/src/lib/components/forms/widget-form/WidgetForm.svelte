@@ -484,6 +484,7 @@
           title={data.form.data.title}
           subtitle={data.form.data.subtitle}
           username={data.user.username}
+          widgetDark={widgetMode === 'dark'}
         />
       </div>
     {:else if focusedTab === 'general.title' || focusedTab === 'general.subtitle'}

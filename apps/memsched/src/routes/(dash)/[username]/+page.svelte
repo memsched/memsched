@@ -2,6 +2,7 @@
   import { FiPlus } from 'svelte-icons-pack/fi';
   import SvelteSeo from 'svelte-seo';
 
+  import { page } from '$app/state';
   import Profile from '$lib/components/account/Profile.svelte';
   import DashHeader from '$lib/components/headers/DashHeader.svelte';
   import IconButton from '$lib/components/ui/IconButton.svelte';
@@ -52,11 +53,19 @@
     type: 'profile',
     site_name: 'MEMsched',
   }}
-  twitter={{
-    card: 'summary',
-    title: pageTitle,
-    description: pageDescription,
-  }}
+  twitter={data.widget
+    ? {
+        card: 'summary_large_image',
+        title: data.widget.title,
+        description: data.widget.subtitle,
+        image: `${page.url.origin}/api/widgets/${data.widget.id}?f=png${data.widgetDark ? '&dark' : ''}`,
+        imageAlt: data.widget.title,
+      }
+    : {
+        card: 'summary',
+        title: pageTitle,
+        description: pageDescription,
+      }}
   jsonLd={personSchema}
 />
 

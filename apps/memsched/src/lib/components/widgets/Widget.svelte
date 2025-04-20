@@ -24,6 +24,7 @@
   interface WidgetProps extends Partial<WidgetData>, Props {
     metrics?: PartialBy<WidgetMetricData, 'data'>[];
     dark?: boolean;
+    margin?: number;
   }
 
   const {
@@ -34,6 +35,7 @@
     textIcon,
     imagePlacement = 'left',
     padding = 16,
+    margin = 0,
     borderWidth = 1,
     borderRadius = 8,
     borderColor = '#ededed',
@@ -94,6 +96,7 @@
   style:flex-direction="column"
   style:align-items="flex-start"
   style:gap="0.2rem"
+  style:margin="{margin}px"
 >
   <div
     style:border={`${borderWidth}px solid ${effectiveBorderColor}`}

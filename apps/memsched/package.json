@@ -78,6 +78,7 @@
     "@libsql/client": "^0.14.0",
     "@oslojs/crypto": "^1.0.1",
     "@oslojs/encoding": "^1.1.0",
+    "@resvg/resvg-js": "^2.6.2",
     "arctic": "^3.6.0",
     "culori": "^4.0.1",
     "date-fns": "^4.1.0",

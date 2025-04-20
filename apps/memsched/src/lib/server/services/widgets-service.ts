@@ -50,6 +50,17 @@ export class WidgetsService {
     });
   }
 
+  public getPublic(widgetId: string) {
+    return wrapResultAsyncFn(async () => {
+      const widgets = await this.db
+        .select()
+        .from(table.widget)
+        .where(and(eq(table.widget.id, widgetId), eq(table.widget.visibility, 'public')));
+
+      return widgets.length > 0 ? widgets[0] : null;
+    });
+  }
+
   public getAll(userId: string) {
     return wrapResultAsync(
       this.db
@@ -337,8 +348,8 @@ export class WidgetsService {
   public invalidateWidget(widgetId: string, cache: CacheService) {
     return wrapResultAsyncFn(async () => {
       await Promise.all(
-        ['html', 'svg'].flatMap((type) =>
-          ['light', 'dark'].map((theme) => cache.delete(`widget:${widgetId}:${type}:${theme}`))
+        ['html', 'svg'].flatMap((format) =>
+          ['light', 'dark'].map((theme) => cache.delete(`widget:${widgetId}:${format}:${theme}`))
         )
       );
     });

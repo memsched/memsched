@@ -1,5 +1,6 @@
 import { okAsync, ResultAsync } from 'neverthrow';
 
+import type { Widget } from '$lib/server/db/schema';
 import * as table from '$lib/server/db/schema';
 import { handleDbError } from '$lib/server/utils';
 
@@ -12,6 +13,17 @@ export const load: PageServerLoad = async (event) => {
   }
   const user = userResult.value;
   const isOwner = user.id === event.locals.session?.userId;
+
+  let widget: Widget | null = null;
+  const widgetDark = event.url.searchParams.has('dark');
+  const widgetIdSearchParam = event.url.searchParams.get('w');
+  if (widgetIdSearchParam) {
+    const widgetResult = await event.locals.widgetsService.getPublic(widgetIdSearchParam);
+    if (widgetResult.isErr()) {
+      return handleDbError(widgetResult);
+    }
+    widget = widgetResult.value;
+  }
 
   let objectives: table.Objective[] = [];
   let widgetIds: string[] = [];
@@ -46,5 +58,7 @@ export const load: PageServerLoad = async (event) => {
     },
     objectives,
     isOwner: user.id === event.locals.session?.userId,
+    widget,
+    widgetDark,
   };
 };

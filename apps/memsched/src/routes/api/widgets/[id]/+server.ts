@@ -8,14 +8,19 @@ import type { RequestHandler } from './$types';
 
 export const GET: RequestHandler = async (event) => {
   const widgetId = event.params.id;
-  const renderSvg = event.url.searchParams.has('svg');
+  const format = event.url.searchParams.get('f');
+  const contentType =
+    format === 'svg' ? 'image/svg+xml' : format === 'png' ? 'image/png' : 'text/html';
   const dark = event.url.searchParams.has('dark');
-  const cacheKey = `widget:${widgetId}:${renderSvg ? 'svg' : 'html'}:${dark ? 'dark' : 'light'}`;
+  const cacheKey = `widget:${widgetId}:${format}:${dark ? 'dark' : 'light'}`;
+  const cacheEnabled =
+    format !== 'png' &&
+    (import.meta.env.VITE_DEBUG_DISABLE_WIDGET_CACHE !== '1' || !import.meta.env.DEV);
 
   let cachedWidget: Awaited<ReturnType<typeof event.locals.cache.get>> = null;
   let isAllowedToAccessWidget = false;
 
-  if (import.meta.env.VITE_DEBUG_DISABLE_WIDGET_CACHE !== '1' || !import.meta.env.DEV) {
+  if (cacheEnabled) {
     const clientEtag = event.request.headers.get('If-None-Match');
     cachedWidget = await event.locals.cache.get(cacheKey);
 
@@ -61,7 +66,7 @@ export const GET: RequestHandler = async (event) => {
   if (cachedWidget && cachedWidget.etag === newEtag && isAllowedToAccessWidget) {
     return new Response(cachedWidget.value, {
       headers: {
-        'Content-Type': renderSvg ? 'image/svg+xml' : 'text/html',
+        'Content-Type': contentType,
         ETag: newEtag,
         'Cache-Control': 'no-cache, no-store, must-revalidate',
         Pragma: 'no-cache',
@@ -71,25 +76,29 @@ export const GET: RequestHandler = async (event) => {
   }
 
   // Render the widget
-  const rendered = await renderWidget(
+  const renderedResponse = await renderWidget(
     Widget,
     {
       ...widgetDataResult.value,
       dark,
     },
-    renderSvg
+    format
   );
-  const renderedContent = await rendered.text();
 
   // Cache the result
-  await event.locals.cache.set(cacheKey, renderedContent, newEtag, {
-    visibility: widgetResult.value.visibility,
-    userId: event.locals.session?.userId ?? null,
-  });
+  if (cacheEnabled) {
+    const renderedContent = await renderedResponse.text();
+    await event.locals.cache.set(cacheKey, renderedContent, newEtag, {
+      visibility: widgetResult.value.visibility,
+      userId: event.locals.session?.userId ?? null,
+    });
+  }
 
-  return new Response(renderedContent, {
+  // Return the rendered response with the new etag header
+  return new Response(renderedResponse.body, {
+    status: renderedResponse.status,
     headers: {
-      'Content-Type': renderSvg ? 'image/svg+xml' : 'text/html',
+      ...Object.fromEntries(renderedResponse.headers.entries()),
       ETag: newEtag,
       'Cache-Control': 'no-cache, no-store, must-revalidate',
       Pragma: 'no-cache',

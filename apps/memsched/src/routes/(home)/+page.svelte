@@ -21,7 +21,7 @@
   import { mockWidgets } from '$lib/widgets';
 
   const codeSnippet = `
-<img src="https://memsched.com/api/widgets/example?svg" />`;
+<img src="https://memsched.com/api/widgets/example?f=svg" />`;
 
   let liveIncrement = $state(0);
   let livePoints = $state([{ y: 0 }]);

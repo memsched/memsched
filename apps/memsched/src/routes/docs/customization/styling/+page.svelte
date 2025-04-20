@@ -31,7 +31,7 @@
 
       <h4 class="mt-4 text-xl font-semibold tracking-tight">Example:</h4>
       <pre class="mt-2 overflow-x-auto rounded-md border bg-muted p-4 font-mono text-sm"><code
-          >&lt;img src="https://memsched.com/api/widgets/[YOUR_WIDGET_ID]?svg<span
+          >&lt;img src="https://memsched.com/api/widgets/[YOUR_WIDGET_ID]?f=svg<span
             class="font-bold text-primary">&dark</span
           >" alt="MEMsched Widget"&gt;</code
         ></pre>

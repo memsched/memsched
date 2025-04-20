@@ -24,7 +24,9 @@
 
   const origin = $derived(page.url.origin);
   const trueHref = $derived(href || `${origin}/widgets/${widget.id}`);
-  const imgSrc = $derived(`${origin}/api/widgets/${widget.id}?svg&v=${updateState.widgetCounter}`);
+  const imgSrc = $derived(
+    `${origin}/api/widgets/${widget.id}?f=svg&v=${updateState.widgetCounter}`
+  );
   const imgAlt = $derived(`${widget.title} - ${widget.subtitle}`);
 
   let loaded = $state(false);

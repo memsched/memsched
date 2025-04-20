@@ -1,3 +1,4 @@
+import { Resvg } from '@resvg/resvg-js';
 import parse from 'html-react-parser';
 import satori from 'satori';
 import type { Component } from 'svelte';
@@ -19,30 +20,56 @@ function getSatoriInstance() {
 export async function renderWidget<P extends Record<string, any>>(
   Widget: Component<P>,
   props: P,
-  renderSvg: boolean = true
+  format: string | null
 ) {
-  const widget = render<Component<P>>(Widget, { props }).body;
-  if (!renderSvg) {
-    return new Response(widget, {
+  if (format === 'svg') {
+    const widget = render<Component<P>>(Widget, { props }).body;
+    let svg = await getSatoriInstance()(parse(widget, { trim: true }));
+
+    // TODO: Simplify these regexes
+    svg = svg.replace(/<svg[^>]*height="[^"]*"[^>]*>/, (match) =>
+      match.replace(/height="[^"]*"/, '')
+    );
+    svg = svg.replace(/<svg[^>]*width="[^"]*"[^>]*>/, (match) =>
+      match.replace(/width="[^"]*"/, 'width="100%"')
+    );
+
+    return new Response(svg, {
       headers: {
-        'Content-Type': 'text/html',
+        'Content-Type': 'image/svg+xml',
       },
     });
   }
 
-  let svg = await getSatoriInstance()(parse(widget, { trim: true }));
+  if (format === 'png') {
+    const widget = render<Component<P>>(Widget, { props: { ...props, margin: 16 } }).body;
+    const svg = await getSatoriInstance()(parse(widget, { trim: true }));
 
-  // TODO: Simplify these regexes
-  svg = svg.replace(/<svg[^>]*height="[^"]*"[^>]*>/, (match) =>
-    match.replace(/height="[^"]*"/, '')
-  );
-  svg = svg.replace(/<svg[^>]*width="[^"]*"[^>]*>/, (match) =>
-    match.replace(/width="[^"]*"/, 'width="100%"')
-  );
+    const opts = {
+      background: 'rgb(255, 255, 255)',
+      fitTo: {
+        mode: 'height' as const,
+        value: 512,
+      },
+      font: {
+        loadSystemFonts: false,
+      },
+    };
+    const resvg = new Resvg(svg, opts);
+    const pngData = resvg.render();
+    const pngBuffer = pngData.asPng();
 
-  return new Response(svg, {
+    return new Response(pngBuffer, {
+      headers: {
+        'Content-Type': 'image/png',
+      },
+    });
+  }
+
+  const widget = render<Component<P>>(Widget, { props }).body;
+  return new Response(widget, {
     headers: {
-      'Content-Type': 'image/svg+xml',
+      'Content-Type': 'text/html',
     },
   });
 }

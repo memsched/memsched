@@ -24,7 +24,8 @@
   interface WidgetProps extends Partial<WidgetData>, Props {
     metrics?: PartialBy<WidgetMetricData, 'data'>[];
     dark?: boolean;
-    margin?: number;
+    marginX?: number;
+    marginY?: number;
   }
 
   const {
@@ -35,7 +36,6 @@
     textIcon,
     imagePlacement = 'left',
     padding = 16,
-    margin = 0,
     borderWidth = 1,
     borderRadius = 8,
     borderColor = '#ededed',
@@ -51,6 +51,8 @@
     onMetricClose,
     onMetricDrag,
     dark = false,
+    marginX = 0,
+    marginY = 0,
   }: WidgetProps = $props();
 
   const effectiveColor = $derived(dark ? formatHex8(smartInvert(color)) : color);
@@ -96,7 +98,10 @@
   style:flex-direction="column"
   style:align-items="flex-start"
   style:gap="0.2rem"
-  style:margin="{margin}px"
+  style:margin-left="{marginX}px"
+  style:margin-right="{marginX}px"
+  style:margin-top="{marginY}px"
+  style:margin-bottom="{marginY}px"
 >
   <div
     style:border={`${borderWidth}px solid ${effectiveBorderColor}`}

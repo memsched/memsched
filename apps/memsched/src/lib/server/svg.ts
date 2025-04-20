@@ -1,4 +1,3 @@
-import { Resvg } from '@resvg/resvg-js';
 import parse from 'html-react-parser';
 import satori from 'satori';
 import type { Component } from 'svelte';
@@ -55,8 +54,15 @@ export async function renderWidget<P extends Record<string, any>>(
         loadSystemFonts: false,
       },
     };
-    const resvg = new Resvg(svg, opts);
-    const pngData = resvg.render();
+
+    let resvg;
+    if (import.meta.env.DEV) {
+      resvg = await import('@cf-wasm/resvg/node');
+    } else {
+      resvg = await import('@cf-wasm/resvg');
+    }
+    const renderer = await resvg.Resvg.create(svg, opts);
+    const pngData = renderer.render();
     const pngBuffer = pngData.asPng();
 
     return new Response(pngBuffer, {

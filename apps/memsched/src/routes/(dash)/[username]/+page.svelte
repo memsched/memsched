@@ -46,13 +46,27 @@
 <SvelteSeo
   title={pageTitle}
   description={pageDescription}
-  openGraph={{
-    title: pageTitle,
-    description: pageDescription,
-    url: `${DOMAIN}/${data.publicUser.username}`,
-    type: 'profile',
-    site_name: 'MEMsched',
-  }}
+  openGraph={data.widget
+    ? {
+        title: data.widget.title,
+        description: data.widget.subtitle,
+        images: [
+          {
+            url: `${page.url.origin}/api/widgets/${data.widget.id}?f=png${data.widgetDark ? '&dark' : ''}`,
+            alt: data.widget.title,
+          },
+        ],
+        url: `${DOMAIN}/${data.publicUser.username}`,
+        type: 'profile',
+        site_name: 'MEMsched',
+      }
+    : {
+        title: pageTitle,
+        description: pageDescription,
+        url: `${DOMAIN}/${data.publicUser.username}`,
+        type: 'profile',
+        site_name: 'MEMsched',
+      }}
   twitter={data.widget
     ? {
         card: 'summary_large_image',

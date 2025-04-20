@@ -25,4 +25,8 @@ export default defineConfig({
     isolate: true,
     testTimeout: 10000,
   },
+
+  optimizeDeps: {
+    exclude: ['@cf-wasm/resvg'],
+  },
 });

@@ -78,7 +78,7 @@
                 order: 1,
               }}
               color="#000000"
-              accentColor="#32ad86"
+              accentColor={$formData.accentColor}
             />
           </WidgetTabStyleButton>
           <WidgetTabStyleButton
@@ -99,7 +99,7 @@
                 order: 1,
               }}
               color="#000000"
-              accentColor="#32ad86"
+              accentColor={$formData.accentColor}
             />
           </WidgetTabStyleButton>
 
@@ -120,7 +120,7 @@
                 data: PLOT_DATA,
               }}
               color="#000000"
-              accentColor="#32ad86"
+              accentColor={$formData.accentColor}
             />
           </WidgetTabStyleButton>
           <WidgetTabStyleButton
@@ -143,7 +143,7 @@
                 order: 1,
               }}
               color="#000000"
-              accentColor="#32ad86"
+              accentColor={$formData.accentColor}
             />
           </WidgetTabStyleButton>
           <WidgetTabStyleButton
@@ -165,7 +165,7 @@
                 },
               }}
               color="#000000"
-              accentColor="#32ad86"
+              accentColor={$formData.accentColor}
             />
           </WidgetTabStyleButton>
           <WidgetTabStyleButton
@@ -188,7 +188,7 @@
                 order: 1,
               }}
               color="#000000"
-              accentColor="#32ad86"
+              accentColor={$formData.accentColor}
             />
           </WidgetTabStyleButton>
         </div>

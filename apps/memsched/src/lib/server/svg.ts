@@ -29,8 +29,8 @@ function extractSvgDimensions(svgString: string): { width: number; height: numbe
 function calculateMargins(
   width: number,
   height: number,
-  baseMarginX: number = 16,
-  baseMarginY: number = 16
+  baseMarginX: number = 24,
+  baseMarginY: number = 24
 ): { marginX: number; marginY: number } {
   // Target aspect ratio is 2:1 (width:height)
   const targetRatio = 2;

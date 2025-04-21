@@ -1,6 +1,6 @@
 <script lang="ts">
   import { Icon } from 'svelte-icons-pack';
-  import { BsTwitterX } from 'svelte-icons-pack/bs';
+  import { BsLinkedin, BsTwitterX } from 'svelte-icons-pack/bs';
   import { IoInformationCircle } from 'svelte-icons-pack/io';
 
   import { page } from '$app/state';
@@ -27,6 +27,13 @@
   const twitterText = `What I'm learning right now:\n\n`;
   const twitterShareUrl = $derived(
     `https://x.com/intent/tweet?text=${encodeURIComponent(twitterText)}&url=${encodeURIComponent(
+      userUrl + '?w=' + page.params.id + (widgetDark ? '&dark' : '')
+    )}`
+  );
+
+  // Construct the LinkedIn share URL
+  const linkedInShareUrl = $derived(
+    `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
       userUrl + '?w=' + page.params.id + (widgetDark ? '&dark' : '')
     )}`
   );
@@ -80,10 +87,14 @@
     </Tabs.Content>
   </Tabs.Root>
   <div class="h-px w-full bg-border"></div>
-  <div class="mt-4">
+  <div class="mt-4 flex gap-2">
     <Button href={twitterShareUrl} target="_blank" rel="noopener noreferrer" variant="outline">
       <Icon src={BsTwitterX} className="mr-2 size-4" />
       Share on X
+    </Button>
+    <Button href={linkedInShareUrl} target="_blank" rel="noopener noreferrer" variant="outline">
+      <Icon src={BsLinkedin} className="mr-2 size-4" />
+      Share on LinkedIn
     </Button>
   </div>
 </div>

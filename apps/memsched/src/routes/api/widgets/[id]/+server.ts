@@ -76,7 +76,7 @@ export const GET: RequestHandler = async (event) => {
   }
 
   // Render the widget
-  const renderedResponse = await renderWidget(
+  const rendered = await renderWidget(
     Widget,
     {
       ...widgetDataResult.value,
@@ -87,18 +87,16 @@ export const GET: RequestHandler = async (event) => {
 
   // Cache the result
   if (cacheEnabled) {
-    const renderedContent = await renderedResponse.text();
-    await event.locals.cache.set(cacheKey, renderedContent, newEtag, {
+    await event.locals.cache.set(cacheKey, rendered as string, newEtag, {
       visibility: widgetResult.value.visibility,
       userId: event.locals.session?.userId ?? null,
     });
   }
 
   // Return the rendered response with the new etag header
-  return new Response(renderedResponse.body, {
-    status: renderedResponse.status,
+  return new Response(rendered, {
     headers: {
-      ...Object.fromEntries(renderedResponse.headers.entries()),
+      'Content-Type': contentType,
       ETag: newEtag,
       'Cache-Control': 'no-cache, no-store, must-revalidate',
       Pragma: 'no-cache',

@@ -81,11 +81,7 @@ export async function renderWidget<P extends Record<string, any>>(
       match.replace(/width="[^"]*"/, 'width="100%"')
     );
 
-    return new Response(svg, {
-      headers: {
-        'Content-Type': 'image/svg+xml',
-      },
-    });
+    return svg;
   }
 
   if (format === 'png') {
@@ -128,17 +124,8 @@ export async function renderWidget<P extends Record<string, any>>(
     const pngData = renderer.render();
     const pngBuffer = pngData.asPng();
 
-    return new Response(pngBuffer, {
-      headers: {
-        'Content-Type': 'image/png',
-      },
-    });
+    return pngBuffer;
   }
 
-  const widget = render<Component<P>>(Widget, { props }).body;
-  return new Response(widget, {
-    headers: {
-      'Content-Type': 'text/html',
-    },
-  });
+  return render<Component<P>>(Widget, { props }).body;
 }

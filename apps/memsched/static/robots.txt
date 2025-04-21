@@ -10,7 +10,27 @@ Disallow: /objectives/
 Disallow: /settings/
 Disallow: /widgets/
 
-# Allow public user profiles
+# Allow specific social media bots to access widget images for previews
+User-agent: Twitterbot
+Allow: /api/widgets/
+
+User-agent: facebookexternalhit
+Allow: /api/widgets/
+
+User-agent: Facebot
+Allow: /api/widgets/
+
+User-agent: LinkedInBot
+Allow: /api/widgets/
+
+User-agent: Pinterestbot
+Allow: /api/widgets/
+
+User-agent: Discordbot
+Allow: /api/widgets/
+
+# Allow public user profiles for all bots
+User-agent: *
 Allow: /*/
 
 # Host

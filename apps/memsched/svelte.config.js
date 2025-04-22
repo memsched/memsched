@@ -54,6 +54,7 @@ const config = {
         'img-src': [
           'self',
           'data:',
+          'https://api.producthunt.com/',
           'https://*.githubusercontent.com',
           'https://*.googleusercontent.com',
         ],

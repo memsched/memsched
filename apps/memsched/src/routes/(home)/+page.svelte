@@ -93,9 +93,23 @@
         </h2>
       </div>
       <div class="relative w-fit">
-        <Button data-umami-event="hero-get-started-button" href="/auth/signin" size="cta"
-          >Start Tracking Your Progress</Button
-        >
+        <div class="flex items-center gap-2">
+          <a
+            href="https://www.producthunt.com/posts/memsched?embed=true&utm_source=badge-featured&utm_medium=badge&utm_souce=badge-memsched"
+            target="_blank"
+            rel="noreferrer noopener"
+            ><img
+              src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=955665&theme=neutral&t=1745314792465"
+              alt="MEMsched - Show&#0032;the&#0032;world&#0032;what&#0032;you&#0039;re&#0032;learning&#0032;and&#0032;embed&#0032;on&#0032;any&#0032;site | Product Hunt"
+              style="width: 250px; height: 54px;"
+              width="250"
+              height="54"
+            /></a
+          >
+          <Button data-umami-event="hero-get-started-button" href="/auth/signin" size="cta"
+            >Start Your Journey for Free</Button
+          >
+        </div>
         <Arrow class="absolute left-[105%] top-[60%] rotate-6" />
       </div>
     </div>

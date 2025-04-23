@@ -48,9 +48,6 @@ export const GET: RequestHandler = async (event) => {
     event.locals.session?.userId
   );
   if (widgetResult.isErr()) {
-    return handleDbError(widgetResult);
-  }
-  if (widgetResult.isErr()) {
     return error(404, 'Widget not found');
   }
 

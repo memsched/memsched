@@ -73,6 +73,14 @@
         url: `${DOMAIN}/${data.publicUser.username}`,
         type: 'profile',
         site_name: 'MEMsched',
+        images: [
+          {
+            url: `${DOMAIN}/opengraph.png`,
+            width: 1200,
+            height: 630,
+            alt: 'MEMsched - Track and showcase your learning journey',
+          },
+        ],
       }}
   twitter={data.widget
     ? {
@@ -83,9 +91,11 @@
         imageAlt: data.widget.title,
       }
     : {
-        card: 'summary',
+        card: 'summary_large_image',
         title: pageTitle,
         description: pageDescription,
+        image: `${DOMAIN}/opengraph.png`,
+        imageAlt: 'MEMsched - Track and showcase your learning journey',
       }}
   jsonLd={personSchema}
 />

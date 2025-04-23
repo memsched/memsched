@@ -2,7 +2,6 @@
   import { Icon } from 'svelte-icons-pack';
   import { BsLinkedin, BsTwitterX } from 'svelte-icons-pack/bs';
   import { IoInformationCircle } from 'svelte-icons-pack/io';
-  import { v4 as uuidv4 } from 'uuid';
 
   import { page } from '$app/state';
   import { Button } from '$lib/components/ui/button';
@@ -28,14 +27,14 @@
   const twitterText = `What I'm learning right now:\n\n`;
   const twitterShareUrl = $derived(
     `https://x.com/intent/tweet?text=${encodeURIComponent(twitterText)}&url=${encodeURIComponent(
-      userUrl + '?w=' + page.params.id + (widgetDark ? '&dark' : '') + '&v=' + uuidv4()
+      userUrl + '?w=' + page.params.id + (widgetDark ? '&dark' : '')
     )}`
   );
 
   // Construct the LinkedIn share URL
   const linkedInShareUrl = $derived(
     `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
-      userUrl + '?w=' + page.params.id + (widgetDark ? '&dark' : '') + '&v=' + uuidv4()
+      userUrl + '?w=' + page.params.id + (widgetDark ? '&dark' : '')
     )}`
   );
 

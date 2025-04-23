@@ -1,6 +1,7 @@
 <script lang="ts">
   import { FiPlus } from 'svelte-icons-pack/fi';
   import SvelteSeo from 'svelte-seo';
+  import { v4 as uuidv4 } from 'uuid';
 
   import { page } from '$app/state';
   import Profile from '$lib/components/account/Profile.svelte';
@@ -44,7 +45,7 @@
 
   const widgetPreivewUrl = $derived(
     data.widget
-      ? `${page.url.origin}/api/widgets/${data.widget.id}?f=png${data.widgetDark ? '&dark' : ''}`
+      ? `${page.url.origin}/api/widgets/${data.widget.id}/${uuidv4()}?f=png${data.widgetDark ? '&dark' : ''}`
       : ''
   );
 </script>

@@ -44,7 +44,7 @@
   // HTML snippet with anchor tag
   const htmlSnippet = $derived(
     `<a href="${userUrl}" target="_blank" rel="noopener noreferrer">
-    <img src="${widgetUrl}?f=svg" 
+    <img src="${widgetUrl}?f=svg${widgetDark ? '&dark' : ''}"
          alt="${title}${subtitle ? ' - ' + subtitle : ''}"
          height="80"
     />
@@ -53,7 +53,7 @@
 
   // HTML snippet without anchor tag
   const htmlSnippetNoLink = $derived(
-    `<img src="${widgetUrl}?f=svg" 
+    `<img src="${widgetUrl}?f=svg${widgetDark ? '&dark' : ''}"
      alt="${title}${subtitle ? ' - ' + subtitle : ''}"
      height="80"
 />`.trim()

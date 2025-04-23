@@ -45,7 +45,7 @@
 
   const widgetPreivewUrl = $derived(
     data.widget
-      ? `${page.url.origin}/api/widgets/${data.widget.id}/${uuidv4()}.png${data.widgetDark ? '&dark' : ''}`
+      ? `${page.url.origin}/api/widgets/${data.widget.id}/${uuidv4()}.png${data.widgetDark ? '?dark' : ''}`
       : ''
   );
 </script>

@@ -11,6 +11,7 @@
   import * as Tabs from '$lib/components/ui/tabs';
 
   import CodeBlock from './CodeBlock.svelte';
+  import CopyButton from './CopyButton.svelte';
 
   interface Props {
     title: string;
@@ -24,19 +25,21 @@
   const userUrl = page.url.origin + '/' + username;
   const widgetUrl = page.url.origin + '/api/widgets/' + page.params.id;
 
+  const widgetShareUrl = $derived(
+    userUrl + '?w=' + page.params.id + (widgetDark ? '&dark' : '') + '&r=' + uuidv4()
+  );
+
   // Construct the Twitter share URL
   const twitterText = `What I'm learning right now:\n\n`;
   const twitterShareUrl = $derived(
     `https://x.com/intent/tweet?text=${encodeURIComponent(twitterText)}&url=${encodeURIComponent(
-      userUrl + '?w=' + page.params.id + (widgetDark ? '&dark' : '') + '&r=' + uuidv4()
+      widgetShareUrl
     )}`
   );
 
   // Construct the LinkedIn share URL
   const linkedInShareUrl = $derived(
-    `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
-      userUrl + '?w=' + page.params.id + (widgetDark ? '&dark' : '') + '&r=' + uuidv4()
-    )}`
+    `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(widgetShareUrl)}`
   );
 
   let includeProfileLink = $state(true);
@@ -89,6 +92,7 @@
   </Tabs.Root>
   <div class="h-px w-full bg-border"></div>
   <div class="mt-4 flex gap-2">
+    <CopyButton textToCopy={widgetShareUrl} label="Copy Link" />
     <Button href={twitterShareUrl} target="_blank" rel="noopener noreferrer" variant="outline">
       <Icon src={BsTwitterX} className="mr-2 size-4" />
       Share on X

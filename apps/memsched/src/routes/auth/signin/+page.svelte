@@ -2,8 +2,8 @@
   import { AiOutlineGithub } from 'svelte-icons-pack/ai';
   import SvelteSeo from 'svelte-seo';
 
+  import { page } from '$app/state';
   import IconButton from '$lib/components/ui/IconButton.svelte';
-  import { DOMAIN } from '$lib/constants';
   import { FcGoogle } from '$lib/icons';
 
   const pageTitle = 'Sign in to MEMsched - Track Your Learning Journey';
@@ -17,7 +17,7 @@
   openGraph={{
     title: pageTitle,
     description: pageDescription,
-    url: `${DOMAIN}/auth/signin`,
+    url: `${page.url.origin}/auth/signin`,
     type: 'website',
     site_name: 'MEMsched',
   }}

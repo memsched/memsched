@@ -7,7 +7,6 @@
   import AuthLayout from '$lib/components/layouts/AuthLayout.svelte';
   import { Badge } from '$lib/components/ui/badge';
   import IconButton from '$lib/components/ui/IconButton.svelte';
-  import { DOMAIN } from '$lib/constants';
 
   const pageTitle = page.status === 404 ? 'Page Not Found - MEMsched' : 'Error - MEMsched';
   const pageDescription =
@@ -19,7 +18,7 @@
   openGraph={{
     title: pageTitle,
     description: pageDescription,
-    url: `${DOMAIN}${page.url.pathname}`,
+    url: `${page.url.origin}${page.url.pathname}`,
     type: 'website',
     site_name: 'MEMsched',
   }}

@@ -5,6 +5,7 @@
   import { IoArrowForward, IoCube, IoGlobe, IoPersonCircle } from 'svelte-icons-pack/io';
   import SvelteSeo from 'svelte-seo';
 
+  import { page } from '$app/state';
   import CodeBlock from '$lib/components/CodeBlock.svelte';
   import HomeLayout from '$lib/components/layouts/HomeLayout.svelte';
   import Arrow from '$lib/components/svgs/Arrow.svelte';
@@ -16,7 +17,6 @@
   import WidgetCarousel from '$lib/components/WidgetCarousel.svelte';
   import Widget from '$lib/components/widgets/Widget.svelte';
   import { HEADER_HEIGHT } from '$lib/constants';
-  import { DOMAIN } from '$lib/constants';
   import { FLAT_COLOR_ICONS } from '$lib/icons';
   import { mockWidgets } from '$lib/widgets';
 
@@ -50,16 +50,16 @@
 <SvelteSeo
   title={pageTitle}
   description={pageDescription}
-  canonical={DOMAIN}
+  canonical={page.url.origin}
   openGraph={{
     title: pageTitle,
     description: pageDescription,
-    url: DOMAIN,
+    url: page.url.origin,
     type: 'website',
     site_name: 'MEMsched - Learning Progress Tracker',
     images: [
       {
-        url: `${DOMAIN}/opengraph.png`,
+        url: `${page.url.origin}/opengraph.png`,
         width: 1200,
         height: 630,
         alt: imageAlt,
@@ -70,7 +70,7 @@
     card: 'summary_large_image',
     title: pageTitle,
     description: pageDescription,
-    image: `${DOMAIN}/opengraph.png`,
+    image: `${page.url.origin}/opengraph.png`,
     imageAlt: imageAlt,
   }}
 />

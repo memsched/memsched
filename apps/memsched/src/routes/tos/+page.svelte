@@ -1,9 +1,9 @@
 <script lang="ts">
   import SvelteSeo from 'svelte-seo';
 
+  import { page } from '$app/state';
   import ContentLayout from '$lib/components/layouts/ContentLayout.svelte';
   import TermsOfService from '$lib/components/markdown/TermsOfService.svelte';
-  import { DOMAIN } from '$lib/constants';
 
   const pageTitle = 'Terms of Service - MEMsched';
   const pageDescription =
@@ -15,7 +15,7 @@
   openGraph={{
     title: pageTitle,
     description: pageDescription,
-    url: `${DOMAIN}/tos`,
+    url: `${page.url.origin}/tos`,
     type: 'website',
     site_name: 'MEMsched',
   }}

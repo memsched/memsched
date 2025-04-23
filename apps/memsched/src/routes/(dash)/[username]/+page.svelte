@@ -8,7 +8,6 @@
   import DashHeader from '$lib/components/headers/DashHeader.svelte';
   import IconButton from '$lib/components/ui/IconButton.svelte';
   import WidgetImage from '$lib/components/widgets/WidgetImage.svelte';
-  import { DOMAIN } from '$lib/constants';
 
   import type { PageProps } from './$types';
 
@@ -22,12 +21,12 @@
     '@type': 'Person' as const,
     mainEntityOfPage: {
       '@type': 'WebPage' as const,
-      '@id': `${DOMAIN}/${data.publicUser.username}`,
+      '@id': `${page.url.origin}/${data.publicUser.username}`,
     },
     name: data.publicUser.name || data.publicUser.username,
     description: data.publicUser.bio || pageDescription,
     identifier: data.publicUser.username,
-    url: `${DOMAIN}/${data.publicUser.username}`,
+    url: `${page.url.origin}/${data.publicUser.username}`,
     ...(data.publicUser.location && {
       homeLocation: {
         '@type': 'Place' as const,
@@ -63,19 +62,19 @@
             alt: data.widget.title,
           },
         ],
-        url: `${DOMAIN}/${data.publicUser.username}`,
+        url: `${page.url.origin}/${data.publicUser.username}`,
         type: 'profile',
         site_name: 'MEMsched',
       }
     : {
         title: pageTitle,
         description: pageDescription,
-        url: `${DOMAIN}/${data.publicUser.username}`,
+        url: `${page.url.origin}/${data.publicUser.username}`,
         type: 'profile',
         site_name: 'MEMsched',
         images: [
           {
-            url: `${DOMAIN}/opengraph.png`,
+            url: `${page.url.origin}/opengraph.png`,
             width: 1200,
             height: 630,
             alt: 'MEMsched - Track and showcase your learning journey',
@@ -94,7 +93,7 @@
         card: 'summary_large_image',
         title: pageTitle,
         description: pageDescription,
-        image: `${DOMAIN}/opengraph.png`,
+        image: `${page.url.origin}/opengraph.png`,
         imageAlt: 'MEMsched - Track and showcase your learning journey',
       }}
   jsonLd={personSchema}

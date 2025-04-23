@@ -1,8 +1,9 @@
 import parse from 'html-react-parser';
 import satori from 'satori';
-import type { Component } from 'svelte';
+import type { ComponentProps } from 'svelte';
 import { render } from 'svelte/server';
 
+import Widget from '$lib/components/widgets/Widget.svelte';
 import { fontOptions } from '$lib/server/fonts';
 
 let satoriInstance: ((markup: ReturnType<typeof render>) => ReturnType<typeof satori>) | null =
@@ -64,13 +65,9 @@ function calculateMargins(
   return { marginX, marginY };
 }
 
-export async function renderWidget<P extends Record<string, any>>(
-  Widget: Component<P>,
-  props: P,
-  format: string | null
-) {
+export async function renderWidget(props: ComponentProps<typeof Widget>, format: string | null) {
   if (format === 'svg') {
-    const widget = render<Component<P>>(Widget, { props }).body;
+    const widget = render<typeof Widget>(Widget, { props }).body;
     let svg = await getSatoriInstance()(parse(widget, { trim: true }));
 
     // TODO: Simplify these regexes
@@ -86,7 +83,7 @@ export async function renderWidget<P extends Record<string, any>>(
 
   if (format === 'png') {
     // First render to get dimensions
-    const widget = render<Component<P>>(Widget, { props }).body;
+    const widget = render<typeof Widget>(Widget, { props }).body;
     let svg = await getSatoriInstance()(parse(widget, { trim: true }));
 
     // Extract dimensions and calculate margins for 2:1 aspect ratio
@@ -94,7 +91,7 @@ export async function renderWidget<P extends Record<string, any>>(
     const margins = calculateMargins(dimensions.width, dimensions.height);
 
     // Re-render with calculated margins
-    const widgetWithMargins = render<Component<P>>(Widget, {
+    const widgetWithMargins = render<typeof Widget>(Widget, {
       props: {
         ...props,
         marginX: margins.marginX,
@@ -104,7 +101,7 @@ export async function renderWidget<P extends Record<string, any>>(
     svg = await getSatoriInstance()(parse(widgetWithMargins, { trim: true }));
 
     const opts = {
-      background: 'rgb(255, 255, 255)',
+      background: props.dark ? 'rgb(25, 25, 25)' : 'rgb(255, 255, 255)',
       fitTo: {
         mode: 'height' as const,
         value: 512,
@@ -127,5 +124,5 @@ export async function renderWidget<P extends Record<string, any>>(
     return pngBuffer;
   }
 
-  return render<Component<P>>(Widget, { props }).body;
+  return render<typeof Widget>(Widget, { props }).body;
 }

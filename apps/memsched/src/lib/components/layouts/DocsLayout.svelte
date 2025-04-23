@@ -8,7 +8,6 @@
 
   import { goto } from '$app/navigation';
   import { page } from '$app/state';
-  import { DOMAIN } from '$lib/constants';
 
   interface Props {
     class?: string;
@@ -98,7 +97,7 @@
   openGraph={{
     title: currentSeo.title,
     description: currentSeo.description,
-    url: `${DOMAIN}${page.url.pathname}`,
+    url: `${page.url.origin}${page.url.pathname}`,
     type: 'website',
     site_name: 'MEMsched Documentation',
   }}

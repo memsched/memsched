@@ -1,7 +1,6 @@
 import { error } from '@sveltejs/kit';
 
-import Widget from '$lib/components/widgets/Widget.svelte';
-import { renderWidget } from '$lib/server/svg';
+import { renderWidget } from '$lib/server/renderer';
 import { handleDbError } from '$lib/server/utils';
 
 import type { RequestHandler } from './$types';
@@ -26,7 +25,6 @@ export const GET: RequestHandler = async (event) => {
 
   // Render the widget
   const rendered = await renderWidget(
-    Widget,
     {
       ...widgetDataResult.value,
       dark,

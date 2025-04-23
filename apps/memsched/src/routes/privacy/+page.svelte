@@ -1,9 +1,9 @@
 <script lang="ts">
   import SvelteSeo from 'svelte-seo';
 
+  import { page } from '$app/state';
   import ContentLayout from '$lib/components/layouts/ContentLayout.svelte';
   import PrivaryPolicy from '$lib/components/markdown/PrivaryPolicy.svelte';
-  import { DOMAIN } from '$lib/constants';
 
   const pageTitle = 'Privacy Policy - MEMsched';
   const pageDescription =
@@ -15,7 +15,7 @@
   openGraph={{
     title: pageTitle,
     description: pageDescription,
-    url: `${DOMAIN}/privacy`,
+    url: `${page.url.origin}/privacy`,
     type: 'website',
     site_name: 'MEMsched',
   }}

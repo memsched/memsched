@@ -41,6 +41,12 @@
       },
     }),
   } as const;
+
+  const widgetPreivewUrl = $derived(
+    data.widget
+      ? `${page.url.origin}/api/widgets/${data.widget.id}?f=png${data.widgetDark ? '&dark' : ''}`
+      : ''
+  );
 </script>
 
 <SvelteSeo
@@ -52,7 +58,7 @@
         description: data.widget.subtitle,
         images: [
           {
-            url: `${page.url.origin}/api/widgets/${data.widget.id}?f=png${data.widgetDark ? '&dark' : ''}`,
+            url: widgetPreivewUrl,
             alt: data.widget.title,
           },
         ],
@@ -72,7 +78,7 @@
         card: 'summary_large_image',
         title: data.widget.title,
         description: data.widget.subtitle,
-        image: `${page.url.origin}/api/widgets/${data.widget.id}?f=png${data.widgetDark ? '&dark' : ''}`,
+        image: widgetPreivewUrl,
         imageAlt: data.widget.title,
       }
     : {

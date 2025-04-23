@@ -33,10 +33,7 @@ export const GET: RequestHandler = async (event) => {
       return new Response(null, {
         status: 304,
         headers: {
-          ETag: cachedWidget.etag,
-          'Cache-Control': 'no-cache, no-store, must-revalidate',
-          Pragma: 'no-cache',
-          Expires: '0',
+          ETag: `"${cachedWidget.etag}"`,
         },
       });
     }
@@ -64,10 +61,7 @@ export const GET: RequestHandler = async (event) => {
     return new Response(cachedWidget.value, {
       headers: {
         'Content-Type': contentType,
-        ETag: newEtag,
-        'Cache-Control': 'no-cache, no-store, must-revalidate',
-        Pragma: 'no-cache',
-        Expires: '0',
+        ETag: `"${newEtag}"`,
       },
     });
   }
@@ -94,10 +88,7 @@ export const GET: RequestHandler = async (event) => {
   return new Response(rendered, {
     headers: {
       'Content-Type': contentType,
-      ETag: newEtag,
-      'Cache-Control': 'no-cache, no-store, must-revalidate',
-      Pragma: 'no-cache',
-      Expires: '0',
+      ETag: `"${newEtag}"`,
     },
   });
 };

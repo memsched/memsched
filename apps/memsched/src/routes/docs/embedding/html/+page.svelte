@@ -11,13 +11,13 @@
   const htmlSnippet = `<a href="${exampleUserUrl}" target="_blank" rel="noopener noreferrer">
     <img src="${exampleWidgetUrl}?f=svg" 
          alt="${exampleTitle}"
-         height="80"
+         style="width: fit-content; height: fit-content;"
     />
 </a>`;
 
   const htmlSnippetNoLink = `<img src="${exampleWidgetUrl}?f=svg" 
      alt="${exampleTitle}"
-     height="80"
+     style="width: fit-content; height: fit-content;"
 />`;
 </script>
 

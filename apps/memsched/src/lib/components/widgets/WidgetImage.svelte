@@ -15,12 +15,11 @@
       title: string;
       subtitle: string;
     };
-    height?: number;
     url?: boolean;
     href?: string;
   }
 
-  const { widget, height = 85, url = false, href, ...rest }: Props = $props();
+  const { widget, url = false, href, ...rest }: Props = $props();
 
   const origin = $derived(page.url.origin);
   const trueHref = $derived(href || `${origin}/widgets/${widget.id}`);
@@ -36,10 +35,9 @@
   <img
     src={imgSrc}
     alt={imgAlt}
-    style="height: {height}px;"
     {...props}
     class={cn(
-      'transition-opacity duration-200',
+      'h-fit w-fit transition-opacity duration-100',
       loaded ? 'opacity-100' : 'opacity-0',
       $mode === 'light' ? '' : 'hidden',
       props.class
@@ -49,10 +47,9 @@
   <img
     src={imgSrc + '&dark'}
     alt={imgAlt}
-    style="height: {height}px;"
     {...props}
     class={cn(
-      'transition-opacity duration-200',
+      'h-fit w-fit transition-opacity duration-100',
       loaded ? 'opacity-100' : 'opacity-0',
       $mode === 'dark' ? '' : 'hidden',
       props.class
@@ -63,7 +60,7 @@
 
 {#if browser}
   {#if url || href}
-    <a href={trueHref} {...rest}>
+    <a href={trueHref} {...rest} class={cn(rest.class, 'flex-shrink-0')}>
       {@render widgetImage({})}
     </a>
   {:else}

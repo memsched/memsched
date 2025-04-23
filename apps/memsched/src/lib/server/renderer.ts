@@ -68,15 +68,15 @@ function calculateMargins(
 export async function renderWidget(props: ComponentProps<typeof Widget>, format: string | null) {
   if (format === 'svg') {
     const widget = render<typeof Widget>(Widget, { props }).body;
-    let svg = await getSatoriInstance()(parse(widget, { trim: true }));
+    const svg = await getSatoriInstance()(parse(widget, { trim: true }));
 
     // TODO: Simplify these regexes
-    svg = svg.replace(/<svg[^>]*height="[^"]*"[^>]*>/, (match) =>
-      match.replace(/height="[^"]*"/, '')
-    );
-    svg = svg.replace(/<svg[^>]*width="[^"]*"[^>]*>/, (match) =>
-      match.replace(/width="[^"]*"/, 'width="100%"')
-    );
+    // svg = svg.replace(/<svg[^>]*height="[^"]*"[^>]*>/, (match) =>
+    //   match.replace(/height="[^"]*"/, '')
+    // );
+    // svg = svg.replace(/<svg[^>]*width="[^"]*"[^>]*>/, (match) =>
+    //   match.replace(/width="[^"]*"/, 'width="100%"')
+    // );
 
     return svg;
   }

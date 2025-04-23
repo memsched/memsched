@@ -49,7 +49,7 @@
     `<a href="${userUrl}" target="_blank" rel="noopener noreferrer">
     <img src="${widgetUrl}?f=svg${widgetDark ? '&dark' : ''}"
          alt="${title}${subtitle ? ' - ' + subtitle : ''}"
-         height="80"
+         style="width: fit-content; height: fit-content;"
     />
 </a>`.trim()
   );
@@ -58,7 +58,7 @@
   const htmlSnippetNoLink = $derived(
     `<img src="${widgetUrl}?f=svg${widgetDark ? '&dark' : ''}"
      alt="${title}${subtitle ? ' - ' + subtitle : ''}"
-     height="80"
+     style="width: fit-content; height: fit-content;"
 />`.trim()
   );
 </script>

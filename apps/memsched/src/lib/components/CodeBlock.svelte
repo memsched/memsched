@@ -54,7 +54,11 @@
     <!-- eslint-disable-next-line svelte/no-at-html-tags -->
     <code class="flex flex-col justify-center">{@html highlightedCode}</code>
     {#if copy}
-    <button class="flex items-center" onclick={copyToClipboard} aria-label="Copy to clipboard">
+    <button
+      class="flex items-center"
+      type="button"
+      onclick={copyToClipboard}
+      aria-label="Copy to clipboard">
             <Icon
         src={copied ? IoCheckmarkCircleOutline : IoCopyOutline}
         className={cn(

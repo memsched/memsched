@@ -28,7 +28,8 @@
   const maxValue = $derived(Math.max(...data.points.map((p) => p.z)));
 
   function getColorIntensity(value: number) {
-    const normalizedValue = (value - minValue) / (maxValue - minValue);
+    const range = maxValue - minValue;
+    const normalizedValue = range === 0 ? 0 : (value - minValue) / range;
     // Set alpha based on normalized value (0.25 to 1)
     return formatHex8(setOpacity(accentColor, 0.25 + normalizedValue * 0.75));
   }

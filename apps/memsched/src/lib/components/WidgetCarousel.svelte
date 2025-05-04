@@ -60,7 +60,7 @@
           style="animation-duration: {animationDuration}s; animation-timing-function: linear; animation-iteration-count: infinite;"
         >
           {#each column.widgets as widget, j (j)}
-            <Widget {...widget} dark={$mode === 'dark'} />
+            <Widget {...widget} dark={mode.current === 'dark'} />
           {/each}
         </div>
       </div>

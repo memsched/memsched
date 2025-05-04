@@ -22,7 +22,7 @@
   class={cn('relative flex w-full min-w-[32px] items-center px-2 py-1.5', props.class)}
   aria-label="Toggle theme"
 >
-  {#if $mode === 'dark'}
+  {#if mode.current === 'dark'}
     <div in:slide={{ duration: 200 }} out:slide={{ duration: 200 }} class="absolute left-[8px]">
       <Icon src={IoMoon} size={16} />
     </div>
@@ -32,6 +32,6 @@
     </div>
   {/if}
   {#if !compact}
-    <div class="ps-[24px] capitalize">{$mode}</div>
+    <div class="ps-[24px] capitalize">{mode.current || 'system'}</div>
   {/if}
 </button>

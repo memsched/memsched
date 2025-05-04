@@ -32,7 +32,7 @@
     ></script>
   {/if}
   <!-- Highlight.js -->
-  {#if $mode === 'dark'}
+  {#if mode.current === 'dark'}
     <link rel="stylesheet" href="/highlightjs/github-dark.min.css" />
   {:else}
     <link rel="stylesheet" href="/highlightjs/github.min.css" />

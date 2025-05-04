@@ -39,7 +39,7 @@
     class={cn(
       'h-fit w-fit transition-opacity duration-100',
       loaded ? 'opacity-100' : 'opacity-0',
-      $mode === 'light' ? '' : 'hidden',
+      mode.current === 'light' ? '' : 'hidden',
       props.class
     )}
     onload={() => (loaded = true)}
@@ -51,7 +51,7 @@
     class={cn(
       'h-fit w-fit transition-opacity duration-100',
       loaded ? 'opacity-100' : 'opacity-0',
-      $mode === 'dark' ? '' : 'hidden',
+      mode.current === 'dark' ? '' : 'hidden',
       props.class
     )}
     onload={() => (loaded = true)}

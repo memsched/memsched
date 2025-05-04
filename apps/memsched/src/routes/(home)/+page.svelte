@@ -267,7 +267,7 @@
             textIcon={null}
             title="Learning Progress"
             watermark={true}
-            dark={$mode === 'dark'}
+            dark={mode.current === 'dark'}
           />
         </div>
 

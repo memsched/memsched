@@ -20,9 +20,9 @@
   },
   "devDependencies": {
     "@fontsource-variable/inter": "^5.2.5",
-    "@fontsource/geist-mono": "^5.2.5",
+    "@fontsource/geist-mono": "^5.2.6",
     "@memsched/ui": "workspace:*",
-    "mode-watcher": "^0.5.1",
+    "mode-watcher": "^1.0.5",
     "prettier": "^3.5.3",
     "prettier-plugin-astro": "0.14.1",
     "sharp": "^0.34.1",

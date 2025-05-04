@@ -18,6 +18,31 @@
   });
 
   const { children } = $props();
+
+  const HIGHLIGHT_THEME_LINK_ID = 'highlight-js-theme';
+
+  $effect(() => {
+    if (!browser) return;
+
+    const theme = mode.current === 'dark' ? 'github-dark' : 'github';
+    const themeUrl = `/highlightjs/${theme}.min.css`;
+
+    let linkElement = document.getElementById(HIGHLIGHT_THEME_LINK_ID) as HTMLLinkElement | null;
+
+    if (linkElement) {
+      // Update existing link if theme changed
+      if (linkElement.href !== themeUrl) {
+        linkElement.href = themeUrl;
+      }
+    } else {
+      // Create and append new link if it doesn't exist
+      linkElement = document.createElement('link');
+      linkElement.id = HIGHLIGHT_THEME_LINK_ID;
+      linkElement.rel = 'stylesheet';
+      linkElement.href = themeUrl;
+      document.head.appendChild(linkElement);
+    }
+  });
 </script>
 
 <SvelteSeo />
@@ -32,11 +57,6 @@
     ></script>
   {/if}
   <!-- Highlight.js -->
-  {#if mode.current === 'dark'}
-    <link rel="stylesheet" href="/highlightjs/github-dark.min.css" />
-  {:else}
-    <link rel="stylesheet" href="/highlightjs/github.min.css" />
-  {/if}
 </svelte:head>
 
 <PageLoadProgress />

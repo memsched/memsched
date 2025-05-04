@@ -10,6 +10,7 @@
   import AccessibilityToolbar from '$lib/components/AccessibilityToolbar.svelte';
   import ColorPickerToolbar from '$lib/components/ColorPickerToolbar.svelte';
   import PageLoadProgress from '$lib/components/layouts/PageLoadProgress.svelte';
+  import { initDevice } from '$lib/device.svelte';
 
   beforeNavigate(({ willUnload, to }) => {
     if (updated.current && !willUnload && to?.url) {
@@ -58,6 +59,8 @@
   {/if}
   <!-- Highlight.js -->
 </svelte:head>
+
+<svelte:window use:initDevice />
 
 <PageLoadProgress />
 <ModeWatcher defaultMode="dark" track disableHeadScriptInjection />

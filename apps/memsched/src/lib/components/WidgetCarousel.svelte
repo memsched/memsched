@@ -4,6 +4,7 @@
 
   import { browser } from '$app/environment';
   import Widget from '$lib/components/widgets/Widget.svelte';
+  import { deviceState } from '$lib/device.svelte';
   import type { WidgetJoinMetricsData } from '$lib/server/services/metrics/types';
 
   interface Props {
@@ -29,13 +30,13 @@
       const colWidgets = widgets.slice(startIdx, endIdx);
 
       // Triplicate for continuous scrolling
-      const triplicatedWidgets = [...colWidgets, ...colWidgets, ...colWidgets];
+      const finalWidgets = deviceState.isMobile ? colWidgets : [...colWidgets, ...colWidgets];
 
       // Alternate scroll direction
       const direction = i % 2 === 0 ? 'left' : 'right';
 
       cols.push({
-        widgets: triplicatedWidgets,
+        widgets: finalWidgets,
         direction,
       });
     }

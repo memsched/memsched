@@ -5,6 +5,7 @@
   import { IoArrowForward, IoCube, IoGlobe, IoPersonCircle } from 'svelte-icons-pack/io';
   import SvelteSeo from 'svelte-seo';
 
+  import { browser } from '$app/environment';
   import { page } from '$app/state';
   import CodeBlock from '$lib/components/CodeBlock.svelte';
   import HomeLayout from '$lib/components/layouts/HomeLayout.svelte';
@@ -14,7 +15,6 @@
   import { Badge } from '$lib/components/ui/badge';
   import { Button } from '$lib/components/ui/button';
   import IconButton from '$lib/components/ui/IconButton.svelte';
-  import WidgetCarousel from '$lib/components/WidgetCarousel.svelte';
   import Widget from '$lib/components/widgets/Widget.svelte';
   import { HEADER_HEIGHT } from '$lib/constants';
   import { FLAT_COLOR_ICONS } from '$lib/icons';
@@ -113,7 +113,11 @@
         <Arrow class="absolute left-[105%] top-[60%] rotate-6" />
       </div>
     </div>
-    <WidgetCarousel widgets={mockWidgets} />
+    {#if browser}
+      {#await import('$lib/components/WidgetCarousel.svelte') then { default: WidgetCarousel }}
+        <WidgetCarousel widgets={mockWidgets} />
+      {/await}
+    {/if}
   </section>
 
   <!-- How it works section -->
@@ -197,11 +201,13 @@
             src="/static/images/objectives.png"
             alt="Learning objectives dashboard tracking multiple skills"
             class="rounded-md border shadow-sm dark:hidden"
+            loading="lazy"
           />
           <enhanced:img
             src="/static/images/objectives-dark.png"
             alt="Learning objectives dashboard tracking multiple skills"
             class="hidden rounded-md border shadow-sm dark:block"
+            loading="lazy"
           />
         </div>
         <div>
@@ -210,11 +216,13 @@
             src="/static/images/create-widget.png"
             alt="Create customizable learning progress widgets"
             class="rounded-md border shadow-sm dark:hidden"
+            loading="lazy"
           />
           <enhanced:img
             src="/static/images/create-widget-dark.png"
             alt="Create customizable learning progress widgets"
             class="hidden rounded-md border shadow-sm dark:block"
+            loading="lazy"
           />
         </div>
       </div>

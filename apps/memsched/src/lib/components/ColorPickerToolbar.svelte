@@ -295,7 +295,7 @@
     }
 
     // Get current theme mode
-    const prefersMode = $userPrefersMode;
+    const prefersMode = userPrefersMode.current;
     if (prefersMode === 'system') {
       currentTheme = 'system';
     } else {

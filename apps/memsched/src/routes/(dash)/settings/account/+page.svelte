@@ -18,16 +18,12 @@
 
   const { data }: PageProps = $props();
 
-  let subscription = $state(data.subscription);
+  let subscription = $derived(data.subscription);
   let isSubscribed = $derived(
     subscription.status === 'active' || subscription.status === 'trialing'
   );
   let isCanceled = $derived(subscription.cancelAtPeriodEnd);
   let periodEnd = $derived(subscription.currentPeriodEnd);
-
-  $effect(() => {
-    subscription = data.subscription;
-  });
 </script>
 
 <SvelteSeo

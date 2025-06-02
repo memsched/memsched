@@ -1,6 +1,6 @@
 # MEMsched
 
-![MEMsched OpenGraph Image](/static/opengraph.png)
+![MEMsched OpenGraph Image](apps/memsched/static/opengraph.png)
 
 MEMsched helps you showcase your learning journey to the world.
 

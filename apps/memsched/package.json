@@ -84,7 +84,7 @@
     "date-fns": "^4.1.0",
     "drizzle-orm": "^0.41.0",
     "highlight.js": "^11.11.1",
-    "html-react-parser": "^5.2.5",
+    "html-react-parser": "5.2.3",
     "mode-watcher": "^1.0.7",
     "satori": "^0.12.2",
     "stripe": "^17.7.0",

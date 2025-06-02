@@ -18,7 +18,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 <script>
   import { Logo, SwissFlag } from '@memsched/ui/components/svgs';
   import { Icon } from 'svelte-icons-pack';
-  import { BsTwitterX } from 'svelte-icons-pack/bs';
+  import { BsGithub, BsTwitterX } from 'svelte-icons-pack/bs';
   import { IoHeart } from 'svelte-icons-pack/io';
 
   import UptimeRobot from '../UptimeRobot.svelte';
@@ -41,7 +41,16 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
         </div>
         <UptimeRobot />
       </div>
-      <div>
+      <div class="flex items-center gap-3">
+        <a
+          href="https://github.com/memsched/memsched"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="View source on GitHub"
+          data-umami-event="footer-github-button"
+        >
+          <Icon src={BsGithub} className="size-5" />
+        </a>
         <a
           href="https://x.com/leonardcser"
           target="_blank"

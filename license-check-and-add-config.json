@@ -1,0 +1,103 @@
+{
+  "license": "header.txt",
+  "ignoreDefaultIgnores": false,
+  "ingoreFile": ".gitignore",
+  "ignore": [
+    "**/.dockerignore",
+    "**/.env*",
+    "**/.eslintignore",
+    "**/.github/**",
+    "**/.gitignore",
+    "**/.node-version",
+    "**/.npmignore",
+    "**/.npmrc",
+    "**/.nvmrc",
+    "**/.prettierignore",
+    "**/.prettierrc",
+    "**/.svelte-kit/**",
+    "**/__tests__/**",
+    "**/_headers",
+    "**/*.bundle.css",
+    "**/*.bundle.js",
+    "**/*.eot",
+    "**/*.gif",
+    "**/*.ico",
+    "**/*.jpeg",
+    "**/*.jpg",
+    "**/*.json",
+    "**/*.md",
+    "**/*.mdc",
+    "**/*.mdx",
+    "**/*.min.css",
+    "**/*.min.js",
+    "**/*.png",
+    "**/*.spec.js",
+    "**/*.spec.ts",
+    "**/*.svg",
+    "**/*.ttf",
+    "**/*.woff",
+    "**/*.woff2",
+    "**/astro.config.mjs",
+    "**/build/**",
+    "**/CHANGELOG.md",
+    "**/dist/**",
+    "**/drizzle.config.ts",
+    "**/drizzle/**",
+    "**/eslint.config.js",
+    "**/LICENSE",
+    "**/node_modules/**",
+    "**/package-lock.json",
+    "**/package.json",
+    "**/playwright.config.ts",
+    "**/pnpm-lock.yaml",
+    "**/pnpm-workspace.yaml",
+    "**/postcss.config.js",
+    "**/public/**",
+    "**/README.md",
+    "**/static/**",
+    "**/svelte.config.js",
+    "**/tailwind.config.js",
+    "**/tailwind.config.ts",
+    "**/test/**",
+    "**/tests/**",
+    "**/tsconfig.json",
+    "**/vite.config.js",
+    "**/vite.config.ts",
+    "**/wrangler.jsonc",
+    "**/yarn.lock"
+  ],
+  "trailingWhitespace": "TRIM",
+  "licenseFormats": {
+    "ts|js": {
+      "prepend": "/*",
+      "append": "*/"
+    },
+    "svelte|astro|html|xml": {
+      "prepend": "<!--",
+      "append": "-->"
+    },
+    "css|scss|less": {
+      "prepend": "/*",
+      "append": "*/"
+    },
+    "sql": {
+      "eachLine": {
+        "prepend": "-- "
+      }
+    },
+    "sh|py": {
+      "eachLine": {
+        "prepend": "# "
+      }
+    },
+    "yaml|yml": {
+      "eachLine": {
+        "prepend": "# "
+      }
+    }
+  },
+  "defaultFormat": {
+    "prepend": "/*",
+    "append": "*/"
+  }
+}

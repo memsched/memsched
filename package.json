@@ -8,6 +8,7 @@
     "preview": "pnpm --filter memsched run preview",
     "format": "pnpm exec prettier --write . && pnpm -r run format",
     "lint": "pnpm run license:check && pnpm --filter memsched run lint",
+    "fix": "pnpm run license:add && pnpm --filter memsched run fix",
     "deploy": "pnpm --filter memsched run deploy",
     "license:check": "license-check-and-add check -f license-check-and-add-config.json",
     "license:add": "license-check-and-add add -f license-check-and-add-config.json",

@@ -346,8 +346,12 @@ export class PaymentService {
   public validateAndProcessWebhook(payload: string, signature: string, endpointSecret: string) {
     return wrapResultAsyncFn(async () => {
       try {
-        // Validate webhook signature
-        const event = this.stripe.webhooks.constructEvent(payload, signature, endpointSecret);
+        // Validate webhook signature (using async version for edge runtime compatibility)
+        const event = await this.stripe.webhooks.constructEventAsync(
+          payload,
+          signature,
+          endpointSecret
+        );
 
         // Process the validated event
         return await this.handleWebhookEvent(event);

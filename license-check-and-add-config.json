@@ -5,6 +5,7 @@
   "ignore": [
     "**/.dockerignore",
     "**/.env*",
+    "**/.dev.vars",
     "**/.eslintignore",
     "**/.github/**",
     "**/.gitignore",
@@ -64,7 +65,8 @@
     "**/vite.config.js",
     "**/vite.config.ts",
     "**/wrangler.jsonc",
-    "**/yarn.lock"
+    "**/yarn.lock",
+    "**/local.db"
   ],
   "trailingWhitespace": "TRIM",
   "licenseFormats": {

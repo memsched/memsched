@@ -5,7 +5,7 @@ import { dev } from '$app/environment';
  */
 export function base64ToArrayBuffer(base64: string): ArrayBuffer {
   // Remove data URL prefix if present
-  const base64Data = base64.replace(/^data:image\/\w+;base64,/, '');
+  const base64Data = base64.replace(/^data:image\/[^;]+;base64,/, '');
   const binaryString = atob(base64Data);
   const bytes = new Uint8Array(binaryString.length);
   for (let i = 0; i < binaryString.length; i++) {

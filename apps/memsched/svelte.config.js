@@ -73,7 +73,7 @@ const config = {
     },
     // CSRF Protection
     csrf: {
-      checkOrigin: true,
+      trustedOrigins: [],
     },
     // Version management for safer deployments
     version: {

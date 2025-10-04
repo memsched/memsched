@@ -10,13 +10,11 @@ import sitemap from '@astrojs/sitemap';
 export default defineConfig({
   site: 'https://memsched.com/blog',
   base: '/blog/',
-  experimental: {
-    responsiveImages: true,
-  },
   image: {
     // Used for all Markdown images; not configurable per-image
     // Used for all `<Image />` and `<Picture />` components unless overridden with a prop
-    experimentalLayout: 'constrained',
+    layout: 'constrained',
+    responsiveStyles: true,
   },
   output: 'static',
   trailingSlash: 'never',

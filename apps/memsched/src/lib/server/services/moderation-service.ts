@@ -29,34 +29,38 @@ export class ModerationService {
 
   constructor() {}
 
-  public isTextSafe(text: string) {
+  public isTextSafe(_text: string) {
     return wrapResultAsyncFn(async () => {
-      try {
-        const res = await this.getModerationResult({ type: 'text', text: text });
-        return !res.results[0].flagged;
-      } catch (error) {
-        console.error('Text moderation failed:', error);
-        // Fallback: allow content when moderation service is unavailable
-        // In production, you might want to be more conservative
-        return true;
-      }
+      // Text verification temporarily disabled
+      return true;
+      // try {
+      //   const res = await this.getModerationResult({ type: 'text', text: text });
+      //   return !res.results[0].flagged;
+      // } catch (error) {
+      //   console.error('Text moderation failed:', error);
+      //   // Fallback: allow content when moderation service is unavailable
+      //   // In production, you might want to be more conservative
+      //   return true;
+      // }
     });
   }
 
-  public isImageSafe(imageUrl: string) {
+  public isImageSafe(_imageUrl: string) {
     return wrapResultAsyncFn(async () => {
-      try {
-        const res = await this.getModerationResult({
-          type: 'image_url',
-          image_url: { url: imageUrl },
-        });
-        return !res.results[0].flagged;
-      } catch (error) {
-        console.error('Image moderation failed:', error);
-        // Fallback: allow content when moderation service is unavailable
-        // In production, you might want to be more conservative
-        return true;
-      }
+      // Image verification temporarily disabled
+      return true;
+      // try {
+      //   const res = await this.getModerationResult({
+      //     type: 'image_url',
+      //     image_url: { url: imageUrl },
+      //   });
+      //   return !res.results[0].flagged;
+      // } catch (error) {
+      //   console.error('Image moderation failed:', error);
+      //   // Fallback: allow content when moderation service is unavailable
+      //   // In production, you might want to be more conservative
+      //   return true;
+      // }
     });
   }
 

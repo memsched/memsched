@@ -1,8 +1,6 @@
 import { createClient } from '@libsql/client';
-import { drizzle as drizzleD1, DrizzleD1Database } from 'drizzle-orm/d1';
+import { drizzle as drizzleD1 } from 'drizzle-orm/d1';
 import { drizzle } from 'drizzle-orm/libsql';
-
-export type DBType = DrizzleD1Database;
 
 // Function to get database instance based on environment
 export function getDB(platform?: App.Platform) {

@@ -46,7 +46,8 @@ export function arrayBufferToBase64(buffer: ArrayBuffer, mimeType: string = 'ima
 export async function resizeImageBuffer(
   buffer: ArrayBuffer,
   maxSize: number,
-  quality: number = 75
+  quality: number = 75,
+  outputFormat: 'jpeg' | 'png' = 'jpeg'
 ): Promise<ArrayBuffer> {
   if (dev) {
     // In dev mode, return the original buffer without resizing
@@ -75,7 +76,8 @@ export async function resizeImageBuffer(
     // Only resize if the image is larger than maxSize
     if (width > maxSize || height > maxSize) {
       const outputImage = resize(inputImage, newWidth, newHeight, SamplingFilter.Lanczos3);
-      const outputBytes = outputImage.get_bytes_jpeg(quality);
+      const outputBytes =
+        outputFormat === 'png' ? outputImage.get_bytes() : outputImage.get_bytes_jpeg(quality);
       outputImage.free();
       return outputBytes.buffer as ArrayBuffer;
     }
@@ -101,9 +103,14 @@ export async function processWidgetImage(imageUrl: string | null): Promise<strin
 
   // If it's a base64 image, resize it
   if (imageUrl.startsWith('data:image/')) {
+    // Extract the mime type from the data URL
+    const mimeTypeMatch = imageUrl.match(/^data:(image\/[^;]+);base64,/);
+    const mimeType = mimeTypeMatch ? mimeTypeMatch[1] : 'image/jpeg';
+    const isPng = mimeType === 'image/png';
+
     const buffer = base64ToArrayBuffer(imageUrl);
-    const resizedBuffer = await resizeImageBuffer(buffer, 200); // Widget images are 200px max
-    return arrayBufferToBase64(resizedBuffer);
+    const resizedBuffer = await resizeImageBuffer(buffer, 200, 75, isPng ? 'png' : 'jpeg'); // Widget images are 200px max
+    return arrayBufferToBase64(resizedBuffer, mimeType);
   }
 
   return null;

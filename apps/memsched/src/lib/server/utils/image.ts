@@ -5,7 +5,7 @@ import { dev } from '$app/environment';
  */
 export function base64ToArrayBuffer(base64: string): ArrayBuffer {
   // Remove data URL prefix if present
-  const base64Data = base64.replace(/^data:image\/\w+;base64,/, '');
+  const base64Data = base64.replace(/^data:image\/[^;]+;base64,/, '');
   const binaryString = atob(base64Data);
   const bytes = new Uint8Array(binaryString.length);
   for (let i = 0; i < binaryString.length; i++) {
@@ -99,7 +99,7 @@ export async function processWidgetImage(imageUrl: string | null): Promise<strin
     return imageUrl;
   }
 
-  // If it's a base64 image
+  // If it's a base64 image, resize it
   if (imageUrl.startsWith('data:image/')) {
     const buffer = base64ToArrayBuffer(imageUrl);
     const resizedBuffer = await resizeImageBuffer(buffer, 200); // Widget images are 200px max

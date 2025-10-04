@@ -109,12 +109,13 @@ export const formSchema = z.object({
     .refine(
       (url) => {
         if (!url) return true;
-        return (
-          url.startsWith('data:image/') ||
-          (url.match(/^https?:\/\//) && url.toLowerCase().endsWith('.svg'))
-        );
+        // Allow non-SVG data URLs or SVG file URLs from server
+        if (url.startsWith('data:image/')) {
+          return !url.startsWith('data:image/svg+xml');
+        }
+        return url.match(/^https?:\/\//) && url.toLowerCase().endsWith('.svg');
       },
-      { message: 'Image URL must either be a data URL or an SVG file URL' }
+      { message: 'Image URL must be a raster image data URL or an SVG file URL from the server' }
     )
     .nullable()
     .transform((v) => (v === '' ? null : v)),

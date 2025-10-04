@@ -19,6 +19,11 @@
       return;
     }
 
+    if (file.type === 'image/svg+xml') {
+      alert('SVG files are not supported for upload');
+      return;
+    }
+
     if (file.size > maxSize) {
       alert(`File size must be less than ${maxSize / 1024 / 1024}MB`);
       return;
@@ -82,7 +87,13 @@
   tabindex="0"
   aria-label="Upload image"
 >
-  <input type="file" class="hidden" accept="image/*" bind:this={inputRef} onchange={handleChange} />
+  <input
+    type="file"
+    class="hidden"
+    accept="image/png,image/jpeg,image/jpg,image/gif,image/webp"
+    bind:this={inputRef}
+    onchange={handleChange}
+  />
 
   <div class="text-sm">
     <div class="flex flex-col items-center gap-1">

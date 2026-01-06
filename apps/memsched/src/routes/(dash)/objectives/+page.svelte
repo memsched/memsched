@@ -6,6 +6,7 @@
   import SvelteSeo from 'svelte-seo';
   import { type SuperValidated } from 'sveltekit-superforms';
 
+  import { resolve } from '$app/paths';
   import { enhance } from '$app/forms';
   import { page } from '$app/state';
   import CreateNew from '$lib/components/CreateNew.svelte';
@@ -244,7 +245,7 @@
                       <DropdownMenu.Group>
                         <DropdownMenu.Item class="cursor-pointer">
                           {#snippet child({ props })}
-                            <a href="/objectives/{objective.id}" {...props}>
+                            <a href={resolve(`/objectives/${objective.id}`)} {...props}>
                               <Icon src={FiEdit3} className="!text-muted-foreground" />
                               Edit
                             </a>

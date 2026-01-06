@@ -2,6 +2,7 @@
   import { AiOutlineGithub } from 'svelte-icons-pack/ai';
   import SvelteSeo from 'svelte-seo';
 
+  import { resolve } from '$app/paths';
   import { page } from '$app/state';
   import IconButton from '$lib/components/ui/IconButton.svelte';
   import { FcGoogle } from '$lib/icons';
@@ -49,10 +50,10 @@
     >
   </div>
   <p class="text-sm text-muted-foreground">
-    By joining, you agree to our <a href="/tos" aria-label="Terms of Service"
+    By joining, you agree to our <a href={resolve('/tos')} aria-label="Terms of Service"
       >Terms of <br /> Service</a
     >
     and
-    <a href="/privacy" aria-label="Privacy Policy">Privacy Policy</a>.
+    <a href={resolve('/privacy')} aria-label="Privacy Policy">Privacy Policy</a>.
   </p>
 </div>

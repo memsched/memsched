@@ -4,6 +4,7 @@
   import { Icon } from 'svelte-icons-pack';
   import { FiBookOpen, FiHome, FiLogIn } from 'svelte-icons-pack/fi';
 
+  import { resolve } from '$app/paths';
   import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
 
   import DropdownMenuLabel from '../ui/dropdown-menu/dropdown-menu-label.svelte';
@@ -27,7 +28,7 @@
         {#snippet child({ props })}
           <a
             {...props}
-            href="/auth/signin"
+            href={resolve('/auth/signin')}
             class={cn(props?.class as string, 'font-semibold text-primary')}
             aria-label="Log In"
             data-umami-event="header-profile-anonymous-login-button"
@@ -41,7 +42,7 @@
       <DropdownMenu.Item class="cursor-pointer hover:text-accent-foreground">
         {#snippet child({ props })}
           <a
-            href="/"
+            href={resolve('/')}
             {...props}
             aria-label="MEMsched Homepage"
             data-sveltekit-reload
@@ -55,7 +56,7 @@
       <DropdownMenu.Item class="cursor-pointer hover:text-accent-foreground">
         {#snippet child({ props })}
           <a
-            href="/docs"
+            href={resolve('/docs')}
             {...props}
             data-sveltekit-reload
             data-umami-event="header-profile-anonymous-docs-button"

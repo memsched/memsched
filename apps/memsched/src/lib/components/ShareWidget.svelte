@@ -4,6 +4,7 @@
   import { IoInformationCircle } from 'svelte-icons-pack/io';
   import { v4 as uuidv4 } from 'uuid';
 
+  import { resolve } from '$app/paths';
   import { page } from '$app/state';
   import { Button } from '$lib/components/ui/button';
   import { Label } from '$lib/components/ui/label';
@@ -69,7 +70,7 @@
     <div class="space-y-1">
       <p>
         For detailed setup instructions and troubleshooting, check out our
-        <a href="/docs/embedding/html" class="text-primary hover:underline" data-sveltekit-reload
+        <a href={resolve('/docs/embedding/html')} class="text-primary hover:underline" data-sveltekit-reload
           >widget documentation</a
         >.
       </p>

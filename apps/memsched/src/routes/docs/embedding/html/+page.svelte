@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { resolve } from '$app/paths';
   import { page } from '$app/state';
   import CodeBlock from '$lib/components/CodeBlock.svelte';
   import * as Alert from '$lib/components/ui/alert';
@@ -62,7 +63,7 @@
 
     <p class="mt-4">
       For customization options like dark mode or adjusting the height, please refer to the
-      <a href="/docs/customization/styling" class="text-primary hover:underline"
+      <a href={resolve('/docs/customization/styling')} class="text-primary hover:underline"
         >Styling & Customization</a
       > page.
     </p>
@@ -79,7 +80,7 @@
         </li>
         <li>
           <strong>Wrong size:</strong> Check the
-          <a href="/docs/customization/styling" class="text-primary hover:underline"
+          <a href={resolve('/docs/customization/styling')} class="text-primary hover:underline"
             >Styling & Customization</a
           > page for details on setting the height.
         </li>

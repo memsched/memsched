@@ -3,6 +3,7 @@
   import { mode } from 'mode-watcher';
   import type { HTMLAnchorAttributes, HTMLImgAttributes } from 'svelte/elements';
 
+  import { resolve } from '$app/paths';
   import { browser } from '$app/environment';
   import { page } from '$app/state';
   import { updateState } from '$lib/state.svelte';
@@ -60,7 +61,7 @@
 
 {#if browser}
   {#if url || href}
-    <a href={trueHref} {...rest} class={cn(rest.class, 'flex-shrink-0')}>
+    <a href={trueHref.startsWith('http://') || trueHref.startsWith('https://') ? trueHref : (resolve(trueHref) as any)} {...rest} class={cn(rest.class, 'flex-shrink-0')}>
       {@render widgetImage({})}
     </a>
   {:else}

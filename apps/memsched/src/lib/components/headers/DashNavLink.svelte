@@ -3,6 +3,7 @@
   import type { IconType } from 'svelte-icons-pack';
   import { Icon } from 'svelte-icons-pack';
 
+  import { resolve } from '$app/paths';
   import { page } from '$app/state';
   import * as Tooltip from '$lib/components/ui/tooltip';
 
@@ -25,7 +26,7 @@
   <Tooltip.Root>
     <Tooltip.Trigger class="px-1.5 py-3">
       {#snippet child({ props })}
-        <a {href} aria-label={text} {...props}>
+        <a href={resolve(href) as any} aria-label={text} {...props}>
           <Icon
             src={icon}
             className={cn(

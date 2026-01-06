@@ -4,6 +4,7 @@
   import { FiArrowRight } from 'svelte-icons-pack/fi';
   import { IoArrowForward } from 'svelte-icons-pack/io';
 
+  import { resolve } from '$app/paths';
   import { page } from '$app/state';
   import { getUserOverviewUrl } from '$lib/api';
   import { HEADER_HEIGHT } from '$lib/constants';
@@ -29,7 +30,7 @@
           <Logo />
         </button>
       {:else}
-        <a href="/" aria-label="MEMsched Homepage">
+        <a href={resolve('/')} aria-label="MEMsched Homepage">
           <Logo />
         </a>
       {/if}

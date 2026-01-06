@@ -4,6 +4,7 @@
   import { FiBookOpen, FiHome, FiLogOut, FiSettings } from 'svelte-icons-pack/fi';
   import { IoBulb } from 'svelte-icons-pack/io';
 
+  import { resolve } from '$app/paths';
   import { enhance } from '$app/forms';
   import { page } from '$app/state';
   import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
@@ -46,7 +47,7 @@
       <DropdownMenu.Item class="cursor-pointer hover:text-accent-foreground">
         {#snippet child({ props })}
           <a
-            href="/settings/profile"
+            href={resolve('/settings/profile')}
             {...props}
             aria-label="Settings"
             data-umami-event="header-profile-settings-button"
@@ -59,7 +60,7 @@
       <DropdownMenu.Item class="cursor-pointer hover:text-accent-foreground">
         {#snippet child({ props })}
           <a
-            href="/docs"
+            href={resolve('/docs')}
             {...props}
             aria-label="Documentation"
             data-sveltekit-reload
@@ -73,7 +74,7 @@
       <DropdownMenu.Item class="cursor-pointer hover:text-accent-foreground">
         {#snippet child({ props })}
           <a
-            href="/"
+            href={resolve('/')}
             {...props}
             aria-label="Home"
             data-sveltekit-reload

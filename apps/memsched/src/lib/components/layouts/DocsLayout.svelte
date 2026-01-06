@@ -6,6 +6,7 @@
   import { IoClose, IoMenu } from 'svelte-icons-pack/io';
   import SvelteSeo from 'svelte-seo';
 
+  import { resolve } from '$app/paths';
   import { goto } from '$app/navigation';
   import { page } from '$app/state';
 
@@ -150,7 +151,7 @@
     >
       <!-- Logo -->
       <div class="mb-12">
-        <a href="/docs" class="inline-block" aria-label="MEMsched Documentation Homepage">
+        <a href={resolve('/docs')} class="inline-block" aria-label="MEMsched Documentation Homepage">
           <Logo class="h-6 w-auto text-primary" />
         </a>
       </div>
@@ -164,7 +165,7 @@
               {#each section.links as link}
                 <li>
                   <a
-                    href={link.href}
+                    href={resolve(link.href) as any}
                     class={cn(
                       'block rounded-md px-3 py-1.5 transition-colors',
                       page.url.pathname === link.href
@@ -189,7 +190,7 @@
         <div class="mt-8 border-t pt-6">
           <button
             onclick={() => {
-              goto('/', { invalidateAll: true });
+              goto(resolve('/'), { invalidateAll: true });
             }}
             class="block w-full rounded-md px-3 py-1.5 text-start text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
             aria-label="Home"
@@ -209,13 +210,13 @@
         <!-- Navigation -->
         <div class="mt-8 flex items-center justify-between border-t pt-4">
           {#if prevLink}
-            <a href={prevLink.href} class="text-primary hover:underline">← {prevLink.label}</a>
+            <a href={resolve(prevLink.href) as any} class="text-primary hover:underline">← {prevLink.label}</a>
           {:else}
             <div></div>
           {/if}
 
           {#if nextLink}
-            <a href={nextLink.href} class="text-primary hover:underline">{nextLink.label} →</a>
+            <a href={resolve(nextLink.href) as any} class="text-primary hover:underline">{nextLink.label} →</a>
           {:else}
             <div></div>
           {/if}

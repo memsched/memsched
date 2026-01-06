@@ -4,6 +4,7 @@
   import { BsGithub, BsTwitterX } from 'svelte-icons-pack/bs';
   import { IoHeart } from 'svelte-icons-pack/io';
 
+  import { resolve } from '$app/paths';
   import UptimeRobot from '../UptimeRobot.svelte';
 </script>
 
@@ -14,12 +15,12 @@
         <div
           class="flex flex-wrap gap-x-12 gap-y-2 text-muted-foreground *:whitespace-nowrap *:transition-colors hover:*:text-foreground max-sm:flex-col"
         >
-          <a href="/blog/" data-umami-event="footer-blog-button">Blog</a>
-          <a href="/docs" data-sveltekit-reload data-umami-event="footer-docs-button">
+          <a href={resolve('/blog/')} data-umami-event="footer-blog-button">Blog</a>
+          <a href={resolve('/docs')} data-sveltekit-reload data-umami-event="footer-docs-button">
             Documentation
           </a>
-          <a href="/tos" data-umami-event="footer-tos-button">Terms of Service</a>
-          <a href="/privacy" data-umami-event="footer-privacy-button">Privacy Policy</a>
+          <a href={resolve('/tos')} data-umami-event="footer-tos-button">Terms of Service</a>
+          <a href={resolve('/privacy')} data-umami-event="footer-privacy-button">Privacy Policy</a>
           <a href="mailto:info@memsched.com" data-umami-event="footer-contact-button">Contact</a>
         </div>
         <UptimeRobot />

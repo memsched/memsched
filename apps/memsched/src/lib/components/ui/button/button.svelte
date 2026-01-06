@@ -43,6 +43,7 @@
 </script>
 
 <script lang="ts">
+  import { resolve } from '$app/paths';
   import { cn } from '@memsched/ui/utils';
 
   let {
@@ -58,7 +59,7 @@
 </script>
 
 {#if href}
-  <a bind:this={ref} class={cn(buttonVariants({ variant, size }), className)} {href} {...restProps}>
+  <a bind:this={ref} class={cn(buttonVariants({ variant, size }), className)} href={href.startsWith('http://') || href.startsWith('https://') || href.startsWith('mailto:') ? href : resolve(href) as any} {...restProps}>
     {@render children?.()}
   </a>
 {:else}

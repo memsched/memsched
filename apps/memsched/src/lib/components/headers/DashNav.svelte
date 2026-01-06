@@ -2,6 +2,7 @@
   import { LogoShort } from '@memsched/ui/components/svgs';
   import { IoCube, IoFlash, IoFolderOpen } from 'svelte-icons-pack/io';
 
+  import { resolve } from '$app/paths';
   import { page } from '$app/state';
   import { getUserOverviewUrl } from '$lib/api';
 
@@ -34,7 +35,7 @@
       <DashNavLink {...item} />
     {/each}
   </div>
-  <a href="/" class="p-1" aria-label="MEMsched Homepage" data-sveltekit-reload>
+  <a href={resolve('/')} class="p-1" aria-label="MEMsched Homepage" data-sveltekit-reload>
     <LogoShort height={20} />
   </a>
 </div>

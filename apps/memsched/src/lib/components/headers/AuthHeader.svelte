@@ -1,6 +1,7 @@
 <script lang="ts">
   import { Logo } from '@memsched/ui/components/svgs';
 
+  import { resolve } from '$app/paths';
   import { HEADER_HEIGHT } from '$lib/constants';
 
   import { Button } from '../ui/button';
@@ -8,7 +9,7 @@
 
 <header class="w-full">
   <nav style:height="{HEADER_HEIGHT}px" class="main-container flex items-center justify-between">
-    <a href="/" aria-label="MEMsched Homepage">
+    <a href={resolve('/')} aria-label="MEMsched Homepage">
       <Logo />
     </a>
     <div class="flex gap-3">

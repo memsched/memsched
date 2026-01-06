@@ -38,9 +38,9 @@
     radius = null,
   }: Props = $props();
 
-  let name = String(displayValue || value).substring(0, 2);
-  let key = randiman({ value, min: 0, max: 19 });
-  let shapeKey = randiman({ value, min: 1, max: 60 });
+  let name = $derived(String(displayValue || value).substring(0, 2));
+  let key = $derived(randiman({ value, min: 0, max: 19 }));
+  let shapeKey = $derived(randiman({ value, min: 1, max: 60 }));
 </script>
 
 <div

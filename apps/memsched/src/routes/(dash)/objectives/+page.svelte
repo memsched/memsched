@@ -6,8 +6,8 @@
   import SvelteSeo from 'svelte-seo';
   import { type SuperValidated } from 'sveltekit-superforms';
 
-  import { resolve } from '$app/paths';
   import { enhance } from '$app/forms';
+  import { resolve } from '$app/paths';
   import { page } from '$app/state';
   import CreateNew from '$lib/components/CreateNew.svelte';
   import ConfirmDeleteDialog from '$lib/components/dialogs/ConfirmDeleteDialog.svelte';
@@ -49,13 +49,16 @@
   const isArchivedTab = $derived(page.url.searchParams.has('archived'));
   const isCompletedTab = $derived(page.url.searchParams.has('completed'));
 
-  const pageTitle = data.isArchived
-    ? 'Archived Objectives - MEMsched'
-    : data.isCompleted
-      ? 'Completed Objectives - MEMsched'
-      : 'Learning Objectives - MEMsched';
-  const pageDescription =
-    'Manage your learning objectives on MEMsched. Set goals, track progress, and showcase your learning journey.';
+  const pageTitle = $derived(
+    data.isArchived
+      ? 'Archived Objectives - MEMsched'
+      : data.isCompleted
+        ? 'Completed Objectives - MEMsched'
+        : 'Learning Objectives - MEMsched'
+  );
+  const pageDescription = $derived(
+    'Manage your learning objectives on MEMsched. Set goals, track progress, and showcase your learning journey.'
+  );
 
   // Function to calculate progress percentage for fixed goals
   function calculateProgress(objective: Objective): number {

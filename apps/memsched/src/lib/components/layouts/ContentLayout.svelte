@@ -4,8 +4,8 @@
   import { Icon } from 'svelte-icons-pack';
   import { IoChevronBack } from 'svelte-icons-pack/io';
 
-  import { resolve } from '$app/paths';
   import { goto } from '$app/navigation';
+  import { resolve } from '$app/paths';
 
   interface Props {
     title: string;

@@ -26,7 +26,7 @@
   <Tooltip.Root>
     <Tooltip.Trigger class="px-1.5 py-3">
       {#snippet child({ props })}
-        <a href={resolve(href) as any} aria-label={text} {...props}>
+        <a href={resolve(href as any)} aria-label={text} {...props}>
           <Icon
             src={icon}
             className={cn(

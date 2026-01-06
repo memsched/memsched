@@ -13,10 +13,14 @@
 
   const { data }: PageProps = $props();
 
-  const pageTitle = `${data.publicUser.name || data.publicUser.username} - MEMsched Profile`;
-  const pageDescription = `View ${data.publicUser.name || data.publicUser.username}'s learning journey on MEMsched. See their learning widgets and progress.`;
+  const pageTitle = $derived(
+    `${data.publicUser.name || data.publicUser.username} - MEMsched Profile`
+  );
+  const pageDescription = $derived(
+    `View ${data.publicUser.name || data.publicUser.username}'s learning journey on MEMsched. See their learning widgets and progress.`
+  );
 
-  const personSchema = {
+  const personSchema = $derived({
     '@context': 'https://schema.org' as const,
     '@type': 'Person' as const,
     mainEntityOfPage: {
@@ -40,7 +44,7 @@
         url: data.publicUser.avatarUrl,
       },
     }),
-  } as const;
+  } as const);
 
   const widgetPreivewUrl = $derived(
     data.widget

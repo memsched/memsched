@@ -92,6 +92,7 @@
     {#if website}
       <div class="flex items-center gap-2 text-muted-foreground">
         <Icon src={FiGlobe} className="size-4" />
+        <!-- eslint-disable-next-line svelte/no-navigation-without-resolve -- external URL -->
         <a href={website} target="_blank" rel="noopener noreferrer" class="hover:underline">
           {website.replace(/^https?:\/\//, '')}
         </a>

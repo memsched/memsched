@@ -23,8 +23,8 @@
 
   const { title, subtitle, username, widgetDark = false }: Props = $props();
 
-  const userUrl = page.url.origin + '/' + username;
-  const widgetUrl = page.url.origin + '/api/widgets/' + page.params.id;
+  const userUrl = $derived(page.url.origin + '/' + username);
+  const widgetUrl = $derived(page.url.origin + '/api/widgets/' + page.params.id);
 
   const widgetShareUrl = $derived(
     userUrl + '?w=' + page.params.id + (widgetDark ? '&dark' : '') + '&r=' + uuidv4()
@@ -70,8 +70,10 @@
     <div class="space-y-1">
       <p>
         For detailed setup instructions and troubleshooting, check out our
-        <a href={resolve('/docs/embedding/html')} class="text-primary hover:underline" data-sveltekit-reload
-          >widget documentation</a
+        <a
+          href={resolve('/docs/embedding/html')}
+          class="text-primary hover:underline"
+          data-sveltekit-reload>widget documentation</a
         >.
       </p>
     </div>

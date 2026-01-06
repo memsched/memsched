@@ -9,6 +9,7 @@
 
 <style>
   :global(body) {
-    @apply h-full overflow-hidden;
+    height: 100%;
+    overflow: hidden;
   }
 </style>

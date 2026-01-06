@@ -23,7 +23,7 @@
     buttonText = 'Create Now',
     buttonIcon = FiPlus,
   }: Props = $props();
-  const finalHref = page.data.user === null ? '/auth/signin' : href;
+  const finalHref = $derived(page.data.user === null ? '/auth/signin' : href);
 </script>
 
 <div class="flex flex-col items-center justify-center gap-4">

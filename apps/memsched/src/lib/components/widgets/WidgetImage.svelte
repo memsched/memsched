@@ -1,10 +1,11 @@
 <script lang="ts">
+  /* eslint-disable svelte/no-navigation-without-resolve -- resolvedHref is computed with resolve() for internal URLs */
   import { cn } from '@memsched/ui/utils';
   import { mode } from 'mode-watcher';
   import type { HTMLAnchorAttributes, HTMLImgAttributes } from 'svelte/elements';
 
-  import { resolve } from '$app/paths';
   import { browser } from '$app/environment';
+  import { resolve } from '$app/paths';
   import { page } from '$app/state';
   import { updateState } from '$lib/state.svelte';
 
@@ -24,6 +25,8 @@
 
   const origin = $derived(page.url.origin);
   const trueHref = $derived(href || `${origin}/widgets/${widget.id}`);
+  const isExternalUrl = $derived(trueHref.startsWith('http://') || trueHref.startsWith('https://'));
+  const resolvedHref = $derived(isExternalUrl ? trueHref : resolve(trueHref as any));
   const imgSrc = $derived(
     `${origin}/api/widgets/${widget.id}?f=svg&v=${updateState.widgetCounter}`
   );
@@ -61,7 +64,7 @@
 
 {#if browser}
   {#if url || href}
-    <a href={trueHref.startsWith('http://') || trueHref.startsWith('https://') ? trueHref : (resolve(trueHref) as any)} {...rest} class={cn(rest.class, 'flex-shrink-0')}>
+    <a href={resolvedHref} {...rest} class={cn(rest.class, 'flex-shrink-0')}>
       {@render widgetImage({})}
     </a>
   {:else}

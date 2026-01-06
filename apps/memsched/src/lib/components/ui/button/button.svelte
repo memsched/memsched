@@ -43,8 +43,10 @@
 </script>
 
 <script lang="ts">
-  import { resolve } from '$app/paths';
+  /* eslint-disable svelte/no-navigation-without-resolve -- resolvedHref is computed with resolve() for internal URLs */
   import { cn } from '@memsched/ui/utils';
+
+  import { resolve } from '$app/paths';
 
   let {
     class: className,
@@ -56,10 +58,20 @@
     children,
     ...restProps
   }: ButtonProps = $props();
+
+  const isExternalUrl = $derived(
+    href?.startsWith('http://') || href?.startsWith('https://') || href?.startsWith('mailto:')
+  );
+  const resolvedHref = $derived(href && (isExternalUrl ? href : resolve(href as any)));
 </script>
 
 {#if href}
-  <a bind:this={ref} class={cn(buttonVariants({ variant, size }), className)} href={href.startsWith('http://') || href.startsWith('https://') || href.startsWith('mailto:') ? href : resolve(href) as any} {...restProps}>
+  <a
+    bind:this={ref}
+    class={cn(buttonVariants({ variant, size }), className)}
+    href={resolvedHref}
+    {...restProps}
+  >
     {@render children?.()}
   </a>
 {:else}

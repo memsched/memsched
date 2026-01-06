@@ -4,8 +4,8 @@
   import { FiBookOpen, FiHome, FiLogOut, FiSettings } from 'svelte-icons-pack/fi';
   import { IoBulb } from 'svelte-icons-pack/io';
 
-  import { resolve } from '$app/paths';
   import { enhance } from '$app/forms';
+  import { resolve } from '$app/paths';
   import { page } from '$app/state';
   import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
 

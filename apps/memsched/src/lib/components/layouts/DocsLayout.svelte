@@ -6,8 +6,8 @@
   import { IoClose, IoMenu } from 'svelte-icons-pack/io';
   import SvelteSeo from 'svelte-seo';
 
-  import { resolve } from '$app/paths';
   import { goto } from '$app/navigation';
+  import { resolve } from '$app/paths';
   import { page } from '$app/state';
 
   interface Props {
@@ -151,7 +151,11 @@
     >
       <!-- Logo -->
       <div class="mb-12">
-        <a href={resolve('/docs')} class="inline-block" aria-label="MEMsched Documentation Homepage">
+        <a
+          href={resolve('/docs')}
+          class="inline-block"
+          aria-label="MEMsched Documentation Homepage"
+        >
           <Logo class="h-6 w-auto text-primary" />
         </a>
       </div>
@@ -165,7 +169,7 @@
               {#each section.links as link}
                 <li>
                   <a
-                    href={resolve(link.href) as any}
+                    href={resolve(link.href as any)}
                     class={cn(
                       'block rounded-md px-3 py-1.5 transition-colors',
                       page.url.pathname === link.href
@@ -210,13 +214,17 @@
         <!-- Navigation -->
         <div class="mt-8 flex items-center justify-between border-t pt-4">
           {#if prevLink}
-            <a href={resolve(prevLink.href) as any} class="text-primary hover:underline">← {prevLink.label}</a>
+            <a href={resolve(prevLink.href as any)} class="text-primary hover:underline"
+              >← {prevLink.label}</a
+            >
           {:else}
             <div></div>
           {/if}
 
           {#if nextLink}
-            <a href={resolve(nextLink.href) as any} class="text-primary hover:underline">{nextLink.label} →</a>
+            <a href={resolve(nextLink.href as any)} class="text-primary hover:underline"
+              >{nextLink.label} →</a
+            >
           {:else}
             <div></div>
           {/if}

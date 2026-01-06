@@ -5,6 +5,7 @@
   import { IoHeart } from 'svelte-icons-pack/io';
 
   import { resolve } from '$app/paths';
+
   import UptimeRobot from '../UptimeRobot.svelte';
 </script>
 

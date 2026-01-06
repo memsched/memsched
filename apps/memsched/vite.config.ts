@@ -4,6 +4,13 @@ import fs from 'fs';
 import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
+  resolve: {
+    alias: {
+      // Force html-dom-parser to use server version (htmlparser2) instead of
+      // browser version which requires DOM APIs not available in Cloudflare Workers
+      'html-dom-parser': 'html-dom-parser/lib/server/html-to-dom',
+    },
+  },
   plugins: [
     enhancedImages(),
     sveltekit(),

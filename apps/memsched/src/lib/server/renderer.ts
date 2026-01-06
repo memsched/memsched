@@ -1,4 +1,5 @@
-import parse from 'html-react-parser';
+// @ts-ignore - using htmlparser2 implementation directly
+import parse from 'html-react-parser/lib/index';
 import satori from 'satori';
 import type { ComponentProps } from 'svelte';
 import { render } from 'svelte/server';
@@ -117,7 +118,7 @@ export async function renderWidget(props: ComponentProps<typeof Widget>, format:
     } else {
       resvg = await import('@cf-wasm/resvg');
     }
-    const renderer = await resvg.Resvg.create(svg, opts);
+    const renderer = await resvg.Resvg.async(svg, opts);
     const pngData = renderer.render();
     const pngBuffer = pngData.asPng();
 

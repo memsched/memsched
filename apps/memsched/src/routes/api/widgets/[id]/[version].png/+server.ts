@@ -32,7 +32,7 @@ export const GET: RequestHandler = async (event) => {
     'png'
   );
 
-  return new Response(rendered, {
+  return new Response(rendered as BodyInit, {
     headers: {
       'Content-Type': 'image/png',
       'Cache-Control': 'no-cache, no-store, must-revalidate',

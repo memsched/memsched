@@ -83,7 +83,7 @@ export const GET: RequestHandler = async (event) => {
   }
 
   // Return the rendered response with the new etag header
-  return new Response(rendered, {
+  return new Response(rendered as BodyInit, {
     headers: {
       'Content-Type': contentType,
       ETag: `"${newEtag}"`,

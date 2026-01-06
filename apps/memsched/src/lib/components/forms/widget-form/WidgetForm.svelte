@@ -4,7 +4,7 @@
   import { FiPlus, FiTrash2, FiX } from 'svelte-icons-pack/fi';
   import { IoChevronForward, IoInformationCircle } from 'svelte-icons-pack/io';
   import SuperDebug, { type Infer, superForm, type SuperValidated } from 'sveltekit-superforms';
-  import { zodClient } from 'sveltekit-superforms/adapters';
+  import { zod4Client } from 'sveltekit-superforms/adapters';
 
   import { browser } from '$app/environment';
   import { page } from '$app/state';
@@ -46,7 +46,7 @@
   );
 
   const form = superForm(data.form, {
-    validators: zodClient(formSchema),
+    validators: zod4Client(formSchema),
     resetForm: !edit,
     dataType: 'json',
     onResult({ result }) {
@@ -257,10 +257,12 @@
 
   const metricsLength = $derived($formData.metrics.length);
   const metricDeps = $derived($formData.metrics);
-  const fromMetricsValid = $derived(
-    formSchema.safeParse($formData).error?.formErrors.fieldErrors.metrics?.length === 0 ||
-      formSchema.safeParse($formData).error?.formErrors.fieldErrors.metrics?.length === undefined
-  );
+  const fromMetricsValid = $derived(() => {
+    const result = formSchema.safeParse($formData);
+    if (!result.error) return true;
+    const metricsErrors = result.error.issues.filter((issue) => issue.path[0] === 'metrics');
+    return metricsErrors.length === 0;
+  });
 
   explicitEffect(
     () => {

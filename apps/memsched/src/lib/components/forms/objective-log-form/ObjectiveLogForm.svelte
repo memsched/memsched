@@ -1,6 +1,6 @@
 <script lang="ts">
   import SuperDebug, { superForm, type SuperValidated } from 'sveltekit-superforms';
-  import { zodClient } from 'sveltekit-superforms/adapters';
+  import { zod4Client } from 'sveltekit-superforms/adapters';
 
   import { browser } from '$app/environment';
   import * as Form from '$lib/components/ui/form';
@@ -20,7 +20,7 @@
   const { data, objective, onSuccess }: Props = $props();
 
   const form = superForm(data.form, {
-    validators: zodClient(logSchema),
+    validators: zod4Client(logSchema),
     resetForm: true,
     onUpdated({ form }) {
       if (form.valid) {

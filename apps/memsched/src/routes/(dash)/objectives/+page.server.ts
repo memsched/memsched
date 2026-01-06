@@ -1,6 +1,6 @@
 import { error, fail, redirect } from '@sveltejs/kit';
 import { superValidate } from 'sveltekit-superforms';
-import { zod } from 'sveltekit-superforms/adapters';
+import { zod4 } from 'sveltekit-superforms/adapters';
 
 import { logSchema } from '$lib/components/forms/objective-log-form/schema';
 import { handleDbError, handleFormDbError } from '$lib/server/utils';
@@ -48,7 +48,7 @@ export const load: PageServerLoad = async (event) => {
 
   return {
     objectives,
-    form: await superValidate(zod(logSchema)),
+    form: await superValidate(zod4(logSchema)),
     isArchived,
     isCompleted,
     objectivesLimitReached,
@@ -62,7 +62,7 @@ export const actions: Actions = {
       return error(401, 'Unauthorized');
     }
 
-    const form = await superValidate(event, zod(logSchema));
+    const form = await superValidate(event, zod4(logSchema));
     const userId = event.locals.session.userId;
 
     if (!form.valid) {

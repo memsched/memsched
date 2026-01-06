@@ -1,6 +1,6 @@
 import { error, fail, redirect } from '@sveltejs/kit';
 import { message, setError, superValidate } from 'sveltekit-superforms';
-import { zod } from 'sveltekit-superforms/adapters';
+import { zod4 } from 'sveltekit-superforms/adapters';
 import { z } from 'zod';
 
 import { formSchema } from '$lib/components/forms/profile-form/schema';
@@ -27,7 +27,7 @@ export const load: PageServerLoad = async (event) => {
       website: currentUser.website,
       avatarUrl: currentUser.avatarUrl,
     },
-    zod(formSchema)
+    zod4(formSchema)
   );
 
   return {
@@ -43,7 +43,7 @@ export const actions: Actions = {
     }
 
     const currentUser = event.locals.user as LocalUser;
-    const form = await superValidate(event, zod(formSchema));
+    const form = await superValidate(event, zod4(formSchema));
 
     if (!form.valid) {
       return fail(400, { form });
@@ -120,7 +120,7 @@ export const actions: Actions = {
     }
 
     const currentUser = event.locals.user as LocalUser;
-    const form = await superValidate(event, zod(z.object({ username: z.string() })));
+    const form = await superValidate(event, zod4(z.object({ username: z.string() })));
 
     if (!form.valid) {
       return fail(400, { form });

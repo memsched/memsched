@@ -71,7 +71,7 @@
     "vite": "^7.3.0",
     "vitest": "^4.0.16",
     "wrangler": "^4.54.0",
-    "zod": "^3.25.76"
+    "zod": "^4.3.5"
   },
   "dependencies": {
     "@cf-wasm/photon": "^0.1.31",

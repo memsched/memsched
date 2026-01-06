@@ -3,7 +3,7 @@
   import toast from 'svelte-french-toast';
   import { FiPlus } from 'svelte-icons-pack/fi';
   import SuperDebug, { type Infer, superForm, type SuperValidated } from 'sveltekit-superforms';
-  import { zodClient } from 'sveltekit-superforms/adapters';
+  import { zod4Client } from 'sveltekit-superforms/adapters';
 
   import { browser } from '$app/environment';
   import * as Form from '$lib/components/ui/form';
@@ -23,7 +23,7 @@
   const { data, edit = false }: Props = $props();
 
   const form = superForm(data.form, {
-    validators: zodClient(formSchema),
+    validators: zod4Client(formSchema),
     resetForm: !edit,
     onUpdated({ form }) {
       if (form.message) {

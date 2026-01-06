@@ -1,7 +1,7 @@
 import { error, fail, redirect } from '@sveltejs/kit';
 import { okAsync, ResultAsync } from 'neverthrow';
 import { message, setError, superValidate } from 'sveltekit-superforms';
-import { zod } from 'sveltekit-superforms/adapters';
+import { zod4 } from 'sveltekit-superforms/adapters';
 
 import { formSchema } from '$lib/components/forms/widget-form/schema';
 import { imageUploadLimiter } from '$lib/server/rate-limiter';
@@ -28,7 +28,7 @@ export const load: PageServerLoad = async (event) => {
   }
   const [widget, objectives] = res.value;
 
-  const form = await superValidate(zod(formSchema));
+  const form = await superValidate(zod4(formSchema));
   form.data = widget as any;
 
   form.data.metrics = widget.metrics.map((metric) => ({
@@ -60,7 +60,7 @@ export const actions: Actions = {
       return fail(429, { error: 'Too many requests. Please try again later.' });
     }
 
-    const form = await superValidate(event, zod(formSchema));
+    const form = await superValidate(event, zod4(formSchema));
     if (!form.valid) {
       return fail(400, {
         form,

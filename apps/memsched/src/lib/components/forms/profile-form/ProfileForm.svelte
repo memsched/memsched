@@ -3,7 +3,7 @@
   import { Icon } from 'svelte-icons-pack';
   import { IoAlertCircleOutline, IoCheckmarkCircleOutline } from 'svelte-icons-pack/io';
   import SuperDebug, { type Infer, superForm, type SuperValidated } from 'sveltekit-superforms';
-  import { zodClient } from 'sveltekit-superforms/adapters';
+  import { zod4Client } from 'sveltekit-superforms/adapters';
 
   import { browser } from '$app/environment';
   import * as Form from '$lib/components/ui/form';
@@ -23,7 +23,7 @@
   let usernameAlreadyTaken = $state(false);
 
   const form = superForm(data.form, {
-    validators: zodClient(formSchema),
+    validators: zod4Client(formSchema),
     resetForm: false,
     onUpdated({ form }) {
       if (form.message) {

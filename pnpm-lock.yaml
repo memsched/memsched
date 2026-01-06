@@ -246,8 +246,8 @@ importers:
         specifier: ^4.54.0
         version: 4.54.0(@cloudflare/workers-types@4.20260103.0)
       zod:
-        specifier: ^3.25.76
-        version: 3.25.76
+        specifier: ^4.3.5
+        version: 4.3.5
 
   packages/ui:
     devDependencies:
@@ -8941,7 +8941,6 @@ snapshots:
 
   zod@3.25.76: {}
 
-  zod@4.3.5:
-    optional: true
+  zod@4.3.5: {}
 
   zwitch@2.0.4: {}

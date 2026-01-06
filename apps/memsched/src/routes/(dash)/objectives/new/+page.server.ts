@@ -1,6 +1,6 @@
 import { error, fail, redirect } from '@sveltejs/kit';
 import { superValidate } from 'sveltekit-superforms';
-import { zod } from 'sveltekit-superforms/adapters';
+import { zod4 } from 'sveltekit-superforms/adapters';
 
 import { formSchema } from '$lib/components/forms/objective-form/schema';
 import { handleDbError, handleFormDbError } from '$lib/server/utils';
@@ -30,14 +30,14 @@ export const load: PageServerLoad = async (event) => {
 
   if (objectivesLimitReached) {
     return {
-      form: await superValidate(zod(formSchema)),
+      form: await superValidate(zod4(formSchema)),
       objectivesLimitReached,
       maxObjectives: planLimits.value.maxObjectives,
     };
   }
 
   return {
-    form: await superValidate(zod(formSchema)),
+    form: await superValidate(zod4(formSchema)),
     objectivesLimitReached: false,
     maxObjectives: planLimits.value.maxObjectives,
   };
@@ -69,7 +69,7 @@ export const actions: Actions = {
       });
     }
 
-    const form = await superValidate(event, zod(formSchema));
+    const form = await superValidate(event, zod4(formSchema));
 
     if (!form.valid) {
       return fail(400, {

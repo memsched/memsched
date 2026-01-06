@@ -40,7 +40,7 @@
     "@sveltejs/enhanced-img": "^0.9.2",
     "@sveltejs/kit": "^2.49.3",
     "@sveltejs/vite-plugin-svelte": "^6.2.1",
-    "@types/culori": "^2.1.1",
+    "@types/culori": "^4.0.1",
     "autoprefixer": "^10.4.23",
     "bits-ui": "^1.8.0",
     "clsx": "^2.1.1",
@@ -74,8 +74,8 @@
     "zod": "^4.3.5"
   },
   "dependencies": {
-    "@cf-wasm/photon": "^0.1.31",
-    "@cf-wasm/resvg": "^0.1.24",
+    "@cf-wasm/photon": "^0.3.4",
+    "@cf-wasm/resvg": "^0.3.3",
     "@libsql/client": "^0.14.0",
     "@oslojs/crypto": "^1.0.1",
     "@oslojs/encoding": "^1.1.0",
@@ -86,7 +86,7 @@
     "highlight.js": "^11.11.1",
     "html-react-parser": "5.2.11",
     "mode-watcher": "^1.1.0",
-    "satori": "^0.12.2",
+    "satori": "^0.18.3",
     "stripe": "^17.7.0",
     "svelte-french-toast": "^1.2.0",
     "uuid": "^13.0.0"

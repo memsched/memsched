@@ -19,20 +19,17 @@
 
   const { data, objective, onSuccess }: Props = $props();
 
-  const form = $derived(
-    superForm(data.form, {
-      validators: zod4Client(logSchema),
-      resetForm: true,
-      onUpdated({ form }) {
-        if (form.valid) {
-          onSuccess?.();
-        }
-      },
-    })
-  );
-  const formData = $derived(form.form);
-  const enhance = $derived(form.enhance);
-  const submitting = $derived(form.submitting);
+  // svelte-ignore state_referenced_locally
+  const form = superForm(data.form, {
+    validators: zod4Client(logSchema),
+    resetForm: true,
+    onUpdated({ form }) {
+      if (form.valid) {
+        onSuccess?.();
+      }
+    },
+  });
+  const { form: formData, enhance, submitting } = form;
 
   // Set the objective ID when the component is mounted
   $effect(() => {

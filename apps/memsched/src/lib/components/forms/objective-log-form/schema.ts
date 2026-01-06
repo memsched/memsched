@@ -8,7 +8,8 @@ export const logSchema = z.object({
   notes: z
     .string()
     .nullable()
-    .transform((value) => (value === '' ? null : value)),
+    .optional()
+    .transform((value) => (value === '' || value === undefined ? null : value)),
 });
 
 export type LogSchema = typeof logSchema;

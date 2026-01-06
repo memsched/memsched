@@ -118,13 +118,15 @@ export const formSchema = z.object({
       { message: 'Image URL must be a raster image data URL or an SVG file URL from the server' }
     )
     .nullable()
-    .transform((v) => (v === '' ? null : v)),
+    .optional()
+    .transform((v) => (v === '' || v === undefined ? null : v)),
   textIcon: z
     .string()
     .max(2, { message: 'Text icon must be 1-2 characters.' })
     .regex(/^[A-Z]{1,2}$/, { message: 'Text icon must be 1-2 capital letters.' })
     .nullable()
-    .transform((v) => (v === '' ? null : v)),
+    .optional()
+    .transform((v) => (v === '' || v === undefined ? null : v)),
   imagePlacement: z.enum(['left', 'right']).default('left'),
   visibility: z
     .enum(['public', 'private'], {

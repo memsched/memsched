@@ -46,37 +46,35 @@
     edit && data.form.data.visibility === 'public' ? 'sharing' : 'general.title'
   );
 
-  const form = $derived(
-    superForm(data.form, {
-      validators: zod4Client(formSchema),
-      resetForm: !edit,
-      dataType: 'json',
-      onResult({ result }) {
-        if (result.type === 'failure') {
-          if (result.data?.form?.errors?.title) {
-            focusedTab = 'general.title';
-          } else if (result.data?.form?.errors?.subtitle) {
-            focusedTab = 'general.subtitle';
-          } else if (result.data?.form?.errors?.imageUrl || result.data?.form?.errors?.textIcon) {
-            focusedTab = 'image';
-          } else if (result.data?.form?.errors?.metrics?.[0]) {
-            focusedTab = 'metric.1';
-          } else if (result.data?.form?.errors?.metrics?.[1]) {
-            focusedTab = 'metric.2';
-          } else if (result.data?.form?.errors?.metrics?.[2]) {
-            focusedTab = 'metric.3';
-          }
-        }
-      },
-      onUpdated({ form }) {
-        if (form.message) {
-          toast.success(form.message);
-        }
-        updateState.widgetCounter++;
-      },
-    })
-  );
   // svelte-ignore state_referenced_locally
+  const form = superForm(data.form, {
+    validators: zod4Client(formSchema),
+    resetForm: !edit,
+    dataType: 'json',
+    onResult({ result }) {
+      if (result.type === 'failure') {
+        if (result.data?.form?.errors?.title) {
+          focusedTab = 'general.title';
+        } else if (result.data?.form?.errors?.subtitle) {
+          focusedTab = 'general.subtitle';
+        } else if (result.data?.form?.errors?.imageUrl || result.data?.form?.errors?.textIcon) {
+          focusedTab = 'image';
+        } else if (result.data?.form?.errors?.metrics?.[0]) {
+          focusedTab = 'metric.1';
+        } else if (result.data?.form?.errors?.metrics?.[1]) {
+          focusedTab = 'metric.2';
+        } else if (result.data?.form?.errors?.metrics?.[2]) {
+          focusedTab = 'metric.3';
+        }
+      }
+    },
+    onUpdated({ form }) {
+      if (form.message) {
+        toast.success(form.message);
+      }
+      updateState.widgetCounter++;
+    },
+  });
   const { form: formData, enhance, submitting } = form;
 
   let formRef = $state<HTMLFormElement | null>(null);

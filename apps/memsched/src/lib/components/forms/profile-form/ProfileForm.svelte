@@ -22,21 +22,17 @@
 
   let usernameAlreadyTaken = $state(false);
 
-  const form = $derived(
-    superForm(data.form, {
-      validators: zod4Client(formSchema),
-      resetForm: false,
-      onUpdated({ form }) {
-        if (form.message) {
-          toast.success(form.message);
-        }
-      },
-    })
-  );
-  const formData = $derived(form.form);
-  const enhance = $derived(form.enhance);
-  const errors = $derived(form.errors);
-  const submitting = $derived(form.submitting);
+  // svelte-ignore state_referenced_locally
+  const form = superForm(data.form, {
+    validators: zod4Client(formSchema),
+    resetForm: false,
+    onUpdated({ form }) {
+      if (form.message) {
+        toast.success(form.message);
+      }
+    },
+  });
+  const { form: formData, enhance, errors, submitting } = form;
 
   const {
     delayed,

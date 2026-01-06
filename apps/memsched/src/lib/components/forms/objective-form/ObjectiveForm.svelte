@@ -22,20 +22,17 @@
 
   const { data, edit = false }: Props = $props();
 
-  const form = $derived(
-    superForm(data.form, {
-      validators: zod4Client(formSchema),
-      resetForm: !edit,
-      onUpdated({ form }) {
-        if (form.message) {
-          toast.success(form.message);
-        }
-      },
-    })
-  );
-  const formData = $derived(form.form);
-  const enhance = $derived(form.enhance);
-  const submitting = $derived(form.submitting);
+  // svelte-ignore state_referenced_locally
+  const form = superForm(data.form, {
+    validators: zod4Client(formSchema),
+    resetForm: !edit,
+    onUpdated({ form }) {
+      if (form.message) {
+        toast.success(form.message);
+      }
+    },
+  });
+  const { form: formData, enhance, submitting } = form;
 </script>
 
 <form method="POST" use:enhance class="w-full space-y-5">

@@ -12,9 +12,9 @@
     "deploy": "pnpm --filter memsched run deploy"
   },
   "devDependencies": {
-    "prettier": "^3.5.3"
+    "prettier": "^3.7.4"
   },
-  "packageManager": "pnpm@10.3.0",
+  "packageManager": "pnpm@10.27.0",
   "pnpm": {
     "overrides": {
       "cookie@<0.7.0": ">=0.7.0",
@@ -25,6 +25,6 @@
     }
   },
   "engines": {
-    "node": "^22.12.0"
+    "node": "^24.0.0"
   }
 }

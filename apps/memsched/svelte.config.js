@@ -71,10 +71,6 @@ const config = {
       //   'report-to': ['csp-endpoint'],
       // },
     },
-    // CSRF Protection
-    csrf: {
-      checkOrigin: true,
-    },
     // Version management for safer deployments
     version: {
       name: child_process.execSync('git rev-parse HEAD').toString().trim(),

@@ -44,7 +44,6 @@ STRIPE_WEBHOOK_SECRET=your_stripe_webhook_secret
 ```
 
 3. Environment files breakdown:
-
    - `.env.local` - Local overrides (not committed to git)
    - `.env.development` - Development environment variables
    - `.env.production` - Production environment variables

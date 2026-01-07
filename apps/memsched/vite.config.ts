@@ -4,12 +4,9 @@ import fs from 'fs';
 import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
-  resolve: {
-    alias: {
-      // Force html-dom-parser to use server version (htmlparser2) instead of
-      // browser version which requires DOM APIs not available in Cloudflare Workers
-      'html-dom-parser': 'html-dom-parser/lib/server/html-to-dom',
-    },
+  ssr: {
+    // Force these packages to be bundled (not externalized) for Cloudflare Workers
+    noExternal: ['htmlparser2', 'domhandler'],
   },
   plugins: [
     enhancedImages(),
@@ -31,6 +28,10 @@ export default defineConfig({
     setupFiles: ['src/setupTests.ts'],
     isolate: true,
     testTimeout: 10000,
+    alias: {
+      // Override @libsql/client to use node version in tests (supports :memory:)
+      '@libsql/client': '@libsql/client/node',
+    },
   },
 
   optimizeDeps: {

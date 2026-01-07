@@ -1,6 +1,21 @@
-// @ts-ignore - using htmlparser2 implementation directly
-import parse from 'html-react-parser/lib/index';
+import { domToReact, type HTMLReactParserOptions } from 'html-react-parser';
+import { DomHandler, Parser } from 'htmlparser2';
 import satori from 'satori';
+
+// Custom HTML parser that uses htmlparser2 directly (server-side, no DOM APIs)
+// This avoids the html-dom-parser browser detection which fails in Cloudflare Workers
+function parse(html: string, options?: HTMLReactParserOptions) {
+  if (typeof html !== 'string') {
+    throw new TypeError('First argument must be a string');
+  }
+  if (!html) {
+    return [];
+  }
+  const handler = new DomHandler();
+  new Parser(handler, { lowerCaseAttributeNames: false }).end(html);
+
+  return domToReact(handler.dom as any, options);
+}
 import type { ComponentProps } from 'svelte';
 import { render } from 'svelte/server';
 

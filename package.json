@@ -2,29 +2,26 @@
   "name": "memsched-monorepo",
   "private": true,
   "version": "0.0.1",
+  "workspaces": ["apps/*", "packages/*"],
   "scripts": {
-    "dev": "pnpm -r run dev",
-    "build": "pnpm --filter memsched run build",
-    "preview": "pnpm --filter memsched run preview",
-    "format": "pnpm exec prettier --write . && pnpm -r run format",
-    "lint": "pnpm --filter memsched run lint",
-    "fix": "pnpm --filter memsched run fix",
-    "deploy": "pnpm --filter memsched run deploy"
+    "dev": "bun run --filter '*' dev",
+    "build": "bun run --filter '@memsched/memsched' build",
+    "preview": "bun run --filter '@memsched/memsched' preview",
+    "format": "bunx prettier --write . && bun run --filter '*' format",
+    "lint": "bun run --filter '@memsched/memsched' lint",
+    "fix": "bun run --filter '@memsched/memsched' fix",
+    "deploy": "bun run --filter '@memsched/memsched' deploy"
   },
   "devDependencies": {
     "prettier": "^3.8.1"
   },
-  "packageManager": "pnpm@10.27.0",
-  "pnpm": {
-    "overrides": {
-      "cookie@<0.7.0": ">=0.7.0",
-      "esbuild@<=0.24.2": ">=0.25.0",
-      "@babel/runtime@<7.26.10": ">=7.26.10",
-      "brace-expansion@>=1.0.0 <=1.1.11": ">=1.1.12",
-      "brace-expansion@>=2.0.0 <=2.0.1": ">=2.0.2",
-      "diff@<8.0.3": ">=8.0.3",
-      "undici@>=7.0.0 <7.18.2": ">=7.18.2"
-    }
+  "overrides": {
+    "cookie": ">=0.7.0",
+    "esbuild": ">=0.25.0",
+    "@babel/runtime": ">=7.26.10",
+    "brace-expansion": ">=2.0.2",
+    "diff": ">=8.0.3",
+    "undici": ">=7.18.2"
   },
   "engines": {
     "node": "^24.0.0"

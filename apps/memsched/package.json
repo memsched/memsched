@@ -5,23 +5,23 @@
   "type": "module",
   "scripts": {
     "dev": "vite dev --open",
-    "build": "pnpm -C ../blog build && vite build",
+    "build": "bun run --cwd ../blog build && vite build",
     "build:e2e": "vite build --mode testing",
     "preview": "wrangler pages dev --port 5173",
     "prepare": "svelte-kit sync || echo ''",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
-    "fix": "pnpm run check && eslint --fix --cache . && pnpm run format",
+    "fix": "bun run check && eslint --fix --cache . && bun run format",
     "format": "prettier --write .",
-    "lint": "pnpm run check && prettier --check . && eslint .",
+    "lint": "bun run check && prettier --check . && eslint .",
     "test:unit": "vitest run",
-    "test": "pnpm run test:unit -- --run && pnpm run test:e2e",
+    "test": "bun run test:unit -- --run && bun run test:e2e",
     "test:e2e": "playwright test",
     "db:push": "drizzle-kit push",
     "db:generate": "DATABASE_URL=file:local.db drizzle-kit generate",
     "db:migrate": "DATABASE_URL=file:local.db drizzle-kit migrate",
     "db:studio": "DATABASE_URL=file:local.db drizzle-kit studio",
-    "deploy": "pnpm run build && wrangler pages deploy",
+    "deploy": "bun run build && wrangler pages deploy",
     "cf-typegen": "wrangler types && mv worker-configuration.d.ts src/",
     "d1:migrate": "wrangler d1 migrations apply memsched-db --local",
     "prod:d1:create": "wrangler d1 create memsched-db --remote",
@@ -91,7 +91,6 @@
     "svelte-french-toast": "^1.2.0",
     "uuid": "^13.0.0"
   },
-  "packageManager": "pnpm@10.27.0",
   "engines": {
     "node": "^24.0.0"
   }

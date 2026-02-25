@@ -13,25 +13,22 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - uses: pnpm/action-setup@v4
-        name: Install pnpm
-        with:
-          run_install: false
+      - name: Install bun
+        uses: oven-sh/setup-bun@v2
 
       - name: Install Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 24
-          cache: 'pnpm'
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: bun ci
 
       - name: Lint code
-        run: pnpm run lint
+        run: bun run lint
 
       - name: Run unit tests
-        run: pnpm --filter memsched run test:unit
+        run: bun run --filter '@memsched/memsched' test:unit
 
   deploy:
     needs: [lint-and-test] # This makes migrations run only after successful lint and test
@@ -41,30 +38,27 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - uses: pnpm/action-setup@v4
-        name: Install pnpm
-        with:
-          run_install: false
+      - name: Install bun
+        uses: oven-sh/setup-bun@v2
 
       - name: Install Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 24
-          cache: 'pnpm'
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: bun ci
 
       - name: Deploy to Cloudflare Pages
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           CI: true
-        run: pnpm run deploy
+        run: bun run deploy
 
       - name: Apply migrations
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           CI: true
-        run: pnpm --filter memsched run prod:d1:migrate
+        run: bun run --filter '@memsched/memsched' prod:d1:migrate

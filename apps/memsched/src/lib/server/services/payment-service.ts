@@ -24,7 +24,7 @@ const initializeStripe = () => {
     throw new Error('Stripe secret key is not configured');
   }
   return new Stripe(env.STRIPE_SECRET_KEY, {
-    apiVersion: '2025-02-24.acacia', // Latest supported API version
+    apiVersion: '2026-01-28.clover',
     typescript: true,
     telemetry: false,
   });
@@ -170,20 +170,22 @@ export class PaymentService {
 
           if (subscriptions.data.length > 0) {
             const subscription = subscriptions.data[0];
+            const subscriptionItem = subscription.items.data[0];
+            const periodEnd = subscriptionItem?.current_period_end;
 
             // Update the database with the latest info
             await this.updateSubscriptionStatus(userId, {
               status: subscription.status,
-              planId: subscription.items.data[0]?.price.id,
-              periodEnd: subscription.current_period_end,
+              planId: subscriptionItem?.price.id,
+              periodEnd,
               cancelAtPeriodEnd: subscription.cancel_at_period_end,
             });
 
             // Return fresh data
             return {
               status: subscription.status,
-              planId: subscription.items.data[0]?.price.id,
-              currentPeriodEnd: new Date(subscription.current_period_end * 1000),
+              planId: subscriptionItem?.price.id,
+              currentPeriodEnd: periodEnd ? new Date(periodEnd * 1000) : null,
               cancelAtPeriodEnd: subscription.cancel_at_period_end,
             };
           }
@@ -340,7 +342,7 @@ export class PaymentService {
         return await this.handleWebhookEvent(event);
       } catch (err: any) {
         console.error('Webhook signature verification failed', err);
-        throw new Error(`Webhook Error: ${err.message || 'Unknown error'}`);
+        throw new Error(`Webhook Error: ${err.message || 'Unknown error'}`, { cause: err });
       }
     });
   }
@@ -397,14 +399,16 @@ export class PaymentService {
       }
 
       const subscription = await this.stripe.subscriptions.retrieve(session.subscription as string);
+      const subscriptionItem = subscription.items.data[0];
+      const periodEnd = subscriptionItem?.current_period_end;
 
       await this.db
         .update(table.user)
         .set({
           subscriptionStatus: subscription.status,
           stripeCustomerId: session.customer as string,
-          stripePlanId: subscription.items.data[0]?.price.id,
-          subscriptionPeriodEnd: new Date(subscription.current_period_end * 1000),
+          stripePlanId: subscriptionItem?.price.id,
+          subscriptionPeriodEnd: periodEnd ? new Date(periodEnd * 1000) : undefined,
           cancelAtPeriodEnd: subscription.cancel_at_period_end,
         })
         .where(eq(table.user.id, userId));
@@ -422,12 +426,15 @@ export class PaymentService {
       throw new DrizzleRecordNotFoundErrorCause('User not found for Stripe customer ID');
     }
 
+    const subscriptionItem = subscription.items.data[0];
+    const periodEnd = subscriptionItem?.current_period_end;
+
     await this.db
       .update(table.user)
       .set({
         subscriptionStatus: subscription.status,
-        stripePlanId: subscription.items.data[0]?.price.id,
-        subscriptionPeriodEnd: new Date(subscription.current_period_end * 1000),
+        stripePlanId: subscriptionItem?.price.id,
+        subscriptionPeriodEnd: periodEnd ? new Date(periodEnd * 1000) : undefined,
         cancelAtPeriodEnd: subscription.cancel_at_period_end,
       })
       .where(eq(table.user.id, users[0].id));

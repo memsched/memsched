@@ -26,7 +26,7 @@ export const load: PageServerLoad = async (event) => {
   }
 
   let objectives: table.Objective[] = [];
-  let widgetIds: string[] = [];
+  let widgetIds: string[] = []; // eslint-disable-line no-useless-assignment -- used when !isOwner
   if (isOwner) {
     const res = await event.locals.objectivesService
       .getAll(user.id)

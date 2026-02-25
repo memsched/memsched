@@ -29,7 +29,10 @@ export default ts.config(
   },
   {
     files: ['**/*.svelte', '**/*.svelte.js', '**/*.svelte.ts'],
-    // See more details at: https://typescript-eslint.io/packages/parser/
+    rules: {
+      // Svelte 5 reactivity ($bindable, $derived, etc.) triggers false positives
+      'no-useless-assignment': 'off',
+    },
     languageOptions: {
       parserOptions: {
         projectService: true,

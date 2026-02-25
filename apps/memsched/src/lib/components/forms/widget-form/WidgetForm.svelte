@@ -339,7 +339,7 @@
           }
         }}
         onclick={onRemoveImage}
-        class="!text-zinc-400 hover:!text-foreground"
+        class="hover:!text-foreground !text-zinc-400"
       >
         <Icon src={FiX} />
       </span>
@@ -360,7 +360,7 @@
           }
         }}
         onclick={(e) => onRemoveMetric(e, i)}
-        class="!text-zinc-400 hover:!text-foreground"
+        class="hover:!text-foreground !text-zinc-400"
       >
         <Icon src={FiX} />
       </span>
@@ -388,8 +388,8 @@
 
 <div class="flex flex-grow" style="height: calc(100vh - {SUB_NAV_HEIGHT}px);">
   <div class="bg-dotted relative flex max-w-[60%] flex-grow items-center justify-center p-2">
-    <div class="absolute left-2 right-2 top-2 space-y-2">
-      <div class="flex items-center gap-3 rounded-lg border bg-background p-3 text-sm">
+    <div class="absolute top-2 right-2 left-2 space-y-2">
+      <div class="bg-background flex items-center gap-3 rounded-lg border p-3 text-sm">
         <Icon
           src={IoInformationCircle}
           className="mt-0.5 size-5 flex-shrink-0 text-muted-foreground"
@@ -402,7 +402,7 @@
         </div>
       </div>
       <div
-        class="flex w-fit items-center gap-3 rounded-lg border bg-background p-3 text-sm font-medium"
+        class="bg-background flex w-fit items-center gap-3 rounded-lg border p-3 text-sm font-medium"
       >
         <Switch
           checked={widgetMode === 'dark'}
@@ -482,7 +482,7 @@
     method="POST"
     id="widget-form"
     use:enhance
-    class="main-container w-1/2 space-y-16 overflow-y-scroll border-s bg-background py-8 pb-24"
+    class="main-container bg-background w-1/2 space-y-16 overflow-y-scroll border-s py-8 pb-24"
   >
     {#if focusedTab === 'sharing'}
       <div class="space-y-6">

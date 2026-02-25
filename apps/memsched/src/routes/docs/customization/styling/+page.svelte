@@ -1,6 +1,6 @@
 <div class="space-y-8">
   <h1 class="scroll-m-20 text-4xl font-bold tracking-tight">Styling & Customization</h1>
-  <p class="text-xl text-muted-foreground">
+  <p class="text-muted-foreground text-xl">
     Customize the appearance and dimensions of your MEMsched widget using URL parameters.
   </p>
 
@@ -14,25 +14,25 @@
       <h3 class="text-2xl font-semibold tracking-tight">Dark Mode</h3>
       <p>
         You can enable a dark theme for your widget by adding the <code
-          class="relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm">dark</code
+          class="bg-muted relative rounded px-[0.3rem] py-[0.2rem] font-mono text-sm">dark</code
         > query parameter to the widget URL. This is useful when embedding the widget on pages with a
         dark background.
       </p>
       <p>
         Simply append <code
-          class="relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm">?dark</code
+          class="bg-muted relative rounded px-[0.3rem] py-[0.2rem] font-mono text-sm">?dark</code
         >
         (if it's the first parameter) or
-        <code class="relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm"
+        <code class="bg-muted relative rounded px-[0.3rem] py-[0.2rem] font-mono text-sm"
           >&dark</code
         >
         (if other parameters exist) to the URL. Note that <code>?dark=1</code> is also valid.
       </p>
 
       <h4 class="mt-4 text-xl font-semibold tracking-tight">Example:</h4>
-      <pre class="mt-2 overflow-x-auto rounded-md border bg-muted p-4 font-mono text-sm"><code
+      <pre class="bg-muted mt-2 overflow-x-auto rounded-md border p-4 font-mono text-sm"><code
           >&lt;img src="https://memsched.com/api/widgets/[YOUR_WIDGET_ID]?f=svg<span
-            class="font-bold text-primary">&dark</span
+            class="text-primary font-bold">&dark</span
           >" alt="MEMsched Widget"&gt;</code
         ></pre>
     </div>
@@ -46,12 +46,12 @@
       <ul class="list-disc space-y-2 pl-6">
         <li>
           Using HTML attribute: <code
-            class="relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm"
+            class="bg-muted relative rounded px-[0.3rem] py-[0.2rem] font-mono text-sm"
             >&lt;img src="..." height="100"&gt;</code
           > (Sets height to 100px, default is 80px).
         </li>
       </ul>
-      <p class="text-sm text-muted-foreground">
+      <p class="text-muted-foreground text-sm">
         Note: Using the HTML attribute is the recommended way to set the widget height.
       </p>
     </div>
@@ -72,7 +72,7 @@
           <strong>Styling conflicts with page CSS:</strong> If the widget size set by the
           <code>height</code>
           attribute isn't working, try using inline CSS:
-          <code class="relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm"
+          <code class="bg-muted relative rounded px-[0.3rem] py-[0.2rem] font-mono text-sm"
             >style="height: 80px;"</code
           >
           on the <code>&lt;img&gt;</code> tag. This often overrides conflicting styles.

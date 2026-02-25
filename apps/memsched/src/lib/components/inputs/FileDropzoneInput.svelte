@@ -70,7 +70,7 @@
 
 <div
   class={cn(
-    'relative flex min-h-[200px] cursor-pointer items-center justify-center rounded-lg border-2 border-dashed border-muted-foreground/25 px-6 py-10 text-center transition-colors hover:bg-muted/50',
+    'border-muted-foreground/25 hover:bg-muted/50 relative flex min-h-[200px] cursor-pointer items-center justify-center rounded-lg border-2 border-dashed px-6 py-10 text-center transition-colors',
     isDragging && 'bg-muted/50'
   )}
   ondragenter={handleDragEnter}
@@ -102,7 +102,7 @@
       {:else}
         <Icon src={OiUpload16} className="size-10 !text-muted-foreground" />
         <div class="text-base font-medium">Drop image here or click to upload</div>
-        <p class="text-xs text-muted-foreground">
+        <p class="text-muted-foreground text-xs">
           PNG, JPG or GIF (max. {maxSize / 1024 / 1024}MB)
         </p>
       {/if}

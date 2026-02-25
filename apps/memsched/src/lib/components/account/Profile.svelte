@@ -40,7 +40,7 @@
   <div class="relative">
     <UserAvatar {username} {avatarUrl} large />
     {#if edit}
-      <div class="absolute bottom-2 left-2 size-12 rounded-full border-2 bg-back !p-0"></div>
+      <div class="bg-back absolute bottom-2 left-2 size-12 rounded-full border-2 !p-0"></div>
       <form
         method="POST"
         action="/settings/profile?/updateAvatar"
@@ -66,7 +66,7 @@
           type="button"
           onclick={handleClick}
           size="sm"
-          class="absolute bottom-2 left-2 size-12 rounded-full border-[3px] border-back !p-0 [&_svg]:size-5"
+          class="border-back absolute bottom-2 left-2 size-12 rounded-full border-[3px] !p-0 [&_svg]:size-5"
           variant="translucent"
           {loading}
           icon={FiCamera}
@@ -75,7 +75,7 @@
     {/if}
   </div>
   <h2 class="mt-8">{name}</h2>
-  <p class="text-lg text-muted-foreground">{username}</p>
+  <p class="text-muted-foreground text-lg">{username}</p>
 
   {#if bio}
     <p class="mt-5">{bio}</p>
@@ -83,14 +83,14 @@
 
   <div class="mt-4 flex flex-col gap-2">
     {#if location}
-      <div class="flex items-center gap-2 text-muted-foreground">
+      <div class="text-muted-foreground flex items-center gap-2">
         <Icon src={FiMapPin} className="size-4" />
         <span>{location}</span>
       </div>
     {/if}
 
     {#if website}
-      <div class="flex items-center gap-2 text-muted-foreground">
+      <div class="text-muted-foreground flex items-center gap-2">
         <Icon src={FiGlobe} className="size-4" />
         <!-- eslint-disable-next-line svelte/no-navigation-without-resolve -- external URL -->
         <a href={website} target="_blank" rel="noopener noreferrer" class="hover:underline">

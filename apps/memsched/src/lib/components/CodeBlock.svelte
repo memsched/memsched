@@ -47,7 +47,7 @@
 <pre
   {...rest}
   class={cn(
-    'flex text-wrap break-all rounded-md border bg-secondary p-4 font-mono text-xs',
+    'bg-secondary flex rounded-md border p-4 font-mono text-xs text-wrap break-all',
     copy && 'items-start justify-between gap-3',
     rest.class
   )}>

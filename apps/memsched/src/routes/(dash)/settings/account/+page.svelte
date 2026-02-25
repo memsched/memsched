@@ -46,7 +46,7 @@
 
     <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
       <!-- Free Plan Card -->
-      <Card.Root class={cn('border bg-card', !isSubscribed && 'border-primary')}>
+      <Card.Root class={cn('bg-card border', !isSubscribed && 'border-primary')}>
         <Card.Header>
           <div class="flex items-center justify-between">
             <Card.Title>Free Plan</Card.Title>
@@ -99,7 +99,7 @@
               <span class="text-2xl font-bold">{formatCurrency(price.amount, price.currency)}</span>
               <span class="text-muted-foreground">/{price.interval}</span>
             {:catch}
-              <span class="text-sm text-destructive">Error loading price</span>
+              <span class="text-destructive text-sm">Error loading price</span>
             {/await}
           </div>
           <ul class="space-y-2">
@@ -137,7 +137,7 @@
                 >
               </form>
               {#if periodEnd}
-                <div class="text-sm text-muted-foreground">
+                <div class="text-muted-foreground text-sm">
                   Your subscription ends on {new Date(periodEnd).toLocaleDateString()}
                 </div>
               {/if}
@@ -180,17 +180,17 @@
 
     <!-- Delete Account Section -->
     <div
-      class="rounded-lg border border-destructive/20 bg-destructive/5 p-5 dark:border-destructive/30 dark:bg-destructive/10"
+      class="border-destructive/20 bg-destructive/5 dark:border-destructive/30 dark:bg-destructive/10 rounded-lg border p-5"
     >
       <div class="flex flex-col gap-6">
         <div class="space-y-2">
-          <h3 class="text-xl font-semibold text-destructive">Delete Account</h3>
+          <h3 class="text-destructive text-xl font-semibold">Delete Account</h3>
           <div class="space-y-4">
-            <p class="max-w-prose text-sm text-muted-foreground">
+            <p class="text-muted-foreground max-w-prose text-sm">
               Permanently delete your account and all associated data. This action cannot be undone.
             </p>
 
-            <div class="text-sm text-muted-foreground">
+            <div class="text-muted-foreground text-sm">
               <p class="mb-2 font-medium">When you delete your account:</p>
               <ul class="list-inside list-disc space-y-1">
                 <li>Your personal information will be anonymized</li>

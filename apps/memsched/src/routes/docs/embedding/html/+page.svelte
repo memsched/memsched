@@ -25,7 +25,7 @@
 <div class="space-y-8">
   <div class="space-y-4">
     <h1 class="scroll-m-20 text-4xl font-bold tracking-tight">HTML & Markdown Embedding</h1>
-    <p class="text-xl text-muted-foreground">
+    <p class="text-muted-foreground text-xl">
       Learn how to embed your MEMsched widget using HTML or Markdown.
     </p>
   </div>

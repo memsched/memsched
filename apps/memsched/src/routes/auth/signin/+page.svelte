@@ -49,7 +49,7 @@
       size="lg">Continue with Github</IconButton
     >
   </div>
-  <p class="text-sm text-muted-foreground">
+  <p class="text-muted-foreground text-sm">
     By joining, you agree to our <a href={resolve('/tos')} aria-label="Terms of Service"
       >Terms of <br /> Service</a
     >

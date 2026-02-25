@@ -9,12 +9,12 @@
   import UptimeRobot from '../UptimeRobot.svelte';
 </script>
 
-<footer class="border-t bg-background text-sm">
+<footer class="bg-background border-t text-sm">
   <div class="main-container flex flex-col gap-6 divide-y py-10">
     <div class="flex justify-between gap-6">
       <div class="flex flex-col gap-3">
         <div
-          class="flex flex-wrap gap-x-12 gap-y-2 text-muted-foreground *:whitespace-nowrap *:transition-colors hover:*:text-foreground max-sm:flex-col"
+          class="text-muted-foreground hover:*:text-foreground flex flex-wrap gap-x-12 gap-y-2 *:whitespace-nowrap *:transition-colors max-sm:flex-col"
         >
           <a href={resolve('/blog/')} data-umami-event="footer-blog-button">Blog</a>
           <a href={resolve('/docs')} data-sveltekit-reload data-umami-event="footer-docs-button">

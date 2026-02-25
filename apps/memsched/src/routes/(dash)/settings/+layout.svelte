@@ -13,7 +13,7 @@
 </script>
 
 <DashHeader>
-  <div class="px-3 text-sm font-medium text-muted-foreground">Settings</div>
+  <div class="text-muted-foreground px-3 text-sm font-medium">Settings</div>
   <Icon className="!text-muted-foreground" src={IoChevronForward} />
   {#each tabs as tab}
     <TabNavLink {...tab} />

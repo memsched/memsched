@@ -17,7 +17,7 @@
 
 <div class="mx-auto flex h-full max-w-screen-md flex-col p-8 lg:px-12 lg:py-16">
   <button
-    class="mb-10 flex items-center gap-0.5 font-bold text-muted-foreground transition-colors hover:text-foreground"
+    class="text-muted-foreground hover:text-foreground mb-10 flex items-center gap-0.5 font-bold transition-colors"
     onclick={() => {
       if (window.history.length > 1) {
         window.history.back();

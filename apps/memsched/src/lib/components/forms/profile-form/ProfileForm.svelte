@@ -74,17 +74,17 @@
               />
               <input type="hidden" name="username" value={$formData.username} />
               {#if $delayed}
-                <div class="absolute right-3 top-1/2 -translate-y-1/2">
+                <div class="absolute top-1/2 right-3 -translate-y-1/2">
                   <div
-                    class="h-4 w-4 animate-spin rounded-full border-2 border-gray-300 border-t-primary"
+                    class="border-t-primary h-4 w-4 animate-spin rounded-full border-2 border-gray-300"
                   ></div>
                 </div>
               {:else if ($errors.username || usernameAlreadyTaken) && $formData.username !== data.form.data.username}
-                <div class="absolute right-3 top-1/2 -translate-y-1/2 text-destructive">
+                <div class="text-destructive absolute top-1/2 right-3 -translate-y-1/2">
                   <Icon src={IoAlertCircleOutline} className="size-5" />
                 </div>
               {:else if !($errors.username || usernameAlreadyTaken) && $formData.username !== data.form.data.username}
-                <div class="text-success absolute right-3 top-1/2 -translate-y-1/2 text-green-500">
+                <div class="text-success absolute top-1/2 right-3 -translate-y-1/2 text-green-500">
                   <Icon src={IoCheckmarkCircleOutline} className="size-5" />
                 </div>
               {/if}

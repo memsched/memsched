@@ -1,5 +1,6 @@
 import { enhancedImages } from '@sveltejs/enhanced-img';
 import { sveltekit } from '@sveltejs/kit/vite';
+import tailwindcss from '@tailwindcss/vite';
 import fs from 'fs';
 import { defineConfig } from 'vitest/config';
 
@@ -9,6 +10,7 @@ export default defineConfig({
     noExternal: ['htmlparser2', 'domhandler'],
   },
   plugins: [
+    tailwindcss(),
     enhancedImages(),
     sveltekit(),
     {

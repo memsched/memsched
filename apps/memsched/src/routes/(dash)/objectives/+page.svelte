@@ -124,7 +124,7 @@
       </div> -->
 
       <!-- Scrollable content -->
-      <div class="overflow-x-auto bg-back">
+      <div class="bg-back overflow-x-auto">
         <div class="min-w-[900px] *:border-b">
           {#each data.objectives as objective}
             <div class="grid grid-cols-12 items-center gap-20 px-6 py-3.5 transition-colors">
@@ -240,7 +240,7 @@
                 >
                   <DropdownMenu.Root>
                     <DropdownMenu.Trigger
-                      class="flex h-8 w-8 items-center justify-center rounded-full p-1 hover:bg-muted"
+                      class="hover:bg-muted flex h-8 w-8 items-center justify-center rounded-full p-1"
                     >
                       <Icon src={IoEllipsisHorizontal} size="18" />
                     </DropdownMenu.Trigger>

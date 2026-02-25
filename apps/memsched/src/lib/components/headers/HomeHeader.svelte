@@ -19,7 +19,7 @@
   ];
 </script>
 
-<header class="fixed z-40 w-full border-b bg-background">
+<header class="bg-background fixed z-40 w-full border-b">
   <nav
     class="main-container flex w-full items-center justify-between"
     style="height: {HEADER_HEIGHT}px"

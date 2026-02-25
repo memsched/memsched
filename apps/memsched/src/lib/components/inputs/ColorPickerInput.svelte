@@ -238,7 +238,7 @@
     <div class="flex gap-3">
       <div
         bind:this={satValPickerEl}
-        class="relative h-40 w-40 cursor-crosshair select-none overflow-hidden rounded border"
+        class="relative h-40 w-40 cursor-crosshair overflow-hidden rounded border select-none"
         style:background-color={hueColor}
         onpointerdown={handleSatValPointerDown}
         aria-label="Saturation and Value Picker"
@@ -253,7 +253,7 @@
 
       <div
         bind:this={huePickerEl}
-        class="relative h-40 w-5 cursor-ns-resize select-none overflow-hidden rounded border"
+        class="relative h-40 w-5 cursor-ns-resize overflow-hidden rounded border select-none"
         style="background: linear-gradient(to bottom, #f00, #ff0, #0f0, #0ff, #00f, #f0f, #f00)"
         onpointerdown={handleHuePointerDown}
         aria-label="Hue Slider"
@@ -267,7 +267,7 @@
       {#if alpha}
         <div
           bind:this={alphaPickerEl}
-          class="relative h-40 w-5 cursor-ns-resize select-none overflow-hidden rounded border bg-[url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAIAAADZF8uwAAAAGUlEQVQYV2M4gwH+YwCGIasIUwhT25BVBADtzYNYrHvv4gAAAABJRU5ErkJggg==')] bg-repeat"
+          class="relative h-40 w-5 cursor-ns-resize overflow-hidden rounded border bg-[url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAIAAADZF8uwAAAAGUlEQVQYV2M4gwH+YwCGIasIUwhT25BVBADtzYNYrHvv4gAAAABJRU5ErkJggg==')] bg-repeat select-none"
           onpointerdown={handleAlphaPointerDown}
           aria-label="Opacity Slider"
         >

@@ -110,7 +110,7 @@
             >Start Your Journey for Free</Button
           >
         </div>
-        <Arrow class="absolute left-[105%] top-[60%] rotate-6" />
+        <Arrow class="absolute top-[60%] left-[105%] rotate-6" />
       </div>
     </div>
     {#if browser}
@@ -121,13 +121,13 @@
   </section>
 
   <!-- How it works section -->
-  <section id="how-it-works" class="border-y bg-background">
+  <section id="how-it-works" class="bg-background border-y">
     <div class="container px-4">
       <div class="mb-16 flex flex-col items-center text-center">
-        <h2 class="h2 mb-3 w-fit border-b-2 border-dashed border-primary pb-1">
+        <h2 class="h2 border-primary mb-3 w-fit border-b-2 border-dashed pb-1">
           How MEMsched Works
         </h2>
-        <p class="text-lg text-muted-foreground">
+        <p class="text-muted-foreground text-lg">
           Three simple steps to track metrics and showcase your learning journey
         </p>
       </div>
@@ -135,8 +135,8 @@
       <div
         class="relative grid w-full grid-cols-1 justify-center gap-12 p-8 max-sm:px-4 lg:grid-cols-3"
       >
-        <Path class="absolute left-[21%] top-[-15%] -translate-x-1/2 max-lg:hidden" />
-        <Path class="absolute bottom-0 right-[18%] -translate-x-1/2 rotate-180 max-lg:hidden" />
+        <Path class="absolute top-[-15%] left-[21%] -translate-x-1/2 max-lg:hidden" />
+        <Path class="absolute right-[18%] bottom-0 -translate-x-1/2 rotate-180 max-lg:hidden" />
         <div class="flex justify-start gap-6">
           <div
             class="mt-1 inline-flex size-8 flex-shrink-0 items-center justify-center rounded-full bg-zinc-300 text-lg font-bold dark:bg-zinc-700"
@@ -146,7 +146,7 @@
           <div class="space-y-1">
             <Icon className="size-10" src={IoPersonCircle} />
             <h3 class="text-xl font-semibold">Create Learning Objectives & Goals</h3>
-            <p class="!mb-3 text-muted-foreground">
+            <p class="text-muted-foreground !mb-3">
               Define measurable learning objectives with specific metrics to track your skill
               development.
             </p>
@@ -200,13 +200,13 @@
           <enhanced:img
             src="/static/images/objectives.png"
             alt="Learning objectives dashboard tracking multiple skills"
-            class="rounded-md border shadow-sm dark:hidden"
+            class="rounded-md border shadow-xs dark:hidden"
             loading="lazy"
           />
           <enhanced:img
             src="/static/images/objectives-dark.png"
             alt="Learning objectives dashboard tracking multiple skills"
-            class="hidden rounded-md border shadow-sm dark:block"
+            class="hidden rounded-md border shadow-xs dark:block"
             loading="lazy"
           />
         </div>
@@ -215,13 +215,13 @@
           <enhanced:img
             src="/static/images/create-widget.png"
             alt="Create customizable learning progress widgets"
-            class="rounded-md border shadow-sm dark:hidden"
+            class="rounded-md border shadow-xs dark:hidden"
             loading="lazy"
           />
           <enhanced:img
             src="/static/images/create-widget-dark.png"
             alt="Create customizable learning progress widgets"
-            class="hidden rounded-md border shadow-sm dark:block"
+            class="hidden rounded-md border shadow-xs dark:block"
             loading="lazy"
           />
         </div>
@@ -238,14 +238,14 @@
 
           On <span class="me-1 font-bold italic">Your</span> Website
         </h2>
-        <p class="text-lg text-muted-foreground">
+        <p class="text-muted-foreground text-lg">
           Auto-updating progress widgets that seamlessly integrate with your website or portfolio
         </p>
       </div>
 
       <div class="space-y-8">
         <div class="relative mx-auto w-fit">
-          <div class="absolute right-0 top-0 flex items-center justify-center">
+          <div class="absolute top-0 right-0 flex items-center justify-center">
             <div class="absolute size-5 rounded-full bg-green-500"></div>
             <div class="absolute size-5 animate-ping rounded-full bg-green-500"></div>
           </div>
@@ -287,7 +287,7 @@
             code={codeSnippet}
             language="html"
             copy={false}
-            class="mx-auto w-fit justify-center bg-background text-base"
+            class="bg-background mx-auto w-fit justify-center text-base"
           />
         </div>
       </div>
@@ -295,13 +295,13 @@
   </section>
 
   <!-- FAQ Section -->
-  <section id="faq" class="z-10 border-y bg-background">
+  <section id="faq" class="bg-background z-10 border-y">
     <div class="main-container mx-auto px-4">
       <div class="mb-16 flex flex-col items-center text-center">
-        <h2 class="h2 mb-3 w-fit border-b-2 border-dashed border-primary pb-1">
+        <h2 class="h2 border-primary mb-3 w-fit border-b-2 border-dashed pb-1">
           Common Questions About MEMsched
         </h2>
-        <p class="text-lg text-muted-foreground">
+        <p class="text-muted-foreground text-lg">
           Learn more about our learning progress tracking platform
         </p>
       </div>
@@ -364,7 +364,7 @@
   <!-- CTA section -->
   <section id="cta" class="bg-dotted-fade">
     <div
-      class="main-container flex justify-between gap-10 text-primary max-md:flex-col max-md:items-center max-md:text-center"
+      class="main-container text-primary flex justify-between gap-10 max-md:flex-col max-md:items-center max-md:text-center"
     >
       <div>
         <h2 class="mb-2 text-3xl font-bold">Ready to track and showcase your learning journey?</h2>
@@ -377,8 +377,8 @@
         <Button data-umami-event="cta-get-started-button" href="/auth/signin" size="cta"
           >Start Tracking Now</Button
         >
-        <Arrow class="absolute left-[-85%] top-[-85%] rotate-180" />
-        <p class="mt-2 text-sm text-muted-foreground">
+        <Arrow class="absolute top-[-85%] left-[-85%] rotate-180" />
+        <p class="text-muted-foreground mt-2 text-sm">
           No credit card required. Free plan available.
         </p>
       </div>

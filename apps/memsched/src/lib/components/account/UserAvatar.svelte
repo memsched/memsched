@@ -42,7 +42,7 @@
 {:else if loaded}
   <div in:fade={{ duration: 100 }}>
     <img
-      class={cn('inline-block rounded-full', large ? 'size-[250px] ring-2 ring-border' : 'size-8')}
+      class={cn('inline-block rounded-full', large ? 'ring-border size-[250px] ring-2' : 'size-8')}
       src={avatarUrl + '?v=' + updateState.avatarCounter}
       alt="User profile avatar"
     />
@@ -50,7 +50,7 @@
 {:else}
   <div
     class={cn(
-      'rounded-full bg-background ring-2 ring-border',
+      'bg-background ring-border rounded-full ring-2',
       large ? 'size-[250px]' : 'size-8 ring-1',
       'animate-pulse'
     )}

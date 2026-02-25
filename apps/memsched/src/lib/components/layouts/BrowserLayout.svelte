@@ -10,7 +10,7 @@
 
 <div class="max-w-full overflow-hidden rounded-xl border bg-white shadow-xl">
   <!-- Browser chrome -->
-  <div class="flex items-center border-b bg-secondary px-4 py-3">
+  <div class="bg-secondary flex items-center border-b px-4 py-3">
     <div class="mr-6 flex gap-1.5">
       <div class="h-3 w-3 rounded-full bg-red-400"></div>
       <div class="h-3 w-3 rounded-full bg-yellow-400"></div>

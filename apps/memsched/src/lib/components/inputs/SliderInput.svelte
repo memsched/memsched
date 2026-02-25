@@ -84,7 +84,7 @@
 <div class="relative flex items-center">
   <div
     class={cn(
-      'absolute inset-y-0 left-0 flex cursor-ew-resize items-center pl-3 pr-1 text-muted-foreground transition-colors hover:text-foreground',
+      'text-muted-foreground hover:text-foreground absolute inset-y-0 left-0 flex cursor-ew-resize items-center pr-1 pl-3 transition-colors',
       isDragging && 'text-foreground'
     )}
     onmousedown={handleMouseDown}

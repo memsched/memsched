@@ -35,7 +35,7 @@
   icon={FiArrowUpRight}
   variant="link"
   {href}
-  class="px-1 text-muted-foreground [&_svg]:size-3.5"
+  class="text-muted-foreground px-1 [&_svg]:size-3.5"
 >
   {text}
 </IconButton>

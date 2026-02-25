@@ -111,7 +111,7 @@
 
 <div class={cn('mx-auto max-w-7xl px-4 sm:px-6 lg:px-8', className)}>
   <!-- Mobile menu button -->
-  <div class="fixed left-5 top-5 z-40 lg:hidden">
+  <div class="fixed top-5 left-5 z-40 lg:hidden">
     <button
       onclick={toggleMobileMenu}
       aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
@@ -129,7 +129,7 @@
     <!-- Mobile Sidebar Overlay -->
     {#if isMobileMenuOpen}
       <div
-        class="fixed inset-0 z-30 bg-background/80 backdrop-blur-sm lg:hidden"
+        class="bg-background/80 fixed inset-0 z-30 backdrop-blur-xs lg:hidden"
         onclick={toggleMobileMenu}
         onkeydown={handleKeydown}
         role="button"
@@ -142,7 +142,7 @@
     <div
       id="mobile-navigation"
       class={cn(
-        'fixed inset-y-0 left-0 z-30 w-64 transform overflow-y-auto transition-transform duration-200 ease-in-out max-lg:border-e max-lg:bg-background max-lg:pt-12 lg:fixed lg:block lg:transform-none lg:shadow-none',
+        'max-lg:bg-background fixed inset-y-0 left-0 z-30 w-64 transform overflow-y-auto transition-transform duration-200 ease-in-out max-lg:border-e max-lg:pt-12 lg:fixed lg:block lg:transform-none lg:shadow-none',
         'px-6 py-8 lg:mx-4 lg:px-8 lg:py-12 lg:pt-16 xl:mx-8',
         isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
       )}
@@ -156,7 +156,7 @@
           class="inline-block"
           aria-label="MEMsched Documentation Homepage"
         >
-          <Logo class="h-6 w-auto text-primary" />
+          <Logo class="text-primary h-6 w-auto" />
         </a>
       </div>
 
@@ -164,7 +164,7 @@
       <nav class="h-[calc(100vh-12rem)] space-y-8 overflow-y-auto pb-16">
         {#each sidebarLinks as section}
           <div>
-            <h4 class="mb-3 text-sm font-semibold text-primary">{section.title}</h4>
+            <h4 class="text-primary mb-3 text-sm font-semibold">{section.title}</h4>
             <ul class="space-y-2.5 text-sm">
               {#each section.links as link}
                 <li>
@@ -196,7 +196,7 @@
             onclick={() => {
               goto(resolve('/'), { invalidateAll: true });
             }}
-            class="block w-full rounded-md px-3 py-1.5 text-start text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+            class="text-muted-foreground hover:bg-muted hover:text-foreground block w-full rounded-md px-3 py-1.5 text-start text-sm transition-colors"
             aria-label="Home"
             data-sveltekit-reload
           >
@@ -207,8 +207,8 @@
     </div>
 
     <!-- Main content -->
-    <div class="min-w-0 max-w-3xl flex-auto lg:ml-64">
-      <div class="prose prose-slate max-w-none dark:prose-invert">
+    <div class="max-w-3xl min-w-0 flex-auto lg:ml-64">
+      <div class="prose prose-slate dark:prose-invert max-w-none">
         {@render children()}
 
         <!-- Navigation -->

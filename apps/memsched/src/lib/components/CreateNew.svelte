@@ -27,17 +27,17 @@
 </script>
 
 <div class="flex flex-col items-center justify-center gap-4">
-  <div class="flex h-48 w-48 items-center justify-center rounded-full bg-primary/10">
+  <div class="bg-primary/10 flex h-48 w-48 items-center justify-center rounded-full">
     <Icon src={icon} size="150" className="*:!stroke-[5px] !text-primary" />
   </div>
 
   <h1 class="h3 max-w-sm text-center">{title}</h1>
   {#if description}
-    <p class="max-w-sm text-center text-muted-foreground">{description}</p>
+    <p class="text-muted-foreground max-w-sm text-center">{description}</p>
   {/if}
   <div class="text-center">
     <IconButton icon={buttonIcon} size="lg" href={finalHref}>{buttonText}</IconButton>
-    <p class="mt-2 text-xs text-muted-foreground">
+    <p class="text-muted-foreground mt-2 text-xs">
       {#if page.data.user === null}
         Sign in to get started
       {:else}

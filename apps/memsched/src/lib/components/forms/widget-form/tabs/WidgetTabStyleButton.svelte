@@ -57,7 +57,7 @@
         <div class="text-sm">{disabledTooltip}</div>
       {:else}
         <div class="text-sm font-medium">{title}</div>
-        <div class="text-sm text-muted-foreground">{description}</div>
+        <div class="text-muted-foreground text-sm">{description}</div>
       {/if}
     </Tooltip.Content>
   </Tooltip.Root>

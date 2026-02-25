@@ -21,15 +21,15 @@
     <DropdownMenu.Group>
       <DropdownMenuLabel>
         <div class="leading-3">Anonymous</div>
-        <small class="font-normal text-muted-foreground">Currently logged out</small>
+        <small class="text-muted-foreground font-normal">Currently logged out</small>
       </DropdownMenuLabel>
       <DropdownMenuSeparator />
-      <DropdownMenu.Item class="w-full cursor-pointer hover:text-accent-foreground">
+      <DropdownMenu.Item class="hover:text-accent-foreground w-full cursor-pointer">
         {#snippet child({ props })}
           <a
             {...props}
             href={resolve('/auth/signin')}
-            class={cn(props?.class as string, 'font-semibold text-primary')}
+            class={cn(props?.class as string, 'text-primary font-semibold')}
             aria-label="Log In"
             data-umami-event="header-profile-anonymous-login-button"
           >
@@ -39,7 +39,7 @@
         {/snippet}
       </DropdownMenu.Item>
       <DropdownMenuSeparator />
-      <DropdownMenu.Item class="cursor-pointer hover:text-accent-foreground">
+      <DropdownMenu.Item class="hover:text-accent-foreground cursor-pointer">
         {#snippet child({ props })}
           <a
             href={resolve('/')}
@@ -53,7 +53,7 @@
           </a>
         {/snippet}
       </DropdownMenu.Item>
-      <DropdownMenu.Item class="cursor-pointer hover:text-accent-foreground">
+      <DropdownMenu.Item class="hover:text-accent-foreground cursor-pointer">
         {#snippet child({ props })}
           <a
             href={resolve('/docs')}
@@ -67,7 +67,7 @@
         {/snippet}
       </DropdownMenu.Item>
       <DropdownMenuSeparator />
-      <DropdownMenu.Item class="cursor-pointer hover:text-accent-foreground">
+      <DropdownMenu.Item class="hover:text-accent-foreground cursor-pointer">
         {#snippet child({ props })}
           <ThemeToggle {...props} />
         {/snippet}

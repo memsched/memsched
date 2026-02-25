@@ -25,9 +25,9 @@
   variant="ghost"
   size="xs"
   class={cn(
-    'rounded-none bg-background text-zinc-400 hover:bg-background hover:text-foreground',
+    'bg-background hover:bg-background hover:text-foreground rounded-none text-zinc-400',
     isActive &&
-      'bg-zinc-100 text-foreground hover:bg-zinc-100 dark:bg-zinc-700/50 dark:hover:bg-zinc-700/50'
+      'text-foreground bg-zinc-100 hover:bg-zinc-100 dark:bg-zinc-700/50 dark:hover:bg-zinc-700/50'
   )}
 >
   {name}

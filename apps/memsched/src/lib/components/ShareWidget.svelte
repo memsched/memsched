@@ -65,7 +65,7 @@
 </script>
 
 <div class="space-y-4">
-  <div class="flex items-center gap-3 rounded-lg border bg-secondary p-3 text-sm">
+  <div class="bg-secondary flex items-center gap-3 rounded-lg border p-3 text-sm">
     <Icon src={IoInformationCircle} className="mt-0.5 size-5 flex-shrink-0 text-muted-foreground" />
     <div class="space-y-1">
       <p>
@@ -88,12 +88,12 @@
       <div class="space-y-2">
         <CodeBlock code={includeProfileLink ? htmlSnippet : htmlSnippetNoLink} language="html" />
       </div>
-      <p class="text-sm text-muted-foreground">
+      <p class="text-muted-foreground text-sm">
         Copy the code above and paste it into your HTML website or blog.
       </p>
     </Tabs.Content>
   </Tabs.Root>
-  <div class="h-px w-full bg-border"></div>
+  <div class="bg-border h-px w-full"></div>
   <div class="mt-4 flex gap-2">
     <CopyButton textToCopy={widgetShareUrl} label="Copy Link" />
     <Button href={twitterShareUrl} target="_blank" rel="noopener noreferrer" variant="outline">

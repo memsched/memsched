@@ -113,7 +113,7 @@
           </Tabs.List>
           <Form.FieldErrors />
           <Tabs.Content value="fixed" class="space-y-6">
-            <div class="text-sm text-muted-foreground">
+            <div class="text-muted-foreground text-sm">
               A goal with a clear endpoint, like "run a marathon" or "read a book."
             </div>
             <Form.Field {form} name="endValue">
@@ -128,7 +128,7 @@
             </Form.Field>
           </Tabs.Content>
           <Tabs.Content value="ongoing">
-            <div class="text-sm text-muted-foreground">
+            <div class="text-muted-foreground text-sm">
               A goal with an ongoing process, like "learn a new language" or "write blog posts."
             </div>
           </Tabs.Content>

@@ -28,7 +28,7 @@
     {#if !compact}
       <div class="flex flex-col text-end *:leading-tight">
         <small>{page.data.user.name}</small>
-        <small class="font-light text-muted-foreground">{page.data.user.username}</small>
+        <small class="text-muted-foreground font-light">{page.data.user.username}</small>
       </div>
     {/if}
     <UserAvatar username={page.data.user.username} avatarUrl={page.data.user.avatarUrl} />
@@ -41,10 +41,10 @@
     <DropdownMenu.Group>
       <DropdownMenuLabel>
         <div class="leading-3">{page.data.user.username}</div>
-        <small class="font-normal text-muted-foreground">{page.data.user.email}</small>
+        <small class="text-muted-foreground font-normal">{page.data.user.email}</small>
       </DropdownMenuLabel>
       <DropdownMenuSeparator />
-      <DropdownMenu.Item class="cursor-pointer hover:text-accent-foreground">
+      <DropdownMenu.Item class="hover:text-accent-foreground cursor-pointer">
         {#snippet child({ props })}
           <a
             href={resolve('/settings/profile')}
@@ -57,7 +57,7 @@
           </a>
         {/snippet}
       </DropdownMenu.Item>
-      <DropdownMenu.Item class="cursor-pointer hover:text-accent-foreground">
+      <DropdownMenu.Item class="hover:text-accent-foreground cursor-pointer">
         {#snippet child({ props })}
           <a
             href={resolve('/docs')}
@@ -71,7 +71,7 @@
           </a>
         {/snippet}
       </DropdownMenu.Item>
-      <DropdownMenu.Item class="cursor-pointer hover:text-accent-foreground">
+      <DropdownMenu.Item class="hover:text-accent-foreground cursor-pointer">
         {#snippet child({ props })}
           <a
             href={resolve('/')}
@@ -86,13 +86,13 @@
         {/snippet}
       </DropdownMenu.Item>
       <DropdownMenuSeparator />
-      <DropdownMenu.Item class="cursor-pointer hover:text-accent-foreground">
+      <DropdownMenu.Item class="hover:text-accent-foreground cursor-pointer">
         {#snippet child({ props })}
           <ThemeToggle {...props} />
         {/snippet}
       </DropdownMenu.Item>
       <DropdownMenuSeparator />
-      <DropdownMenu.Item class="cursor-pointer hover:text-accent-foreground">
+      <DropdownMenu.Item class="hover:text-accent-foreground cursor-pointer">
         {#snippet child({ props })}
           <a
             {...props}
@@ -109,7 +109,7 @@
       </DropdownMenu.Item>
       <DropdownMenuSeparator />
       <form action="/auth/signout" method="POST" use:enhance>
-        <DropdownMenu.Item class="w-full cursor-pointer hover:text-accent-foreground">
+        <DropdownMenu.Item class="hover:text-accent-foreground w-full cursor-pointer">
           {#snippet child({ props })}
             <button
               {...props}

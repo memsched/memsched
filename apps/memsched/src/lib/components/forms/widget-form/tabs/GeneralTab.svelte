@@ -63,7 +63,7 @@
                 <Icon src={IoGlobeOutline} className="size-8 *:!stroke-[16px]" />
                 <div class="flex flex-col gap-1.5">
                   <div class="font-medium">Public</div>
-                  <div class="font-normal text-muted-foreground">
+                  <div class="text-muted-foreground font-normal">
                     Share your progress with everyone
                   </div>
                 </div>
@@ -79,7 +79,7 @@
                 <Icon src={IoDocumentLockOutline} className="size-8 *:!stroke-[16px]" />
                 <div class="flex flex-col gap-1.5">
                   <div class="font-medium">Private</div>
-                  <div class="font-normal text-muted-foreground">
+                  <div class="text-muted-foreground font-normal">
                     Keep your progress to yourself. The widget will be visible to you only.
                   </div>
                 </div>

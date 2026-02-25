@@ -76,7 +76,7 @@
               {ondragend}
             >
               {#if value === undefined || value === null || value === ''}
-                <div class="h-full w-full rounded-sm bg-zinc-200"></div>
+                <div class="h-full w-full rounded-xs bg-zinc-200"></div>
               {:else if children}
                 {@render children()}
               {/if}
@@ -84,7 +84,7 @@
             {#if onclose && !isDragged}
               <button
                 class={cn(
-                  'absolute -right-1.5 -top-1.5 flex size-[15px] items-center justify-center rounded-full border bg-background text-muted-foreground opacity-0 transition-colors hover:border-foreground hover:text-foreground',
+                  'bg-background text-muted-foreground hover:border-foreground hover:text-foreground absolute -top-1.5 -right-1.5 flex size-[15px] items-center justify-center rounded-full border opacity-0 transition-colors',
                   isHovering && 'opacity-100'
                 )}
                 aria-label="Close"

@@ -494,12 +494,12 @@
 </script>
 
 <div
-  class="fixed z-[9999] w-64 select-none overflow-hidden rounded-lg border border-border bg-background font-sans text-sm shadow-md"
+  class="border-border bg-background fixed z-[9999] w-64 overflow-hidden rounded-lg border font-sans text-sm shadow-md select-none"
   style="left: {position.x}px; top: {position.y}px;"
 >
   <!-- Header -->
   <div
-    class="flex h-8 cursor-move items-center justify-between border-b border-border bg-muted px-2.5 py-1"
+    class="border-border bg-muted flex h-8 cursor-move items-center justify-between border-b px-2.5 py-1"
     onmousedown={startDrag}
     role="button"
     aria-label="Drag to move accessibility toolbar"
@@ -508,7 +508,7 @@
     <span class="text-sm font-semibold">Accessibility Toolbar</span>
     <div class="flex items-center gap-1">
       <button
-        class="flex h-5 w-5 cursor-pointer items-center justify-center rounded border-none bg-transparent text-xs hover:bg-muted-foreground/10"
+        class="hover:bg-muted-foreground/10 flex h-5 w-5 cursor-pointer items-center justify-center rounded border-none bg-transparent text-xs"
         onclick={() => {
           if (activeTab === 'headings') scanHeadings();
           if (activeTab === 'contrast') scanContrast();
@@ -533,7 +533,7 @@
         </svg>
       </button>
       <button
-        class="flex h-5 w-5 cursor-pointer items-center justify-center rounded border-none bg-transparent text-xs hover:bg-muted-foreground/10"
+        class="hover:bg-muted-foreground/10 flex h-5 w-5 cursor-pointer items-center justify-center rounded border-none bg-transparent text-xs"
         onclick={toggleCollapse}
         aria-label={isCollapsed ? 'Expand' : 'Collapse'}
       >
@@ -574,7 +574,7 @@
   {#if !isCollapsed}
     <div class="p-3">
       <!-- Tabs -->
-      <div class="mb-3 flex border-b border-border">
+      <div class="border-border mb-3 flex border-b">
         <button
           class="flex-1 border-b-2 px-2 py-1 text-xs transition-colors"
           class:border-primary={activeTab === 'headings'}
@@ -609,14 +609,14 @@
         <div class="mb-2 text-xs font-semibold">Heading Hierarchy:</div>
 
         {#if headingElements.length === 0}
-          <div class="py-2 text-xs text-muted-foreground">No headings detected on this page.</div>
+          <div class="text-muted-foreground py-2 text-xs">No headings detected on this page.</div>
         {:else}
           <div class="max-h-[300px] overflow-y-auto">
             {#each headingElements as heading, index}
               {@const prevHeading = index > 0 ? headingElements[index - 1] : null}
               <button
                 type="button"
-                class="mb-1 flex w-full cursor-pointer items-start rounded px-1 py-0.5 text-left text-xs hover:bg-muted/50"
+                class="hover:bg-muted/50 mb-1 flex w-full cursor-pointer items-start rounded px-1 py-0.5 text-left text-xs"
                 class:text-destructive={prevHeading &&
                   heading.level > prevHeading.level &&
                   heading.level - prevHeading.level > 1}
@@ -628,14 +628,14 @@
                   }
                 }}
               >
-                <div class="mr-1 font-mono text-primary">H{heading.level}</div>
+                <div class="text-primary mr-1 font-mono">H{heading.level}</div>
                 <div class="truncate">{heading.text}</div>
               </button>
             {/each}
           </div>
 
           <!-- Heading Stats -->
-          <div class="mt-3 rounded border border-border bg-muted/30 p-2 text-[10px]">
+          <div class="border-border bg-muted/30 mt-3 rounded border p-2 text-[10px]">
             <div class="font-medium">Heading Statistics:</div>
             {#each [1, 2, 3, 4, 5, 6] as level}
               {@const count = headingElements.filter((h) => h.level === level).length}
@@ -653,16 +653,16 @@
         <div class="mb-2 text-xs font-semibold">ARIA Landmarks:</div>
 
         {#if landmarkElements.length === 0}
-          <div class="py-2 text-xs text-muted-foreground">
+          <div class="text-muted-foreground py-2 text-xs">
             No ARIA landmarks detected on this page.
-            <button class="mt-1 text-primary underline" onclick={() => scanLandmarks()}>
+            <button class="text-primary mt-1 underline" onclick={() => scanLandmarks()}>
               Scan for landmarks
             </button>
           </div>
         {:else}
           <div class="max-h-[300px] overflow-y-auto">
             {#each landmarkElements as landmark}
-              <div class="mb-2 rounded border border-border p-1.5 text-xs">
+              <div class="border-border mb-2 rounded border p-1.5 text-xs">
                 <div class="flex justify-between">
                   <span class="font-medium">{landmark.role}</span>
                   {#if landmark.count > 1}
@@ -675,7 +675,7 @@
                 {#if landmark.label}
                   <div class="mt-0.5 text-[10px]">Label: {landmark.label}</div>
                 {/if}
-                <div class="mt-0.5 text-[10px] text-muted-foreground">
+                <div class="text-muted-foreground mt-0.5 text-[10px]">
                   Element: &lt;{landmark.element}&gt;
                 </div>
               </div>
@@ -688,7 +688,7 @@
 
           {#if !hasMain || !hasNav}
             <div
-              class="mt-3 rounded border border-destructive bg-destructive/10 p-2 text-[10px] text-destructive"
+              class="border-destructive bg-destructive/10 text-destructive mt-3 rounded border p-2 text-[10px]"
             >
               <div class="font-medium">Missing recommended landmarks:</div>
               {#if !hasMain}
@@ -709,21 +709,21 @@
         {#if isScanning}
           <div class="py-4 text-center text-xs">
             <div class="mb-2">Scanning page for contrast issues...</div>
-            <div class="h-1 w-full overflow-hidden rounded-full bg-muted">
-              <div class="h-full animate-pulse rounded-full bg-primary"></div>
+            <div class="bg-muted h-1 w-full overflow-hidden rounded-full">
+              <div class="bg-primary h-full animate-pulse rounded-full"></div>
             </div>
           </div>
         {:else if contrastIssues.length === 0}
-          <div class="py-2 text-xs text-muted-foreground">
+          <div class="text-muted-foreground py-2 text-xs">
             No contrast issues detected.
-            <button class="mt-1 text-primary underline" onclick={() => scanContrast()}>
+            <button class="text-primary mt-1 underline" onclick={() => scanContrast()}>
               Scan for contrast issues
             </button>
           </div>
         {:else}
           <div class="mb-2 text-xs">
             Found {contrastIssues.length} elements with insufficient contrast.
-            <button class="ml-1 text-primary underline" onclick={() => scanContrast()}>
+            <button class="text-primary ml-1 underline" onclick={() => scanContrast()}>
               Rescan
             </button>
           </div>
@@ -732,7 +732,7 @@
             {#each contrastIssues as issue}
               <button
                 type="button"
-                class="mb-2 w-full cursor-pointer rounded border border-border p-2 text-left text-xs hover:bg-muted/50"
+                class="border-border hover:bg-muted/50 mb-2 w-full cursor-pointer rounded border p-2 text-left text-xs"
                 onclick={() => scrollToElement(issue.element)}
                 onkeydown={(e) => {
                   if (e.key === 'Enter' || e.key === ' ') {
@@ -746,12 +746,12 @@
                 <div class="mb-1 flex gap-1">
                   <!-- Color swatches -->
                   <span
-                    class="h-4 w-4 rounded border border-border"
+                    class="border-border h-4 w-4 rounded border"
                     style="background-color: {issue.foregroundColor};"
                     title="Text color: {issue.foregroundColor}"
                   ></span>
                   <span
-                    class="h-4 w-4 rounded border border-border"
+                    class="border-border h-4 w-4 rounded border"
                     style="background-color: {issue.backgroundColor};"
                     title="Background color: {issue.backgroundColor}"
                   ></span>
@@ -772,7 +772,7 @@
                   </span>
                 </div>
 
-                <div class="text-[10px] text-muted-foreground">
+                <div class="text-muted-foreground text-[10px]">
                   Required: {formatContrastRatio(issue.requiredRatio)} ({issue.isLargeText
                     ? 'Large'
                     : 'Normal'} text)
@@ -782,11 +782,11 @@
           </div>
 
           <!-- WCAG Guidelines -->
-          <div class="mt-3 rounded border border-border bg-muted/30 p-2 text-[10px]">
+          <div class="border-border bg-muted/30 mt-3 rounded border p-2 text-[10px]">
             <div class="font-medium">WCAG Guidelines:</div>
             <div class="mt-1">• Normal text: minimum ratio of 4.5:1</div>
             <div>• Large text: minimum ratio of 3:1</div>
-            <div class="mt-1 text-muted-foreground">
+            <div class="text-muted-foreground mt-1">
               Large text is 18pt (24px) or 14pt (18.67px) if bold
             </div>
           </div>

@@ -312,12 +312,12 @@
 </script>
 
 <div
-  class="fixed z-[9999] w-64 select-none overflow-hidden rounded-lg border border-border bg-background font-sans text-sm shadow-md"
+  class="border-border bg-background fixed z-[9999] w-64 overflow-hidden rounded-lg border font-sans text-sm shadow-md select-none"
   style="left: {position.x}px; top: {position.y}px;"
 >
   <!-- Header -->
   <div
-    class="flex h-8 cursor-move items-center justify-between border-b border-border bg-muted px-2.5 py-1"
+    class="border-border bg-muted flex h-8 cursor-move items-center justify-between border-b px-2.5 py-1"
     onmousedown={startDrag}
     role="button"
     aria-label="Drag to move color picker"
@@ -326,7 +326,7 @@
     <span class="text-sm font-semibold">Theme Color Editor</span>
     <div class="flex items-center gap-1">
       <button
-        class="flex h-5 w-5 cursor-pointer items-center justify-center rounded border-none bg-transparent text-xs hover:bg-muted-foreground/10"
+        class="hover:bg-muted-foreground/10 flex h-5 w-5 cursor-pointer items-center justify-center rounded border-none bg-transparent text-xs"
         onclick={copyCurrentToClipboard}
         title="Copy current color to clipboard"
       >
@@ -362,7 +362,7 @@
         {/if}
       </button>
       <button
-        class="flex h-5 w-5 cursor-pointer items-center justify-center rounded border-none bg-transparent text-xs hover:bg-muted-foreground/10"
+        class="hover:bg-muted-foreground/10 flex h-5 w-5 cursor-pointer items-center justify-center rounded border-none bg-transparent text-xs"
         onclick={toggleCollapse}
         aria-label={isCollapsed ? 'Expand' : 'Collapse'}
       >
@@ -403,12 +403,12 @@
   {#if !isCollapsed}
     <div class="p-3">
       <!-- Theme Mode Toggle -->
-      <div class="mb-3 border-b border-border pb-3">
+      <div class="border-border mb-3 border-b pb-3">
         <div class="mb-2 text-xs font-medium">Theme Mode:</div>
         <div class="flex items-center justify-between gap-2">
           {#each THEME_MODES as mode}
             <button
-              class="flex-1 rounded border border-border px-2 py-1 text-xs transition-colors"
+              class="border-border flex-1 rounded border px-2 py-1 text-xs transition-colors"
               class:bg-primary={currentTheme === mode}
               class:text-primary-foreground={currentTheme === mode}
               onclick={() => handleThemeToggle(mode)}
@@ -425,7 +425,7 @@
           Color Variable:
           <div class="flex gap-2">
             <select
-              class="flex-1 rounded border border-border bg-background px-2 py-1 text-xs"
+              class="border-border bg-background flex-1 rounded border px-2 py-1 text-xs"
               onchange={handleVariableChange}
               value={selectedStandalone ? selectedStandalone.name : selectedPair?.base}
             >
@@ -443,7 +443,7 @@
 
             {#if selectedPair && !selectedStandalone}
               <button
-                class="rounded border border-border bg-background px-2 py-1 text-xs hover:bg-muted/50"
+                class="border-border bg-background hover:bg-muted/50 rounded border px-2 py-1 text-xs"
                 onclick={toggleForeground}
                 title="Toggle between base and foreground"
               >
@@ -457,7 +457,7 @@
       <!-- Color Preview -->
       <div class="mb-3">
         <div class="flex flex-col gap-1">
-          <div class="h-[30px] w-full rounded border border-border" style={currentStyle}></div>
+          <div class="border-border h-[30px] w-full rounded border" style={currentStyle}></div>
           <span class="text-center text-[10px] leading-tight">{currentLabel}</span>
         </div>
       </div>
